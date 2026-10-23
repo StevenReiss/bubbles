@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalPackageGraph.java						*/
-/*										*/
-/*	Bubbles ANALysis package visitor to create a package graph		*/
-/*										*/
+/*                                                                              */
+/*              BanalPackageGraph.java                                          */
+/*                                                                              */
+/*      Bubbles ANALysis package visitor to create a package graph              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,24 +49,24 @@ class BanalPackageGraph extends BanalDefaultVisitor implements BanalConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String			project_name;
-private String			package_name;
-private Map<String,ClassData>	class_nodes;
-private Map<String,MethodData>	method_nodes;
-private AtomicInteger		id_counter;
-private boolean 		same_class;
+private String                  project_name;
+private String                  package_name;
+private Map<String,ClassData>   class_nodes;
+private Map<String,MethodData>  method_nodes;
+private AtomicInteger           id_counter;
+private boolean                 same_class;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BanalPackageGraph(String proj,String pkg,boolean usemethods,boolean sameclass)
@@ -100,16 +100,16 @@ BanalPackageGraph(Element xml)
       String id = IvyXml.getAttrString(e,"ID");
       int mod = IvyXml.getAttrInt(e,"MOD");
       if (typ.equals("CLASS")) {
-	 ClassData cd = new ClassData(nm);
-	 class_nodes.put(nm,cd);
-	 cd.setAccess(mod);
-	 idmap.put(id,cd);
+         ClassData cd = new ClassData(nm);
+         class_nodes.put(nm,cd);
+         cd.setAccess(mod);
+         idmap.put(id,cd);
        }
       else if (typ.equals("METHOD")) {
-	 MethodData md = new MethodData(nm);
-	 method_nodes.put(nm,md);
-	 md.setAccess(mod);
-	 idmap.put(id,md);
+         MethodData md = new MethodData(nm);
+         method_nodes.put(nm,md);
+         md.setAccess(mod);
+         idmap.put(id,md);
        }
     }
 
@@ -118,15 +118,15 @@ BanalPackageGraph(Element xml)
       NodeData nd1 = idmap.get(id);
       if (nd1 == null) continue;
       for (Element le : IvyXml.children(e,"LINK")) {
-	 String id2 = IvyXml.getAttrString(le,"TOID");
-	 NodeData nd2 = idmap.get(id2);
-	 if (nd2 == null) continue;
-	 LinkData ld = nd1.createLinkTo(nd2);
-	 if (ld == null) continue;
-	 for (PackageRelationType rt : PackageRelationType.values()) {
-	    int ct = IvyXml.getAttrInt(le,rt.toString());
-	    if (ct >= 0) ld.addRelation(rt,ct);
-	  }
+         String id2 = IvyXml.getAttrString(le,"TOID");
+         NodeData nd2 = idmap.get(id2);
+         if (nd2 == null) continue;
+         LinkData ld = nd1.createLinkTo(nd2);
+         if (ld == null) continue;
+         for (PackageRelationType rt : PackageRelationType.values()) {
+            int ct = IvyXml.getAttrInt(le,rt.toString());
+            if (ct >= 0) ld.addRelation(rt,ct);
+          }
        }
     }
 }
@@ -134,9 +134,9 @@ BanalPackageGraph(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<BanalPackageClass> getClassNodes()
@@ -158,9 +158,9 @@ Collection<BanalPackageNode> getAllNodes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Visitors to handle start/stop/checking relevance			*/
-/*										*/
+/*                                                                              */
+/*      Visitors to handle start/stop/checking relevance                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean checkUseProject(String proj)
@@ -192,9 +192,9 @@ Collection<BanalPackageNode> getAllNodes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic class data							*/
-/*										*/
+/*                                                                              */
+/*      Basic class data                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void visitClass(BanalClass bc,String sign,int access)
@@ -287,9 +287,9 @@ private LinkData findLink(BanalMethod frm,BanalClass to)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -307,9 +307,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hierarchy visiting methods						*/
-/*										*/
+/*                                                                              */
+/*      Hierarchy visiting methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void visitSuper(BanalClass cls,BanalClass sup,boolean isiface)
@@ -337,9 +337,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Method and field handling						*/
-/*										*/
+/*                                                                              */
+/*      Method and field handling                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void visitClassMethod(BanalMethod bm,String gen,int acc,BanalClass [] excepts)
@@ -361,9 +361,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access visiting methods 						*/
-/*										*/
+/*                                                                              */
+/*      Access visiting methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void visitRemoteFieldAccess(BanalMethod bm,BanalField bf)
@@ -440,9 +440,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Node information							*/
-/*										*/
+/*                                                                              */
+/*      Node information                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class NodeData implements BanalPackageNode {
@@ -463,9 +463,9 @@ private abstract class NodeData implements BanalPackageNode {
       if (id_counter != null) node_id = id_counter.incrementAndGet();
     }
 
-   @Override public String getName()		{ return node_name; }
-   int getId()					{ return node_id; }
-   @Override public int getModifiers()		{ return class_access; }
+   @Override public String getName()            { return node_name; }
+   int getId()                                  { return node_id; }
+   @Override public int getModifiers()          { return class_access; }
    @Override public Collection<BanalPackageLink> getInLinks() {
       return new ArrayList<BanalPackageLink>(in_links.values());
     }
@@ -473,9 +473,9 @@ private abstract class NodeData implements BanalPackageNode {
       return new ArrayList<BanalPackageLink>(out_links.values());
     }
 
-   @Override public String getProjectName()	{ return project_name; }
-   @Override public String getMethodName()	{ return null; }
-   @Override public String getClassName()	{ return null; }
+   @Override public String getProjectName()     { return project_name; }
+   @Override public String getMethodName()      { return null; }
+   @Override public String getClassName()       { return null; }
    @Override public String getPackageName() {
       String nm = getClassName();
       int idx = nm.lastIndexOf(".");
@@ -514,9 +514,9 @@ private abstract class NodeData implements BanalPackageNode {
       if (cd == this || cd == null) return null;
       LinkData ld = out_links.get(cd);
       if (ld == null) {
-	 ld = new LinkData(this,cd);
-	 out_links.put(cd,ld);
-	 cd.in_links.put(this,ld);
+         ld = new LinkData(this,cd);
+         out_links.put(cd,ld);
+         cd.in_links.put(this,ld);
        }
       return ld;
     }
@@ -530,7 +530,7 @@ private abstract class NodeData implements BanalPackageNode {
 
       if (class_access != -1) xw.field("MOD",class_access);
       for (LinkData ld : out_links.values()) {
-	 ld.outputXml(xw);
+         ld.outputXml(xw);
        }
       xw.end("NODE");
     }
@@ -552,7 +552,7 @@ private abstract class NodeData implements BanalPackageNode {
       return false;
     }
 
-}	// end of inner class ClassData
+}       // end of inner class ClassData
 
 
 
@@ -562,7 +562,7 @@ private class ClassData extends NodeData implements BanalPackageClass {
       super(nm);
     }
 
-   @Override public String getClassName()		{ return getName(); }
+   @Override public String getClassName()               { return getName(); }
 
    @Override public Set<ClassType> getTypes() {
       if (class_types != null) return class_types;
@@ -584,7 +584,7 @@ private class ClassData extends NodeData implements BanalPackageClass {
       return class_types;
     }
 
-}	// end of inner class ClassData
+}       // end of inner class ClassData
 
 
 
@@ -619,9 +619,9 @@ private class MethodData extends NodeData implements BanalPackageMethod {
 
 
 /********************************************************************************/
-/*										*/
-/*	Link information							*/
-/*										*/
+/*                                                                              */
+/*      Link information                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LinkData implements BanalPackageLink {
@@ -636,8 +636,8 @@ private static class LinkData implements BanalPackageLink {
       type_count = new EnumMap<PackageRelationType,Integer>(PackageRelationType.class);
     }
 
-   @Override public BanalPackageNode getFromNode()		{ return from_class; }
-   @Override public BanalPackageNode getToNode()		{ return to_class; }
+   @Override public BanalPackageNode getFromNode()              { return from_class; }
+   @Override public BanalPackageNode getToNode()                { return to_class; }
    @Override public Map<PackageRelationType,Integer> getTypes() { return type_count; }
 
    void addRelation(PackageRelationType rt) {
@@ -662,9 +662,9 @@ private static class LinkData implements BanalPackageLink {
       xw.field("TO",to_class.getName());
       xw.field("TOID",to_class.getId());
       for (Map.Entry<PackageRelationType,Integer> ent : type_count.entrySet()) {
-	 PackageRelationType rt = ent.getKey();
-	 int ct = ent.getValue();
-	 xw.field(rt.toString(),ct);
+         PackageRelationType rt = ent.getKey();
+         int ct = ent.getValue();
+         xw.field(rt.toString(),ct);
        }
       xw.end("LINK");
     }
@@ -676,10 +676,10 @@ private static class LinkData implements BanalPackageLink {
       buf.append("--(");
       int ctr = 0;
       for (Map.Entry<PackageRelationType,Integer> ent : type_count.entrySet()) {
-	 if (ent.getValue() > 0) {
-	    if (ctr++ > 0) buf.append(",");
-	    buf.append(ent.getKey());
-	  }
+         if (ent.getValue() > 0) {
+            if (ctr++ > 0) buf.append(",");
+            buf.append(ent.getKey());
+          }
        }
       buf.append(")-->");
       buf.append(to_class.getName());
@@ -687,12 +687,12 @@ private static class LinkData implements BanalPackageLink {
       return buf.toString();
     }
 
-}	// end of inner class LinkData
+}       // end of inner class LinkData
 
 
 
 
-}	// end of class BanalPackageGraph
+}       // end of class BanalPackageGraph
 
 
 

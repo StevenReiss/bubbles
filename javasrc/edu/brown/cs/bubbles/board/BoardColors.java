@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardColors.java						*/
-/*										*/
-/*	Provide a common framework for all color choices			*/
-/*										*/
+/*                                                                              */
+/*              BoardColors.java                                                */
+/*                                                                              */
+/*      Provide a common framework for all color choices                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -52,25 +52,25 @@ public final class BoardColors implements BoardConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<String,Color>	color_map;
+private Map<String,Color>       color_map;
 private Map<String,Color>       known_map;
-private String			palette_name;
-private File			palette_file;
-private long			last_modified;
-private int			check_count;
-private List<URL>		added_palettes;
+private String                  palette_name;
+private File                    palette_file;
+private long                    last_modified;
+private int                     check_count;
+private List<URL>               added_palettes;
 
-private Map<Object,Color>	default_colors;
+private Map<Object,Color>       default_colors;
 
-private static BoardColors	the_colors;
+private static BoardColors      the_colors;
 public static final Color TRANSPARENT = new Color(0,0,0,0);
 
-private static final int MAX_COUNT =	16;		// check every so often
+private static final int MAX_COUNT =    16;             // check every so often
 
 private static boolean  use_w3 = true;
 
@@ -78,9 +78,9 @@ private static boolean  use_w3 = true;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardColors()
@@ -106,9 +106,9 @@ static synchronized BoardColors getColors()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setPalette(String name)
@@ -176,9 +176,9 @@ public static Color getResourceColor(String id,Color dflt)
       String sfx = id.substring(idx+1);
       BoardProperties bp = BoardProperties.getProperties(pfx);
       if (bp != null) {
-	 Color c1 = bp.getColor(id,null);
-	 if (c1 == null) c1 = bp.getColor(sfx,null);
-	 if (c1 != null) {
+         Color c1 = bp.getColor(id,null);
+         if (c1 == null) c1 = bp.getColor(sfx,null);
+         if (c1 != null) {
             c = c1;
           }
        }
@@ -216,9 +216,9 @@ public static Color getColor(String id,Color dflt)
       String sfx = id.substring(idx+1);
       BoardProperties bp = BoardProperties.getProperties(pfx);
       if (bp != null) {
-	 Color c1 = bp.getColor(id,null);
-	 if (c1 == null) c1 = bp.getColor(sfx,null);
-	 if (c1 != null) {
+         Color c1 = bp.getColor(id,null);
+         if (c1 == null) c1 = bp.getColor(sfx,null);
+         if (c1 != null) {
             c = c1;
             cm.put(id,c);
           }
@@ -237,9 +237,9 @@ public static Color getColor(String id,Color dflt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Relative color methods							*/
-/*										*/
+/*                                                                              */
+/*      Relative color methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static Color getPaleColor(Color c)
@@ -302,8 +302,8 @@ public static Color transparent(Color c,double alpha)
 public static Color between(Color tc,Color bc)
 {
    return new Color((tc.getRed() + bc.getRed())/2,
-	 (tc.getGreen() + bc.getGreen())/2,
-	 (tc.getBlue() + bc.getBlue())/2);
+         (tc.getGreen() + bc.getGreen())/2,
+         (tc.getBlue() + bc.getBlue())/2);
 }
 
 
@@ -391,9 +391,9 @@ public static boolean isInverted()
 
 
 /********************************************************************************/
-/*										*/
-/*	Palette loading methods 						*/
-/*										*/
+/*                                                                              */
+/*      Palette loading methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public static void forceLoad()
@@ -407,8 +407,8 @@ private synchronized Map<String,Color> loadPalette()
 {
    if (palette_file != null && check_count++ >= MAX_COUNT) {
       if (palette_file.lastModified() > last_modified) {
-	 palette_file = null;
-	 color_map = null;
+         palette_file = null;
+         color_map = null;
        }
       check_count = 0;
     }
@@ -444,14 +444,14 @@ private InputStream getPaletteStream()
    if (palette_name.startsWith(File.separator)) {
       File f = new File(palette_name);
       if (!f.exists()) {
-	 File f1 = new File(palette_name + ".palette");
-	 if (f1.exists()) f = f1;
+         File f1 = new File(palette_name + ".palette");
+         if (f1.exists()) f = f1;
        }
       if (f.exists() && f.canRead()) {
-	 try {
-	    return new FileInputStream(f);
-	  }
-	 catch (IOException e) { }
+         try {
+            return new FileInputStream(f);
+          }
+         catch (IOException e) { }
        }
     }
 
@@ -473,9 +473,9 @@ private InputStream getPaletteStream()
 
    if (f.exists() && f.canRead()) {
       try {
-	 palette_file = f;
-	 last_modified = f.lastModified();
-	 return new FileInputStream(f);
+         palette_file = f;
+         last_modified = f.lastModified();
+         return new FileInputStream(f);
        }
       catch (IOException e) { }
     }
@@ -500,7 +500,7 @@ private InputStream getDefaultPaletteStream()
 // File f = new File(dir1,palette_name);
 // if (f.exists() && f.canRead()) {
 //    try {
-// 	 return new FileInputStream(f);
+//       return new FileInputStream(f);
 //     }
 //    catch (IOException e) { }
 //  }
@@ -520,22 +520,22 @@ private void loadPaletteData(InputStream ins,boolean added)
    BufferedReader br = new BufferedReader(new InputStreamReader(ins));
    try {
       for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null) break;
-	 ln = ln.trim();
-	 if (ln.startsWith("#") || ln.startsWith("/")) continue;
-	 StringTokenizer tok = new StringTokenizer(ln," \t:");
-	 if (!tok.hasMoreTokens()) continue;
-	 String nm = tok.nextToken();
-	 if (added && color_map.containsKey(nm)) continue;
-	 if (!tok.hasMoreTokens()) continue;
-	 String col = tok.nextToken();
-	 Color c = SwingColorSet.getColorByName(col);
-	 if (c != null) {
-	    if (added && isInverted()) c = invertColor(c);
-	    color_map.put(nm,c);
-	  }
-	 else BoardLog.logX("BOARD","Color " + col + " not found");
+         String ln = br.readLine();
+         if (ln == null) break;
+         ln = ln.trim();
+         if (ln.startsWith("#") || ln.startsWith("/")) continue;
+         StringTokenizer tok = new StringTokenizer(ln," \t:");
+         if (!tok.hasMoreTokens()) continue;
+         String nm = tok.nextToken();
+         if (added && color_map.containsKey(nm)) continue;
+         if (!tok.hasMoreTokens()) continue;
+         String col = tok.nextToken();
+         Color c = SwingColorSet.getColorByName(col);
+         if (c != null) {
+            if (added && isInverted()) c = invertColor(c);
+            color_map.put(nm,c);
+          }
+         else BoardLog.logX("BOARD","Color " + col + " not found");
        }
       br.close();
     }
@@ -561,9 +561,9 @@ private void addPaletteData(URL u)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle creating a dark pallette 					*/
-/*										*/
+/*                                                                              */
+/*      Handle creating a dark pallette                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void createInversePalette()
@@ -576,9 +576,9 @@ private void createInversePalette()
    try {
       PrintWriter pw = new PrintWriter(new FileWriter(f));
       for (Map.Entry<String,Color> ent : color_map.entrySet()) {
-	 Color c1 = invertColor(ent.getValue());
-	 String cv = Integer.toUnsignedString(c1.getRGB(),16);
-	 pw.println(ent.getKey() + "\t:\t0x" + cv);
+         Color c1 = invertColor(ent.getValue());
+         String cv = Integer.toUnsignedString(c1.getRGB(),16);
+         pw.println(ent.getKey() + "\t:\t0x" + cv);
        }
       pw.close();
     }
@@ -611,12 +611,12 @@ public static Color invertColor(Color base)
    else if (r == 0) {
       if (g == 0 && b == 0) return Color.WHITE;
       else if (g == 0) {
-	 binv = invlum * 1000 / 114;
+         binv = invlum * 1000 / 114;
        }
       else {
-	 double x =  b * 114.0 / g + 587.0;
-	 ginv = (int) (invlum * 1000 / x);
-	 binv = b * ginv / g;
+         double x =  b * 114.0 / g + 587.0;
+         ginv = (int) (invlum * 1000 / x);
+         binv = b * ginv / g;
        }
     }
    else {
@@ -644,15 +644,15 @@ public static Color invertColor(Color base)
       float [] rslt = Color.RGBtoHSB(rinv,binv,ginv,null);
       int hval = (int) (360*rslt[0]);
       if (hval > 10 && hval < 350 && rslt[1] < 0.3 && rslt[2] < 0.25) {
-	 // pastel color
-	 rslt[1] = 0.3f;
-	 rslt[2] = 0.25f;
-	 Color cnew = Color.getHSBColor(rslt[0],rslt[1],rslt[2]);
-	 if (base.getAlpha() != 255) {
-	    cnew = transparent(cnew,base.getAlpha());
-	  }
-//	 System.err.println("COMPARE COLOR " + cnew + " " + rinv + " " + ginv + " " + binv);
-	 return cnew;
+         // pastel color
+         rslt[1] = 0.3f;
+         rslt[2] = 0.25f;
+         Color cnew = Color.getHSBColor(rslt[0],rslt[1],rslt[2]);
+         if (base.getAlpha() != 255) {
+            cnew = transparent(cnew,base.getAlpha());
+          }
+//       System.err.println("COMPARE COLOR " + cnew + " " + rinv + " " + ginv + " " + binv);
+         return cnew;
        }
     }
 
@@ -751,9 +751,9 @@ private static int rescale(double v)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle default colors							*/
-/*										*/
+/*                                                                              */
+/*      Handle default colors                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void setDefaults(boolean inv)
@@ -761,32 +761,32 @@ private void setDefaults(boolean inv)
    if (inv) {
       boolean savedflts = false;
       if (default_colors == null) {
-	 default_colors = new HashMap<>();
-	 savedflts = true;
+         default_colors = new HashMap<>();
+         savedflts = true;
        }
       UIDefaults dflts = UIManager.getDefaults();
       Map<Object,Object> chngs = new HashMap<>();
       for (Map.Entry<Object,Object> ent : dflts.entrySet()) {
-	 if (ent.getValue() instanceof Color) {
-	    Color c = (Color) ent.getValue();
-	    if (savedflts) default_colors.put(ent.getKey(),c);
-	    Color cinv = invertColor(c);
-	    chngs.put(ent.getKey(),cinv);
-	  }
+         if (ent.getValue() instanceof Color) {
+            Color c = (Color) ent.getValue();
+            if (savedflts) default_colors.put(ent.getKey(),c);
+            Color cinv = invertColor(c);
+            chngs.put(ent.getKey(),cinv);
+          }
        }
       dflts.putAll(chngs);
     }
    else {
       UIDefaults dflts = UIManager.getDefaults();
       if (default_colors != null) {
-	 dflts.putAll(default_colors);
+         dflts.putAll(default_colors);
        }
     }
 }
 
 
 
-}	// end of class BoardColors
+}       // end of class BoardColors
 
 
 

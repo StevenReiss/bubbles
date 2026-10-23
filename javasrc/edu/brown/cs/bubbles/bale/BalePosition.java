@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BalePosition.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor position implementation		*/
-/*										*/
+/*                                                                              */
+/*              BalePosition.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor position implementation                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,19 +40,19 @@ class BalePosition implements Position, BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected Position	base_position;
+protected Position      base_position;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BalePosition(Position p)
@@ -70,9 +70,9 @@ protected BalePosition()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methodes 							*/
-/*										*/
+/*                                                                              */
+/*      Access methodes                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int getOffset()
@@ -102,9 +102,9 @@ void savePosition(BaleDocument bd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -114,7 +114,7 @@ void savePosition(BaleDocument bd)
 
 
 
-}	// end of class BalePosition
+}       // end of class BalePosition
 
 
 

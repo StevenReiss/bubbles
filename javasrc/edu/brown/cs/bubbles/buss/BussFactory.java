@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BussFactory.java						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack factory class			*/
-/*										*/
+/*                                                                              */
+/*              BussFactory.java                                                */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack factory class                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -36,7 +36,7 @@ import java.util.Collection;
 
 
 /**
- *	This class provides the entries to create stack bubbles
+ *      This class provides the entries to create stack bubbles
  **/
 
 public final class BussFactory implements BussConstants
@@ -45,24 +45,24 @@ public final class BussFactory implements BussConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static BussFactory	the_factory = null;
+private static BussFactory      the_factory = null;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the singleton instance of the stack bubble factory.
+ *      Return the singleton instance of the stack bubble factory.
  **/
 
 public static synchronized BussFactory getFactory()
@@ -74,19 +74,19 @@ public static synchronized BussFactory getFactory()
 
 
 
-private BussFactory()				{ }
+private BussFactory()                           { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Initialize stack bubbles. This is called automatically at system initialization.
+ *      Initialize stack bubbles. This is called automatically at system initialization.
  **/
 
 public static void setup()
@@ -97,14 +97,14 @@ public static void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a bubble stack for a list of entities.  The content width passed in
- *	is the desired width of the content area of the bubble stack.
+ *      Create a bubble stack for a list of entities.  The content width passed in
+ *      is the desired width of the content area of the bubble stack.
  **/
 
 public BussBubble createBubbleStack(Collection<BussEntry> ents,int contentwidth)
@@ -114,7 +114,7 @@ public BussBubble createBubbleStack(Collection<BussEntry> ents,int contentwidth)
 
 
 
-}	// end of class BussFactory
+}       // end of class BussFactory
 
 
 

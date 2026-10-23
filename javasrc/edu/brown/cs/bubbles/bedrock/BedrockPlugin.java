@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockPlugin.java						*/
-/*										*/
-/*	Main class for the Eclipse-Bubbles interface				*/
-/*										*/
+/*                                                                              */
+/*              BedrockPlugin.java                                              */
+/*                                                                              */
+/*      Main class for the Eclipse-Bubbles interface                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -85,9 +85,9 @@ public class BedrockPlugin extends Plugin implements BedrockConstants, MintConst
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private MintControl mint_control;
@@ -104,7 +104,7 @@ private BedrockProblem bedrock_problem;
 private BedrockQuickFix quick_fixer;
 private boolean shutdown_mint;
 private boolean doing_exit;
-private int	num_clients;
+private int     num_clients;
 private Element lang_data;
 private boolean for_bubbles;
 
@@ -117,9 +117,9 @@ private static BedrockPlugin the_plugin = null;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BedrockPlugin()
@@ -141,9 +141,9 @@ public BedrockPlugin()
 
    if (f2.exists()) {
       if (!f3.exists() || !IvySetup.setup(f3)) {
-	 if (!f4.exists() || !IvySetup.setup(f4)) {
-	    IvySetup.setup();
-	  }
+         if (!f4.exists() || !IvySetup.setup(f4)) {
+            IvySetup.setup();
+          }
        }
     }
 
@@ -151,27 +151,27 @@ public BedrockPlugin()
 
    if (log_file == null) {
       try {
-	 long now = System.currentTimeMillis();
-	 String logfile = null;
-	 for (int i = 0; i < 20; ++i) {
-	    if (i == 0) logfile = "bedrock_log.log";
-	    else logfile = "bedrock_log_" + i + ".log";
-	    File lf = new File(ws.getRoot().getLocation().append(logfile).toOSString());
-	    if (!lf.exists()) break;
-	    if (now - lf.lastModified() > 5000) break;
-	 }
-	 String filename = ws.getRoot().getLocation().append(logfile).toOSString();
-	 log_file = new PrintStream(new FileOutputStream(filename),true);
+         long now = System.currentTimeMillis();
+         String logfile = null;
+         for (int i = 0; i < 20; ++i) {
+            if (i == 0) logfile = "bedrock_log.log";
+            else logfile = "bedrock_log_" + i + ".log";
+            File lf = new File(ws.getRoot().getLocation().append(logfile).toOSString());
+            if (!lf.exists()) break;
+            if (now - lf.lastModified() > 5000) break;
+         }
+         String filename = ws.getRoot().getLocation().append(logfile).toOSString();
+         log_file = new PrintStream(new FileOutputStream(filename),true);
        }
       catch (FileNotFoundException e) {
-	 log_file = null;
-	 BedrockPlugin.logE("Error initialising file: " + e.getMessage());
+         log_file = null;
+         BedrockPlugin.logE("Error initialising file: " + e.getMessage());
        }
     }
 
    BedrockPlugin.logI("STARTING");
    BedrockPlugin.logI("MEMORY " + Runtime.getRuntime().maxMemory() + " " +
-			 Runtime.getRuntime().totalMemory());
+                         Runtime.getRuntime().totalMemory());
 
    System.setProperty("org.eclipse.jdt.ui.codeAssistTimeout","30000");
 
@@ -207,9 +207,9 @@ private void initWorkbench() {
 
 
 /********************************************************************************/
-/*										*/
-/*	Mint methods								*/
-/*										*/
+/*                                                                              */
+/*      Mint methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 String getMintName()
@@ -254,18 +254,18 @@ private synchronized void setupMint()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public static BedrockPlugin getPlugin() 		{ return the_plugin; }
+public static BedrockPlugin getPlugin()                 { return the_plugin; }
 
-BedrockProject getProjectManager()			{ return bedrock_project; }
+BedrockProject getProjectManager()                      { return bedrock_project; }
 
-BedrockEditManager getEditManager()			{ return bedrock_editor; }
+BedrockEditManager getEditManager()                     { return bedrock_editor; }
 
-BedrockBreakpoint getBreakManager()			{ return bedrock_breakpoint; }
+BedrockBreakpoint getBreakManager()                     { return bedrock_breakpoint; }
 
 boolean forBubbles()                                    { return for_bubbles; }
 
@@ -331,9 +331,9 @@ void addFixes(IMarker ip,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Start/stop methods							*/
-/*										*/
+/*                                                                              */
+/*      Start/stop methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void start(BundleContext ctx) throws Exception
@@ -409,16 +409,16 @@ private void saveEclipse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for sending out messages					*/
-/*										*/
+/*                                                                              */
+/*      Methods for sending out messages                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void sendMessage(String msg)
 {
    synchronized (send_sema) {
       if (mint_control != null && !doing_exit)
-	 mint_control.send(msg);
+         mint_control.send(msg);
     }
 }
 
@@ -429,7 +429,7 @@ private String sendMessageWait(String msg,long delay)
 
    synchronized (send_sema) {
       if (mint_control != null && !doing_exit) {
-	 mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
+         mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
        }
       else return null;
     }
@@ -494,9 +494,9 @@ String finishMessageWait(IvyXmlWriter xw,long delay)
 
 
 /********************************************************************************/
-/*										*/
-/*	New command processors							*/
-/*										*/
+/*                                                                              */
+/*      New command processors                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
@@ -521,480 +521,480 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 
    switch (cmd) {
       case "PING" :
-	 if (doing_exit || shutdown_mint) xw.text("EXIT");
-	 else if (PlatformUI.isWorkbenchRunning()) xw.text("PONG");
-	 else xw.text("UNSET");
-	 break;
+         if (doing_exit || shutdown_mint) xw.text("EXIT");
+         else if (PlatformUI.isWorkbenchRunning()) xw.text("PONG");
+         else xw.text("UNSET");
+         break;
       case "PROJECTS" :
-	 bedrock_project.listProjects(xw);
-	 break;
+         bedrock_project.listProjects(xw);
+         break;
       case "OPENPROJECT" :
-	 bedrock_project.openProject(proj,IvyXml.getAttrBool(xml,"FILES",false),
-	       IvyXml.getAttrBool(xml,"PATHS",false),
-	       IvyXml.getAttrBool(xml,"CLASSES",false),
-	       IvyXml.getAttrBool(xml,"OPTIONS",false),
-	       IvyXml.getAttrBool(xml,"IMPORTS",false),
-	       IvyXml.getAttrString(xml,"BACKGROUND"),xw);
-	 break;
+         bedrock_project.openProject(proj,IvyXml.getAttrBool(xml,"FILES",false),
+               IvyXml.getAttrBool(xml,"PATHS",false),
+               IvyXml.getAttrBool(xml,"CLASSES",false),
+               IvyXml.getAttrBool(xml,"OPTIONS",false),
+               IvyXml.getAttrBool(xml,"IMPORTS",false),
+               IvyXml.getAttrString(xml,"BACKGROUND"),xw);
+         break;
       case "EDITPROJECT" :
-	 bedrock_project.editProject(proj,IvyXml.getAttrBool(xml,"LOCAL"),
-	       IvyXml.getChild(xml,"PROJECT"),xw);
-	 break;
+         bedrock_project.editProject(proj,IvyXml.getAttrBool(xml,"LOCAL"),
+               IvyXml.getChild(xml,"PROJECT"),xw);
+         break;
       case "CREATEPROJECT" :
-	 bedrock_project.handleCreateProject(IvyXml.getAttrString(xml,"NAME"),
-	       new File(IvyXml.getAttrString(xml,"DIR")),
-	       IvyXml.getAttrString(xml,"TYPE"),
-	       IvyXml.getChild(xml,"PROPS"),xw);
-	 break;
+         bedrock_project.handleCreateProject(IvyXml.getAttrString(xml,"NAME"),
+               new File(IvyXml.getAttrString(xml,"DIR")),
+               IvyXml.getAttrString(xml,"TYPE"),
+               IvyXml.getChild(xml,"PROPS"),xw);
+         break;
       case "IMPORTPROJECT" :
-	 try {
-	    bedrock_project.importExistingProject(proj);
-	  }
-	 catch (Throwable t) {
-	    xw.close();
-	    throw new BedrockException("Exception constructing project: " + t.getMessage());
-	  }
-	 break;
+         try {
+            bedrock_project.importExistingProject(proj);
+          }
+         catch (Throwable t) {
+            xw.close();
+            throw new BedrockException("Exception constructing project: " + t.getMessage());
+          }
+         break;
       case "BUILDPROJECT" :
-	 bedrock_project.buildProject(proj,IvyXml.getAttrBool(xml,"CLEAN"),
-	       IvyXml.getAttrBool(xml,"FULL"),
-	       IvyXml.getAttrBool(xml,"REFRESH"),xw);
-	 break;
+         bedrock_project.buildProject(proj,IvyXml.getAttrBool(xml,"CLEAN"),
+               IvyXml.getAttrBool(xml,"FULL"),
+               IvyXml.getAttrBool(xml,"REFRESH"),xw);
+         break;
       case "CREATEDIRECTORY" :
       case "CREATEPACKAGE" :
-	 bedrock_project.createPackage(proj,IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrBool(xml,"FORCE",false),xw);
-	 break;
+         bedrock_project.createPackage(proj,IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrBool(xml,"FORCE",false),xw);
+         break;
       case "FINDPACKAGE" :
-	 bedrock_project.findPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
-	 break;
+         bedrock_project.findPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
+         break;
       case "GETALLNAMES" :
-	 bedrock_java.handleGetAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       getSet(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"BACKGROUND"),xw);
-	 break;
+         bedrock_java.handleGetAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
+               getSet(xml,"FILE"),
+               IvyXml.getAttrString(xml,"BACKGROUND"),xw);
+         break;
       case "FINDDEFINITIONS" :
-	 bedrock_java.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",false),
-	       IvyXml.getAttrBool(xml,"IMPLS",false),
-	       IvyXml.getAttrBool(xml,"EQUIV",false),
-	       IvyXml.getAttrBool(xml,"EXACT",false),
-	       IvyXml.getAttrBool(xml,"SYSTEM",false),
-	       IvyXml.getAttrBool(xml,"TYPE",false),
-	       false,false,
-	       xw);
-	 break;
+         bedrock_java.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",false),
+               IvyXml.getAttrBool(xml,"IMPLS",false),
+               IvyXml.getAttrBool(xml,"EQUIV",false),
+               IvyXml.getAttrBool(xml,"EXACT",false),
+               IvyXml.getAttrBool(xml,"SYSTEM",false),
+               IvyXml.getAttrBool(xml,"TYPE",false),
+               false,false,
+               xw);
+         break;
       case "FINDREFERENCES" :
-	 bedrock_java.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),
-	       IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",true),
-	       IvyXml.getAttrBool(xml,"IMPLS",false),
-	       IvyXml.getAttrBool(xml,"EQUIV",false),
-	       IvyXml.getAttrBool(xml,"EXACT",false),
-	       IvyXml.getAttrBool(xml,"SYSTEM",false),
-	       IvyXml.getAttrBool(xml,"TYPE",false),
-	       IvyXml.getAttrBool(xml,"RONLY",false),
-	       IvyXml.getAttrBool(xml,"WONLY",false),
-	       xw);
-	 break;
+         bedrock_java.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),
+               IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",true),
+               IvyXml.getAttrBool(xml,"IMPLS",false),
+               IvyXml.getAttrBool(xml,"EQUIV",false),
+               IvyXml.getAttrBool(xml,"EXACT",false),
+               IvyXml.getAttrBool(xml,"SYSTEM",false),
+               IvyXml.getAttrBool(xml,"TYPE",false),
+               IvyXml.getAttrBool(xml,"RONLY",false),
+               IvyXml.getAttrBool(xml,"WONLY",false),
+               xw);
+         break;
       case "PATTERNSEARCH" :
          logD("SEARCH: " + IvyXml.convertXmlToString(xml));
-	 bedrock_java.handlePatternSearch(proj,
+         bedrock_java.handlePatternSearch(proj,
                IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"PATTERN"),
-	       IvyXml.getAttrString(xml,"FOR"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",true),
-	       IvyXml.getAttrBool(xml,"IMPLS",false),
-	       IvyXml.getAttrBool(xml,"EQUIV",false),
-	       IvyXml.getAttrBool(xml,"EXACT",false),
-	       IvyXml.getAttrBool(xml,"SYSTEM",false),
-	       xw);
-	 break;
+               IvyXml.getAttrString(xml,"PATTERN"),
+               IvyXml.getAttrString(xml,"FOR"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",true),
+               IvyXml.getAttrBool(xml,"IMPLS",false),
+               IvyXml.getAttrBool(xml,"EQUIV",false),
+               IvyXml.getAttrBool(xml,"EXACT",false),
+               IvyXml.getAttrBool(xml,"SYSTEM",false),
+               xw);
+         break;
       case "SEARCH" :
-	 bedrock_java.textSearch(proj,IvyXml.getAttrInt(xml,"FLAGS",0),
-	       IvyXml.getTextElement(xml,"PATTERN"),
-	       IvyXml.getAttrInt(xml,"MAX",MAX_TEXT_SEARCH_RESULTS),
-	       xw);
-	 break;
+         bedrock_java.textSearch(proj,IvyXml.getAttrInt(xml,"FLAGS",0),
+               IvyXml.getTextElement(xml,"PATTERN"),
+               IvyXml.getAttrInt(xml,"MAX",MAX_TEXT_SEARCH_RESULTS),
+               xw);
+         break;
       case "GETFULLYQUALIFIEDNAME" :
-	 bedrock_java.getFullyQualifiedName(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),
-	       IvyXml.getAttrInt(xml,"END"),xw);
-	 break;
+         bedrock_java.getFullyQualifiedName(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),
+               IvyXml.getAttrInt(xml,"END"),xw);
+         break;
       case "CREATEFILE" :
       case "CREATECLASS" :
-	 bedrock_java.handleNewClass(proj,IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrBool(xml,"FORCE",false),
-	       IvyXml.getTextElement(xml,"CONTENTS"), xw);
-	 break;
+         bedrock_java.handleNewClass(proj,IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrBool(xml,"FORCE",false),
+               IvyXml.getTextElement(xml,"CONTENTS"), xw);
+         break;
       case "FINDHIERARCHY" :
-	 bedrock_java.handleFindHierarchy(proj,IvyXml.getAttrString(xml,"PACKAGE"),
-	       IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrBool(xml,"ALL",false), xw);
-	 break;
+         bedrock_java.handleFindHierarchy(proj,IvyXml.getAttrString(xml,"PACKAGE"),
+               IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrBool(xml,"ALL",false), xw);
+         break;
       case "LAUNCHQUERY" :
-	 bedrock_runtime.handleLaunchQuery(proj,IvyXml.getAttrString(xml,"QUERY"),
-	       IvyXml.getAttrBool(xml,"OPTION",false),xw);
-	 break;
+         bedrock_runtime.handleLaunchQuery(proj,IvyXml.getAttrString(xml,"QUERY"),
+               IvyXml.getAttrBool(xml,"OPTION",false),xw);
+         break;
       case "GETRUNCONFIG" :
-	 bedrock_runtime.getRunConfigurations(xw);
-	 break;
+         bedrock_runtime.getRunConfigurations(xw);
+         break;
       case "NEWRUNCONFIG" :
-	 bedrock_runtime.getNewRunConfiguration(proj,
-	       IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"CLONE"),
-	       IvyXml.getAttrString(xml,"TYPE","Java Application"),xw);
-	 break;
+         bedrock_runtime.getNewRunConfiguration(proj,
+               IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"CLONE"),
+               IvyXml.getAttrString(xml,"TYPE","Java Application"),xw);
+         break;
       case "EDITRUNCONFIG" :
-	 bedrock_runtime.editRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrString(xml,"PROP"),
-	       IvyXml.getAttrString(xml,"VALUE"),xw);
-	 break;
+         bedrock_runtime.editRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrString(xml,"PROP"),
+               IvyXml.getAttrString(xml,"VALUE"),xw);
+         break;
       case "SAVERUNCONFIG" :
-	 bedrock_runtime.saveRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
-	 break;
+         bedrock_runtime.saveRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
+         break;
       case "DELETERUNCONFIG" :
-	 bedrock_runtime.deleteRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
-	 break;
+         bedrock_runtime.deleteRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
+         break;
       case "START" :
-	 bedrock_runtime.runProject(IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"MODE",ILaunchManager.DEBUG_MODE),
-	       IvyXml.getAttrBool(xml,"BUILD",true),
-	       IvyXml.getAttrBool(xml,"REGISTER",true),
-	       IvyXml.getAttrString(xml,"VMARG"),
-	       IvyXml.getAttrString(xml,"ID"),
-	       xw);
-	 break;
+         bedrock_runtime.runProject(IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"MODE",ILaunchManager.DEBUG_MODE),
+               IvyXml.getAttrBool(xml,"BUILD",true),
+               IvyXml.getAttrBool(xml,"REGISTER",true),
+               IvyXml.getAttrString(xml,"VMARG"),
+               IvyXml.getAttrString(xml,"ID"),
+               xw);
+         break;
       case "GETALLBREAKPOINTS" :
-	 bedrock_breakpoint.getAllBreakpoints(xw);
-	 break;
+         bedrock_breakpoint.getAllBreakpoints(xw);
+         break;
       case "ADDLINEBREAKPOINT" :
-	 bedrock_breakpoint.setLineBreakpoint(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getTextElement(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrInt(xml,"LINE"),
-	       IvyXml.getAttrBool(xml,"SUSPENDVM",false),
-	       IvyXml.getAttrBool(xml,"TRACE",false));
-	 break;
+         bedrock_breakpoint.setLineBreakpoint(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getTextElement(xml,"FILE"),
+               IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrInt(xml,"LINE"),
+               IvyXml.getAttrBool(xml,"SUSPENDVM",false),
+               IvyXml.getAttrBool(xml,"TRACE",false));
+         break;
       case "ADDEXCEPTIONBREAKPOINT" :
-	 bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrBool(xml,"CAUGHT",false),
-	       IvyXml.getAttrBool(xml,"UNCAUGHT",true),
-	       IvyXml.getAttrBool(xml,"CHECKED",false),
-	       IvyXml.getAttrBool(xml,"SUSPENDVM",false),
-	       IvyXml.getAttrBool(xml,"SUBCLASS",true));
-	 break;
+         bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrBool(xml,"CAUGHT",false),
+               IvyXml.getAttrBool(xml,"UNCAUGHT",true),
+               IvyXml.getAttrBool(xml,"CHECKED",false),
+               IvyXml.getAttrBool(xml,"SUSPENDVM",false),
+               IvyXml.getAttrBool(xml,"SUBCLASS",true));
+         break;
       case "EDITBREAKPOINT" :
-	 bedrock_breakpoint.editBreakpoint(IvyXml.getAttrInt(xml,"ID"),
-	       IvyXml.getAttrString(xml,"PROP"),
-	       IvyXml.getAttrString(xml,"VALUE"),
-	       IvyXml.getAttrString(xml,"PROP1"),
-	       IvyXml.getAttrString(xml,"VALUE1"),
-	       IvyXml.getAttrString(xml,"PROP2"),
-	       IvyXml.getAttrString(xml,"VALUE2"));
-	 break;
+         bedrock_breakpoint.editBreakpoint(IvyXml.getAttrInt(xml,"ID"),
+               IvyXml.getAttrString(xml,"PROP"),
+               IvyXml.getAttrString(xml,"VALUE"),
+               IvyXml.getAttrString(xml,"PROP1"),
+               IvyXml.getAttrString(xml,"VALUE1"),
+               IvyXml.getAttrString(xml,"PROP2"),
+               IvyXml.getAttrString(xml,"VALUE2"));
+         break;
       case "CLEARALLLINEBREAKPOINTS" :
-	 bedrock_breakpoint.clearLineBreakpoints(proj,null,null,0);
-	 break;
+         bedrock_breakpoint.clearLineBreakpoints(proj,null,null,0);
+         break;
       case "CLEARLINEBREAKPOINT" :
-	 bedrock_breakpoint.clearLineBreakpoints(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrInt(xml,"LINE"));
-	 break;
+         bedrock_breakpoint.clearLineBreakpoints(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrInt(xml,"LINE"));
+         break;
       case "DEBUGACTION" :
-	 bedrock_runtime.debugAction(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrString(xml,"TARGET"),
-	       IvyXml.getAttrString(xml,"PROCESS"),
-	       IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getAttrEnum(xml,"ACTION",BedrockDebugAction.NONE),xw);
-	 break;
+         bedrock_runtime.debugAction(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrString(xml,"TARGET"),
+               IvyXml.getAttrString(xml,"PROCESS"),
+               IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getAttrEnum(xml,"ACTION",BedrockDebugAction.NONE),xw);
+         break;
       case "CONSOLEINPUT" :
-	 String cinp = IvyXml.getTextElement(xml,"INPUT");
-	 if (cinp == null) {
-	    Element inpelt = IvyXml.getChild(xml,"INPUT");
-	    String c1 = inpelt.getTextContent();
-	    cinp = c1;
-	  }
-	 bedrock_runtime.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getTextElement(xml,"INPUT"));
-	 break;
+         String cinp = IvyXml.getTextElement(xml,"INPUT");
+         if (cinp == null) {
+            Element inpelt = IvyXml.getChild(xml,"INPUT");
+            String c1 = inpelt.getTextContent();
+            cinp = c1;
+          }
+         bedrock_runtime.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getTextElement(xml,"INPUT"));
+         break;
       case "GETSTACKFRAMES" :
-	 bedrock_runtime.getStackFrames(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrInt(xml,"COUNT",-1),
-	       IvyXml.getAttrInt(xml,"DEPTH",0),
-	       IvyXml.getAttrInt(xml,"ARRAY",100),xw);
-	 break;
+         bedrock_runtime.getStackFrames(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrInt(xml,"COUNT",-1),
+               IvyXml.getAttrInt(xml,"DEPTH",0),
+               IvyXml.getAttrInt(xml,"ARRAY",100),xw);
+         break;
       case "VARVAL" :
-	 bedrock_runtime.getVariableValue(IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getTextElement(xml,"VAR"),
-	       IvyXml.getAttrInt(xml,"DEPTH",1),
-	       IvyXml.getAttrInt(xml,"ARRAY",100),xw);
-	 break;
+         bedrock_runtime.getVariableValue(IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getTextElement(xml,"VAR"),
+               IvyXml.getAttrInt(xml,"DEPTH",1),
+               IvyXml.getAttrInt(xml,"ARRAY",100),xw);
+         break;
       case "VARDETAIL" :
-	 bedrock_runtime.getVariableValue(IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getTextElement(xml,"VAR"),-1,
-	       IvyXml.getAttrInt(xml,"ARRAY",100),xw);
-	 /********
-	    bedrock_runtime.getVariableDetails(IvyXml.getAttrString(xml,"THREAD"),
-						  IvyXml.getAttrString(xml,"FRAME"),
-						  IvyXml.getTextElement(xml,"VAR"),xw);
-	 **********/
-	 break;
+         bedrock_runtime.getVariableValue(IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getTextElement(xml,"VAR"),-1,
+               IvyXml.getAttrInt(xml,"ARRAY",100),xw);
+         /********
+            bedrock_runtime.getVariableDetails(IvyXml.getAttrString(xml,"THREAD"),
+                                                  IvyXml.getAttrString(xml,"FRAME"),
+                                                  IvyXml.getTextElement(xml,"VAR"),xw);
+         **********/
+         break;
       case "EVALUATE" :
-	 bedrock_runtime.evaluateExpression(proj,
+         bedrock_runtime.evaluateExpression(proj,
                IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getTextElement(xml,"EXPR"),
-	       IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getAttrBool(xml,"IMPLICIT",false),
-	       IvyXml.getAttrBool(xml,"BREAK",true),
-	       IvyXml.getAttrString(xml,"REPLYID"),
-	       IvyXml.getAttrInt(xml,"LEVEL"),
-	       IvyXml.getAttrInt(xml,"ARRAY"),
-	       IvyXml.getAttrString(xml,"SAVEID"),
-	       IvyXml.getAttrBool(xml,"ALLFRAMES"),xw);
-	 break;
+               IvyXml.getTextElement(xml,"EXPR"),
+               IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getAttrBool(xml,"IMPLICIT",false),
+               IvyXml.getAttrBool(xml,"BREAK",true),
+               IvyXml.getAttrString(xml,"REPLYID"),
+               IvyXml.getAttrInt(xml,"LEVEL"),
+               IvyXml.getAttrInt(xml,"ARRAY"),
+               IvyXml.getAttrString(xml,"SAVEID"),
+               IvyXml.getAttrBool(xml,"ALLFRAMES"),xw);
+         break;
       case "EDITPARAM" :
-	 bedrock_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"VALUE"));
-	 break;
+         bedrock_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"VALUE"));
+         break;
       case "STARTFILE" :
-	 bedrock_editor.handleStartFile(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"ID"),
-	       IvyXml.getAttrBool(xml,"CONTENTS",false),xw);
-	 break;
+         bedrock_editor.handleStartFile(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"ID"),
+               IvyXml.getAttrBool(xml,"CONTENTS",false),xw);
+         break;
       case "FINISHFILE" :
-	 bedrock_editor.handleFinishFile(proj,IvyXml.getAttrString(xml,"BID"),
-	       IvyXml.getAttrString(xml,"FILE"));
-	 break;
+         bedrock_editor.handleFinishFile(proj,IvyXml.getAttrString(xml,"BID"),
+               IvyXml.getAttrString(xml,"FILE"));
+         break;
       case "EDITFILE" :
-	 bedrock_editor.handleEdit(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"ID"),
-	       getEditSet(xml),xw);
-	 break;
+         bedrock_editor.handleEdit(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"ID"),
+               getEditSet(xml),xw);
+         break;
       case "COMMIT" :
-	 bedrock_editor.handleCommit(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrBool(xml,"REFRESH",false),
-	       IvyXml.getAttrBool(xml,"SAVE",false),
-	       IvyXml.getAttrBool(xml,"COMPILE",false),
-	       getElements(xml,"FILE"),xw);
-	 break;
+         bedrock_editor.handleCommit(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrBool(xml,"REFRESH",false),
+               IvyXml.getAttrBool(xml,"SAVE",false),
+               IvyXml.getAttrBool(xml,"COMPILE",false),
+               getElements(xml,"FILE"),xw);
+         break;
       case "CREATEPRIVATE" :
-	 bedrock_editor.createPrivateBuffer(proj,
-	       IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"PID"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"FROMPID"),xw);
+         bedrock_editor.createPrivateBuffer(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"PID"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"FROMPID"),xw);
 
-	 break;
+         break;
       case "PRIVATEEDIT" :
-	 bedrock_editor.handleEdit(proj,IvyXml.getAttrString(xml,"PID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       null,
-	       getEditSet(xml),xw);
-	 break;
+         bedrock_editor.handleEdit(proj,IvyXml.getAttrString(xml,"PID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               null,
+               getEditSet(xml),xw);
+         break;
       case "REMOVEPRIVATE" :
-	 bedrock_editor.removePrivateBuffer(proj,
-	       IvyXml.getAttrString(xml,"PID"),
-	       IvyXml.getAttrString(xml,"FILE"));
-	 break;
+         bedrock_editor.removePrivateBuffer(proj,
+               IvyXml.getAttrString(xml,"PID"),
+               IvyXml.getAttrString(xml,"FILE"));
+         break;
       case "DELETE" :
-	 bedrock_editor.handleDelete(proj,
-	       IvyXml.getAttrString(xml,"WHAT"),
-	       IvyXml.getAttrString(xml,"PATH"));
-	 break;
+         bedrock_editor.handleDelete(proj,
+               IvyXml.getAttrString(xml,"WHAT"),
+               IvyXml.getAttrString(xml,"PATH"));
+         break;
       case "GETCOMPLETIONS" :
-	 bedrock_editor.handleGetCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"OFFSET"),xw);
-	 break;
+         bedrock_editor.handleGetCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"OFFSET"),xw);
+         break;
       case "ELIDESET" :
-	 bedrock_editor.elisionSetup(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrBool(xml,"COMPUTE",true),
-	       getElements(xml,"REGION"),xw);
-	 break;
+         bedrock_editor.elisionSetup(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrBool(xml,"COMPUTE",true),
+               getElements(xml,"REGION"),xw);
+         break;
       case "FILEELIDE" :
-	 bedrock_editor.fileElide(IvyXml.getBytesElement(xml,"FILE"),xw);
-	 break;
+         bedrock_editor.fileElide(IvyXml.getBytesElement(xml,"FILE"),xw);
+         break;
       case "RENAME" :
-	 bedrock_editor.rename(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
-	       IvyXml.getAttrString(xml,"NEWNAME"),
-	       IvyXml.getAttrBool(xml,"KEEPORIGINAL",false),
-	       IvyXml.getAttrBool(xml,"RENAMEGETTERS",false),
-	       IvyXml.getAttrBool(xml,"RENAMESETTERS",false),
-	       IvyXml.getAttrBool(xml,"UPDATEHIERARCHY",false),
-	       IvyXml.getAttrBool(xml,"UPDATEQUALIFIED",false),
-	       IvyXml.getAttrBool(xml,"UPDATEREFS",true),
-	       IvyXml.getAttrBool(xml,"UPDATESIMILAR",false),
-	       IvyXml.getAttrBool(xml,"UPDATETEXT",false),
-	       IvyXml.getAttrBool(xml,"DOEDIT",false),
-	       IvyXml.getAttrString(xml,"FILES"),xw);
-	 break;
+         bedrock_editor.rename(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
+               IvyXml.getAttrString(xml,"NEWNAME"),
+               IvyXml.getAttrBool(xml,"KEEPORIGINAL",false),
+               IvyXml.getAttrBool(xml,"RENAMEGETTERS",false),
+               IvyXml.getAttrBool(xml,"RENAMESETTERS",false),
+               IvyXml.getAttrBool(xml,"UPDATEHIERARCHY",false),
+               IvyXml.getAttrBool(xml,"UPDATEQUALIFIED",false),
+               IvyXml.getAttrBool(xml,"UPDATEREFS",true),
+               IvyXml.getAttrBool(xml,"UPDATESIMILAR",false),
+               IvyXml.getAttrBool(xml,"UPDATETEXT",false),
+               IvyXml.getAttrBool(xml,"DOEDIT",false),
+               IvyXml.getAttrString(xml,"FILES"),xw);
+         break;
       case "MOVEELEMENT" :
-	 bedrock_editor.moveElement(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"WHAT"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
-	       IvyXml.getAttrString(xml,"TARGET"),
-	       IvyXml.getAttrBool(xml,"UPDATEQUALIFIED",true),
-	       IvyXml.getAttrBool(xml,"UPDATEREFS",true),
-	       IvyXml.getAttrBool(xml,"EDIT",false),xw);
-	 break;
+         bedrock_editor.moveElement(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"WHAT"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
+               IvyXml.getAttrString(xml,"TARGET"),
+               IvyXml.getAttrBool(xml,"UPDATEQUALIFIED",true),
+               IvyXml.getAttrBool(xml,"UPDATEREFS",true),
+               IvyXml.getAttrBool(xml,"EDIT",false),xw);
+         break;
       case "RENAMERESOURCE" :
-	 bedrock_editor.renameResource(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"NEWNAME"),xw);
-	 break;
+         bedrock_editor.renameResource(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"NEWNAME"),xw);
+         break;
       case "EXTRACTMETHOD" :
-	 bedrock_editor.extractMethod(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrString(xml,"NEWNAME"),
-	       IvyXml.getAttrBool(xml,"REPLACEDUPS",false),
-	       IvyXml.getAttrBool(xml,"COMMENTS",false),
-	       IvyXml.getAttrBool(xml,"EXCEPTIONS",false),xw);
-	 break;
+         bedrock_editor.extractMethod(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrString(xml,"NEWNAME"),
+               IvyXml.getAttrBool(xml,"REPLACEDUPS",false),
+               IvyXml.getAttrBool(xml,"COMMENTS",false),
+               IvyXml.getAttrBool(xml,"EXCEPTIONS",false),xw);
+         break;
       case "FORMATCODE" :
-	 bedrock_editor.formatCode(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),
-	       IvyXml.getAttrInt(xml,"END"),xw);
-	 break;
+         bedrock_editor.formatCode(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),
+               IvyXml.getAttrInt(xml,"END"),xw);
+         break;
       case "FINDREGIONS" :
-	 bedrock_editor.getTextRegions(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrBool(xml,"PREFIX",false),
-	       IvyXml.getAttrBool(xml,"STATICS",false),
-	       IvyXml.getAttrBool(xml,"COMPUNIT",false),
-	       IvyXml.getAttrBool(xml,"IMPORTS",false),
-	       IvyXml.getAttrBool(xml,"PACKAGE",false),
-	       IvyXml.getAttrBool(xml,"TOPDECLS",false),
-	       IvyXml.getAttrBool(xml,"FIELDS",false),
-	       IvyXml.getAttrBool(xml,"ALL",false),xw);
-	 break;
+         bedrock_editor.getTextRegions(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrBool(xml,"PREFIX",false),
+               IvyXml.getAttrBool(xml,"STATICS",false),
+               IvyXml.getAttrBool(xml,"COMPUNIT",false),
+               IvyXml.getAttrBool(xml,"IMPORTS",false),
+               IvyXml.getAttrBool(xml,"PACKAGE",false),
+               IvyXml.getAttrBool(xml,"TOPDECLS",false),
+               IvyXml.getAttrBool(xml,"FIELDS",false),
+               IvyXml.getAttrBool(xml,"ALL",false),xw);
+         break;
       case "FINDBYKEY" :
-	 bedrock_editor.findByKey(proj,
-	       IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"KEY"),
-	       IvyXml.getAttrString(xml,"FILE"), xw);
-	 break;
+         bedrock_editor.findByKey(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"KEY"),
+               IvyXml.getAttrString(xml,"FILE"), xw);
+         break;
       case "FINDBYLINE" :
          bedrock_editor.findByLine(proj,
                IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"LINE"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"LINE"),
                IvyXml.getAttrInt(xml,"OFFSET"),xw);
          break;
       case "CALLPATH" :
-	 bedrock_call.getCallPath(proj,IvyXml.getAttrString(xml,"FROM"),
-	       IvyXml.getAttrString(xml,"TO"),
-	       IvyXml.getAttrBool(xml,"SHORTEST",false),
-	       IvyXml.getAttrInt(xml,"LEVELS",0),xw);
-	 break;
+         bedrock_call.getCallPath(proj,IvyXml.getAttrString(xml,"FROM"),
+               IvyXml.getAttrString(xml,"TO"),
+               IvyXml.getAttrBool(xml,"SHORTEST",false),
+               IvyXml.getAttrInt(xml,"LEVELS",0),xw);
+         break;
       case "FIXIMPORTS" :
-	 bedrock_editor.handleFixImports(proj,
-	       IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"DEMAND",0),
-	       IvyXml.getAttrInt(xml,"STATICDEMAND",0),
-	       IvyXml.getAttrString(xml,"ORDER"),
-	       IvyXml.getAttrString(xml,"ADD"),xw);
-	       break;
+         bedrock_editor.handleFixImports(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"DEMAND",0),
+               IvyXml.getAttrInt(xml,"STATICDEMAND",0),
+               IvyXml.getAttrString(xml,"ORDER"),
+               IvyXml.getAttrString(xml,"ADD"),xw);
+               break;
       case "GETEXPECTEDTYPE" :
-	 bedrock_editor.handleGetExpectedType(proj,
-	       IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"LINE"),xw);
-	 break;
+         bedrock_editor.handleGetExpectedType(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"LINE"),xw);
+         break;
       case "PREFERENCES" :
-	 bedrock_project.handlePreferences(proj,xw);
-	 break;
+         bedrock_project.handlePreferences(proj,xw);
+         break;
       case "SETPREFERENCES" :
-	 Element pxml = IvyXml.getChild(xml,"profile");
-	 if (pxml == null) pxml = IvyXml.getChild(xml,"OPTIONS");
-	 bedrock_project.handleSetPreferences(proj,pxml,xw);
-	 break;
+         Element pxml = IvyXml.getChild(xml,"profile");
+         if (pxml == null) pxml = IvyXml.getChild(xml,"OPTIONS");
+         bedrock_project.handleSetPreferences(proj,pxml,xw);
+         break;
       case "LOGLEVEL" :
-	 log_level = IvyXml.getAttrEnum(xml,"LEVEL",BedrockLogLevel.ERROR);
-	 break;
+         log_level = IvyXml.getAttrEnum(xml,"LEVEL",BedrockLogLevel.ERROR);
+         break;
       case "GETHOST" :
-	 h1 = null;
-	 h2 = null;
-	 h3 = null;
-	 try {
-	    InetAddress lh = InetAddress.getLocalHost();
-	    h1 = lh.getHostAddress();
-	    h2 = lh.getHostName();
-	    h3 = lh.getCanonicalHostName();
-	  }
-	 catch (IOException e) { }
-	 if (h1 != null) xw.field("ADDR",h1);
-	 if (h2 != null) xw.field("NAME",h2);
-	 if (h3 != null) xw.field("CNAME",h3);
-	 break;
+         h1 = null;
+         h2 = null;
+         h3 = null;
+         try {
+            InetAddress lh = InetAddress.getLocalHost();
+            h1 = lh.getHostAddress();
+            h2 = lh.getHostName();
+            h3 = lh.getCanonicalHostName();
+          }
+         catch (IOException e) { }
+         if (h1 != null) xw.field("ADDR",h1);
+         if (h2 != null) xw.field("NAME",h2);
+         if (h3 != null) xw.field("CNAME",h3);
+         break;
       case "GETPROXY" :
-	 getProxyForHost(IvyXml.getAttrString(xml,"HOST"),xw);
-	 break;
+         getProxyForHost(IvyXml.getAttrString(xml,"HOST"),xw);
+         break;
       case "QUICKFIX" :
-	 // done in the front end for now
-	 // bedrock_editor.handleCommit(proj,null,false,false,null,null);
-	 quick_fixer.handleQuickFix(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"OFFSET"),
-	       IvyXml.getAttrInt(xml,"LENGTH"),
-	       getElements(xml,"PROBLEM"),xw);
-	 break;
+         // done in the front end for now
+         // bedrock_editor.handleCommit(proj,null,false,false,null,null);
+         quick_fixer.handleQuickFix(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"OFFSET"),
+               IvyXml.getAttrInt(xml,"LENGTH"),
+               getElements(xml,"PROBLEM"),xw);
+         break;
       case "REFACTOR" :
-	 bedrock_editor.executeRefactoring(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),IvyXml.getAttrString(xml,"ID"),
-	       xml,xw);
-	 break;
+         bedrock_editor.executeRefactoring(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),IvyXml.getAttrString(xml,"ID"),
+               xml,xw);
+         break;
       case "HOVERDATA" :
-	 break;
+         break;
       case "BEGINTASK" :
       case "ENDTASK" :
          break;
       case "ENTER" :
-	 BedrockApplication.enterApplication();
-	 ++num_clients;
-	 xw.text(Integer.toString(num_clients));
-	 break;
+         BedrockApplication.enterApplication();
+         ++num_clients;
+         xw.text(Integer.toString(num_clients));
+         break;
       case "LANGUAGEDATA" :
-	 handleLanguageData(xw);
-	 break;
+         handleLanguageData(xw);
+         break;
 
       case "SAVEWORKSPACE" :
-	 saveEclipse();
-	 xw.text("SAVED");
-	 break;
+         saveEclipse();
+         xw.text("SAVED");
+         break;
       case "EXIT" :
-	 logD("EXIT Request received " + num_clients + " " + doing_exit);
-	 if (--num_clients <= 0) {
-	    xw.text("EXITING");
-	    forceExit();
-	  }
-	 break;
+         logD("EXIT Request received " + num_clients + " " + doing_exit);
+         if (--num_clients <= 0) {
+            xw.text("EXITING");
+            forceExit();
+          }
+         break;
       default :
-	 xw.close();
-	 throw new BedrockException("Unknown plugin command " + cmd);
+         xw.close();
+         throw new BedrockException("Unknown plugin command " + cmd);
     }
 
    xw.end("RESULT");
@@ -1061,9 +1061,9 @@ private List<Element> getElements(Element xml,String key)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling edits						*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling edits                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private List<EditData> getEditSet(Element xml)
@@ -1092,23 +1092,23 @@ private static class EditDataImpl implements EditData {
       edit_text = IvyXml.getText(e,false);
       if (edit_text != null && edit_text.length() == 0) edit_text = null;
       if (edit_text != null && IvyXml.getAttrBool(e,"ENCODE")) {
-	 byte [] bytes = IvyXml.stringToByteArray(edit_text);
-	 edit_text = new String(bytes);
+         byte [] bytes = IvyXml.stringToByteArray(edit_text);
+         edit_text = new String(bytes);
        }
     }
 
-   @Override public int getOffset()			{ return start_offset; }
-   @Override public int getLength()			{ return end_offset - start_offset; }
-   @Override public String getText()			{ return edit_text; }
+   @Override public int getOffset()                     { return start_offset; }
+   @Override public int getLength()                     { return end_offset - start_offset; }
+   @Override public String getText()                    { return edit_text; }
 
-}	// end of innerclass EditDataImpl
+}       // end of innerclass EditDataImpl
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Get language data							*/
-/*										*/
+/*                                                                              */
+/*      Get language data                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleLanguageData(IvyXmlWriter xw)
@@ -1125,24 +1125,24 @@ Element getLanguageData()
    String nm = "resources/launches-java.xml";
    InputStream ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
    BedrockPlugin.logD("Language data " + nm + " " + ins + " " +
-			 BedrockPlugin.class.getClassLoader().getResource(nm));
+                         BedrockPlugin.class.getClassLoader().getResource(nm));
    Element xml = IvyXml.loadXmlFromStream(ins);
    if (xml == null) {
       String nm1 = "launches-java.xml";
       ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm1);
       BedrockPlugin.logD("Language data " + nm1 + " " + ins + " " +
-			    BedrockPlugin.class.getClassLoader().getResource(nm1));
+                            BedrockPlugin.class.getClassLoader().getResource(nm1));
       xml = IvyXml.loadXmlFromStream(ins);
     }
    if (xml == null) {
       // report error
       ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
       try {
-	 String txt = IvyFile.loadFile(ins);
-	 BedrockPlugin.logE("BAD language resource file:\n" + txt);
+         String txt = IvyFile.loadFile(ins);
+         BedrockPlugin.logE("BAD language resource file:\n" + txt);
        }
       catch (IOException e) {
-	 BedrockPlugin.logE("Bad language resource read",e);
+         BedrockPlugin.logE("Bad language resource read",e);
        }
       xml = lang_data;
     }
@@ -1158,9 +1158,9 @@ Element getLanguageData()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling proxy requests					*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling proxy requests                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void getProxyForHost(String host,IvyXmlWriter xw)
@@ -1177,15 +1177,15 @@ private void getProxyForHost(String host,IvyXmlWriter xw)
       URI uri = new URI(host);
       IProxyData [] pds = ips.select(uri);
       for (IProxyData pd : pds) {
-	 xw.begin("PROXY");
-	 xw.field("TYPE",pd.getType());
-	 xw.field("PORT",pd.getPort());
-	 xw.field("HOST",pd.getHost());
-	 if (pd.isRequiresAuthentication()) {
-	    xw.field("USER",pd.getUserId());
-	    xw.field("PWD",pd.getPassword());
-	  }
-	 xw.end("PROXY");
+         xw.begin("PROXY");
+         xw.field("TYPE",pd.getType());
+         xw.field("PORT",pd.getPort());
+         xw.field("HOST",pd.getHost());
+         if (pd.isRequiresAuthentication()) {
+            xw.field("USER",pd.getUserId());
+            xw.field("PWD",pd.getPassword());
+          }
+         xw.end("PROXY");
        }
     }
    catch (Throwable t) {
@@ -1197,9 +1197,9 @@ private void getProxyForHost(String host,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mint handlers								*/
-/*										*/
+/*                                                                              */
+/*      Mint handlers                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CommandHandler implements MintHandler {
@@ -1231,7 +1231,7 @@ private final class CommandHandler implements MintHandler {
          PrintWriter pw = new PrintWriter(sw);
          t.printStackTrace(pw);
          Throwable xt = t;
-         for (	; xt.getCause() != null; xt = xt.getCause());
+         for (  ; xt.getCause() != null; xt = xt.getCause());
          if (xt != null && xt != t) {
             rslt += "\n";
             xt.printStackTrace(pw);
@@ -1255,27 +1255,27 @@ private final class CommandHandler implements MintHandler {
        }
     }
 
-}	// end of subclass CommandHandler
+}       // end of subclass CommandHandler
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging methods 							*/
-/*										*/
+/*                                                                              */
+/*      Logging methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static void logE(String msg,Throwable t) { log(BedrockLogLevel.ERROR,msg,t); }
 
-static void logE(String msg)		{ log(BedrockLogLevel.ERROR,msg,null); }
+static void logE(String msg)            { log(BedrockLogLevel.ERROR,msg,null); }
 
-static void logW(String msg)		{ log(BedrockLogLevel.WARNING,msg,null); }
+static void logW(String msg)            { log(BedrockLogLevel.WARNING,msg,null); }
 
-static void logI(String msg)		{ log(BedrockLogLevel.INFO,msg,null); }
+static void logI(String msg)            { log(BedrockLogLevel.INFO,msg,null); }
 
-static void logD(String msg)		{ log(BedrockLogLevel.DEBUG,msg,null); }
+static void logD(String msg)            { log(BedrockLogLevel.DEBUG,msg,null); }
 
 static void logX(String msg)
 {
@@ -1299,7 +1299,7 @@ static void logEX(String msg)
 
 
 
-static void log(String msg)		{ logI(msg); }
+static void log(String msg)             { logI(msg); }
 
 
 
@@ -1312,10 +1312,10 @@ static void log(BedrockLogLevel lvl,String msg,Throwable t)
    if (log_file != null) {
       log_file.println(pfx + msg);
       if (t != null) {
-	 t.printStackTrace(log_file);
-	 Throwable r = null;
-	 for (r = t.getCause(); r != null && r.getCause() != null; r = r.getCause());
-	 if (r != null) r.printStackTrace(log_file);
+         t.printStackTrace(log_file);
+         Throwable r = null;
+         for (r = t.getCause(); r != null && r.getCause() != null; r = r.getCause());
+         if (r != null) r.printStackTrace(log_file);
        }
     }
    if (use_stderr || log_file == null) {
@@ -1333,7 +1333,7 @@ static void setLogLevel(BedrockLogLevel lvl)
 
 
 
-}	// end of class BedrockPlugin
+}       // end of class BedrockPlugin
 
 
 

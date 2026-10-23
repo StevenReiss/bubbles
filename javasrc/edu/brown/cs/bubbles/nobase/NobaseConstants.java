@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseConstants.java						*/
-/*										*/
-/*	Constants for Node Bubbles base interface						    */
-/*										*/
+/*                                                                              */
+/*              NobaseConstants.java                                            */
+/*                                                                              */
+/*      Constants for Node Bubbles base interface                                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -36,20 +36,20 @@ public interface NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Messaging definitions							*/
-/*										*/
+/*                                                                              */
+/*      Messaging definitions                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 // Must Match BumpConstants.BUMP_MINT_NAME
-String	NOBASE_MINT_NAME = "BUBBLES_" + System.getProperty("user.name").replace(" ","_");
+String  NOBASE_MINT_NAME = "BUBBLES_" + System.getProperty("user.name").replace(" ","_");
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging constants							*/
-/*										*/
+/*                                                                              */
+/*      Logging constants                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 enum NobaseLogLevel {
@@ -64,9 +64,9 @@ enum NobaseLogLevel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Search Information							*/
-/*										*/
+/*                                                                              */
+/*      Search Information                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 int MAX_TEXT_SEARCH_RESULTS = 128;
@@ -99,9 +99,9 @@ interface SearchResult {
 
 
 /********************************************************************************/
-/*										*/
-/*	Errro Messages								*/
-/*										*/
+/*                                                                              */
+/*      Errro Messages                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 enum ErrorSeverity {
@@ -114,9 +114,9 @@ enum ErrorSeverity {
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread pool information 						*/
-/*										*/
+/*                                                                              */
+/*      Thread pool information                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 int NOBASE_CORE_POOL_SIZE = 2;
@@ -127,9 +127,9 @@ long NOBASE_POOL_KEEP_ALIVE_TIME = 2*60*1000;
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit command information						*/
-/*										*/
+/*                                                                              */
+/*      Edit command information                                                */
+/*                                                                              */
 /********************************************************************************/
 
 interface IEditData {
@@ -138,15 +138,15 @@ interface IEditData {
    int getLength();
    String getText();
 
-}	// end of subinterface EditData
+}       // end of subinterface EditData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Compiler information							*/
-/*										*/
+/*                                                                              */
+/*      Compiler information                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 interface IParser {
@@ -164,7 +164,7 @@ interface ISemanticData {
 
    JavaScriptUnit getRootNode();
 
-}	// end of inner interface ISemanticData
+}       // end of inner interface ISemanticData
 
 
 
@@ -219,17 +219,17 @@ enum KnownValue {
 interface Evaluator {
 
    NobaseValue evaluate(NobaseFile nf,List<NobaseValue> arguments,
-	    NobaseValue thisval);
+            NobaseValue thisval);
 
-}	// end of interface FunctionEvaluator
+}       // end of interface FunctionEvaluator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging constants							*/
-/*										*/
+/*                                                                              */
+/*      Debugging constants                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 enum NobaseDebugAction {
@@ -246,9 +246,9 @@ enum NobaseDebugAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging definitions							*/
-/*										*/
+/*                                                                              */
+/*      Debugging definitions                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 enum NobaseConfigAttribute {
@@ -290,7 +290,7 @@ class IdCounter {
       if (counter_value <= v) counter_value = v+1;
     }
 
-}	// end of inner class IdCounter
+}       // end of inner class IdCounter
 
 
 class NobaseDebugRefMap extends HashMap<String,NobaseDebugValue> {
@@ -335,7 +335,7 @@ enum DebugDetailValue {
 
 
 
-}	// end of interface NobaseConstants
+}       // end of interface NobaseConstants
 
 
 

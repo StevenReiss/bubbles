@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseJsdt.java 						*/
-/*										*/
-/*	JavaScript parsing using Eclipse jsdt package				*/
-/*										*/
+/*                                                                              */
+/*              NobaseJsdt.java                                                 */
+/*                                                                              */
+/*      JavaScript parsing using Eclipse jsdt package                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -38,18 +38,18 @@ class NobaseJsdt implements NobaseConstants, NobaseConstants.IParser
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static boolean do_resolve = false;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseJsdt()
@@ -58,9 +58,9 @@ NobaseJsdt()
 
 
 /********************************************************************************/
-/*										*/
-/*	Parsing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Parsing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public ISemanticData parse(NobaseProject proj,NobaseFile fd,boolean lib)
@@ -93,9 +93,9 @@ NobaseJsdt()
 
 
 /********************************************************************************/
-/*										*/
-/*	 Result Data								*/
-/*										*/
+/*                                                                              */
+/*       Result Data                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ParseData implements ISemanticData {
@@ -118,22 +118,22 @@ private static class ParseData implements ISemanticData {
       root_node = b;
     }
 
-   @Override public NobaseFile getFileData()		{ return for_file; }
-   @Override public NobaseProject getProject()		{ return for_project; }
-   @Override public List<NobaseMessage> getMessages()	{ return message_list; }
-   @Override public JavaScriptUnit getRootNode()	{ return root_node; }
+   @Override public NobaseFile getFileData()            { return for_file; }
+   @Override public NobaseProject getProject()          { return for_project; }
+   @Override public List<NobaseMessage> getMessages()   { return message_list; }
+   @Override public JavaScriptUnit getRootNode()        { return root_node; }
 
    @Override public void addMessages(List<NobaseMessage> msgs) {
       if (msgs == null || is_library) return;
       message_list.addAll(msgs);
     }
 
-}	// end of inner class ParseData
+}       // end of inner class ParseData
 
 
 
 
-}	// end of class NobaseJsdt
+}       // end of class NobaseJsdt
 
 
 

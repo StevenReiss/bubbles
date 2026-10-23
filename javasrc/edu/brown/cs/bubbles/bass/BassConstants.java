@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassConstants.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies constant definitions 		*/
-/*										*/
+/*                                                                              */
+/*              BassConstants.java                                              */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies constant definitions                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,8 +49,8 @@ import java.util.Stack;
 
 
 /**
- *	Define the constants, interfaces, etc. associated with search bubbles
- *	of various forms.
+ *      Define the constants, interfaces, etc. associated with search bubbles
+ *      of various forms.
  **/
 
 public interface BassConstants extends BumpConstants, BudaConstants {
@@ -63,16 +63,16 @@ BoardProperties BASS_PROPERTIES = BoardProperties.getProperties("Bass");
 
 
 /********************************************************************************/
-/*										*/
-/*	Types of leaf nodes							*/
-/*										*/
+/*                                                                              */
+/*      Types of leaf nodes                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This enumeration lists the types of names that symbols can represent.
- *	STATICS refers to static initializers (python evaluations);
- *	HEADER refers to a class header (i.e. the imports, package, etc.
- *	information).
+ *      This enumeration lists the types of names that symbols can represent.
+ *      STATICS refers to static initializers (python evaluations);
+ *      HEADER refers to a class header (i.e. the imports, package, etc.
+ *      information).
  **/
 
 enum BassNameType {
@@ -110,9 +110,9 @@ enum BassNameType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Types of branch nodes							*/
-/*										*/
+/*                                                                              */
+/*      Types of branch nodes                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /***
@@ -134,32 +134,32 @@ enum BranchNodeType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Control constants							*/
-/*										*/
+/*                                                                              */
+/*      Control constants                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Maximum number of leafs for expand all.  If the number of leaf nodes is
- *	less than this, then the search box will automatically expand all tree
- *	nodes so that all leaves are visible.
+ *      Maximum number of leafs for expand all.  If the number of leaf nodes is
+ *      less than this, then the search box will automatically expand all tree
+ *      nodes so that all leaves are visible.
  **/
 int MAX_LEAF_FOR_EXPANDALL = 48;
 String MAX_LEAF_FOR_EXPANDALL_PROP = "Bass.max.leaf.for.expand.all";
 
 
 /**
- *	When doing auto expansion based on user input, this number specifies the
- *	maximum number of leaves that can be present.  If there are more leaves
- *	than this, automatic expansion on type-in is ignored.  This number is
- *	chosen both for practicality purposes and for efficiency considerations.
+ *      When doing auto expansion based on user input, this number specifies the
+ *      maximum number of leaves that can be present.  If there are more leaves
+ *      than this, automatic expansion on type-in is ignored.  This number is
+ *      chosen both for practicality purposes and for efficiency considerations.
  **/
 int MAX_LEAF_FOR_AUTO_EXPAND = 128;
 String MAX_LEAF_FOR_AUTO_EXPAND_PROP = "Bass.max.leaf.for.auto.expand";
 
 
 /**
- *	If fewer than this number of items, expand one level
+ *      If fewer than this number of items, expand one level
  **/
 int MIN_LEAF_FOR_AUTO_EXPAND = 10;
 String MIN_LEAF_FOR_AUTO_EXPAND_PROP = "Bass.min.leaf.for.auto.expand";
@@ -167,7 +167,7 @@ String MIN_LEAF_FOR_AUTO_EXPAND_PROP = "Bass.min.leaf.for.auto.expand";
 
 
 /**
- *	Minimum number of keystrokes before auto expand all
+ *      Minimum number of keystrokes before auto expand all
  **/
 
 int KEYSTROKES_FOR_AUTO_EXPAND = 3;
@@ -175,89 +175,89 @@ String KEYSTROKES_FOR_AUTO_EXPAND_PROP = "Bass.keystrokes.for.auto.expand";
 
 
 /**
- *	Number of pixels that each tree level is indented.  This is used in place
- *	of icons to save screen real estate.
+ *      Number of pixels that each tree level is indented.  This is used in place
+ *      of icons to save screen real estate.
  **/
 int INDENT_AMOUNT = 4;
 
 
 
 /**
- *	Color at the top of a search bubble.
+ *      Color at the top of a search bubble.
  **/
-String	BASS_PANEL_TOP_COLOR_PROP = "Bass.panel.top.color";
+String  BASS_PANEL_TOP_COLOR_PROP = "Bass.panel.top.color";
 
 
 /**
- *	Color at the bottom of a search bubble.
+ *      Color at the bottom of a search bubble.
  **/
-String	BASS_PANEL_BOTTOM_COLOR_PROP = "Bass.panel.bottom.color";
+String  BASS_PANEL_BOTTOM_COLOR_PROP = "Bass.panel.bottom.color";
 
 /**
- *	Color for selection background
+ *      Color for selection background
  **/
-String	BASS_PANEL_SELECT_BACKGROUND_PROP = "Bass.panel.select.background";
+String  BASS_PANEL_SELECT_BACKGROUND_PROP = "Bass.panel.select.background";
 
 
 /**
- *	Font used in search bubbles.
+ *      Font used in search bubbles.
  **/
-Font	BASS_TEXT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,10);
+Font    BASS_TEXT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,10);
 String BASS_TEXT_FONT_PROP = "Bass.font";
 
 
 /**
- *	name for the buddy list
+ *      name for the buddy list
  */
 
 String BASS_BUDDY_LIST_NAME = "@people";
 
 /**
- *	Name for the document list
+ *      Name for the document list
  */
 String BASS_DOC_LIST_NAME = "@docs";
 
 /**
- *	Name for the document list
+ *      Name for the document list
  */
 String BASS_CONFIG_LIST_NAME = "@Launch Configurations";
 
 /**
- *	Name for the document list
+ *      Name for the document list
  */
 String BASS_PROCESS_LIST_NAME = "@Processes";
 
 /**
- *	Name for the courses lsit
+ *      Name for the courses lsit
  */
 
 String BASS_COURSE_LIST_NAME = "@Courses";
 
 /**
- *	Determines whether on startup in a new workspace the package explorer comes up
+ *      Determines whether on startup in a new workspace the package explorer comes up
  */
 String BASS_PACK_ON_START_NAME = "Bass.pack.onstart";
 
 /**
- *	Determines whether the hover bubble pops up when you hover over a name in the package explorer
+ *      Determines whether the hover bubble pops up when you hover over a name in the package explorer
  */
 String BASS_HOVER_OPTION_NAME = "Bass.doeshover";
 
 /**
- *	Determines whether the package explorer is shown in the overview or not
+ *      Determines whether the package explorer is shown in the overview or not
  */
 String BASS_PACK_IN_OVERVIEW = "Bass.shown.in.overview";
 
 
 
 /**
- *	Max initial height for a search box
+ *      Max initial height for a search box
  */
 int MAX_SEARCH_HEIGHT = 1600;
 
 
 /**
- *	Max initial width for a search box
+ *      Max initial width for a search box
  */
 int MAX_SEARCH_WIDTH = 300;
 
@@ -265,26 +265,26 @@ int MAX_SEARCH_WIDTH = 300;
 
 
 /********************************************************************************/
-/*										*/
-/*	Repository abstraction							*/
-/*										*/
+/*                                                                              */
+/*      Repository abstraction                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Bass supports multiple repositories, i.e. a name repository and a documentation
- *	repository.  This interface is all that a new repository needs to implement.
+ *      Bass supports multiple repositories, i.e. a name repository and a documentation
+ *      repository.  This interface is all that a new repository needs to implement.
  **/
 
 interface BassRepository {
 
 /**
- *	Return the set of names in this repository.
+ *      Return the set of names in this repository.
  **/
    Iterable<BassName> getAllNames();
 
 
 /**
- *	Tell if this repository matches or includes another
+ *      Tell if this repository matches or includes another
  **/
    default boolean includesRepository(BassRepository br) {
       return br == this;
@@ -297,7 +297,7 @@ interface BassRepository {
       return false;
     }
 
-}	// end of interface BassRepository
+}       // end of interface BassRepository
 
 
 interface BassUpdatableRepository extends BassRepository {
@@ -309,41 +309,41 @@ interface BassUpdatableRepository extends BassRepository {
 interface BassUpdatingRepository extends BassRepository {
 
 /**
- *	Add a dependent repository for update purposes
+ *      Add a dependent repository for update purposes
  **/
    void addUpdateRepository(BassUpdatableRepository br);
 
    void removeUpdateRepository(BassUpdatableRepository br);
 
-}	// end of inner interface BassUpdatableRepository
+}       // end of inner interface BassUpdatableRepository
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for use with BassName nodes					*/
-/*										*/
+/*                                                                              */
+/*      Constants for use with BassName nodes                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Value representing unknown modifiers for a BassName.
+ *      Value representing unknown modifiers for a BassName.
  **/
-int	BASS_MODIFIERS_UNDEFINED = -1;
+int     BASS_MODIFIERS_UNDEFINED = -1;
 
 
 
 /**
- *	Default sort priority.	Values higher than this come last, values lower come first
+ *      Default sort priority.  Values higher than this come last, values lower come first
  **/
-int	BASS_DEFAULT_SORT_PRIORITY = 50;
+int     BASS_DEFAULT_SORT_PRIORITY = 50;
 
 
 
 /**
- *	Default sort priority for interior nodes.
+ *      Default sort priority for interior nodes.
  **/
-int	BASS_DEFAULT_INTERIOR_PRIORITY = 200;
+int     BASS_DEFAULT_INTERIOR_PRIORITY = 200;
 
 
 /**
@@ -355,9 +355,9 @@ String DOT_SUBSTITUTE = "^^";
 
 
 /********************************************************************************/
-/*										*/
-/*	Interfaces for handling popup menu options on a search box		*/
-/*										*/
+/*                                                                              */
+/*      Interfaces for handling popup menu options on a search box              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -374,41 +374,41 @@ interface BassNewItemCreator {
 
 
 /**
- *	This interface allows components to add their own items to popup menus on the
- *	search box or package explorer.
+ *      This interface allows components to add their own items to popup menus on the
+ *      search box or package explorer.
  **/
 
 interface BassPopupHandler extends EventListener {
 
    void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname);
 
-}	// end of inner interface BassPopupHandler
+}       // end of inner interface BassPopupHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	BassFlagger -- callback to get flag information for a name		*/
-/*										*/
+/*                                                                              */
+/*      BassFlagger -- callback to get flag information for a name              */
+/*                                                                              */
 /********************************************************************************/
 
 interface BassFlagger extends EventListener {
 
    BassFlag getFlagForName(BassName bnm,String fullname);
 
-}	// end of interface BassFlagger
+}       // end of interface BassFlagger
 
 
 interface BassFlag {
    Icon getOverlayIcon();
    int getPriority();
-}	// end of interface BassFlag
+}       // end of interface BassFlag
 
 
 
 
 
-}	// end of interface BassConstants
+}       // end of interface BassConstants
 
 
 

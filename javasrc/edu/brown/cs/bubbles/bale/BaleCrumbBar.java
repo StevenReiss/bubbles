@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleCrumbBar.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment editor crumb bar		*/
-/*										*/
+/*                                                                              */
+/*              BaleCrumbBar.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment editor crumb bar              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Ian Strickman, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Ian Strickman, Steven P. Reiss       */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,27 +56,27 @@ import java.util.LinkedList;
 
 
 class BaleCrumbBar extends JPanel implements DocumentListener,
-		UndoableEditListener, BaleConstants
+                UndoableEditListener, BaleConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleEditorPane		for_editor;
-private BaleDocument		for_document;
-private String			project_name;
-private String			fragment_name;
-private boolean 		is_dirty;
+private BaleEditorPane          for_editor;
+private BaleDocument            for_document;
+private String                  project_name;
+private String                  fragment_name;
+private boolean                 is_dirty;
 private LinkedList<BaleCrumbBarComponent> component_list;
-private BaleCrumbBarComponent	last_name;
-private boolean 		show_method_name;
-private boolean 		force_rename;
-private int			recent_width;
-private char			arrow_char;
+private BaleCrumbBarComponent   last_name;
+private boolean                 show_method_name;
+private boolean                 force_rename;
+private int                     recent_width;
+private char                    arrow_char;
 
 private static final char ARROW = '\u25B6';
 private static final long serialVersionUID = 1;
@@ -84,9 +84,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleCrumbBar(BaleEditorPane be, String name)
@@ -127,9 +127,9 @@ BaleCrumbBar(BaleEditorPane be, String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods (written by Ian Strickman)				*/
-/*										*/
+/*                                                                              */
+/*      Access methods (written by Ian Strickman)                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static LayoutManager bcbLayoutManager()
@@ -154,16 +154,16 @@ private void instTextField(JTextPane j)
 
 
 
-String getProjectName() 			{ return project_name; }
+String getProjectName()                         { return project_name; }
 
-String getFragmentName()			{ return fragment_name; }
+String getFragmentName()                        { return fragment_name; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -175,7 +175,7 @@ String getFragmentName()			{ return fragment_name; }
    boolean smfg = BALE_PROPERTIES.getBoolean(BALE_CRUMB_SHOW_METHOD);
    if (smfg != show_method_name) {
       synchronized (this) {
-	 force_rename = true;
+         force_rename = true;
        }
       show_method_name = smfg;
       SwingUtilities.invokeLater(new CheckNames());
@@ -191,9 +191,9 @@ String getFragmentName()			{ return fragment_name; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Naming methods								*/
-/*										*/
+/*                                                                              */
+/*      Naming methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkNames()
@@ -241,25 +241,25 @@ private synchronized void setFragmentName(String name,boolean dirty)
       String packclass = "";
       String fnam = null;
       if (fidx < 0) {
-	 if (idx >= 0) packclass = fragment_name.substring(0,idx);
+         if (idx >= 0) packclass = fragment_name.substring(0,idx);
       }
       else { 
-	 fnam = fragment_name.substring(0,fidx);
-	 fnam = fnam.replace(".", "$");
-	 usename = fragment_name.substring(fidx+1);
-	 if (idx > 0) {
+         fnam = fragment_name.substring(0,fidx);
+         fnam = fnam.replace(".", "$");
+         usename = fragment_name.substring(fidx+1);
+         if (idx > 0) {
             packclass = fnam + fragment_name.substring(fidx+1,idx);
             idx -= fidx+1;
           }
-	 else packclass = fnam;
+         else packclass = fnam;
       }
       
       int numcomps = 0;
       int mobidx = 0;
       while (mobidx < packclass.length()) {
-	 ++numcomps;
-	 mobidx = packclass.indexOf(".", mobidx + 1);
-	 if (mobidx < 0) break;
+         ++numcomps;
+         mobidx = packclass.indexOf(".", mobidx + 1);
+         if (mobidx < 0) break;
        }
 //      if (fnam != null) ++numcomps;
       
@@ -268,21 +268,21 @@ private synchronized void setFragmentName(String name,boolean dirty)
       mobidx = -1;
       int lastidx;
       for (int i = 0; i < numcomps; i++) {
-	 lastidx = mobidx + 1;
-	 mobidx = packclass.indexOf(".", lastidx);
-	 if (mobidx < 0) mobidx = packclass.length();
-	 if (i == 0) {
-	    String txt = " " + packclass.substring(lastidx, mobidx) + arrow_char;
-	    component_list.addLast(new BaleCrumbBarComponent(this,null,txt));
-	  }
-	 else {
-	    String txt = packclass.substring(lastidx, mobidx) + arrow_char;
-	    component_list.addLast(new BaleCrumbBarComponent(this,component_list.getLast(),txt));
-	  }
-	 instTextField(component_list.getLast());
-	 nodollarname = packclass.substring(0, mobidx).replaceAll("[$]", ".");
-	 component_list.getLast().setPackageName(nodollarname);
-	 add(component_list.getLast());
+         lastidx = mobidx + 1;
+         mobidx = packclass.indexOf(".", lastidx);
+         if (mobidx < 0) mobidx = packclass.length();
+         if (i == 0) {
+            String txt = " " + packclass.substring(lastidx, mobidx) + arrow_char;
+            component_list.addLast(new BaleCrumbBarComponent(this,null,txt));
+          }
+         else {
+            String txt = packclass.substring(lastidx, mobidx) + arrow_char;
+            component_list.addLast(new BaleCrumbBarComponent(this,component_list.getLast(),txt));
+          }
+         instTextField(component_list.getLast());
+         nodollarname = packclass.substring(0, mobidx).replaceAll("[$]", ".");
+         component_list.getLast().setPackageName(nodollarname);
+         add(component_list.getLast());
        }
       
       if (idx+1 >= usename.length()) {
@@ -295,50 +295,50 @@ private synchronized void setFragmentName(String name,boolean dirty)
       int parenloc = lastcomp.indexOf("(");
       boolean stoplast = false;
       if (parenloc >= 0) {
-	 if (show_method_name) lastcomp = lastcomp.substring(0, parenloc + 1) + "...)";
-	 else stoplast = true;
+         if (show_method_name) lastcomp = lastcomp.substring(0, parenloc + 1) + "...)";
+         else stoplast = true;
        }
       if (!stoplast) {
-	 if (parenloc < 0 && lastcomp.indexOf("<") < 0) {
-	    if (component_list.size() > 0) {
-	       last_name = new BaleCrumbBarComponent(this, component_list.getLast(), lastcomp + arrow_char);
-	       last_name.setPackageName(fragment_name);
-	     }
-	    else {
-	       last_name = new BaleCrumbBarComponent(this,null,lastcomp);
-	     }
-	  }
-	 else if (component_list.size() > 0) {
-	    last_name = new BaleCrumbBarComponent(this, component_list.getLast(), lastcomp);
-	  }
+         if (parenloc < 0 && lastcomp.indexOf("<") < 0) {
+            if (component_list.size() > 0) {
+               last_name = new BaleCrumbBarComponent(this, component_list.getLast(), lastcomp + arrow_char);
+               last_name.setPackageName(fragment_name);
+             }
+            else {
+               last_name = new BaleCrumbBarComponent(this,null,lastcomp);
+             }
+          }
+         else if (component_list.size() > 0) {
+            last_name = new BaleCrumbBarComponent(this, component_list.getLast(), lastcomp);
+          }
 
-	 if (last_name != null) {
-	    instTextField(last_name);
-	    component_list.addLast(last_name);
-	    add(last_name);
-	  }
+         if (last_name != null) {
+            instTextField(last_name);
+            component_list.addLast(last_name);
+            add(last_name);
+          }
        }
       int size = component_list.size();
       if (size >= 3) {
-	 component_list.get(size-3).setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
-	 component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
-	 component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_METHOD_COLOR_PROP));
-	 component_list.getLast().setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_METHOD_FONT));
+         component_list.get(size-3).setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
+         component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
+         component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_METHOD_COLOR_PROP));
+         component_list.getLast().setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_METHOD_FONT));
        }
       else if (size == 2) {
-	 String s = component_list.getLast().getShownText();
-	 if (!s.contains("(") && !s.contains("<")) {
-	    component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
-	    component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
-	  }
-	 else {
-	    component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
-	    component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_METHOD_COLOR_PROP));
-	    component_list.getLast().setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_METHOD_FONT));
-	  }
+         String s = component_list.getLast().getShownText();
+         if (!s.contains("(") && !s.contains("<")) {
+            component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
+            component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
+          }
+         else {
+            component_list.get(size-2).setColor(BoardColors.getColor(BALE_CRUMB_CLASS_COLOR_PROP));
+            component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_METHOD_COLOR_PROP));
+            component_list.getLast().setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_METHOD_FONT));
+          }
        }
       else if (size == 1) {
-	 component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
+         component_list.getLast().setColor(BoardColors.getColor(BALE_CRUMB_PACKAGE_COLOR_PROP));
        }
       repaint();
     }
@@ -354,15 +354,15 @@ private final class CheckNames implements Runnable {
       checkNames();
    }
 
-}	// end of inner class CheckNames
+}       // end of inner class CheckNames
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Sizing methods								*/
-/*										*/
+/*                                                                              */
+/*      Sizing methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void handleResize()
@@ -378,31 +378,31 @@ private synchronized void handleResize()
 
    if (newwidth >= recent_width) {
       for (int i = 0; i < component_list.size(); i++){
-	 component_list.get(i).updateNatWidth();
+         component_list.get(i).updateNatWidth();
        }
       lastcomp.updateNatWidth();
       if (lastcomp.getWidthLocation() + lastcomp.addedWidthIfGrown() <= maxwidth) {
-	 lastcomp.grow();
+         lastcomp.grow();
        }
 
       int unelliding = component_list.size()-1;
       while (maxwidth > lastcomp.getWidthLocation() && unelliding >= 0) {
-	 if (lastcomp.getWidthLocation() + component_list.get(unelliding).addedWidthIfGrown() <= maxwidth) {
-	    component_list.get(unelliding).grow();
-	    unelliding--;
-	  }
-	 else break;
+         if (lastcomp.getWidthLocation() + component_list.get(unelliding).addedWidthIfGrown() <= maxwidth) {
+            component_list.get(unelliding).grow();
+            unelliding--;
+          }
+         else break;
        }
     }
 
    if (newwidth < recent_width || recent_width == 0) {
       int elliding = 0;
       while (lastcomp.getWidthLocation() > maxwidth && elliding < component_list.size()) {
-	 component_list.get(elliding).shrink();
-	 elliding++;
+         component_list.get(elliding).shrink();
+         elliding++;
        }
       if (lastcomp.getWidthLocation() > maxwidth && elliding == component_list.size()) {
-	 lastcomp.shrink();
+         lastcomp.shrink();
        }
     }
 
@@ -411,9 +411,9 @@ private synchronized void handleResize()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle resizing						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle resizing                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ResizeListener extends ComponentAdapter {
@@ -432,14 +432,14 @@ private final class ResizeListener extends ComponentAdapter {
       handleResize();
    }
 
-}	// end of inner class ResizeListener
+}       // end of inner class ResizeListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handlers							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handlers                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void handleContextMenu(MouseEvent evt)
@@ -448,7 +448,7 @@ void handleContextMenu(MouseEvent evt)
       Rectangle r = bcc.getBounds();
       int x = evt.getX();
       if (x >= r.x && x < r.x + r.width) {
-	 bcc.handleRequest();
+         bcc.handleRequest();
       }
    }
 }
@@ -456,9 +456,9 @@ void handleContextMenu(MouseEvent evt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback handlers							*/
-/*										*/
+/*                                                                              */
+/*      Callback handlers                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -488,7 +488,7 @@ void handleContextMenu(MouseEvent evt)
 
 
 
-}	// end of class BaleCrumbBar
+}       // end of class BaleCrumbBar
 
 
 

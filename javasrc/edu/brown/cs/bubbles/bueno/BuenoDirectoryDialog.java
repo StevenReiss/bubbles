@@ -47,9 +47,9 @@ BuenoDirectoryDialog(BudaBubble source,Point locale,
 }
 
 /********************************************************************************/
-/*										*/
-/*	Package dialog panel setup						*/
-/*										*/
+/*                                                                              */
+/*      Package dialog panel setup                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void setupPanel(SwingGridPanel pnl)
@@ -77,9 +77,9 @@ BuenoDirectoryDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void doCreate(BudaBubbleArea bba,Point p)

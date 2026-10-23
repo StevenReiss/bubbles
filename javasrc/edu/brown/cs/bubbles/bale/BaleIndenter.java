@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleIndenter.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor indentation computations		*/
-/*										*/
+/*                                                                              */
+/*              BaleIndenter.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor indentation computations               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* RCS: $Header$ */
@@ -43,23 +43,23 @@ abstract class BaleIndenter implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected BumpClient		bump_client;
-protected BaleDocument		bale_document;
-protected Segment		doc_text;
-protected int			doc_length;
+protected BumpClient            bump_client;
+protected BaleDocument          bale_document;
+protected Segment               doc_text;
+protected int                   doc_length;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BaleIndenter(BaleDocument bd)
@@ -81,9 +81,9 @@ protected BaleIndenter(BaleDocument bd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to return the indentation for the line at the given offset	*/
-/*										*/
+/*                                                                              */
+/*      Methods to return the indentation for the line at the given offset      */
+/*                                                                              */
 /********************************************************************************/
 
 abstract int getDesiredIndentation(int offset);
@@ -117,7 +117,7 @@ int getCurrentIndentationAtOffset(int offset)
 abstract int getSplitIndentationDelta(int offset);
 
 /**
- * 	Get unindent spacing for PYTHON (for appropriate command)
+ *      Get unindent spacing for PYTHON (for appropriate command)
  */
 abstract int getUnindentSize();
 
@@ -125,9 +125,9 @@ abstract int getUnindentSize();
 
 
 /********************************************************************************/
-/*										*/
-/*	Text scanning methods							*/
-/*										*/
+/*                                                                              */
+/*      Text scanning methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected int getLineIndent(int lno)
@@ -211,15 +211,15 @@ protected int computeVisualLength(CharSequence indent)
    for (int i = 0; i < indent.length(); i++) {
       char ch = indent.charAt(i);
       switch (ch) {
-	 case '\t':
-	    if (tabsize > 0) {
-	       int reminder = length % tabsize;
-	       length += tabsize - reminder;
-	     }
-	    break;
-	 case ' ':
-	    length++;
-	    break;
+         case '\t':
+            if (tabsize > 0) {
+               int reminder = length % tabsize;
+               length += tabsize - reminder;
+             }
+            break;
+         case ' ':
+            length++;
+            break;
        }
     }
 
@@ -242,9 +242,9 @@ protected abstract int getTabSize();
 
 
 /********************************************************************************/
-/*										*/
-/*	Token scanning methods							*/
-/*										*/
+/*                                                                              */
+/*      Token scanning methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 protected BaleElement getNextElement(BaleElement e,boolean stopateol)
@@ -282,8 +282,8 @@ protected BaleElement findOpeningPeer(BaleElement e,BaleTokenType open,BaleToken
       if (e == null) return null;
       if (e.getTokenType() == close) ++ct;
       else if (e.getTokenType() == open) {
-	 --ct;
-	 if (ct < 0) return e;
+         --ct;
+         if (ct < 0) return e;
        }
     }
 }
@@ -298,7 +298,7 @@ protected BaleTokenType getToken(BaleElement e)
 
 
 
-}	// end of class BaleIndenter
+}       // end of class BaleIndenter
 
 
 

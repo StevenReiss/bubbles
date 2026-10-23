@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardUpdate.java						*/
-/*										*/
-/*	Bubbles attribute and property management automatic update manager	*/
-/*										*/
+/*                                                                              */
+/*              BoardUpdate.java                                                */
+/*                                                                              */
+/*      Bubbles attribute and property management automatic update manager      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -75,42 +75,42 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- *	This class is used to check and perform automatic updates of the bubbles
- *	binary (jar file) as they become available.  It is important that this
- *	class contains no nested classes and uses nothing other than the standard
- *	Java library classes so it can easily be put in a jar file to download
- *	to do the update.
+ *      This class is used to check and perform automatic updates of the bubbles
+ *      binary (jar file) as they become available.  It is important that this
+ *      class contains no nested classes and uses nothing other than the standard
+ *      Java library classes so it can easily be put in a jar file to download
+ *      to do the update.
  **/
 
 public final class BoardUpdate {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constant definitions for update 					*/
-/*										*/
+/*                                                                              */
+/*      Constant definitions for update                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 /**
- *	URL for the currently available version relative to BUBBLES_DIR
+ *      URL for the currently available version relative to BUBBLES_DIR
  **/
 private static final String VERSION_URL = "/version.xml";
 
 
 /**
- *	File path for the current version information.	This only has to work at
- *	Brown since we will be the only one releasing versions.  One might want to
- *	make this machine independent.	Running this main with -version will cause
- *	the minor version number to be updated by one in the given file.  This allows
- *	a script to generate a new version easily.
+ *      File path for the current version information.  This only has to work at
+ *      Brown since we will be the only one releasing versions.  One might want to
+ *      make this machine independent.  Running this main with -version will cause
+ *      the minor version number to be updated by one in the given file.  This allows
+ *      a script to generate a new version easily.
  **/
 
 private static final String VERSION_FILE = "../../../../../../lib/version.xml";
 
 
 /**
- *	File path for version description in readable English
+ *      File path for version description in readable English
  **/
 
 private static final String VERSION_DESC = "../../../../../../lib/version.txt";
@@ -118,25 +118,25 @@ private static final String VERSION_DESC = "../../../../../../lib/version.txt";
 
 
 /**
- *	URL for the jar version of this file.  The updater will download this file
- *	if the current version of bubbles is out of date and then run it with the
- *	path of the bubbles jar as the argument. This is relative to BUBBLES_DIR.
+ *      URL for the jar version of this file.  The updater will download this file
+ *      if the current version of bubbles is out of date and then run it with the
+ *      path of the bubbles jar as the argument. This is relative to BUBBLES_DIR.
  **/
 
 private static final String UPDATER_URL = "/updater.jar";
 
 
 /**
- *	URL for the newest version of code bubbles.  The updater will download this
- *	jar and replace the original with it and the reexecute it.  This is relative
- *	to BUBBLES_DIR.
+ *      URL for the newest version of code bubbles.  The updater will download this
+ *      jar and replace the original with it and the reexecute it.  This is relative
+ *      to BUBBLES_DIR.
  **/
 
 private static final String BUBBLES_URL = "/bubbles.jar";
 
 
 /**
- *	Path in the jar file of the current version file
+ *      Path in the jar file of the current version file
  **/
 
 private static final String VERSION_RESOURCE = "version.xml";
@@ -144,7 +144,7 @@ private static final String VERSION_RESOURCE = "version.xml";
 
 
 /**
- *	Arguments to File.createTempFile for updater file
+ *      Arguments to File.createTempFile for updater file
  **/
 
 private static final String UPDATER_PREFIX = "bubblesupdater";
@@ -157,30 +157,30 @@ private static final String BOARD_PLUGIN_DESCRIPTION_URL = "/plugins.xml";
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static String	bubbles_dir = BUBBLES_DIR;
-private String		jar_file;
-private List<String>	java_args;
-private long		max_memory;
+private static String   bubbles_dir = BUBBLES_DIR;
+private String          jar_file;
+private List<String>    java_args;
+private long            max_memory;
 
-private static Proxy	update_proxy = Proxy.NO_PROXY;
+private static Proxy    update_proxy = Proxy.NO_PROXY;
 
-private static String	version_data = "Build_" + System.getProperty("user.name");
+private static String   version_data = "Build_" + System.getProperty("user.name");
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Main entry point.  This is invoked by bubbles when an update is required.
+ *      Main entry point.  This is invoked by bubbles when an update is required.
  **/
 
 public static void main(String [] args)
@@ -198,9 +198,9 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Static method to check if an update is needed				*/
-/*										*/
+/*                                                                              */
+/*      Static method to check if an update is needed                           */
+/*                                                                              */
 /********************************************************************************/
 
 static void checkUpdate(String jarfile,List<String> javaargs)
@@ -227,12 +227,12 @@ static void checkUpdate(String jarfile,List<String> javaargs)
        }
       uins.close();
 
-      if (sameVersion(ue,ve)) return;		// we are up to date
+      if (sameVersion(ue,ve)) return;           // we are up to date
       
       System.err.println("BOARD: VERSIONS " + getMinor(ue) + " :: " + getMinor(ve));
       
       if (System.getProperty("edu.brown.cs.bubbles.NO_UPDATE") != null) {
-	 return;
+         return;
        }
 
       int curjava = getJavaVersion(System.getProperty("java.version"));
@@ -287,9 +287,9 @@ static void setVersion()
 
 
 /********************************************************************************/
-/*										*/
-/*	Static method to update the version file				*/
-/*										*/
+/*                                                                              */
+/*      Static method to update the version file                                */
+/*                                                                              */
 /********************************************************************************/
 
 static void updateVersionFile()
@@ -323,9 +323,9 @@ static void updateVersionFile()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for managing the XML version file				*/
-/*										*/
+/*                                                                              */
+/*      Methods for managing the XML version file                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static Element getVersionXml(InputStream ins) throws IOException
@@ -345,7 +345,7 @@ private static Element getVersionXml(InputStream ins) throws IOException
     }
    catch (SAXException e) {
       System.err.println("BOARD: Problem parsing XML (network inaccessible?): " + e);
-      return null;			// network inaccessible
+      return null;                      // network inaccessible
     }
 }
 
@@ -363,9 +363,9 @@ private static void saveVersionXml(String file,Element e) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardUpdate(String [] args)
@@ -379,28 +379,28 @@ private BoardUpdate(String [] args)
 
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-") && ourargs) {
-	 if (args[i].startsWith("-m")) {
-	    try {
-	       max_memory = Long.parseLong(args[i].substring(2));
-	     }
-	    catch (NumberFormatException e) {
-	       max_memory = 0;
-	     }
-	  }
-	 else if (args[i].startsWith("-P") && i+1 < args.length) {
-	    setupProxy(args[++i]);
-	  }
-	 else if (args[i].startsWith("-X")) {
-	    ourargs = false;
-	  }
-	 else {
-	    System.err.println("BOARDUPDATE: Illegal argument: " + args[i]);
-	  }
+         if (args[i].startsWith("-m")) {
+            try {
+               max_memory = Long.parseLong(args[i].substring(2));
+             }
+            catch (NumberFormatException e) {
+               max_memory = 0;
+             }
+          }
+         else if (args[i].startsWith("-P") && i+1 < args.length) {
+            setupProxy(args[++i]);
+          }
+         else if (args[i].startsWith("-X")) {
+            ourargs = false;
+          }
+         else {
+            System.err.println("BOARDUPDATE: Illegal argument: " + args[i]);
+          }
        }
       else if (jar_file == null) jar_file = args[i];
       else {
-	 ourargs = false;
-	 java_args.add(args[i]);
+         ourargs = false;
+         java_args.add(args[i]);
        }
     }
 
@@ -430,9 +430,9 @@ private static void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to start the update by downloading and starting the updater	*/
-/*										*/
+/*                                                                              */
+/*      Methods to start the update by downloading and starting the updater     */
+/*                                                                              */
 /********************************************************************************/
 
 private void startUpdate() throws IOException
@@ -463,11 +463,11 @@ private void startUpdate() throws IOException
    java_args.add(idx++,"-m" + Runtime.getRuntime().maxMemory());
    try {
       if (update_proxy != null && update_proxy != Proxy.NO_PROXY) {
-	 String pstr = update_proxy.type().toString();
-	 InetSocketAddress sa = (InetSocketAddress) update_proxy.address();
-	 pstr += ":" + sa.getHostName() + ":" + sa.getPort();
-	 java_args.add(idx++,"-P");
-	 java_args.add(idx++,pstr);
+         String pstr = update_proxy.type().toString();
+         InetSocketAddress sa = (InetSocketAddress) update_proxy.address();
+         pstr += ":" + sa.getHostName() + ":" + sa.getPort();
+         java_args.add(idx++,"-P");
+         java_args.add(idx++,pstr);
        }
     }
    catch (Throwable t) {
@@ -490,9 +490,9 @@ private void startUpdate() throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to actually do the update					*/
-/*										*/
+/*                                                                              */
+/*      Methods to actually do the update                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupUpdate()
@@ -506,8 +506,8 @@ private void setupUpdate()
    prog.setEditable(false);
    pnl.add(prog,BorderLayout.SOUTH);
    JLabel lbl = new JLabel("<html><h1><c>Updating Code Bubbles</c></h1>" +
-			      "<br><h2><c>(This could take some time)</c></h2>"+
-			      "<br>");
+                              "<br><h2><c>(This could take some time)</c></h2>"+
+                              "<br>");
    lbl.setBackground(new Color(211,232,248));
    pnl.add(lbl,BorderLayout.CENTER);
    JFrame splash = new JFrame();
@@ -528,13 +528,13 @@ private void setupUpdate()
 
    for (int i = 0; i < 10; ++i) {
       try {
-	 FileInputStream fins = new FileInputStream(jar_file);
-	 fins.close();
-	 break;
+         FileInputStream fins = new FileInputStream(jar_file);
+         fins.close();
+         break;
        }
       catch (IOException e) { }
       try {
-	 Thread.sleep(1000);
+         Thread.sleep(1000);
        }
       catch (InterruptedException e) { }
     }
@@ -565,15 +565,15 @@ private void setupUpdate()
       prog.setText("Update Problem: restoring old version");
 
       if (usebackup) {
-	 try {
-	    InputStream ins = new FileInputStream(jf1);
-	    OutputStream ots = new FileOutputStream(jf0);
-	    copyFile(ins,ots);
-	  }
-	 catch (IOException e) {
-	    System.err.println("BOARDUPDATE: problem restoring backup " + jf1);
-	    System.exit(1);
-	  }
+         try {
+            InputStream ins = new FileInputStream(jf1);
+            OutputStream ots = new FileOutputStream(jf0);
+            copyFile(ins,ots);
+          }
+         catch (IOException e) {
+            System.err.println("BOARDUPDATE: problem restoring backup " + jf1);
+            System.exit(1);
+          }
        }
       // This is here to prevent infinite loops in the event of update failure
       System.exit(1);
@@ -591,25 +591,25 @@ private void setupUpdate()
       args.add("edu.brown.cs.bubbles.board.BoardSetup");
       args.add("-update");
       if (java_args != null) {
-	 for (int i = 0; i < java_args.size(); ++i) {
-	    if (java_args.get(i).equals("-p")) {
-	       args.add("-p");
-	       args.add(java_args.get(i+1));
-	     }
-	  }
-	 args.add("-X");
-	 for (String s : java_args) args.add(s);
+         for (int i = 0; i < java_args.size(); ++i) {
+            if (java_args.get(i).equals("-p")) {
+               args.add("-p");
+               args.add(java_args.get(i+1));
+             }
+          }
+         args.add("-X");
+         for (String s : java_args) args.add(s);
        }
 
       ProcessBuilder pb = new ProcessBuilder(args);
 
       Process p = pb.start();
       for ( ; ; ) {
-	 try {
-	    p.waitFor(2,TimeUnit.SECONDS);
-	    break;
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            p.waitFor(2,TimeUnit.SECONDS);
+            break;
+          }
+         catch (InterruptedException e) { }
          if (p.isAlive()) {
             splash.setVisible(false);
           }
@@ -761,9 +761,9 @@ private String getJavaPath()
 
 
 /********************************************************************************/
-/*										*/
-/*	Version management							*/
-/*										*/
+/*                                                                              */
+/*      Version management                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static int getMajor(Element e1)
@@ -843,9 +843,9 @@ private static boolean sameVersion(Element e1,Element e2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Proxy methods								*/
-/*										*/
+/*                                                                              */
+/*      Proxy methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static void setupProxy(String s)
@@ -866,9 +866,9 @@ static void setupProxy(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	XML output methods (copied from IvyXML) 				*/
-/*										*/
+/*                                                                              */
+/*      XML output methods (copied from IvyXML)                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static void addXml(Node n,Writer w) throws IOException
@@ -878,22 +878,22 @@ private static void addXml(Node n,Writer w) throws IOException
       w.write("<" + e.getNodeName());
       NamedNodeMap nnm = e.getAttributes();
       for (int i = 0; ; ++i) {
-	 Node na = nnm.item(i);
-	 if (na == null) break;
-	 Attr a = (Attr) na;
-	 if (a.getSpecified()) {
-	    w.write(" " + a.getName() + "='");
-	    outputXmlString(a.getValue(),w);
-	    w.write("'");
-	  }
+         Node na = nnm.item(i);
+         if (na == null) break;
+         Attr a = (Attr) na;
+         if (a.getSpecified()) {
+            w.write(" " + a.getName() + "='");
+            outputXmlString(a.getValue(),w);
+            w.write("'");
+          }
        }
       if (e.getFirstChild() == null) w.write(" />");
       else {
-	 w.write(">");
-	 for (Node cn = n.getFirstChild(); cn != null; cn = cn.getNextSibling()) {
-	    addXml(cn,w);
-	  }
-	 w.write("</" + e.getNodeName() + ">");
+         w.write(">");
+         for (Node cn = n.getFirstChild(); cn != null; cn = cn.getNextSibling()) {
+            addXml(cn,w);
+          }
+         w.write("</" + e.getNodeName() + ">");
        }
     }
    else if (n instanceof CDATASection) {
@@ -915,27 +915,27 @@ private static void outputXmlString(String s,Writer pw)
 
    try {
       for (int i = 0; i < s.length(); ++i) {
-	 char c = s.charAt(i);
-	 switch (c) {
-	    case '&' :
-	       pw.write("&amp;");
-	       break;
-	    case '<' :
-	       pw.write("&lt;");
-	       break;
-	    case '>' :
-	       pw.write("&gt;");
-	       break;
-	    case '"' :
-	       pw.write("&quot;");
-	       break;
-	    case '\'' :
-	       pw.write("&apos;");
-	       break;
-	    default :
-	       pw.write(c);
-	       break;
-	  }
+         char c = s.charAt(i);
+         switch (c) {
+            case '&' :
+               pw.write("&amp;");
+               break;
+            case '<' :
+               pw.write("&lt;");
+               break;
+            case '>' :
+               pw.write("&gt;");
+               break;
+            case '"' :
+               pw.write("&quot;");
+               break;
+            case '\'' :
+               pw.write("&apos;");
+               break;
+            default :
+               pw.write(c);
+               break;
+          }
        }
     }
    catch (IOException e) { }
@@ -971,9 +971,9 @@ private Element loadXmlFromStream(InputStream inf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Create a parser 							*/
-/*										*/
+/*                                                                              */
+/*      Create a parser                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class XmlParser {
@@ -1027,10 +1027,10 @@ private static class XmlParser {
       catch (Throwable e) { }
     }
 
-}	// end of subclass XmlParser
+}       // end of subclass XmlParser
 
 
-}	// end of class BoardUpdate
+}       // end of class BoardUpdate
 
 
 

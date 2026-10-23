@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattConstants.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool constant definitions			*/
-/*										*/
+/*                                                                              */
+/*              BattConstants.java                                              */
+/*                                                                              */
+/*      Bubble Automated Testing Tool constant definitions                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,9 +44,9 @@ int ASM_API = JcodeConstants.ASM_API;
 
 
 /********************************************************************************/
-/*										*/
-/*	File States								*/
-/*										*/
+/*                                                                              */
+/*      File States                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 enum FileState {
@@ -67,9 +67,9 @@ enum FileState {
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing mode								*/
-/*										*/
+/*                                                                              */
+/*      Testing mode                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 enum TestMode {
@@ -80,9 +80,9 @@ enum TestMode {
 
 
 /********************************************************************************/
-/*										*/
-/*	Test Status								*/
-/*										*/
+/*                                                                              */
+/*      Test Status                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 enum TestStatus {
@@ -115,9 +115,9 @@ enum RunType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu and button definitions						*/
-/*										*/
+/*                                                                              */
+/*      Menu and button definitions                                             */
+/*                                                                              */
 /********************************************************************************/
 
 String TEST_BUTTON = "Test Management";
@@ -141,9 +141,9 @@ interface BattModelListener extends EventListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Test case finding and creation definitions				*/
-/*										*/
+/*                                                                              */
+/*      Test case finding and creation definitions                              */
+/*                                                                              */
 /********************************************************************************/
 
 enum UseMode {
@@ -163,9 +163,9 @@ enum NewTestMode {
 
 
 /********************************************************************************/
-/*										*/
-/*	New Test definitions							*/
-/*										*/
+/*                                                                              */
+/*      New Test definitions                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 enum NewTestOp {
@@ -185,9 +185,9 @@ enum NewTestOp {
       op_text = t;
     }
 
-   @Override public String toString()		{ return op_text; }
+   @Override public String toString()           { return op_text; }
 
-}	// end of enum NewTestOp
+}       // end of enum NewTestOp
 
 
 
@@ -203,9 +203,9 @@ enum NewStatus {
 
 
 /********************************************************************************/
-/*										*/
-/*	External view of a test case						*/
-/*										*/
+/*                                                                              */
+/*      External view of a test case                                            */
+/*                                                                              */
 /********************************************************************************/
 
 interface BattTest {
@@ -239,13 +239,13 @@ interface BattCallTest {
    String getTestOpName();
    String getTestDescription();
 
-}	// end of interface BattCallTest
+}       // end of interface BattCallTest
 
 
 /********************************************************************************/
-/*										*/
-/*	Definitions for new test bubbles					*/
-/*										*/
+/*                                                                              */
+/*      Definitions for new test bubbles                                        */
+/*                                                                              */
 /********************************************************************************/
 
 interface StatusUpdate {
@@ -278,9 +278,9 @@ interface BattNewTestPanel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Text status display constants						*/
-/*										*/
+/*                                                                              */
+/*      Text status display constants                                           */
+/*                                                                              */
 /********************************************************************************/
 
 int BATT_STATUS_COL_MIN_WIDTH = 55;
@@ -306,7 +306,7 @@ interface BattPopupHandler extends EventListener {
 }
 
 
-}	// end of interface BattConstants
+}       // end of interface BattConstants
 
 
 

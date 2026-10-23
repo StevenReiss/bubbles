@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewOrphan.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor view for orphaned windows		*/
-/*										*/
+/*                                                                              */
+/*              BaleViewOrphan.java                                             */
+/*                                                                              */
+/*      Bubble Annotated Language Editor view for orphaned windows              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,19 +42,19 @@ class BaleViewOrphan extends LabelView implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		region_text = "< This bubble has been orphaned >";
+private String          region_text = "< This bubble has been orphaned >";
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewOrphan(BaleElement e)
@@ -66,9 +66,9 @@ BaleViewOrphan(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Segment getText(int p0,int p1)
@@ -83,7 +83,7 @@ BaleViewOrphan(BaleElement e)
 
 
 
-}	// end of class BaleViewOrphan
+}       // end of class BaleViewOrphan
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalProjectManager.java					*/
-/*										*/
-/*	Bubbles ANALysis package project/class data manager			*/
-/*										*/
+/*                                                                              */
+/*              BanalProjectManager.java                                        */
+/*                                                                              */
+/*      Bubbles ANALysis package project/class data manager                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -46,24 +46,24 @@ class BanalProjectManager implements BanalConstants, BumpConstants.BumpChangeHan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 // project -> classname -> ClassData
 private Map<String,Map<String,ClassData>> user_classes;
 
-private boolean 	classes_valid;
-private boolean 	accessing_data;
-private BanalMonitor	banal_monitor;
+private boolean         classes_valid;
+private boolean         accessing_data;
+private BanalMonitor    banal_monitor;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BanalProjectManager(BanalMonitor bm)
@@ -78,9 +78,9 @@ BanalProjectManager(BanalMonitor bm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<ClassData> getClassData()
@@ -90,7 +90,7 @@ Collection<ClassData> getClassData()
 
       Collection<ClassData> rslt = new ArrayList<>();
       for (Map<String,ClassData> mcd : user_classes.values()) {
-	 rslt.addAll(mcd.values());
+         rslt.addAll(mcd.values());
        }
 
       return rslt;
@@ -101,19 +101,19 @@ Collection<ClassData> getClassData()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get class information from eclipse				*/
-/*										*/
+/*                                                                              */
+/*      Methods to get class information from eclipse                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkClassData()
 {
    synchronized (this) {
       while (accessing_data) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
       if (classes_valid) return;
       accessing_data = true;
@@ -123,38 +123,38 @@ private void checkClassData()
    for ( ; ; ) {
       Element projs = getAllProjects();
       if (projs == null) {
-	 IvyLog.logE("BANAL","No projects found");
-	 return;
+         IvyLog.logE("BANAL","No projects found");
+         return;
        }
 
       for (Element pe : IvyXml.children(projs,"PROJECT")) {
-	 String pnm = IvyXml.getAttrString(pe,"NAME");
+         String pnm = IvyXml.getAttrString(pe,"NAME");
          IvyLog.logD("BANAL","Work on project " + pnm);
-	 if (user_classes.get(pnm) != null) continue;
+         if (user_classes.get(pnm) != null) continue;
 
-	 Element pinfo = openProject(pnm);
-	 if (pinfo == null) continue;
+         Element pinfo = openProject(pnm);
+         if (pinfo == null) continue;
 
-	 Map<String,ClassData> mcd = new HashMap<>();
+         Map<String,ClassData> mcd = new HashMap<>();
 
-	 Element cinfo = IvyXml.getChild(pinfo,"CLASSES");
-	 for (Element ce : IvyXml.children(cinfo,"TYPE")) {
-	    String cnm = IvyXml.getAttrString(ce,"NAME");
-	    String bnm = IvyXml.getAttrString(ce,"BINARY");
-	    String snm = IvyXml.getAttrString(ce,"SOURCE");
-	    ClassData cd = new ClassData(pnm,cnm,bnm,snm);
-	    mcd.put(cnm,cd);
-	  }
-	 user_classes.put(pnm,mcd);
+         Element cinfo = IvyXml.getChild(pinfo,"CLASSES");
+         for (Element ce : IvyXml.children(cinfo,"TYPE")) {
+            String cnm = IvyXml.getAttrString(ce,"NAME");
+            String bnm = IvyXml.getAttrString(ce,"BINARY");
+            String snm = IvyXml.getAttrString(ce,"SOURCE");
+            ClassData cd = new ClassData(pnm,cnm,bnm,snm);
+            mcd.put(cnm,cd);
+          }
+         user_classes.put(pnm,mcd);
        }
 
       synchronized (this) {
-	 if (classes_valid) {
-	    accessing_data = false;
-	    notifyAll();
-	    break;
-	  }
-	 classes_valid = true;
+         if (classes_valid) {
+            accessing_data = false;
+            notifyAll();
+            break;
+          }
+         classes_valid = true;
        }
     }
 }
@@ -183,9 +183,9 @@ private Element openProject(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling file changes					*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling file changes                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleFileChanged(String proj,String file)
@@ -221,9 +221,9 @@ void invalidate(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class information							*/
-/*										*/
+/*                                                                              */
+/*      Class information                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ClassData implements BanalClassData {
@@ -240,14 +240,14 @@ private static class ClassData implements BanalClassData {
       source_file = snm;
     }
 
-   @Override public String getName()		{ return class_name; }
-   @Override public String getSourceFile()	{ return source_file; }
-   @Override public String getProject() 	{ return class_project; }
+   @Override public String getName()            { return class_name; }
+   @Override public String getSourceFile()      { return source_file; }
+   @Override public String getProject()         { return class_project; }
 
    @Override public InputStream getClassStream() {
       if (class_file == null) return null;
       try {
-	 return new FileInputStream(class_file);
+         return new FileInputStream(class_file);
        }
       catch (IOException e) { }
       return null;
@@ -255,8 +255,8 @@ private static class ClassData implements BanalClassData {
 
    @Override public boolean equals(Object o) {
       if (o instanceof ClassData) {
-	 ClassData cd = (ClassData) o;
-	 return class_name.equals(cd.class_name);
+         ClassData cd = (ClassData) o;
+         return class_name.equals(cd.class_name);
        }
       return false;
     }
@@ -265,12 +265,12 @@ private static class ClassData implements BanalClassData {
       return class_name.hashCode();
     }
 
-}	// end of inner class ClassData
+}       // end of inner class ClassData
 
 
 
 
-}	// end of class BanalProjectManager
+}       // end of class BanalProjectManager
 
 
 

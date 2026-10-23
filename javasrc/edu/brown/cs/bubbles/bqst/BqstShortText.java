@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstShortText.java						*/
-/*										*/
-/*	Bubbles questions and forms short text field implementation		*/
-/*										*/
+/*                                                                              */
+/*              BqstShortText.java                                              */
+/*                                                                              */
+/*      Bubbles questions and forms short text field implementation             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -39,12 +39,12 @@ class BqstShortText extends BqstQuestion implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextField	shorttext_field;
+private JTextField      shorttext_field;
 
 private static final long serialVersionUID = 1L;
 
@@ -52,9 +52,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstShortText(String qst,String help,boolean required)
@@ -67,9 +67,9 @@ protected BqstShortText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void setup()
@@ -86,9 +86,9 @@ protected BqstShortText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Answer methods							*/
-/*										*/
+/*                                                                              */
+/*      Get Answer methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override String getAnswer()
@@ -100,9 +100,9 @@ protected BqstShortText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void reset()

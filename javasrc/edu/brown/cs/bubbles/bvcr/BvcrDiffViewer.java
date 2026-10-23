@@ -130,7 +130,7 @@ private static Dimension panel_size;
 private static Dimension line_size;
 private static Stroke   base_stroke;
 
-private static int tab_size =	 BoardProperties.getProperties("Bvcr").getInt("Bvcr.tabsize",8);
+private static int tab_size =    BoardProperties.getProperties("Bvcr").getInt("Bvcr.tabsize",8);
 
 static {
    JTextArea ar = new SwingTextArea();
@@ -254,7 +254,7 @@ private class HistoryGather implements Runnable {
       historyReady();
     }
 
-}	// end of inner class HistoryGather
+}       // end of inner class HistoryGather
 
 
 
@@ -667,9 +667,9 @@ private class ChangeHighlighter implements Highlighter.HighlightPainter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Display Bubble								*/
-/*										*/
+/*                                                                              */
+/*      Display Bubble                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class DiffBubble extends BudaBubble {
@@ -687,7 +687,7 @@ private class DiffBubble extends BudaBubble {
       g.fillRect(0,0,sz.width,sz.height);
     }
 
-}	// end of inner class DiffBubble
+}       // end of inner class DiffBubble
 
 
 

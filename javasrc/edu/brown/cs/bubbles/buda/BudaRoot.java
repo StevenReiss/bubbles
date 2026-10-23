@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaRoot.java							*/
-/*										*/
-/*	BUblles Display Area root window					*/
-/*										*/
+/*                                                                              */
+/*              BudaRoot.java                                                   */
+/*                                                                              */
+/*      BUblles Display Area root window                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -115,9 +115,9 @@ import gnu.jpdf.PDFJob;
 
 
 /**
- *	This class provides a top level window for doing bubble management.  It
- *	handles setting up the various subwindows and the communications among
- *	those windows.
+ *      This class provides a top level window for doing bubble management.  It
+ *      handles setting up the various subwindows and the communications among
+ *      those windows.
  **/
 
 public class BudaRoot extends JFrame implements BudaConstants {
@@ -126,35 +126,35 @@ public class BudaRoot extends JFrame implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaBubbleArea		bubble_area;
-private BudaViewport		bubble_view;
-private BudaOverviewBar 	bubble_overview;
-private BudaTopBar		bubble_topbar;
-// private double		scale_factor;
-// private MouseScaler		mouse_scaler;
-private BudaBubble		search_bubble;
-private BudaBubble		docsearch_bubble;
-private JPanel			button_panel;
-private List<Component> 	button_panels;
-private Collection<BudaTask>	task_shelf;
-private BudaRelations		relation_data;
-private BudaChannelSet		cur_channels;
-private JPanel			channel_area;
-private BudaShareManager	share_manager;
-private BudaDemonstration	demo_thread;
-private String			demo_text;
-private Point			demo_point;
-private boolean 		view_setup;
-private int			shade_delta;
-private boolean 		shade_down;
-private boolean 		shade_safe;
+private BudaBubbleArea          bubble_area;
+private BudaViewport            bubble_view;
+private BudaOverviewBar         bubble_overview;
+private BudaTopBar              bubble_topbar;
+// private double               scale_factor;
+// private MouseScaler          mouse_scaler;
+private BudaBubble              search_bubble;
+private BudaBubble              docsearch_bubble;
+private JPanel                  button_panel;
+private List<Component>         button_panels;
+private Collection<BudaTask>    task_shelf;
+private BudaRelations           relation_data;
+private BudaChannelSet          cur_channels;
+private JPanel                  channel_area;
+private BudaShareManager        share_manager;
+private BudaDemonstration       demo_thread;
+private String                  demo_text;
+private Point                   demo_point;
+private boolean                 view_setup;
+private int                     shade_delta;
+private boolean                 shade_down;
+private boolean                 shade_safe;
 
-private static MouseEvent	last_mouse;
+private static MouseEvent       last_mouse;
 
 
 private static SwingEventListenerList<BubbleViewCallback> view_callbacks;
@@ -163,12 +163,12 @@ private static SwingEventListenerList<BudaFileHandler> file_handlers;
 private static final Font DEMO_TEXT_FONT = new Font(Font.SANS_SERIF,Font.BOLD,96);
 
 private static SearchBoxCreator search_creator = null;
-private static BudaMenu 	bubble_menu = null;
+private static BudaMenu         bubble_menu = null;
 
-private static Map<String,BubbleConfigurator>	bubble_config;
-private static Map<String,PortConfigurator>	port_config;
+private static Map<String,BubbleConfigurator>   bubble_config;
+private static Map<String,PortConfigurator>     port_config;
 
-private static DocBoxCreator	doc_creator = null;
+private static DocBoxCreator    doc_creator = null;
 
 private static boolean debug_graphics = false;
 
@@ -179,11 +179,11 @@ private static DataFlavor bubble_group_flavor;
 
 private static int color_index;
 private static int color_step;
-private static Color [] 	group_colors;
+private static Color []         group_colors;
 
 private static final int SHADE_UPDATE_TIME = 50;
 private static final long SHADE_UP_DOWN_TIME = 2000;
-private static final int SHADE_PULL_DOWN_START = 5;	// 30, 30 + 104
+private static final int SHADE_PULL_DOWN_START = 5;     // 30, 30 + 104
 private static final int SHADE_PULL_DOWN_END = 30;
 
 
@@ -210,13 +210,13 @@ static {
    int st = ln / 3;
    for (int i = 0; i < ln; ++i) {
       for (int j = 0; j < 2; ++j) {
-	 int x = st + (j == 0 ? i : ln-i);
-	 x %= ln;
-	 if (x == 0) continue;
-	 if (gcd(x,ln) == 1) {
-	    color_step = x;
-	    break;
-	  }
+         int x = st + (j == 0 ? i : ln-i);
+         x %= ln;
+         if (x == 0) continue;
+         if (gcd(x,ln) == 1) {
+            color_step = x;
+            break;
+          }
        }
     }
 }
@@ -231,9 +231,9 @@ private static int gcd(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Static initialization and setup 					*/
-/*										*/
+/*                                                                              */
+/*      Static initialization and setup                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static {
@@ -243,13 +243,13 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new root window with the given title.
+ *      Create a new root window with the given title.
  **/
 
 public BudaRoot(String ttl)
@@ -261,7 +261,7 @@ public BudaRoot(String ttl)
 
 
 /**
- *	Create a new root window from a saved configuration
+ *      Create a new root window from a saved configuration
  **/
 
 public BudaRoot(Element xml)
@@ -378,15 +378,15 @@ private void initialize(Element e)
    BudaCursorManager.setupDefaults(this);
 
    setupGlobalActions();
-   new CheckpointTimer();		// start checkpointing
-   new BubbleRemover(); 		// remove old bubbles if desired
+   new CheckpointTimer();               // start checkpointing
+   new BubbleRemover();                 // remove old bubbles if desired
 
    BoardMetrics.setRootWindow(this);
    share_manager = new BudaShareManager();
 
    if (BoardSetup.getSetup().getRunMode() == RunMode.CLIENT) {
       BoardSetup.getSetup().getMintControl().register("<BUDA SOURCE='SERVER' CMD='_VAR_0' FILE='_VAR_1' />",
-	    new ClientHandler());
+            new ClientHandler());
     }
 }
 
@@ -408,9 +408,9 @@ private void setupSwing()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods -- called after all packages are initialized		*/
-/*										*/
+/*                                                                              */
+/*      Setup methods -- called after all packages are initialized              */
+/*                                                                              */
 /********************************************************************************/
 
 public void restoreConfiguration(Element xml)
@@ -421,13 +421,13 @@ public void restoreConfiguration(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the BudaBubbleArea associated with this root window.
+ *      Return the BudaBubbleArea associated with this root window.
  **/
 
 public BudaBubbleArea getCurrentBubbleArea()
@@ -448,17 +448,17 @@ BudaBubbleArea getDefaultBubbleArea()
 }
 
 
-public BudaBubbleArea getBubbleArea()			{ return bubble_area; }
+public BudaBubbleArea getBubbleArea()                   { return bubble_area; }
 
-BudaShareManager getShareManager()		{ return share_manager; }
+BudaShareManager getShareManager()              { return share_manager; }
 
-public BudaTopBar getTopBar()			{ return bubble_topbar; }
+public BudaTopBar getTopBar()                   { return bubble_topbar; }
 
 
 /**
- *	These methods are used to add and remove links between bubbles in the
- *	display.  They are equivalent to calling the same methods on the bubble
- *	area and are here as a convenience.
+ *      These methods are used to add and remove links between bubbles in the
+ *      display.  They are equivalent to calling the same methods on the bubble
+ *      area and are here as a convenience.
  **/
 
 public void addLink(BudaBubbleLink lnk)
@@ -473,7 +473,7 @@ public void addLink(BudaBubbleLink lnk)
 
 
 /**
- *	Remove the given link.
+ *      Remove the given link.
  **/
 
 public void removeLink(BudaBubbleLink lnk)
@@ -499,17 +499,17 @@ public void removeCurrentBubble()
 
    Point pt = SwingUtilities.convertPoint(c,me.getPoint(),bba);
    me = new MouseEvent(bba,me.getID(),me.getWhen(),me.getModifiersEx(),
-	 pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
-	 me.getButton());
+         pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
+         me.getButton());
    bba.removeCurrentBubble(me);
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Help methods								*/
-/*										*/
+/*                                                                              */
+/*      Help methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static Map<Component,BudaHelp> help_map;
@@ -541,9 +541,9 @@ public static void showHelp(MouseEvent e)
    for (Component c = c0; c != null; c = c.getParent()) {
       BudaHelp bh = help_map.get(c);
       if (bh != null) {
-	 MouseEvent nme = SwingUtilities.convertMouseEvent((Component) e.getSource(),e,c);
-	 bh.simulateHover(nme);
-	 return;
+         MouseEvent nme = SwingUtilities.convertMouseEvent((Component) e.getSource(),e,c);
+         bh.simulateHover(nme);
+         return;
        }
     }
 }
@@ -573,9 +573,9 @@ public void setDemonstrationPoint(Point pt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Working set methods							*/
-/*										*/
+/*                                                                              */
+/*      Working set methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 BudaWorkingSetImpl defineWorkingSet(BudaBubbleArea bba,String lbl,Rectangle rgn,
@@ -599,7 +599,7 @@ void removeWorkingSet(BudaWorkingSetImpl ws)
 
 
 /**
- *	Get the collection of current active working sets.
+ *      Get the collection of current active working sets.
  **/
 
 public Collection<BudaWorkingSet> getWorkingSets()
@@ -625,14 +625,14 @@ void handleNewWorkingSet(Component c,String lbl)
 
 
 /**
- *	Return the data transfer flavor for drag and drop bubbles.
+ *      Return the data transfer flavor for drag and drop bubbles.
  **/
 
-public static DataFlavor getBubbleTransferFlavor()	{ return bubble_flavor; }
+public static DataFlavor getBubbleTransferFlavor()      { return bubble_flavor; }
 
 
 /**
- *	Return the data transfer flavor for drag and drop bubble groups
+ *      Return the data transfer flavor for drag and drop bubble groups
  **/
 
 public static DataFlavor getBubbleGroupTransferFlavor() { return bubble_group_flavor; }
@@ -641,7 +641,7 @@ public static DataFlavor getBubbleGroupTransferFlavor() { return bubble_group_fl
 
 
 /**
- *	Return the working set for a given point from the top bar
+ *      Return the working set for a given point from the top bar
  **/
 
 public BudaWorkingSet findCurrentWorkingSet()
@@ -652,9 +652,9 @@ public BudaWorkingSet findCurrentWorkingSet()
 
 
 /**
- *	Add a top bar menu item
- *	@param c Component to add to menu (generally a JButton)
- *	@param ws Add to working set menu if true, non-workingset menu if not
+ *      Add a top bar menu item
+ *      @param c Component to add to menu (generally a JButton)
+ *      @param ws Add to working set menu if true, non-workingset menu if not
  **/
 
 public void addTopBarMenuItem(Component c,boolean ws)
@@ -665,13 +665,13 @@ public void addTopBarMenuItem(Component c,boolean ws)
 
 
 /********************************************************************************/
-/*										*/
-/*	Static methods for getting bubble information				*/
-/*										*/
+/*                                                                              */
+/*      Static methods for getting bubble information                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the BudaRoot associated with the given component.
+ *      Return the BudaRoot associated with the given component.
  **/
 
 public static BudaRoot findBudaRoot(Component c)
@@ -686,7 +686,7 @@ public static BudaRoot findBudaRoot(Component c)
 
 
 /**
- *	Return the BudaBubbleArea associated with the given component.
+ *      Return the BudaBubbleArea associated with the given component.
  **/
 
 public static BudaBubbleArea findBudaBubbleArea(Component c)
@@ -703,7 +703,7 @@ public static BudaBubbleArea findBudaBubbleArea(Component c)
 
 
 /**
- *	Return the BudaBubble associated with a the givne component.
+ *      Return the BudaBubble associated with a the givne component.
  **/
 
 public static BudaBubble findBudaBubble(Component c)
@@ -718,16 +718,16 @@ public static BudaBubble findBudaBubble(Component c)
 
 
 /**
- *	Return the rectangle defining the bubble associated with the given
- *	component.
+ *      Return the rectangle defining the bubble associated with the given
+ *      component.
  **/
 
 public static Rectangle findBudaLocation(Component c)
 {
    for (Component p = c; p != null; p = getParentComponent(p)) {
       if (p instanceof BudaBubble && p.isVisible() &&
-	     p.getParent() instanceof BudaBubbleArea)
-	 return p.getBounds();
+             p.getParent() instanceof BudaBubbleArea)
+         return p.getBounds();
     }
 
    return null;
@@ -748,9 +748,9 @@ private static Component getParentComponent(Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel methods								*/
-/*										*/
+/*                                                                              */
+/*      Panel methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void addButtonPanel()
@@ -763,7 +763,7 @@ private void addButtonPanel()
 
 
 /**
- *	Return the panel for adding buttons
+ *      Return the panel for adding buttons
  **/
 
 public synchronized JPanel getButtonPanel()
@@ -776,7 +776,7 @@ public synchronized JPanel getButtonPanel()
 
 
 /**
- *	Add a button panel button
+ *      Add a button panel button
  **/
 
 public void addButtonPanelButton(JComponent c)
@@ -817,13 +817,13 @@ public void addPanel(Component pnl,boolean right)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search methods								*/
-/*										*/
+/*                                                                              */
+/*      Search methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Register a search engine with the root for handling search requests
+ *      Register a search engine with the root for handling search requests
  **/
 
 public static void registerSearcher(SearchBoxCreator sb)
@@ -833,8 +833,8 @@ public static void registerSearcher(SearchBoxCreator sb)
 
 
 /**
- *	Create a search bubble at the given point with the given initial
- *	search string.
+ *      Create a search bubble at the given point with the given initial
+ *      search string.
  **/
 
 public void createSearchBubble(Point pt,String proj,String pfx)
@@ -844,8 +844,8 @@ public void createSearchBubble(Point pt,String proj,String pfx)
 
 
 /**
- *	Create a search bubble at the given point with the given initial
- *	search string with or without accompanying menu
+ *      Create a search bubble at the given point with the given initial
+ *      search string with or without accompanying menu
  */
 
 public void createSearchBubble(Point pt,String proj,String pfx,boolean showmenu)
@@ -869,7 +869,7 @@ public void createSearchBubble(Point pt,String proj,String pfx,boolean showmenu)
 }
 
 /**
- *	Hide the search bubble if it is active.
+ *      Hide the search bubble if it is active.
  **/
 
 public void hideSearchBubble()
@@ -891,14 +891,14 @@ public static void hideSearchBubble(Object src)
       BudaRoot br = findBudaRoot(c);
       if (br == null || br.search_bubble == null) return;
       for (Component c1 = c; c1 != null; c1 = c1.getParent()) {
-	 if (c1 instanceof JPopupMenu && c1 != br.search_bubble) {
-	    c1 = ((JPopupMenu) c1).getInvoker();
-	    if (c1 == null) break;
-	 }
-	 if (c1 == br.search_bubble) {
-	    br.hideSearchBubble();
-	    break;
-	  }
+         if (c1 instanceof JPopupMenu && c1 != br.search_bubble) {
+            c1 = ((JPopupMenu) c1).getInvoker();
+            if (c1 == null) break;
+         }
+         if (c1 == br.search_bubble) {
+            br.hideSearchBubble();
+            break;
+          }
        }
     }
 }
@@ -906,7 +906,7 @@ public static void hideSearchBubble(Object src)
 BudaBubble getPackageExplorer(BudaBubbleArea bba) { return search_creator.getPackageExplorer(bba); }
 
 /**
- *	Hide the package explorer
+ *      Hide the package explorer
  *
 
 public void togglePackageExplorer()
@@ -917,7 +917,7 @@ public void togglePackageExplorer()
 
 
 /**
- *	Create a search bubble for the user project and javadoc together.
+ *      Create a search bubble for the user project and javadoc together.
  **/
 
 public void createMergedSearchBubble(Point pt,String proj,String pfx)
@@ -941,7 +941,7 @@ public void createMergedSearchBubble(Point pt,String proj,String pfx)
 
 
 /**
- *	Create a search bubble for java doc
+ *      Create a search bubble for java doc
  **/
 
 public void createDocSearchBubble(Point pt,String proj,String pfx)
@@ -963,8 +963,8 @@ public void createDocSearchBubble(Point pt,String proj,String pfx)
 
 
 /**
- *	Note that the search bubble has been used.  This can be used to
- *	delete the menu.
+ *      Note that the search bubble has been used.  This can be used to
+ *      delete the menu.
  **/
 
 public void noteSearchUsed(JComponent window)
@@ -980,14 +980,14 @@ private final class SearchSingleton extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
-	 search_bubble = null;
+         search_bubble = null;
        }
       if (e.getSource() == docsearch_bubble) {
-	 docsearch_bubble = null;
+         docsearch_bubble = null;
        }
     }
 
-}	// end of inner class SearchSingleton
+}       // end of inner class SearchSingleton
 
 
 
@@ -1000,13 +1000,13 @@ public String findProjectForFile(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Documentation methods							*/
-/*										*/
+/*                                                                              */
+/*      Documentation methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Register a routine that can create documentation boxes
+ *      Register a routine that can create documentation boxes
  */
 
 public static void registerDocumentationCreator(DocBoxCreator dbc)
@@ -1017,7 +1017,7 @@ public static void registerDocumentationCreator(DocBoxCreator dbc)
 
 
 /**
- *	Use the registered documentation creator to build a documentation bubble.
+ *      Use the registered documentation creator to build a documentation bubble.
  **/
 
 public static BudaBubble createDocumentationBubble(String name)
@@ -1031,14 +1031,14 @@ public static BudaBubble createDocumentationBubble(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu methods								*/
-/*										*/
+/*                                                                              */
+/*      Menu methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Register a menu button and its callback.  These buttons are associated
- *	with the search menu.
+ *      Register a menu button and its callback.  These buttons are associated
+ *      with the search menu.
  **/
 
 public static void registerMenuButton(String name,ButtonListener action)
@@ -1079,9 +1079,9 @@ private static synchronized BudaMenu getBubbleMenu()
 
 
 /********************************************************************************/
-/*										*/
-/*	Toolbar methods 							*/
-/*										*/
+/*                                                                              */
+/*      Toolbar methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -1107,9 +1107,9 @@ public static void addToolbarButton(String name, ActionListener l, String toolti
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -1118,21 +1118,21 @@ public static void addToolbarButton(String name, ActionListener l, String toolti
 
    if (demo_thread != null) {
       if (demo_point != null) {
-	 Color dpc = BoardColors.getColor("Buda.RootDemoPointColor");
-	 g.setColor(dpc);
-	 g.fillOval(demo_point.x - 10, demo_point.y - 10, 20, 20);
+         Color dpc = BoardColors.getColor("Buda.RootDemoPointColor");
+         g.setColor(dpc);
+         g.fillOval(demo_point.x - 10, demo_point.y - 10, 20, 20);
        }
       if (demo_text != null) {
-	 Rectangle r = getBounds();
-	 int h = r.height;
-	 r.x = 0;
-	 r.y = h - 100;
-	 r.height = 100;
-	 Graphics2D g2 = (Graphics2D) g;
-	 Color dtc = BoardColors.getColor("Buda.RootDemoTextColor");
-	 g2.setColor(dtc);
-	 g2.setFont(DEMO_TEXT_FONT);
-	 SwingText.drawText(demo_text,g2,r);
+         Rectangle r = getBounds();
+         int h = r.height;
+         r.x = 0;
+         r.y = h - 100;
+         r.height = 100;
+         Graphics2D g2 = (Graphics2D) g;
+         Color dtc = BoardColors.getColor("Buda.RootDemoTextColor");
+         g2.setColor(dtc);
+         g2.setFont(DEMO_TEXT_FONT);
+         SwingText.drawText(demo_text,g2,r);
        }
     }
 }
@@ -1142,9 +1142,9 @@ public static void addToolbarButton(String name, ActionListener l, String toolti
 
 
 /********************************************************************************/
-/*										*/
-/*	Printing methods							*/
-/*										*/
+/*                                                                              */
+/*      Printing methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void printViewport()
@@ -1156,10 +1156,10 @@ void printViewport()
    pjob.setPrintable(bubble_view,fmt);
    if (pjob.printDialog()) {
       try {
-	 pjob.print();
+         pjob.print();
        }
       catch (PrinterException ex) {
-	 BoardLog.logE("BUDA","Printing problem",ex);
+         BoardLog.logE("BUDA","Printing problem",ex);
        }
     }
 }
@@ -1220,9 +1220,9 @@ void exportAsPdf(File file,Rectangle bnds) throws Exception
 
 
 /********************************************************************************/
-/*										*/
-/*	Window manipulation methods						*/
-/*										*/
+/*                                                                              */
+/*      Window manipulation methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void addImpl(Component c,Object cnst,int idx)
@@ -1242,9 +1242,9 @@ void exportAsPdf(File file,Rectangle bnds) throws Exception
 
 
 /********************************************************************************/
-/*										*/
-/*	Viewport methods							*/
-/*										*/
+/*                                                                              */
+/*      Viewport methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void setCurrentViewport(int x,int y)
@@ -1285,7 +1285,7 @@ void moveViewport(int dx,int dy)
 
 
 /**
- *	Return the current viewport rectangle.
+ *      Return the current viewport rectangle.
  **/
 
 public Rectangle getCurrentViewport()
@@ -1297,7 +1297,7 @@ public Rectangle getCurrentViewport()
 
 
 /**
- *	Return the viewport rectangle of the main display.
+ *      Return the viewport rectangle of the main display.
  **/
 
 public Rectangle getViewport()
@@ -1330,7 +1330,7 @@ synchronized Rectangle getShadedViewport()
 }
 
 
-double getScaleFactor() 	{ return getCurrentBubbleArea().getScaleFactor(); }
+double getScaleFactor()         { return getCurrentBubbleArea().getScaleFactor(); }
 
 
 
@@ -1340,29 +1340,29 @@ private final class ViewportHandler implements ChangeListener {
       Rectangle vr = bubble_view.getViewRect();
 
       // if (scale_factor != 1) {
-	 // vr.x /= scale_factor;
-	 // vr.y /= scale_factor;
-	 // vr.width /= scale_factor;
-	 // vr.height /= scale_factor;
+         // vr.x /= scale_factor;
+         // vr.y /= scale_factor;
+         // vr.width /= scale_factor;
+         // vr.height /= scale_factor;
        // }
       bubble_area.setViewPosition(vr);
       bubble_overview.setViewPosition(vr);
     }
 
-}	// end of inner class ViewportHandler
+}       // end of inner class ViewportHandler
 
 
 
 private final class ViewportCallback implements BubbleAreaCallback {
 
-   @Override public void updateOverview()		{ }
+   @Override public void updateOverview()               { }
 
    @Override public void moveDelta(int dx,int dy) {
       Point p = bubble_view.getViewPosition();
       setViewport(p.x + dx,p.y + dy);
     }
 
-}	// end of inner class ViewportCallback
+}       // end of inner class ViewportCallback
 
 
 
@@ -1375,19 +1375,19 @@ public Point convertPoint(Component src,Point pt,Component dst)
 
    for (Component p = src; p != null; p = getParentComponent(p)) {
       if (p instanceof BudaBubbleArea) {
-	 srcbba = (BudaBubbleArea) p;
-	 break;
+         srcbba = (BudaBubbleArea) p;
+         break;
        }
     }
    for (Component p = dst; p != null; p = getParentComponent(p)) {
       if (p instanceof BudaBubbleArea) {
-	 dstbba = (BudaBubbleArea) p;
-	 break;
+         dstbba = (BudaBubbleArea) p;
+         break;
        }
     }
 
    if ((srcbba == null || srcbba.getScaleFactor() == 1) &&
-	  (dstbba == null || dstbba.getScaleFactor() == 1)) {
+          (dstbba == null || dstbba.getScaleFactor() == 1)) {
       return SwingUtilities.convertPoint(src,pt,dst);
     }
 
@@ -1418,9 +1418,9 @@ public Point convertPoint(Component src,Point pt,Component dst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Keyboard methods							*/
-/*										*/
+/*                                                                              */
+/*      Keyboard methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupGlobalActions()
@@ -1430,32 +1430,32 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new RemoveHandler(),"menu W");
    SwingKey.registerKeyAction("ROOT",jc,new EscapeHandler(),"ESCAPE");
    SwingKey.registerKeyAction("ROOT",jc,"Group Adjacent Search",
-	 new SearchKeyHandler(true,true,true),"menu F10");
+         new SearchKeyHandler(true,true,true),"menu F10");
    SwingKey.registerKeyAction("ROOT",jc,"Nongroup Adjacent Search",
-	 new SearchKeyHandler(true,true,true,true),"menu shift F10");
+         new SearchKeyHandler(true,true,true,true),"menu shift F10");
    SwingKey.registerKeyAction("ROOT",jc,"Search in Project",
-	 new SearchKeyHandler(true,false,false),"F10","menu O");
+         new SearchKeyHandler(true,false,false),"F10","menu O");
    SwingKey.registerKeyAction("ROOT",jc,"Search",
-	 new SearchKeyHandler(true,true,false),"F11");
+         new SearchKeyHandler(true,true,false),"F11");
    SwingKey.registerKeyAction("ROOT",jc,"Search for Documentation",
-	 new SearchKeyHandler(false,true,false),"F12");
+         new SearchKeyHandler(false,true,false),"F12");
    SwingKey.registerKeyAction("ROOT",jc,new FloaterHandler(),"menu F12");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus left",
-	 new FocusDirectionHandler(FocusDirectionHandler.LEFT,0.5f),"alt menu LEFT");
+         new FocusDirectionHandler(FocusDirectionHandler.LEFT,0.5f),"alt menu LEFT");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus right",
-	 new FocusDirectionHandler(FocusDirectionHandler.RIGHT,0.5f),"alt menu RIGHT");
+         new FocusDirectionHandler(FocusDirectionHandler.RIGHT,0.5f),"alt menu RIGHT");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus up",
-	 new FocusDirectionHandler(FocusDirectionHandler.UP,0.5f),"alt menu UP");
+         new FocusDirectionHandler(FocusDirectionHandler.UP,0.5f),"alt menu UP");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus down",
-	 new FocusDirectionHandler(FocusDirectionHandler.DOWN,0.5f),"alt menu DOWN");
+         new FocusDirectionHandler(FocusDirectionHandler.DOWN,0.5f),"alt menu DOWN");
    SwingKey.registerKeyAction("ROOT",jc,"Pan left",
-	 new PanHandler(-1,0),"menu LEFT");
+         new PanHandler(-1,0),"menu LEFT");
    SwingKey.registerKeyAction("ROOT",jc,"Pan right",
-	 new PanHandler(1,0),"menu RIGHT");
+         new PanHandler(1,0),"menu RIGHT");
    SwingKey.registerKeyAction("ROOT",jc,"Pan up",
-	 new PanHandler(0,-1),"menu UP");
+         new PanHandler(0,-1),"menu UP");
    SwingKey.registerKeyAction("ROOT",jc,"Pan down",
-	 new PanHandler(0,1),"menu DOWN");
+         new PanHandler(0,1),"menu DOWN");
    SwingKey.registerKeyAction("ROOT",jc,new SaveHandler(),"menu S");
    SwingKey.registerKeyAction("ROOT",jc,new CommitHandler(),"F5");
    SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
@@ -1466,14 +1466,14 @@ private void setupGlobalActions()
 
    if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
       SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
-	    "menu EQUALS");
+            "menu EQUALS");
       SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(-1),
-	    "menu MINUS");
+            "menu MINUS");
       SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(0),
-	    "menu shift EQUALS");
+            "menu shift EQUALS");
     }
 // registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
-//		KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
+//              KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
 }
 
 
@@ -1487,9 +1487,9 @@ public void registerKeyAction(Action act,String cmd,String k)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public boolean handleQuitRequest()
@@ -1564,9 +1564,9 @@ public void handleCheckpointAllRequest()
 
 
 /********************************************************************************/
-/*										*/
-/*	Hide and show methods							*/
-/*										*/
+/*                                                                              */
+/*      Hide and show methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 public int getDefaultViewportHeight()
@@ -1652,23 +1652,23 @@ private final class OverviewListener extends MouseMotionAdapter {
       // Point pt = SwingUtilities.convertPoint(pwin,0,0,twin);
       // int ypos = pt1.y - pt.y;
       int ypos = pt1.y;
-//	System.err.println("POINT " + ypos + " " + ht);
+//      System.err.println("POINT " + ypos + " " + ht);
 
       int htgt = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
       if (ht == 1) {
-	 if (ypos < SHADE_PULL_DOWN_START) {
-	    windowShadeDown();
-	  }
+         if (ypos < SHADE_PULL_DOWN_START) {
+            windowShadeDown();
+          }
        }
       else if (ypos > htgt + SHADE_PULL_DOWN_END && shade_down) {
-	 windowShadeUp();
+         windowShadeUp();
        }
       else if (ht != htgt) {
-	 windowShadeDown();
+         windowShadeDown();
        }
     }
 
-}	// end of inner class OverviewListener
+}       // end of inner class OverviewListener
 
 
 
@@ -1696,23 +1696,23 @@ private class ShadeUpdater implements ActionListener {
       int startht = curht;
       curht += move;
       if (curht < 1) {
-	 curht = 1;
-	 move = curht - startht;
-	 done = true;
+         curht = 1;
+         move = curht - startht;
+         done = true;
        }
       else if (curht > BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT) {
-	 curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-	 move = curht - startht;
-	 done = true;
+         curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+         move = curht - startht;
+         done = true;
        }
 
       for (Component c : button_panels) {
-	 Dimension csz = c.getSize();
-	 csz.height = curht;
-	 c.setSize(csz);
-	 c.setMinimumSize(csz);
-	 c.setMaximumSize(csz);
-	 c.setPreferredSize(csz);
+         Dimension csz = c.getSize();
+         csz.height = curht;
+         c.setSize(csz);
+         c.setMinimumSize(csz);
+         c.setMaximumSize(csz);
+         c.setPreferredSize(csz);
        }
 
       Dimension topsz = bubble_topbar.getSize();
@@ -1745,40 +1745,40 @@ private class ShadeUpdater implements ActionListener {
 
       BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-	 if (bbl.isFloating() && bbl != toolbar) {
-	    Rectangle rbbl = bbl.getBounds();
-	    rbbl.y -= move;
-	    bbl.setBounds(rbbl);
-	  }
+         if (bbl.isFloating() && bbl != toolbar) {
+            Rectangle rbbl = bbl.getBounds();
+            rbbl.y -= move;
+            bbl.setBounds(rbbl);
+          }
        }
       if (toolbar.isVisible()) {
-	 Rectangle rbbl = toolbar.getBounds();
-	 rbbl.y -= move;
-	 // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
-	 toolbar.setBounds(rbbl);
+         Rectangle rbbl = toolbar.getBounds();
+         rbbl.y -= move;
+         // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
+         toolbar.setBounds(rbbl);
        }
 
       // revalidate();
 
       synchronized (BudaRoot.this) {
-	 if (shade_delta == 0 || done) {
-	    shade_delta = 0;
-	    Timer nt = (Timer) e.getSource();
-	    nt.stop();
-	    return;
-	  }
+         if (shade_delta == 0 || done) {
+            shade_delta = 0;
+            Timer nt = (Timer) e.getSource();
+            nt.stop();
+            return;
+          }
        }
     }
 
-}	// end of inner class ShadeUpdater
+}       // end of inner class ShadeUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handlers 							*/
-/*										*/
+/*                                                                              */
+/*      Action handlers                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class EscapeHandler extends AbstractAction {
@@ -1791,14 +1791,14 @@ private class EscapeHandler extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (demo_thread != null) {
-	 demo_thread.stopDemonstration();
-	 return;
+         demo_thread.stopDemonstration();
+         return;
        }
 
       removeCurrentBubble();
     }
 
-}	// end of inner class EscapeHandler
+}       // end of inner class EscapeHandler
 
 
 
@@ -1814,7 +1814,7 @@ private class RemoveHandler extends AbstractAction {
       removeCurrentBubble();
     }
 
-}	// end of inner class RemoveHandler
+}       // end of inner class RemoveHandler
 
 
 
@@ -1849,13 +1849,13 @@ private class SearchKeyHandler extends AbstractAction {
 
       BudaBubble focbub = getCurrentBubbleArea().getFocusBubble();
       if (focbub != null) {
-	 Rectangle bubarea = focbub.getBounds();
-	 SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
-	 if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
-	    if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
-	    else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
-	    pt.y = bubarea.y;
-	  }
+         Rectangle bubarea = focbub.getBounds();
+         SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
+         if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
+            if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
+            else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
+            pt.y = bubarea.y;
+          }
        }
 
       if (doc_search && proj_search) createMergedSearchBubble(pt,null,null);
@@ -1863,7 +1863,7 @@ private class SearchKeyHandler extends AbstractAction {
       else createDocSearchBubble(pt,null,null);
     }
 
-}	// end of inner class SearchKeyHandler
+}       // end of inner class SearchKeyHandler
 
 
 
@@ -1879,7 +1879,7 @@ private static class MetricsHandler extends AbstractAction {
       BoardMetrics.forceDump();
     }
 
-}	// end of inner class MetricsHandler
+}       // end of inner class MetricsHandler
 
 
 
@@ -1895,7 +1895,7 @@ private static class HelpHandler extends AbstractAction {
       showHelp(null);
     }
 
-}	// end of inner class HelpHandler
+}       // end of inner class HelpHandler
 
 
 
@@ -1912,7 +1912,7 @@ private class SaveHandler extends AbstractAction {
       handleSaveAllRequest();
     }
 
-}	// end of inner class HelpHandler
+}       // end of inner class HelpHandler
 
 
 
@@ -1929,7 +1929,7 @@ private class CommitHandler extends AbstractAction {
       handleCommitAllRequest();
     }
 
-}	// end of inner class HelpHandler
+}       // end of inner class HelpHandler
 
 
 
@@ -1952,9 +1952,9 @@ private class UndoHandler extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods for moving focus or bubbles				*/
-/*										*/
+/*                                                                              */
+/*      Action methods for moving focus or bubbles                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class ZoomHandler extends AbstractAction implements ActionListener {
@@ -1977,7 +1977,7 @@ private class ZoomHandler extends AbstractAction implements ActionListener {
     }
 
 
-}	// end of inner class ZoomHandler
+}       // end of inner class ZoomHandler
 
 
 private static String getZoomName(int dir)
@@ -2003,13 +2003,13 @@ private class FloaterHandler extends AbstractAction implements ActionListener {
       BudaBubbleArea focbubarea = getCurrentBubbleArea();
       BudaBubble focbub = focbubarea.getFocusBubble();
       if (focbub != null) {
-	 if (focbub.isFloating()) focbubarea.setBubbleFloating(focbub,false);
-	 else focbubarea.setBubbleFloating(focbub,true);
-	 focbubarea.repaint();
+         if (focbub.isFloating()) focbubarea.setBubbleFloating(focbub,false);
+         else focbubarea.setBubbleFloating(focbub,true);
+         focbubarea.repaint();
        }
    }
 
-}	// end of inner class FloaterHandler
+}       // end of inner class FloaterHandler
 
 
 
@@ -2038,44 +2038,44 @@ private class FocusDirectionHandler extends AbstractAction implements ActionList
       int shortdist = getViewport().width/2;
       int badshortdist = shortdist;
       for (BudaBubble bb : ibb) {
-	 if (bb != focbub) {
-	    int appropriatecalc = 0;
-	    int baddist = 0;
-	    switch (my_dir) {
-	       case LEFT:
-		  appropriatecalc = focbub.getX() - bb.getX() - bb.getWidth();
-		  baddist = Math.abs(focbub.getY() - bb.getY());
-		  break;
-	       case RIGHT:
-		  appropriatecalc = bb.getX() - focbub.getX() - focbub.getWidth();
-		  baddist = Math.abs(focbub.getY() - bb.getY());
-		  break;
-	       case UP:
-		  appropriatecalc = focbub.getY() - bb.getY() - bb.getHeight();
-		  baddist = Math.abs(focbub.getX() - bb.getX());
-		  break;
-	       case DOWN:
-		  appropriatecalc = bb.getY() - focbub.getY() - focbub.getHeight();
-		  baddist = Math.abs(focbub.getX() - bb.getX());
-		  break;
-	    }
-	    if (appropriatecalc < shortdist && appropriatecalc > 0 &&
-		  (int) (baddist*bad_dist_factor) < appropriatecalc) {
-	       bestcandidate = bb;
-	       shortdist = appropriatecalc;
-	       badshortdist = appropriatecalc;
-	    }
-	    else if (appropriatecalc < badshortdist && appropriatecalc > 0) {
-	       notbadcandidate = bb;
-	       badshortdist = appropriatecalc;
-	    }
-	 }
+         if (bb != focbub) {
+            int appropriatecalc = 0;
+            int baddist = 0;
+            switch (my_dir) {
+               case LEFT:
+                  appropriatecalc = focbub.getX() - bb.getX() - bb.getWidth();
+                  baddist = Math.abs(focbub.getY() - bb.getY());
+                  break;
+               case RIGHT:
+                  appropriatecalc = bb.getX() - focbub.getX() - focbub.getWidth();
+                  baddist = Math.abs(focbub.getY() - bb.getY());
+                  break;
+               case UP:
+                  appropriatecalc = focbub.getY() - bb.getY() - bb.getHeight();
+                  baddist = Math.abs(focbub.getX() - bb.getX());
+                  break;
+               case DOWN:
+                  appropriatecalc = bb.getY() - focbub.getY() - focbub.getHeight();
+                  baddist = Math.abs(focbub.getX() - bb.getX());
+                  break;
+            }
+            if (appropriatecalc < shortdist && appropriatecalc > 0 &&
+                  (int) (baddist*bad_dist_factor) < appropriatecalc) {
+               bestcandidate = bb;
+               shortdist = appropriatecalc;
+               badshortdist = appropriatecalc;
+            }
+            else if (appropriatecalc < badshortdist && appropriatecalc > 0) {
+               notbadcandidate = bb;
+               badshortdist = appropriatecalc;
+            }
+         }
       }
       if (bestcandidate != null) bestcandidate.grabFocus();
       else if (notbadcandidate != null) notbadcandidate.grabFocus();
    }
 
-}	// end of inner class FocusDirectionHandler
+}       // end of inner class FocusDirectionHandler
 
 
 
@@ -2103,7 +2103,7 @@ private class PanHandler extends AbstractAction implements ActionListener {
       moveViewport(xmove, ymove);
    }
 
-}	// end of inner class PanHandler\
+}       // end of inner class PanHandler\
 
 
 
@@ -2125,12 +2125,12 @@ private class PrintHandler extends AbstractAction  {
       fmt = pjob.pageDialog(fmt);
       pjob.setPrintable(bbl,fmt);
       if (pjob.printDialog()) {
-	 try {
-	    pjob.print();
-	  }
-	 catch (PrinterException ex) {
-	    BoardLog.logE("BUDA","Window printing problem",ex);
-	  }
+         try {
+            pjob.print();
+          }
+         catch (PrinterException ex) {
+            BoardLog.logE("BUDA","Window printing problem",ex);
+          }
        }
     }
 }
@@ -2138,13 +2138,13 @@ private class PrintHandler extends AbstractAction  {
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration methods							*/
-/*										*/
+/*                                                                              */
+/*      Configuration methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Save the current configuration as an XML document in the given file.
+ *      Save the current configuration as an XML document in the given file.
  **/
 
 public void saveConfiguration(File f) throws IOException
@@ -2181,7 +2181,7 @@ public void saveConfiguration(File f) throws IOException
 
 
 /**
- *	Add a configurator with the given key for creating/saving bubbles.
+ *      Add a configurator with the given key for creating/saving bubbles.
  **/
 
 public static void addBubbleConfigurator(String key,BubbleConfigurator bc)
@@ -2192,7 +2192,7 @@ public static void addBubbleConfigurator(String key,BubbleConfigurator bc)
 
 
 /**
- *	Add a port configurator for creating LinkPorts of particular types.
+ *      Add a port configurator for creating LinkPorts of particular types.
  **/
 
 public static void addPortConfigurator(String key,PortConfigurator pc)
@@ -2262,8 +2262,8 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,bool
       Rectangle va = bubble_view.getViewRect();
       pos = docked ? BudaBubblePosition.DOCKED : BudaBubblePosition.FLOAT;
       if (delta != null) {
-	 x -= delta.x;
-	 y -= delta.y;
+         x -= delta.x;
+         y -= delta.y;
        }
       if (x + size.width > va.width) x = va.width - size.width;
       if (y + size.height > va.height) y = va.height - size.height;
@@ -2271,7 +2271,7 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,bool
       if (y < 0) y = 0;
     }
 
-   bb.setTransient(false);		// transient bubbles aren't saved
+   bb.setTransient(false);              // transient bubbles aren't saved
 
    if (upd) {
       BudaConstraint cnst = new BudaConstraint(pos,x,y);
@@ -2303,7 +2303,7 @@ int matchConfiguration(String key,Element e,BudaBubble bb)
 
 
 /**
- *	Create a link port given the configuration XML.
+ *      Create a link port given the configuration XML.
  **/
 
 public LinkPort createPort(BudaBubble bb,Element e)
@@ -2329,20 +2329,20 @@ private static final class DefaultPortConfigurator implements PortConfigurator {
       return new BudaDefaultPort(e);
     }
 
-}	// end of inner class DefaultPortConfigurator
+}       // end of inner class DefaultPortConfigurator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Input/Output methods							*/
-/*										*/
+/*                                                                              */
+/*      Input/Output methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Saves the current configuration into a file so that it can be reloaded
- *	or shared.
+ *      Saves the current configuration into a file so that it can be reloaded
+ *      or shared.
  **/
 
 public void outputXml(BudaXmlWriter xw,boolean history)
@@ -2368,7 +2368,7 @@ public void outputXml(BudaXmlWriter xw,boolean history)
    if (history) {
       xw.begin("TASKS");
       for (BudaTask bt : getAllTasks()) {
-	 bt.outputXml(xw);
+         bt.outputXml(xw);
        }
       xw.end("TASKS");
       relation_data.outputXml(xw);
@@ -2405,16 +2405,16 @@ private void setupSession(Element config)
       Element view = IvyXml.getChild(config,"VIEWAREA");
       Element viewpos = IvyXml.getChild(view,"VIEW");
       if (viewpos != null) {
-	 int px = (int) IvyXml.getAttrDouble(viewpos,"X",0);
-	 int py = (int) IvyXml.getAttrDouble(viewpos,"Y",0);
-	 int pw = (int) IvyXml.getAttrDouble(viewpos,"WIDTH",0);
-	 int ph = (int) IvyXml.getAttrDouble(viewpos,"HEIGHT",0);
-	 if (pw != 0 && ph != 0) delta = new Rectangle(px,py,pw,ph);
+         int px = (int) IvyXml.getAttrDouble(viewpos,"X",0);
+         int py = (int) IvyXml.getAttrDouble(viewpos,"Y",0);
+         int pw = (int) IvyXml.getAttrDouble(viewpos,"WIDTH",0);
+         int ph = (int) IvyXml.getAttrDouble(viewpos,"HEIGHT",0);
+         if (pw != 0 && ph != 0) delta = new Rectangle(px,py,pw,ph);
        }
 
       Element bubbles = IvyXml.getChild(config,"BUBBLEAREA");
       if (bubbles != null) {
-	 bubble_area.configure(bubbles,delta);
+         bubble_area.configure(bubbles,delta);
        }
     }
 
@@ -2442,7 +2442,7 @@ public synchronized void waitForSetup()
 {
    while (!view_setup) {
       try {
-	 wait(1000);
+         wait(1000);
        }
       catch (InterruptedException e) { }
     }
@@ -2485,7 +2485,7 @@ private class RestoreSession implements Runnable {
       doneSetup();
     }
 
-}	// end of inner class RestoreSession
+}       // end of inner class RestoreSession
 
 
 
@@ -2499,7 +2499,7 @@ private void loadHistory(Element e)
    Element taskcfg = IvyXml.getChild(e,"TASKS");
    if (taskcfg != null) {
       for (Element te : IvyXml.children(taskcfg,"TASK")) {
-	 task_shelf.add(new BudaTask(te));
+         task_shelf.add(new BudaTask(te));
        }
     }
 
@@ -2511,9 +2511,9 @@ private void loadHistory(Element e)
 
 
 /********************************************************************************/
-/*										*/
-/*	New bubble creation methods						*/
-/*										*/
+/*                                                                              */
+/*      New bubble creation methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 public static void registerBubbler(String name,BudaBubbler bbb)
@@ -2529,15 +2529,15 @@ public static BudaBubbler getBubbler(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Channel set methods							*/
-/*										*/
+/*                                                                              */
+/*      Channel set methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Set the current channel set to the designated one.  This is used, for
- *	example, to change to a debugging perspective.	Setting the channel set
- *	to null goes back to the default context.
+ *      Set the current channel set to the designated one.  This is used, for
+ *      example, to change to a debugging perspective.  Setting the channel set
+ *      to null goes back to the default context.
  **/
 
 public void setChannelSet(BudaChannelSet cs)
@@ -2561,7 +2561,7 @@ public void setChannelSet(BudaChannelSet cs)
 
 
 /**
- *	Set the current channel (and its channel set)
+ *      Set the current channel (and its channel set)
  **/
 
 public void setCurrentChannel(Component c)
@@ -2578,10 +2578,10 @@ public void setCurrentChannel(Component c)
 
 
 /**
- *	Return the current channel set
+ *      Return the current channel set
  **/
 
-public BudaChannelSet getChannelSet()			{ return cur_channels; }
+public BudaChannelSet getChannelSet()                   { return cur_channels; }
 
 
 
@@ -2594,9 +2594,9 @@ void addChannelSet(BudaChannelSet cs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Color methods								*/
-/*										*/
+/*                                                                              */
+/*      Color methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static Color getGroupColor(double alpha)
@@ -2612,13 +2612,13 @@ static Color getGroupColor(double alpha)
 
 
 /********************************************************************************/
-/*										*/
-/*	Task shelf methods							*/
-/*										*/
+/*                                                                              */
+/*      Task shelf methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new BudaTask from its XML description and add it to the task shelf
+ *      Create a new BudaTask from its XML description and add it to the task shelf
  **/
 
 public void addTask(Element xml)
@@ -2667,27 +2667,27 @@ private static final class TaskComparator implements Comparator<BudaTask> {
       String name1 = t1.getName();
       String name2 = t2.getName();
       if (Character.isLetter(name1.charAt(0))) {
-	 if (Character.isLetter(name2.charAt(0))) {
-	    return name1.compareTo(name2);
-	 }
-	 return -1;
+         if (Character.isLetter(name2.charAt(0))) {
+            return name1.compareTo(name2);
+         }
+         return -1;
        }
       if (Character.isLetter(name2.charAt(0))) {
-	 return 1;
+         return 1;
        }
       return name1.compareTo(name2);
       //return t1.getName().compareTo(t2.getName());
     }
 
-}	// end of inner class TaskComparator
+}       // end of inner class TaskComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Relationship methods							*/
-/*										*/
+/*                                                                              */
+/*      Relationship methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void noteNamedBubbleGroup(BudaBubbleGroup bg)
@@ -2696,13 +2696,13 @@ void noteNamedBubbleGroup(BudaBubbleGroup bg)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods for bubbles						*/
-/*										*/
+/*                                                                              */
+/*      Callback methods for bubbles                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Add a callback for detecting bubble addition/removal/focus changes.
+ *      Add a callback for detecting bubble addition/removal/focus changes.
  **/
 
 public static void addBubbleViewCallback(BubbleViewCallback cb)
@@ -2713,7 +2713,7 @@ public static void addBubbleViewCallback(BubbleViewCallback cb)
 
 
 /**
- *	Remove a callback for detecting bubble addition/removal/focus changes.
+ *      Remove a callback for detecting bubble addition/removal/focus changes.
  **/
 
 public static void removeBubbleViewCallback(BubbleViewCallback cb)
@@ -2818,14 +2818,14 @@ void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods for files						*/
-/*										*/
+/*                                                                              */
+/*      Callback methods for files                                              */
+/*                                                                              */
 /********************************************************************************/
 
 
 /**
- *	Register a new file handler
+ *      Register a new file handler
  **/
 
 public static void addFileHandler(BudaFileHandler fh)
@@ -2836,7 +2836,7 @@ public static void addFileHandler(BudaFileHandler fh)
 
 
 /**
- *	Remove a file handler from callbacks
+ *      Remove a file handler from callbacks
  **/
 
 public static void removeFileHandler(BudaFileHandler fh)
@@ -2848,9 +2848,9 @@ public static void removeFileHandler(BudaFileHandler fh)
 
 
 /********************************************************************************/
-/*										*/
-/*	Task Manager methods							*/
-/*										*/
+/*                                                                              */
+/*      Task Manager methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -2871,9 +2871,9 @@ public void stopWaitCursor() {
 
 
 /********************************************************************************/
-/*										*/
-/*	Window closing methods							*/
-/*										*/
+/*                                                                              */
+/*      Window closing methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handleCloseRequest(boolean halt)
@@ -2886,21 +2886,21 @@ void handleCloseRequest(boolean halt)
       pnl.addSeparator();
       JCheckBox savebox = null;
       if (BUDA_PROPERTIES.getBoolean("Buda.ask.save.on.close",true)) {
-	 savebox = pnl.addBoolean("Save Any Changes",save,null);
+         savebox = pnl.addBoolean("Save Any Changes",save,null);
        }
       JCheckBox askbox = pnl.addBoolean("Always exit without prompt",false,null);
       int sts = JOptionPane.showConfirmDialog(this,pnl,"Close Confirmation",
-						 JOptionPane.OK_CANCEL_OPTION,
-						 JOptionPane.QUESTION_MESSAGE);
+                                                 JOptionPane.OK_CANCEL_OPTION,
+                                                 JOptionPane.QUESTION_MESSAGE);
       if (sts == JOptionPane.CANCEL_OPTION) return;
       if ((savebox != null && savebox.isSelected() != save) || askbox.isSelected()) {
-	 if (savebox != null) save = savebox.isSelected();
-	 BUDA_PROPERTIES.setProperty("Buda.close.save",Boolean.toString(save));
-	 BUDA_PROPERTIES.setProperty("Buda.close.ask",Boolean.toString(!askbox.isSelected()));
-	 try {
-	    BUDA_PROPERTIES.save();
-	  }
-	 catch (IOException e) { }
+         if (savebox != null) save = savebox.isSelected();
+         BUDA_PROPERTIES.setProperty("Buda.close.save",Boolean.toString(save));
+         BUDA_PROPERTIES.setProperty("Buda.close.ask",Boolean.toString(!askbox.isSelected()));
+         try {
+            BUDA_PROPERTIES.save();
+          }
+         catch (IOException e) { }
        }
     }
 
@@ -2955,15 +2955,15 @@ private class Stopper implements Runnable {
    @Override public void run() {
       BoardLog.logD("BUDA","Starting stopper " + stop_delay);
       if (stop_delay > 0) {
-	 try {
-	    Thread.sleep(stop_delay);
-	  }
-	 catch (InterruptedException e) {  }
+         try {
+            Thread.sleep(stop_delay);
+          }
+         catch (InterruptedException e) {  }
        }
       System.exit(0);
     }
 
-}	// end of inner class Stopper
+}       // end of inner class Stopper
 
 
 
@@ -2973,14 +2973,14 @@ private final class WindowCloser extends WindowAdapter {
       handleCloseRequest(true);
     }
 
-}	// end of inner class WindowCloser
+}       // end of inner class WindowCloser
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Graphics getGraphics()
@@ -2999,9 +2999,9 @@ private final class WindowCloser extends WindowAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Button Panel								*/
-/*										*/
+/*                                                                              */
+/*      Button Panel                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -3035,25 +3035,25 @@ private class ButtonPanel extends JPanel
       g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
-}	// end of inner class ButtonPanel
+}       // end of inner class ButtonPanel
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Checkpoint timer							*/
-/*										*/
+/*                                                                              */
+/*      Checkpoint timer                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class CheckpointTimer implements ActionListener {
 
    CheckpointTimer() {
       if (BUBBLE_CHECKPOINT_TIME > 0) {
-	 javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
-	 timer.setRepeats(true);
-	 timer.start();
+         javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
+         timer.setRepeats(true);
+         timer.start();
        }
     }
 
@@ -3061,15 +3061,15 @@ private class CheckpointTimer implements ActionListener {
       handleCheckpointAllRequest();
     }
 
-}	// end of inner class CheckpointTimer
+}       // end of inner class CheckpointTimer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Event queue to intercept mouse events					*/
-/*										*/
+/*                                                                              */
+/*      Event queue to intercept mouse events                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class MouseEventQueue extends EventQueue {
@@ -3082,13 +3082,13 @@ private static final class MouseEventQueue extends EventQueue {
 
       // only want mouse events for buttons other than 1
       if (!(e instanceof MouseEvent)) {
-	 if (e instanceof InputEvent) {
-	    BudaHover.removeHovers();
-	    InputEvent ie = (InputEvent) e;
-	    BoardMetrics.noteActive(ie.getWhen());
-	  }
-	 resend(e);
-	 return;
+         if (e instanceof InputEvent) {
+            BudaHover.removeHovers();
+            InputEvent ie = (InputEvent) e;
+            BoardMetrics.noteActive(ie.getWhen());
+          }
+         resend(e);
+         return;
        }
 
       MouseEvent me = (MouseEvent) e;
@@ -3096,36 +3096,36 @@ private static final class MouseEventQueue extends EventQueue {
       last_mouse = me;
 
       if (drag_area == null) {
-	 if (me.getButton() == MouseEvent.BUTTON1 ||
-		(me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
-	    resend(e);
-	    return;
-	  }
+         if (me.getButton() == MouseEvent.BUTTON1 ||
+                (me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
+            resend(e);
+            return;
+          }
        }
 
       if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_RELEASED) {
-	 if (drag_area == null) {
-	    resend(e);
-	    return;
-	  }
+         if (drag_area == null) {
+            resend(e);
+            return;
+          }
        }
       else if (drag_area != null && me.getID() != MouseEvent.MOUSE_EXITED) {
-	 clearDragArea();
+         clearDragArea();
        }
 
       if (drag_area == null) setDragArea(me);
 
       if (drag_area != null) {
-	 Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
-	 me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
-	 if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
-	    drag_area.processMouseMotionEvent(me);
-	 else
-	    drag_area.processMouseEvent(me);
-	 if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
-	    clearDragArea();
+         Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
+         me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
+         if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
+            drag_area.processMouseMotionEvent(me);
+         else
+            drag_area.processMouseEvent(me);
+         if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
+            clearDragArea();
 
-	 return;
+         return;
        }
 
       resend(e);
@@ -3137,11 +3137,11 @@ private static final class MouseEventQueue extends EventQueue {
 
       base_component = SwingUtilities.getDeepestComponentAt(me.getComponent(),me.getX(),me.getY());
       for (Component comp = base_component; comp != null; comp = comp.getParent()) {
-	 if (!base_component.isEnabled()) base_component = comp;
-	 if (comp instanceof BudaBubbleArea) {
-	    drag_area = (BudaBubbleArea) comp;
-	    break;
-	  }
+         if (!base_component.isEnabled()) base_component = comp;
+         if (comp instanceof BudaBubbleArea) {
+            drag_area = (BudaBubbleArea) comp;
+            break;
+          }
        }
 
       if (drag_area == null) base_component = null;
@@ -3151,10 +3151,10 @@ private static final class MouseEventQueue extends EventQueue {
       if (drag_area == null) return;
 
       if (base_component != null) {
-	 for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
-	    if (comp == null) break;
-	    comp.setEnabled(true);
-	  }
+         for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
+            if (comp == null) break;
+            comp.setEnabled(true);
+          }
        }
 
       drag_area = null;
@@ -3169,14 +3169,14 @@ private static final class MouseEventQueue extends EventQueue {
        }
     }
 
-}	// end of inner class MouseEventQueue
+}       // end of inner class MouseEventQueue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle server->client messages						*/
-/*										*/
+/*                                                                              */
+/*      Handle server->client messages                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClientHandler implements MintHandler {
@@ -3188,47 +3188,47 @@ private final class ClientHandler implements MintHandler {
       String rply = null;
 
       try {
-	 if (cmd == null) ;
-	 else if (cmd.equals("SAVECONFIG")) {
-	    if (file == null) saveConfiguration(null);
-	    else {
-	       File f = new File(file);
-	       saveConfiguration(f);
-	     }
-	  }
-	 else {
-	    BoardLog.logD("BUDA","Unknown SERVER message " + cmd);
-	  }
+         if (cmd == null) ;
+         else if (cmd.equals("SAVECONFIG")) {
+            if (file == null) saveConfiguration(null);
+            else {
+               File f = new File(file);
+               saveConfiguration(f);
+             }
+          }
+         else {
+            BoardLog.logD("BUDA","Unknown SERVER message " + cmd);
+          }
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUDA","Problem processing SERVER message " + cmd,t);
+         BoardLog.logE("BUDA","Problem processing SERVER message " + cmd,t);
        }
 
       msg.replyTo(rply);
     }
 
-}	// end of inner class ClientHandler
+}       // end of inner class ClientHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Remove old bubbles							*/
-/*										*/
+/*                                                                              */
+/*      Remove old bubbles                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubbleRemover implements ActionListener {
 
-   private long 	remove_time;
-   private long 	active_time;
-   private long 	last_active;
-   private boolean	first_time;
+   private long         remove_time;
+   private long         active_time;
+   private long         last_active;
+   private boolean      first_time;
 
 
    BubbleRemover() {
       long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",168);  // hours
-      remove_time = delay * 60*60*1000; 					 // in ms
+      remove_time = delay * 60*60*1000;                                          // in ms
       long adelay = BUDA_PROPERTIES.getLong("Buda.remove.old.active.time",96);
       active_time = adelay * 60*60*1000;
       if (delay <= 0 && adelay <= 0) return;
@@ -3244,12 +3244,12 @@ private class BubbleRemover implements ActionListener {
       Rectangle cur = bubble_area.getVisibleRect();
 
       if (first_time) {
-	 for (BudaBubble bb : bubble_area.getBubbles()) {
-	    if (bb.isFixed() || bb.isFloating()) continue;
-	    boolean show = bb.getBounds().intersects(cur);
-	    if (show) bb.noteViewed();
-	  }
-	 first_time = false;
+         for (BudaBubble bb : bubble_area.getBubbles()) {
+            if (bb.isFixed() || bb.isFloating()) continue;
+            boolean show = bb.getBounds().intersects(cur);
+            if (show) bb.noteViewed();
+          }
+         first_time = false;
        }
 
       List<BudaBubble> remove = new ArrayList<>();
@@ -3258,36 +3258,36 @@ private class BubbleRemover implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = 0;
       if (last_active > 0) {
-	 long when = BoardMetrics.getLastActive();
-	 if (when > last_active) {
-	    last_active = when;
-	    delta = REMOVAL_CHECK_TIME;
-	  }
+         long when = BoardMetrics.getLastActive();
+         if (when > last_active) {
+            last_active = when;
+            delta = REMOVAL_CHECK_TIME;
+          }
        }
       for (BudaBubble bb : bubble_area.getBubbles()) {
-	 if (bb.isFixed() || bb.isFloating()) continue;
-	 long viewed = bb.getLastViewed();
-	 if (viewed <= 0) continue;
-	 long checktime = now - viewed;
-	 long unviewedtime = bb.getUnviewedTime();
-	 maxcheck = Math.max(maxcheck,checktime);
-	 maxopen = Math.max(maxopen,unviewedtime);
-	 if (remove_time > 0 && checktime > remove_time) remove.add(bb);
-	 else if (active_time > 0 && unviewedtime > active_time) remove(bb);
-	 else if (delta > 0) {
-	    boolean show = bb.getBounds().intersects(cur);
-	    if (!show) bb.noteUnviewed(delta);
-	  }
+         if (bb.isFixed() || bb.isFloating()) continue;
+         long viewed = bb.getLastViewed();
+         if (viewed <= 0) continue;
+         long checktime = now - viewed;
+         long unviewedtime = bb.getUnviewedTime();
+         maxcheck = Math.max(maxcheck,checktime);
+         maxopen = Math.max(maxopen,unviewedtime);
+         if (remove_time > 0 && checktime > remove_time) remove.add(bb);
+         else if (active_time > 0 && unviewedtime > active_time) remove(bb);
+         else if (delta > 0) {
+            boolean show = bb.getBounds().intersects(cur);
+            if (!show) bb.noteUnviewed(delta);
+          }
        }
       BoardLog.logD("BUDA","Check remove " + maxcheck + " " + maxopen + " " +
-	    remove.size());
+            remove.size());
       for (BudaBubble bb : remove) {
-	 BoardLog.logD("BUDA","Auto remove " + bb);
-	 bubble_area.removeBubble(bb);
+         BoardLog.logD("BUDA","Auto remove " + bb);
+         bubble_area.removeBubble(bb);
        }
     }
 
-}	// end of inner class BubbleRemover
+}       // end of inner class BubbleRemover
 
 
 
@@ -3296,7 +3296,7 @@ private class BubbleRemover implements ActionListener {
 
 
 
-}	// end of class BudaRoot
+}       // end of class BudaRoot
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtBreakpointBubble.java					*/
-/*										*/
-/*	Bubble Environment break point bubble					*/
-/*										*/
+/*                                                                              */
+/*              BddtBreakpointBubble.java                                       */
+/*                                                                              */
+/*      Bubble Environment break point bubble                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -82,22 +82,22 @@ import java.util.List;
 
 
 class BddtBreakpointBubble extends BudaBubble implements BddtConstants, BudaConstants,
-	BumpConstants, BumpBreakpointHandler, ActionListener, BudaBubbleOutputer {
+        BumpConstants, BumpBreakpointHandler, ActionListener, BudaBubbleOutputer {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpClient		bump_client;
-private BreakpointTable 	breakpoint_table;
-private BreakpointTableModel	table_model;
-private BreakpointToolBar	tool_bar;
-private Timer			update_timer;
-private BumpBreakModel		break_model;
+private BumpClient              bump_client;
+private BreakpointTable         breakpoint_table;
+private BreakpointTableModel    table_model;
+private BreakpointToolBar       tool_bar;
+private Timer                   update_timer;
+private BumpBreakModel          break_model;
 
 private static final long serialVersionUID = 1;
 
@@ -109,9 +109,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtBreakpointBubble()
@@ -152,9 +152,9 @@ BddtBreakpointBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -168,9 +168,9 @@ BddtBreakpointBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private String getToolTip(BumpBreakpoint bp)
@@ -207,9 +207,9 @@ private String getToolTip(BumpBreakpoint bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse Listener methods							*/
-/*										*/
+/*                                                                              */
+/*      Mouse Listener methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -230,11 +230,11 @@ private String getToolTip(BumpBreakpoint bp)
       breakpoint_table.setRowSelectionInterval(row,row);
       String typ = bp.getProperty("TYPE");
       if (typ.equals("LINE")) {
-	 popup.add(new GotoSourceAction(bp));
+         popup.add(new GotoSourceAction(bp));
        }
       else if (typ.equals("EXCEPTION")) {
-	 popup.add(new ExceptionAction(bp,bp.getBoolProperty("CAUGHT"),true));
-	 popup.add(new ExceptionAction(bp,bp.getBoolProperty("UNCAUGHT"),false));
+         popup.add(new ExceptionAction(bp,bp.getBoolProperty("CAUGHT"),true));
+         popup.add(new ExceptionAction(bp,bp.getBoolProperty("UNCAUGHT"),false));
          popup.add(new ExceptionSubclassAction(bp,bp.getBoolProperty("SUBCLASSES")));
        }
       popup.add(new EnableAction(bp,bp.getBoolProperty("ENABLED")));
@@ -255,9 +255,9 @@ private String getToolTip(BumpBreakpoint bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint Listener methods						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint Listener methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleBreakpointAdded(BumpBreakpoint bp)
@@ -317,16 +317,16 @@ private final class DataChanger implements Runnable {
       table_model.fireTableDataChanged();
     }
 
-}	// end of inner class DataChanger
+}       // end of inner class DataChanger
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint tool bar							*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint tool bar                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class BreakpointToolBar extends JToolBar implements ActionListener {
@@ -339,9 +339,9 @@ private class BreakpointToolBar extends JToolBar implements ActionListener {
 
    BreakpointToolBar() {
       enable_all = new JButton("Enable All",new ImageIcon(BoardImage
-							    .getImage("checkedbox.png")));
+                                                            .getImage("checkedbox.png")));
       disable_all = new JButton("Disable All",new ImageIcon(BoardImage
-							      .getImage("emptybox.png")));
+                                                              .getImage("emptybox.png")));
       remove_btn = new JButton("Remove Selected",new ImageIcon(BoardImage.getImage("no.png")));
       enable_all.setText("Enable All");
       disable_all.setText("Disable All");
@@ -359,44 +359,44 @@ private class BreakpointToolBar extends JToolBar implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (e.getSource() == enable_all) {
-	 BumpClient client = BumpClient.getBump();
-	 Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
-	 while (it.hasNext()) {
-	    BumpBreakpoint bp = it.next();
-	    break_model.enableBreakpoint(bp.getFile(), bp.getLineNumber());
-	  }
-	 //break_model.enableAllBreakpoints(null);
+         BumpClient client = BumpClient.getBump();
+         Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
+         while (it.hasNext()) {
+            BumpBreakpoint bp = it.next();
+            break_model.enableBreakpoint(bp.getFile(), bp.getLineNumber());
+          }
+         //break_model.enableAllBreakpoints(null);
        }
       else if (e.getSource() == disable_all) {
-	 BumpClient client = BumpClient.getBump();
-	 Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
-	 while (it.hasNext()) {
-	    BumpBreakpoint bp = it.next();
-	    break_model.disableBreakpoint(bp.getFile(), bp.getLineNumber());
-	  }
-	 //break_model.disableAllBreakpoints(null);
+         BumpClient client = BumpClient.getBump();
+         Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
+         while (it.hasNext()) {
+            BumpBreakpoint bp = it.next();
+            break_model.disableBreakpoint(bp.getFile(), bp.getLineNumber());
+          }
+         //break_model.disableAllBreakpoints(null);
        }
       else if (e.getSource() == remove_btn) {
-	 int[] rows = breakpoint_table.getSelectedRows();
-	 BumpBreakpoint[] bps = new BumpBreakpoint[rows.length];
-	 for (int i = 0; i < rows.length; i++) {
-	    bps[i] = breakpoint_table.getActualBreakpoint(rows[i]);
-	  }
-	 for (int i = 0; i < bps.length; i++) {
-	    break_model.removeBreakpoint(bps[i].getBreakId());
-	  }
+         int[] rows = breakpoint_table.getSelectedRows();
+         BumpBreakpoint[] bps = new BumpBreakpoint[rows.length];
+         for (int i = 0; i < rows.length; i++) {
+            bps[i] = breakpoint_table.getActualBreakpoint(rows[i]);
+          }
+         for (int i = 0; i < bps.length; i++) {
+            break_model.removeBreakpoint(bps[i].getBreakId());
+          }
        }
       update_timer.restart();
     }
 
-}	// end of inner class BreakpointToolBar
+}       // end of inner class BreakpointToolBar
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint Table methods						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint Table methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class BreakpointTable extends JTable {
@@ -448,16 +448,16 @@ private class BreakpointTable extends JTable {
       return getToolTip(bpt);
     }
 
-}	// end of inner class BreakpointTable
+}       // end of inner class BreakpointTable
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Cell rendering								*/
-/*										*/
+/*                                                                              */
+/*      Cell rendering                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class BreakpointTableRenderer implements TableCellRenderer {
@@ -469,9 +469,9 @@ private class BreakpointTableRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-        						       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t, v, sel,
-        									     foc, r, c);
+                                                                                     foc, r, c);
       if (breakpoint_table.isRowSelected(r)) {
          cmp.setOpaque(true);
          BoardColors.setColors(cmp,BDDT_BREAKPOINT_SELECTION_COLOR_PROP);
@@ -482,15 +482,15 @@ private class BreakpointTableRenderer implements TableCellRenderer {
       return cmp;
     }
 
-}	// end of inner class BreakpointTableRenderer
+}       // end of inner class BreakpointTableRenderer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table model								*/
-/*										*/
+/*                                                                              */
+/*      Table model                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class BreakpointTableModel extends AbstractTableModel {
@@ -550,17 +550,17 @@ private class BreakpointTableModel extends AbstractTableModel {
 
    @Override public boolean isCellEditable(int row,int col) {
       switch (col) {
-	 case 3:
-	    return true;
-	 default:
-	    return false;
+         case 3:
+            return true;
+         default:
+            return false;
        }
     }
 
    @Override public void setValueAt(Object value,int row,int col) {
       if (col == 3) {
-	 toggleEnablement(bump_client.getAllBreakpoints().get(row));
-	 update_timer.restart();
+         toggleEnablement(bump_client.getAllBreakpoints().get(row));
+         update_timer.restart();
        }
     }
 
@@ -574,14 +574,14 @@ private class BreakpointTableModel extends AbstractTableModel {
    
     }
 
-}	// end of inner class BreakpointTableModel
+}       // end of inner class BreakpointTableModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	BudaBubbleOutputer methods						*/
-/*										*/
+/*                                                                              */
+/*      BudaBubbleOutputer methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getConfigurator()
@@ -599,9 +599,9 @@ private class BreakpointTableModel extends AbstractTableModel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions for popup menu							*/
-/*										*/
+/*                                                                              */
+/*      Actions for popup menu                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class GotoSourceAction extends AbstractAction {
@@ -621,7 +621,7 @@ private class GotoSourceAction extends AbstractAction {
       showBubble(f,ln);
    }
 
-}	// end of inner class GotoSourceAction
+}       // end of inner class GotoSourceAction
 
 
 
@@ -643,11 +643,11 @@ private class ExceptionAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BDDT","EditExceptionBreakpoint");
       bump_client.editBreakpoint(for_breakpoint.getBreakId(),
-        			    (is_caught ? "CAUGHT" : "UNCAUGHT"),
-        			    Boolean.toString(!is_set));
+                                    (is_caught ? "CAUGHT" : "UNCAUGHT"),
+                                    Boolean.toString(!is_set));
     }
 
-}	// end of inner class ExceptionAction
+}       // end of inner class ExceptionAction
 
 
 private class ExceptionSubclassAction extends AbstractAction {
@@ -668,7 +668,7 @@ private class ExceptionSubclassAction extends AbstractAction {
            "SUBCLASSES",Boolean.toString(!is_set));
     }
 
-}	// end of inner class ExceptionSubclassAction
+}       // end of inner class ExceptionSubclassAction
 
 
 
@@ -688,10 +688,10 @@ private class EnableAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BDDT","EnableBreakpoint");
       bump_client.editBreakpoint(for_breakpoint.getBreakId(),
-        			    "ENABLE",Boolean.toString(!is_disable));
+                                    "ENABLE",Boolean.toString(!is_disable));
     }
 
-}	// end of inner class EnableAction
+}       // end of inner class EnableAction
 
 
 
@@ -711,7 +711,7 @@ private class RemoveAction extends AbstractAction {
       break_model.removeBreakpoint(for_breakpoint.getBreakId());
     }
 
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 
@@ -731,7 +731,7 @@ private class NewExceptionAction extends AbstractAction {
        }
     }
 
-}	// end of inner class NewExceptionAction
+}       // end of inner class NewExceptionAction
 
 
 
@@ -747,7 +747,7 @@ private static class NewFieldWatchAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
     }
 
-}	// end of inner class NewExceptionAction
+}       // end of inner class NewExceptionAction
 
 
 
@@ -775,7 +775,7 @@ private final class Mouser extends BoardMouser {
 
 
 
-}	// end of class BddtBreakpointBubble
+}       // end of class BddtBreakpointBubble
 
 
 

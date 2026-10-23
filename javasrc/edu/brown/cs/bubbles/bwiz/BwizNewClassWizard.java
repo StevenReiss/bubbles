@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BwizNewClassWizard.java 					*/
-/*										*/
-/*	Wizard to create a new class						*/
-/*										*/
+/*                                                                              */
+/*              BwizNewClassWizard.java                                         */
+/*                                                                              */
+/*      Wizard to create a new class                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,9 +39,9 @@ class BwizNewClassWizard extends BwizNewWizard
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -49,9 +49,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizNewClassWizard(BuenoLocation loc)
@@ -63,9 +63,9 @@ BwizNewClassWizard(BuenoLocation loc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected int getAccessibilityInfo()
@@ -73,22 +73,22 @@ BwizNewClassWizard(BuenoLocation loc)
    return SHOW_ABSTRACT|SHOW_FINAL;
 }
 
-@Override protected Creator getCreator()	{ return new ClassCreator(); }
+@Override protected Creator getCreator()        { return new ClassCreator(); }
 
-@Override protected String getNameText()	{ return "Class Name"; }
+@Override protected String getNameText()        { return "Class Name"; }
 @Override protected String getNameHoverText()
 {
    return "<html>Enter the new class name." +
     " Such names usually start with an uppercase letter";
 }
 
-@Override protected String getSecondText()	{ return "Extends"; }
+@Override protected String getSecondText()      { return "Extends"; }
 @Override protected String getSecondHoverText()
 {
    return "This class's parent (super) class";
 }
 
-@Override protected String getListText()	{ return "Implements: "; }
+@Override protected String getListText()        { return "Implements: "; }
 @Override protected String getListHoverText()
 {
    return "Any interfaces implemented by this class. Press ENTER " +
@@ -98,9 +98,9 @@ BwizNewClassWizard(BuenoLocation loc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class Creator								*/
-/*										*/
+/*                                                                              */
+/*      Class Creator                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClassCreator extends Creator {
@@ -121,11 +121,11 @@ private final class ClassCreator extends Creator {
       return nbbl;
     }
 
-}	// end of inner class ClassCreator
+}       // end of inner class ClassCreator
 
 
 
-}	// end of class BwizNewClassWizard
+}       // end of class BwizNewClassWizard
 
 
 

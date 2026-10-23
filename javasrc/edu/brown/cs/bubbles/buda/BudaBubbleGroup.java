@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaBubbleGroup.java						*/
-/*										*/
-/*	BUblles Display Area bubble group					*/
-/*										*/
+/*                                                                              */
+/*              BudaBubbleGroup.java                                            */
+/*                                                                              */
+/*      BUblles Display Area bubble group                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -67,43 +67,43 @@ import java.util.HashSet;
 
 
 public class BudaBubbleGroup implements BudaConstants, ComponentListener,
-	Comparable<BudaBubbleGroup> {
+        Comparable<BudaBubbleGroup> {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Collection<BudaBubble>	group_bubbles;
-private Area			group_shape;
-private Point2D 		top_point;
-private Rectangle		group_bounds;
-private String			group_title;
-private Shape			title_shape;
-private Color			left_color;
-private Color			right_color;
-private Color			label_color;
-private Color			single_left_color;
-private Color			single_right_color;
-private int			group_index;
-private GroupTitle		title_field;
+private Collection<BudaBubble>  group_bubbles;
+private Area                    group_shape;
+private Point2D                 top_point;
+private Rectangle               group_bounds;
+private String                  group_title;
+private Shape                   title_shape;
+private Color                   left_color;
+private Color                   right_color;
+private Color                   label_color;
+private Color                   single_left_color;
+private Color                   single_right_color;
+private int                     group_index;
+private GroupTitle              title_field;
 private RoundRectangle2D.Double title_region;
 private double                  scale_factor;
 
-private static boolean		complex_shape = false;
+private static boolean          complex_shape = false;
 
-private static int		group_counter = 0;
+private static int              group_counter = 0;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubbleGroup()
@@ -129,9 +129,9 @@ BudaBubbleGroup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble methods								*/
-/*										*/
+/*                                                                              */
+/*      Bubble methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addBubble(BudaBubble bb)
@@ -162,7 +162,7 @@ public Collection<BudaBubble> getBubbles()
 
 
 
-boolean isEmpty()			{ return group_bubbles.isEmpty(); }
+boolean isEmpty()                       { return group_bubbles.isEmpty(); }
 
 
 public BudaBubbleArea getBudaBubbleArea()
@@ -188,9 +188,9 @@ public BudaRoot getBudaRoot()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public Color getColor()
@@ -231,11 +231,11 @@ boolean isSplit()
 
 
 
-int getSize()				{ return group_bubbles.size(); }
+int getSize()                           { return group_bubbles.size(); }
 
 
 
-public String getTitle()			{ return group_title; }
+public String getTitle()                        { return group_title; }
 public void setTitle(String ttl)
 {
    if (ttl != null && ttl.length() == 0) ttl = null;
@@ -246,9 +246,9 @@ public void setTitle(String ttl)
       title_field.setText(group_title);
       Dimension psz;
       if (group_title != null) {
-	 JLabel lbl = new JLabel(group_title);
-	 lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
-	 psz = lbl.getPreferredSize();
+         JLabel lbl = new JLabel(group_title);
+         lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
+         psz = lbl.getPreferredSize();
        }
       else psz = new Dimension(100,15);
 
@@ -259,7 +259,7 @@ public void setTitle(String ttl)
 
 
 
-JComponent getTitleComponent()		{ return title_field; }
+JComponent getTitleComponent()          { return title_field; }
 
 
 
@@ -277,9 +277,9 @@ public Point getCenter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparison methods							*/
-/*										*/
+/*                                                                              */
+/*      Comparison methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int compareTo(BudaBubbleGroup g)
@@ -293,9 +293,9 @@ public Point getCenter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Testing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 boolean shouldAdd(BudaBubble b)
@@ -317,8 +317,8 @@ boolean shouldAdd(BudaBubble b)
 
    for (BudaBubble bubble : group_bubbles) {
       if (!b.equals(bubble)) {
-	 Rectangle bounds2 = getExpandedBounds(bubble);
-	 if (bounds1.intersects(bounds2)) return true;
+         Rectangle bounds2 = getExpandedBounds(bubble);
+         if (bounds1.intersects(bounds2)) return true;
        }
     }
 
@@ -393,9 +393,9 @@ double getAuraSize()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void drawGroup(Graphics2D g,boolean overview)
@@ -434,13 +434,13 @@ void drawGroup(Graphics2D g,boolean overview)
    if (overview) {
       g.setPaint(p);
       if (grad) {
-	 g.fill(s);
+         g.fill(s);
        }
       else {
-	 for (BudaBubble bub : group_bubbles) {
-	    s = getBubbleDrawShape(bub);
-	    g.fill(s);
-	  }
+         for (BudaBubble bub : group_bubbles) {
+            s = getBubbleDrawShape(bub);
+            g.fill(s);
+          }
        }
     }
 
@@ -451,8 +451,8 @@ void drawGroup(Graphics2D g,boolean overview)
     }
    else {
       for (BudaBubble bub : group_bubbles) {
-	 s = getBubbleDrawShape(bub);
-	 g.fill(s);
+         s = getBubbleDrawShape(bub);
+         g.fill(s);
        }
     }
    g.setPaint(px);
@@ -468,11 +468,11 @@ void drawGroup(Graphics2D g,boolean overview)
       double w0 = sz.getWidth() + 8;
       double h0 = sz.getHeight() + 4;
       if (title_region != null) {
-	 g.setColor(BoardColors.getColor("Buda.GroupTitleColor"));
-	 g.fill(title_region);
+         g.setColor(BoardColors.getColor("Buda.GroupTitleColor"));
+         g.fill(title_region);
        }
       title_region =
-	 new RoundRectangle2D.Double(top.getX() - w0/2,top.getY() - h0/2,w0,h0,w0/2,h0/2);
+         new RoundRectangle2D.Double(top.getX() - w0/2,top.getY() - h0/2,w0,h0,w0/2,h0/2);
       g.setColor(label_color);
       g.fill(title_region);
       title_shape = title_region;
@@ -490,9 +490,9 @@ void drawGroup(Graphics2D g,boolean overview)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -519,9 +519,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Context menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Context menu methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void handlePopupMenu(MouseEvent e)
@@ -559,14 +559,14 @@ private class RemoveAction extends AbstractAction {
       bba.userRemoveGroup(BudaBubbleGroup.this);
     }
 
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Component management methods						*/
-/*										*/
+/*                                                                              */
+/*      Component management methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void componentHidden(ComponentEvent e)
@@ -600,9 +600,9 @@ private class RemoveAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Shape Management methods						*/
-/*										*/
+/*                                                                              */
+/*      Shape Management methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void clearShape()
@@ -618,9 +618,9 @@ Area getShape()
 {
    if (group_shape == null || group_bounds == null) {
       for (BudaBubble b : group_bubbles) {
-	 Area s0 = getBubbleShape(b);
-	 if (group_shape == null) group_shape = s0;
-	 else group_shape.add(s0);
+         Area s0 = getBubbleShape(b);
+         if (group_shape == null) group_shape = s0;
+         else group_shape.add(s0);
        }
 
       //TODO: SMOOTH THE SHAPE HERE
@@ -722,8 +722,8 @@ private Area getBubbleShape(BudaBubble b)
    double y56 = (y5 + y6)/2;
    double x67 = x6 - (bf-bn) * 2;
    double y67 = y23;
-   double x70 = (x0 + x7)/2;		// x7
-   double y70 = (y0 + y7)/2;		// y0
+   double x70 = (x0 + x7)/2;            // x7
+   double y70 = (y0 + y7)/2;            // y0
 
    p2.moveTo(x0,y0);
    p2.quadTo(x01,y01,x1,y1);
@@ -746,9 +746,9 @@ private Point2D getTopPoint()
       Rectangle bounds=new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0);
 
       for (BudaBubble b : group_bubbles) {
-	 if (b.getY() < bounds.y) {
-	    bounds = b.getBounds();
-	  }
+         if (b.getY() < bounds.y) {
+            bounds = b.getBounds();
+          }
        }
 
       double topy = bounds.getY() - getAuraSize();
@@ -768,19 +768,19 @@ private Point2D getTopPoint()
 
       // find the top-center point for a bubble label
       for (PathIterator pi = s.getPathIterator(null,1.0); !pi.isDone(); pi.next()) {
-	 pi.currentSegment(coords);
-	 if (pno == 0 || coords[1] < topy) {
-	    topx = coords[0];
-	    topy = coords[1];
-	  }
-	 else if (coords[1] == topy && topy == lasty && topx == lastx) {
-	    topx = (topx + coords[0])/2.0;
-	  }
-	 lastx = coords[0];
-	 lasty = coords[1];
-	 ++pno;
+         pi.currentSegment(coords);
+         if (pno == 0 || coords[1] < topy) {
+            topx = coords[0];
+            topy = coords[1];
+          }
+         else if (coords[1] == topy && topy == lasty && topx == lastx) {
+            topx = (topx + coords[0])/2.0;
+          }
+         lastx = coords[0];
+         lasty = coords[1];
+         ++pno;
 
-	 top_point = new Point2D.Double(topx,topy);
+         top_point = new Point2D.Double(topx,topy);
        }
     }
    ***********/
@@ -791,9 +791,9 @@ private Point2D getTopPoint()
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for title region							*/
-/*										*/
+/*                                                                              */
+/*      Class for title region                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class GroupTitle extends SwingTextField implements ActionListener, FocusListener, NoBubble
@@ -875,11 +875,11 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
       br.noteNamedGroup(BudaBubbleGroup.this,ottl);
     }
 
-}	// end of inner class GroupTitle
+}       // end of inner class GroupTitle
 
 
 
-}	// end of class BudaBubbleArea
+}       // end of class BudaBubbleArea
 
 
 

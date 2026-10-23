@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardEclipse.java						*/
-/*										*/
-/*	Handle eclipse installation for user					*/
-/*										*/
+/*                                                                              */
+/*              BoardEclipse.java                                               */
+/*                                                                              */
+/*      Handle eclipse installation for user                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,9 +70,9 @@ public class BoardEclipse implements BoardConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program for installing eclipse					*/
-/*										*/
+/*                                                                              */
+/*      Main program for installing eclipse                                     */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -88,15 +88,15 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File			install_directory;
-private Map<String,String>	eclipse_versions;
-private File			eclipse_directory;
-private String			eclipse_version;
+private File                    install_directory;
+private Map<String,String>      eclipse_versions;
+private File                    eclipse_directory;
+private String                  eclipse_version;
 
 private static final String ECLIPSE_URL = "https://www.eclipse.org/downloads/download.php?" +
       "file=/technology/epp/downloads/release/$(V)/" +
@@ -110,9 +110,9 @@ private static final int ECLIPSE_HEIGHT = 300;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BoardEclipse(File installdir)
@@ -126,9 +126,9 @@ BoardEclipse(File installdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Installation routine							*/
-/*										*/
+/*                                                                              */
+/*      Installation routine                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 String installEclipse()
@@ -165,9 +165,9 @@ String installEclipse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Run as a separate process						*/
-/*										*/
+/*                                                                              */
+/*      Run as a separate process                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private String runInstaller()
@@ -202,10 +202,10 @@ private String runInstaller()
       int sts = p.waitFor();
 
       if (sts == 0) {
-	 BufferedReader fr = new BufferedReader(new FileReader(f));
-	 String rslt = fr.readLine();
-	 fr.close();
-	 if (rslt != null && rslt.length() > 0) return rslt;
+         BufferedReader fr = new BufferedReader(new FileReader(f));
+         String rslt = fr.readLine();
+         fr.close();
+         if (rslt != null && rslt.length() > 0) return rslt;
        }
     }
    catch (IOException e) {
@@ -219,9 +219,9 @@ private String runInstaller()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Eclipse versions							*/
-/*										*/
+/*                                                                              */
+/*      Get Eclipse versions                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean getEclipseVersions()
@@ -277,9 +277,9 @@ private void addEclipseVersion(String v)
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse panel -- panel for checking eclipse installation		*/
-/*										*/
+/*                                                                              */
+/*      Eclipse panel -- panel for checking eclipse installation                */
+/*                                                                              */
 /********************************************************************************/
 
 private class EclipsePanel implements ActionListener, UndoableEditListener {
@@ -345,16 +345,16 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand().toUpperCase();
       switch (cmd) {
-	 case "INSTALL" :
-	    EclipseDownloader ecl = new EclipseDownloader(this);
-	    ecl.start();
-	    break;
-	 case "CANCEL" :
-	    handleResult(false);
-	    break;
-	 default :
-	    recheck();
-	    break;
+         case "INSTALL" :
+            EclipseDownloader ecl = new EclipseDownloader(this);
+            ecl.start();
+            break;
+         case "CANCEL" :
+            handleResult(false);
+            break;
+         default :
+            recheck();
+            break;
        }
     }
 
@@ -364,17 +364,17 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
 
    synchronized Boolean getStatus() {
       if (result_status == null) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
       return result_status;
     }
 
    synchronized void handleResult(boolean sts) {
       if (!sts) {
-	 eclipse_directory = null;
+         eclipse_directory = null;
        }
       result_status = sts;
       notifyAll();
@@ -382,8 +382,8 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
 
    private void recheck() {
       if (install_button != null) {
-	 boolean fg = validate();
-	 install_button.setEnabled(fg);
+         boolean fg = validate();
+         install_button.setEnabled(fg);
        }
     }
 
@@ -395,25 +395,25 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
       if (vidx < 0) vidx = 0;
       eclipse_version = version_choice.getItemAt(vidx);
       if (dirp.exists()) {
-	 if (!dirp.isDirectory()) return false;
-	 File [] files = dirp.listFiles();
-	 if (files != null && files.length > 0) {
-	    if (!BoardSetup.checkEclipseDirectory(dirp)) return false;
-	  }
+         if (!dirp.isDirectory()) return false;
+         File [] files = dirp.listFiles();
+         if (files != null && files.length > 0) {
+            if (!BoardSetup.checkEclipseDirectory(dirp)) return false;
+          }
        }
       eclipse_directory = dirp;
       return true;
     }
 
-}	// end of inner class EclipsePanel
+}       // end of inner class EclipsePanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse downloader							*/
-/*										*/
+/*                                                                              */
+/*      Eclipse downloader                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class EclipseDownloader extends Thread {
@@ -429,14 +429,14 @@ private class EclipseDownloader extends Thread {
 
       File f = eclipse_directory.getParentFile();
       if (!f.exists() && !f.mkdirs()) {
-	 JOptionPane.showMessageDialog(null,"Can't create installation directory " + f,
-	       "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
-	 for_panel.handleResult(false);
-	 return;
+         JOptionPane.showMessageDialog(null,"Can't create installation directory " + f,
+               "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
+         for_panel.handleResult(false);
+         return;
        }
 
       JOptionPane prog = new JOptionPane("Installing Eclipse " + eclipse_version + " into " + eclipse_directory,
-	    JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION);
+            JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION);
       prog.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       JDialog dlg = prog.createDialog(null,"Installing Eclipse...");
       dlg.setModal(false);
@@ -448,39 +448,39 @@ private class EclipseDownloader extends Thread {
       System.err.println("BOARD: Installing eclipse from " + urltxt);
 
       if (urltxt != null) {
-	 try {
-	    URL url = new URI(urltxt).toURL();
-	    URLConnection uc = url.openConnection();
-	    InputStream ins = uc.getInputStream();
-	    File fd = eclipse_directory;
-	    if (fd.getName().equals("eclipse")) {
-	       fd = fd.getParentFile();
-	     }
-	    else {
-	       eclipse_directory = new File(fd,"eclipse");
-	     }
-	    installEclipseFromJar(ins,fd);
-	    ins.close();
-	    dlg.setVisible(false);
-	    for_panel.handleResult(true);
-	    return;
-	  }
-	 catch (InterruptedException e) {
-	    dlg.setVisible(false);
-	    BoardLog.logE("BOARD","Problem installing",e);
-	    JOptionPane.showMessageDialog(null,e.getMessage(),
-		  "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
-	    try {
-	       IvyFile.remove(eclipse_directory);
-	     }
-	    catch (IOException ex) { }
-	  }
-	 catch (IOException | URISyntaxException e) {
-	    dlg.setVisible(false);
-	    BoardLog.logE("BOARD","Problem installing from " + urltxt,e);
-	    JOptionPane.showMessageDialog(null,e.getMessage(),
-		  "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
-	  }
+         try {
+            URL url = new URI(urltxt).toURL();
+            URLConnection uc = url.openConnection();
+            InputStream ins = uc.getInputStream();
+            File fd = eclipse_directory;
+            if (fd.getName().equals("eclipse")) {
+               fd = fd.getParentFile();
+             }
+            else {
+               eclipse_directory = new File(fd,"eclipse");
+             }
+            installEclipseFromJar(ins,fd);
+            ins.close();
+            dlg.setVisible(false);
+            for_panel.handleResult(true);
+            return;
+          }
+         catch (InterruptedException e) {
+            dlg.setVisible(false);
+            BoardLog.logE("BOARD","Problem installing",e);
+            JOptionPane.showMessageDialog(null,e.getMessage(),
+                  "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
+            try {
+               IvyFile.remove(eclipse_directory);
+             }
+            catch (IOException ex) { }
+          }
+         catch (IOException | URISyntaxException e) {
+            dlg.setVisible(false);
+            BoardLog.logE("BOARD","Problem installing from " + urltxt,e);
+            JOptionPane.showMessageDialog(null,e.getMessage(),
+                  "Eclipse Installation Problem",JOptionPane.ERROR_MESSAGE);
+          }
        }
       dlg.setVisible(false);
       for_panel.handleResult(false);
@@ -516,14 +516,14 @@ private class EclipseDownloader extends Thread {
       return new File(f1,nest.substring(idx+1));
     }
 
-}	// end of inner class EclipseDownloader
+}       // end of inner class EclipseDownloader
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hyper link listener							*/
-/*										*/
+/*                                                                              */
+/*      Hyper link listener                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class HyperListener implements HyperlinkListener {
@@ -551,10 +551,10 @@ private final class HyperListener implements HyperlinkListener {
        }
     }
 
-}	// end of inner class HyperListener
+}       // end of inner class HyperListener
 
 
-}	// end of class BoardEclipse
+}       // end of class BoardEclipse
 
 
 

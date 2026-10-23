@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattJUnit.java							*/
-/*										*/
-/*	Bubble Automated Testing Tool junit main program			*/
-/*										*/
+/*                                                                              */
+/*              BattJUnit.java                                                  */
+/*                                                                              */
+/*      Bubble Automated Testing Tool junit main program                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -72,9 +72,9 @@ public final class BattJUnit implements BattConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -88,16 +88,16 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	list_only;
-private String		result_file;
-private OutputStream	result_stream;
-private Class<?> []	class_set;
-private String		single_test;
+private boolean         list_only;
+private String          result_file;
+private OutputStream    result_stream;
+private Class<?> []     class_set;
+private String          single_test;
 private Map<Description,JunitTest> test_cases;
 private PrintStream     log_stream;
 private boolean         log_debug;
@@ -144,9 +144,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BattJUnit(String [] args)
@@ -171,9 +171,9 @@ private BattJUnit(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning							*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
@@ -188,22 +188,22 @@ private void scanArgs(String [] args)
 
    for (int i = 0; i < args.length; ++i) {
       if (!havecls && args[i].startsWith("-")) {
-	 if (args[i].startsWith("-l")) {                                // -list
-	    list_only = true;
-	  }
-	 else if (args[i].startsWith("-o") && i+1 < args.length) {      // -o <output>
-	    result_file = args[++i];
-	  }
-	 else if (args[i].startsWith("-s") && i+1 < args.length) {      // -s port@host
-	    result_file = null;
-	    setupSocket(args[++i]);
-	  }
-	 else if (args[i].startsWith("-a")) {                           // -all
-	    useall = true;
-	  }
-	 else if (args[i].startsWith("-test") && i+1 < args.length) {   // -test <testname>
-	    single_test = args[++i];
-	  }
+         if (args[i].startsWith("-l")) {                                // -list
+            list_only = true;
+          }
+         else if (args[i].startsWith("-o") && i+1 < args.length) {      // -o <output>
+            result_file = args[++i];
+          }
+         else if (args[i].startsWith("-s") && i+1 < args.length) {      // -s port@host
+            result_file = null;
+            setupSocket(args[++i]);
+          }
+         else if (args[i].startsWith("-a")) {                           // -all
+            useall = true;
+          }
+         else if (args[i].startsWith("-test") && i+1 < args.length) {   // -test <testname>
+            single_test = args[++i];
+          }
          else if (args[i].startsWith("-D")) {                           // -Debug
             log_debug = true;
           }
@@ -221,21 +221,21 @@ private void scanArgs(String [] args)
                logE("Problem opening log file",e);
              }
           }
-	 else badArgs();
+         else badArgs();
        }
       else if (args[i].startsWith("-test") && i+1 < args.length) {   // -test <testname>
-	 single_test = args[++i];
+         single_test = args[++i];
        }
       else {
-	 havecls = true;
-	 String clsnm = args[i];
-	 if (clsnm.startsWith("@")) {
-	    clsnm = clsnm.substring(1);
-	    tststr.add(clsnm);
-	  }
-	 else if (useall) tststr.add(clsnm);
+         havecls = true;
+         String clsnm = args[i];
+         if (clsnm.startsWith("@")) {
+            clsnm = clsnm.substring(1);
+            tststr.add(clsnm);
+          }
+         else if (useall) tststr.add(clsnm);
 
-	 clsstr.add(clsnm);
+         clsstr.add(clsnm);
        }
     }
 
@@ -249,7 +249,7 @@ private void scanArgs(String [] args)
     }
    catch (ClassNotFoundException e) {
       if (!list_only) {
-	 logE("No agent found");
+         logE("No agent found");
        }
    }
    catch (Throwable t) {
@@ -260,9 +260,9 @@ private void scanArgs(String [] args)
 
    if (!list_only) {
       for (String s : clsstr) {
-	 if (!tststr.contains(s)) {
-	    setupClass(s,service);
-	  }
+         if (!tststr.contains(s)) {
+            setupClass(s,service);
+          }
        }
     }
 
@@ -278,28 +278,28 @@ private void scanArgs(String [] args)
 
    if (result_stream == null && result_file != null) {
       try {
-	 result_stream = new FileOutputStream(result_file);
+         result_stream = new FileOutputStream(result_file);
        }
       catch (IOException e) {
-	 logE("Couldn't open output file",e);
-	 System.exit(1);
+         logE("Couldn't open output file",e);
+         System.exit(1);
        }
     }
 
 
    if (!list_only) {
       try {
-	 Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
-	 Method mac = ac.getMethod("doneLoad");
-	 mac.invoke(null);
+         Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
+         Method mac = ac.getMethod("doneLoad");
+         mac.invoke(null);
        }
       catch (Throwable e1) {
-	 logE("Problem with doneLoad",e1);
+         logE("Problem with doneLoad",e1);
        }
     }
 
    logD("Timings " + (time1-time0) + " " + (time2 - time1) + " " + tststr.size() + " " +
-	clss.size() + " " + clsstr.size());
+        clss.size() + " " + clsstr.size());
 }
 
 
@@ -332,61 +332,61 @@ private Class<?> setupClass(String cnm,ExecutorService service)
    while (retry && rslt == null) {
       retry = false;
       try {
-	 // TODO: if this can be done without actually calling the static initializer
-	 // it would be better
-	 // An infinite loop or problem in the static initializer creates problems here
-	 Class<?> c = null;
-	 Future<Class<?>> future = service.submit(new FindClass(cnm));
-	 try {
-	    c = future.get(2000,TimeUnit.MILLISECONDS);
-	  }
-	 catch (ExecutionException e) {
-	    logI("Find class " + cnm + " threw " + e);
-	    throw e.getCause();
-	  }
-	 catch (TimeoutException | InterruptedException e) {
-	    // logE("Initialization problem with " + cnm,e);
-	    future.cancel(true);
-	  }
-	 if (c == null) return null;
-	 logD("Preload test class " + cnm);
-	
-	 TestClass tcls = new TestClass(c);
-   	 boolean valid = tcls.isPublic();
+         // TODO: if this can be done without actually calling the static initializer
+         // it would be better
+         // An infinite loop or problem in the static initializer creates problems here
+         Class<?> c = null;
+         Future<Class<?>> future = service.submit(new FindClass(cnm));
+         try {
+            c = future.get(2000,TimeUnit.MILLISECONDS);
+          }
+         catch (ExecutionException e) {
+            logI("Find class " + cnm + " threw " + e);
+            throw e.getCause();
+          }
+         catch (TimeoutException | InterruptedException e) {
+            // logE("Initialization problem with " + cnm,e);
+            future.cancel(true);
+          }
+         if (c == null) return null;
+         logD("Preload test class " + cnm);
+        
+         TestClass tcls = new TestClass(c);
+         boolean valid = tcls.isPublic();
          try {
             tcls.getOnlyConstructor();
           }
          catch (AssertionError e) {
             valid = false;
           }
-	 if (tcls.isANonStaticInnerClass()) valid = false;
-	 if (valid) {
-	    rslt = c;
-	  }
+         if (tcls.isANonStaticInnerClass()) valid = false;
+         if (valid) {
+            rslt = c;
+          }
        }
       catch (AssertionError e) {
-	 logE("Assertion error setting up class",e);
+         logE("Assertion error setting up class",e);
        }
       catch (IllegalArgumentException e) {
-	 // logE("Argument exception,e);
+         // logE("Argument exception,e);
        }
       catch (ExceptionInInitializerError e) {
-	 // logE("Initialization exception",e);
+         // logE("Initialization exception",e);
        }
       // catch (NoSuchMethodException e) {
       //    logE("No constructor",e);
       // }
       catch (NoClassDefFoundError e) {
-	 logW("Class " + cnm + " not found");
+         logW("Class " + cnm + " not found");
        }
       catch (ClassNotFoundException e) {
-	 logE("Class " + cnm + " not found",e);
+         logE("Class " + cnm + " not found",e);
        }
       catch (LinkageError e) {
-	 retry = true;
+         retry = true;
        }
       catch (Throwable t) {
-	 logE("Class " + cnm + " can't be loaded",t);
+         logE("Class " + cnm + " can't be loaded",t);
        }
     }
 
@@ -407,14 +407,14 @@ private static class FindClass implements Callable<Class<?>> {
 
    @Override public Class<?> call() {
       try {
-	 return Class.forName(class_name);
+         return Class.forName(class_name);
        }
       catch (Throwable t) {
-	 throw new Error(t);
+         throw new Error(t);
        }
     }
 
-}	// end of inner class FindClass
+}       // end of inner class FindClass
 
 
 
@@ -456,7 +456,7 @@ private static String fixHost(String h)
       String h3 = InetAddress.getLocalHost().getCanonicalHostName();
 
       if (h.equals(h1) || h.equals(h2) || h.equals(h3)) {
-	 return "127.0.0.1";
+         return "127.0.0.1";
        }
    }
    catch (UnknownHostException e) { }
@@ -477,9 +477,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -493,11 +493,11 @@ private void process()
       String cnm = single_test.substring(idx1+1,idx2);
       logD("WORK ON SINGLE TEST " + single_test + " " + cnm + " " + mnm);
       try {
-	 Class<?> clz = Class.forName(cnm);
-	 rq = Request.method(clz,mnm);
+         Class<?> clz = Class.forName(cnm);
+         rq = Request.method(clz,mnm);
        }
       catch (Exception e) {
-	 logE("Class for test not found",e);
+         logE("Class for test not found",e);
        }
      }
 
@@ -524,7 +524,7 @@ private void process()
 
    if (result_stream != null) {
       try {
-	 result_stream.close();
+         result_stream.close();
        }
       catch (IOException e) { }
     }
@@ -536,9 +536,9 @@ private void process()
 
 
 /********************************************************************************/
-/*										*/
-/*	Test case maintenance methods						*/
-/*										*/
+/*                                                                              */
+/*      Test case maintenance methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
@@ -549,7 +549,7 @@ synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
    if (btc == null) {
       btc = new JunitTest(d);
       logD("Create new test case for " + d + " " +
-	    test_cases.size() + " " + sts);
+            test_cases.size() + " " + sts);
       test_cases.put(d,btc);
     }
    btc.setStatus(sts);
@@ -638,9 +638,9 @@ void noteDone()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputSingleTest(JunitTest jt)
@@ -650,15 +650,15 @@ private void outputSingleTest(JunitTest jt)
    synchronized (result_stream) {
       XMLStreamWriter xw = null;
       try {
-	 XMLOutputFactory xof = XMLOutputFactory.newInstance();
-	 xw = xof.createXMLStreamWriter(result_stream);
-	 outputTestCase(jt,xw);
-	 xw.flush();
-	 logD("Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
+         XMLOutputFactory xof = XMLOutputFactory.newInstance();
+         xw = xof.createXMLStreamWriter(result_stream);
+         outputTestCase(jt,xw);
+         xw.flush();
+         logD("Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
       }
       catch (XMLStreamException e) {
-	 logE("Problem writing output file " + result_file,e);
-	 System.exit(1);
+         logE("Problem writing output file " + result_file,e);
+         System.exit(1);
       }
    }
 }
@@ -677,7 +677,7 @@ void outputTestCase(JunitTest btc,XMLStreamWriter xw) throws XMLStreamException
       if (Modifier.isAbstract(tcls.getModifiers())) xw.writeAttribute("ABSTRACT","true");
       String tc = d.getTestClass().getName();
       if (!tc.equals(d.getClassName())) {
-	 xw.writeAttribute("TCLASS",tc);
+         xw.writeAttribute("TCLASS",tc);
        }
     }
    if (d.isEmpty()) xw.writeAttribute("EMPTY","TRUE");
@@ -694,8 +694,8 @@ void outputTestCase(JunitTest btc,XMLStreamWriter xw) throws XMLStreamException
       xw.writeStartElement("EXCEPTION");
       String msg = f.getMessage();
       if (msg != null) {
-	 msg = msg.replace("]]>","]] >");
-	 xw.writeCData(msg);
+         msg = msg.replace("]]>","]] >");
+         xw.writeCData(msg);
        }
       xw.writeEndElement();
       xw.writeStartElement("TRACE");
@@ -723,9 +723,9 @@ private String shortenTrace(String t)
       StringBuilder buf = new StringBuilder();
       StringTokenizer tok = new StringTokenizer(t,"\n");
       for (int i = 0; i < 40 && tok.hasMoreTokens(); ++i) {
-	 String ln = tok.nextToken();
-	 buf.append(ln);
-	 buf.append("\n");
+         String ln = tok.nextToken();
+         buf.append(ln);
+         buf.append("\n");
        }
       if (tok.hasMoreTokens()) buf.append("...\n");
       t = buf.toString();
@@ -792,49 +792,49 @@ private void log(String msg)
 }
 
 /********************************************************************************/
-/*										*/
-/*	FIlter for handing listing test classes 				*/
-/*										*/
+/*                                                                              */
+/*      FIlter for handing listing test classes                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ListFilter extends Filter {
 
-   @Override public String describe()			{ return "List test cases"; }
+   @Override public String describe()                   { return "List test cases"; }
 
    @Override public boolean shouldRun(Description d) {
       logD("Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
-			    d.getClassName() + " " + d.getMethodName() + " " +
-			    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
+                            d.getClassName() + " " + d.getMethodName() + " " +
+                            d.getChildren().size() + " " + d.getDisplayName() + " " + d);
       // if (d.isSuite() && d.getClassName().contains("$")) return false;
 
       if (d.isSuite()) return true;
       if (!d.isTest()) return false;
       if (d.getMethodName() != null) {
-	 if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
-	    return false;
-	 if (d.toString().startsWith("initializationError")) return false;
-	 JunitTest jt = addTestCase(d,STATUS_LISTING);
-	 if (jt == null) return false;
-	 outputSingleTest(jt);
-	 return false;
+         if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
+            return false;
+         if (d.toString().startsWith("initializationError")) return false;
+         JunitTest jt = addTestCase(d,STATUS_LISTING);
+         if (jt == null) return false;
+         outputSingleTest(jt);
+         return false;
        }
 
       logI("Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
-			    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
+                            d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
       setTestStatus(d,STATUS_UNKNOWN);
       // might want to check classes to see if they are relevant here as well
       return false;
     }
 
-}	// end of inner class ListFilter
+}       // end of inner class ListFilter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener for handling testing						*/
-/*										*/
+/*                                                                              */
+/*      Listener for handling testing                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class TestListener extends RunListener {
@@ -919,9 +919,9 @@ private class TestListener extends RunListener {
          removeTestCase(f.getDescription());
        }
       else if (f.getMessage() != null &&
-        	  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
-        	      f.getMessage().startsWith("No runnable methods") ||
-        	      f.getMessage().startsWith("No tests found in "))) {
+                  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
+                      f.getMessage().startsWith("No runnable methods") ||
+                      f.getMessage().startsWith("No tests found in "))) {
          removeTestCase(f.getDescription());
          return;
        }
@@ -939,14 +939,14 @@ private class TestListener extends RunListener {
       }
     }
 
-}	// end of inner class TestListener
+}       // end of inner class TestListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	TestCase information							*/
-/*										*/
+/*                                                                              */
+/*      TestCase information                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JunitTest {
@@ -959,8 +959,8 @@ private static class JunitTest {
       test_status = STATUS_UNKNOWN;
     }
 
-   Description getDescription() 		{ return test_info; }
-   JunitTestStatus getStatus()		{ return test_status; }
+   Description getDescription()                 { return test_info; }
+   JunitTestStatus getStatus()          { return test_status; }
    void setStatus(JunitTestStatus sts) {
       if (sts == STATUS_FAILURE) {
          if (test_status.getType() == StatusType.FAILURE) return;
@@ -968,7 +968,7 @@ private static class JunitTest {
       test_status = sts;
     }
 
-}	// end of inner class JunitTest
+}       // end of inner class JunitTest
 
 
 
@@ -987,19 +987,19 @@ private static class JunitTestStatus {
       fail_data = f;
     }
 
-   StatusType getType() 			{ return status_type; }
-   Failure getFailure() 			{ return fail_data; }
+   StatusType getType()                         { return status_type; }
+   Failure getFailure()                         { return fail_data; }
 
-   @Override public String toString()		{ return status_type.toString(); }
+   @Override public String toString()           { return status_type.toString(); }
 
-}	// end of inner class JunitTestStatus
-
-
+}       // end of inner class JunitTestStatus
 
 
 
 
-}	// end of class BattJUnit
+
+
+}       // end of class BattJUnit
 
 
 

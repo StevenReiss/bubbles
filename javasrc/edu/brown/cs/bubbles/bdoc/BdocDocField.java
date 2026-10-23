@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocDocField.java						*/
-/*										*/
-/*	Bubbles Environment Documentation bubbles javadoc field detail		*/
-/*										*/
+/*                                                                              */
+/*              BdocDocField.java                                               */
+/*                                                                              */
+/*      Bubbles Environment Documentation bubbles javadoc field detail          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,9 +42,9 @@ class BdocDocField extends BdocDocItem implements BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocDocField(URI u) throws IOException
@@ -71,7 +71,7 @@ BdocDocField(URI u) throws IOException
 }
 
 
-}	// end of class BdocDocField
+}       // end of class BdocDocField
 
 
 

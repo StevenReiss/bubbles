@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockProgressMonitor.java					*/
-/*										*/
-/*	Progress monitor for Bubbles - Eclipse interface			*/
-/*										*/
+/*                                                                              */
+/*              BedrockProgressMonitor.java                                     */
+/*                                                                              */
+/*      Progress monitor for Bubbles - Eclipse interface                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,18 +47,18 @@ class BedrockProgressMonitor extends NullProgressMonitor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BedrockPlugin	for_plugin;
-private String		task_name;
-private String		subtask_name;
-private double		total_work;
-private double		work_done;
-private boolean 	is_done;
-private String		task_id;
+private BedrockPlugin   for_plugin;
+private String          task_name;
+private String          subtask_name;
+private double          total_work;
+private double          work_done;
+private boolean         is_done;
+private String          task_id;
 
 private static AtomicInteger task_counter = new AtomicInteger(1);
 private static AtomicLong    serial_number = new AtomicLong(1);
@@ -66,9 +66,9 @@ private static AtomicLong    serial_number = new AtomicLong(1);
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockProgressMonitor(BedrockPlugin bp,String nm)
@@ -88,9 +88,9 @@ BedrockProgressMonitor(BedrockPlugin bp,String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Monitor methods 							*/
-/*										*/
+/*                                                                              */
+/*      Monitor methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void beginTask(String name,int total)
@@ -226,16 +226,16 @@ public void finish()
 
 
 /********************************************************************************/
-/*										*/
-/*	Waiting methods 							*/
-/*										*/
+/*                                                                              */
+/*      Waiting methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void waitFor()
 {
    while (!is_done) {
       try {
-	 wait();
+         wait();
        }
       catch (InterruptedException e) { }
     }
@@ -243,7 +243,7 @@ synchronized void waitFor()
 
 
 
-}	// end of class BedrockProgressMonitor
+}       // end of class BedrockProgressMonitor
 
 
 

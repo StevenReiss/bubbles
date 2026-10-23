@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BddtTest.java							*/
-/*										*/
-/*	Bubbles Environment Context Viewer test program 			*/
-/*										*/
+/*                                                                              */
+/*              BddtTest.java                                                   */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer test program                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,9 +40,9 @@ public final class BddtTest implements BddtConstants, BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -56,17 +56,17 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BddtTest(String [] args)
@@ -79,9 +79,9 @@ private BddtTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Testing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -109,28 +109,28 @@ private static class CreateBddt implements Runnable {
 
    @Override public void run() {
       try {
-	 BddtFactory bf = BddtFactory.getFactory();
-	 BumpClient bc = BumpClient.getBump();
-	 bc.waitForIDE();
-	 BumpRunModel run = bc.getRunModel();
-	 for (BumpLaunchConfig blc : run.getLaunchConfigurations()) {
-	    if (blc.getConfigName().equals("buda test")) {
-	       bf.newDebugger(blc);
-	       break;
-	     }
-	  }
+         BddtFactory bf = BddtFactory.getFactory();
+         BumpClient bc = BumpClient.getBump();
+         bc.waitForIDE();
+         BumpRunModel run = bc.getRunModel();
+         for (BumpLaunchConfig blc : run.getLaunchConfigurations()) {
+            if (blc.getConfigName().equals("buda test")) {
+               bf.newDebugger(blc);
+               break;
+             }
+          }
        }
       catch (Throwable t) {
-	 System.err.println("Error testing bddt: " + t);
-	 t.printStackTrace();
+         System.err.println("Error testing bddt: " + t);
+         t.printStackTrace();
        }
     }
 
-}	// end of inner class CreateBddt
+}       // end of inner class CreateBddt
 
 
 
-}	// end of class BddtTest
+}       // end of class BddtTest
 
 
 

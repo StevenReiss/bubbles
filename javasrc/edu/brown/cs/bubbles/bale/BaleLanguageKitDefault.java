@@ -159,9 +159,9 @@ private BaleLanguageKitDefault(BoardLanguage lang)
 
 
 /********************************************************************************/
-/*										*/
-/*	LanguageKit methods					                */
-/*										*/
+/*                                                                              */
+/*      LanguageKit methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Action [] getActions()

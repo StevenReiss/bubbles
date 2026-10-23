@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstConstants.java						*/
-/*										*/
-/*	Bubbles questions and forms constants					*/
-/*										*/
+/*                                                                              */
+/*              BqstConstants.java                                              */
+/*                                                                              */
+/*      Bubbles questions and forms constants                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,9 +42,9 @@ String BG_COLOR_PROP = "Bqst.Background";
 
 
 /********************************************************************************/
-/*										*/
-/*	Types of Questions							*/
-/*										*/
+/*                                                                              */
+/*      Types of Questions                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -57,28 +57,28 @@ enum QuestionType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for component size						*/
-/*										*/
+/*                                                                              */
+/*      Constants for component size                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
  *  Size of form dialog
  */
-int	  FORM_WIDTH	   = 400;
-int	  FORM_HEIGHT	   = 500;
-Dimension FORM_SIZE	= new Dimension(FORM_WIDTH,FORM_HEIGHT);
+int       FORM_WIDTH       = 400;
+int       FORM_HEIGHT      = 500;
+Dimension FORM_SIZE     = new Dimension(FORM_WIDTH,FORM_HEIGHT);
 
 
 /**
  *  Height of JTextArea
  */
-int	  TEXTAREA_HEIGHT  = 80;
+int       TEXTAREA_HEIGHT  = 80;
 
 /**
  *  Height of JTextfield
  */
-int	  TEXTFIELD_HEIGHT = 8;
+int       TEXTFIELD_HEIGHT = 8;
 
 /**
  *  Size of multi-choice question panel
@@ -108,31 +108,31 @@ Dimension BUTTONPANE_SIZE  = new Dimension(330,60);
 
 
 /********************************************************************************/
-/*										*/
-/*	Language settings for form						*/
-/*										*/
+/*                                                                              */
+/*      Language settings for form                                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
  *  Form instruction
  */
-String	  INSTRUCTION_TEXT = 
+String    INSTRUCTION_TEXT = 
    "<html>Please complete the form below. Required fields marked<FONT color=red>*</FONT></html>";
 
 /**
  *  Thank you message after submitting
  */
-String	  THANKS_TEXT	   = 
+String    THANKS_TEXT      = 
    "<html><font color=red>Thank you! Your form has been submitted.</font></html>";
 
 /**
  *  Required fielded unfilled message
  */
-String	  UNFILLED_TEXT    =
+String    UNFILLED_TEXT    =
    "<html><font color=red>You have questions that still needs to be filled out.</font></html>";
 
 
-}	// end of interface BqstConstants
+}       // end of interface BqstConstants
 
 
 

@@ -1,21 +1,21 @@
    /********************************************************************************/
-/*										*/
-/*		BddtInteractionBubble.java					*/
-/*										*/
-/*	Bubble Environment interactive expression bubble			*/
-/*										*/
+/*                                                                              */
+/*              BddtInteractionBubble.java                                      */
+/*                                                                              */
+/*      Bubble Environment interactive expression bubble                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -69,29 +69,29 @@ import java.util.List;
 
 
 class BddtInteractionBubble extends BudaBubble implements BddtConstants, BudaConstants,
-	BumpConstants, BddtConstants.BddtFrameListener
+        BumpConstants, BddtConstants.BddtFrameListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BddtLaunchControl	for_control;
-private JEditorPane		display_area;
-private JTextField		input_field;
-private BumpStackFrame		active_frame;
-private BumpStackFrame		last_frame;
+private BddtLaunchControl       for_control;
+private JEditorPane             display_area;
+private JTextField              input_field;
+private BumpStackFrame          active_frame;
+private BumpStackFrame          last_frame;
 
-private Element 		body_element;
-private Element 		frame_element;
-private int			frame_counter;
-private String			last_frameid;
+private Element                 body_element;
+private Element                 frame_element;
+private int                     frame_counter;
+private String                  last_frameid;
 
-private Color			background_color;
-private Color			outline_color;
+private Color                   background_color;
+private Color                   outline_color;
 
 private List<String>            eval_history;
 private int                     history_position;
@@ -109,9 +109,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtInteractionBubble(BddtLaunchControl ctrl)
@@ -170,9 +170,9 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Activation routines							*/
-/*										*/
+/*                                                                              */
+/*      Activation routines                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setActiveFrame(BumpStackFrame frm)
@@ -184,9 +184,9 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu management 							*/
-/*										*/
+/*                                                                              */
+/*      Menu management                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -202,9 +202,9 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void evaluate(String expr)
@@ -225,21 +225,21 @@ private void evaluate(String expr)
    ExpressionValue ev = for_control.evaluateExpression(active_frame,expr);
    if (ev != null) {
       if (ev.isValid()) {
-	 buf.append("<div align='left' style='color:green;'>");
+         buf.append("<div align='left' style='color:green;'>");
          buf.append("<span style='color:black;'>");
          buf.append(expr);
          buf.append(" = ");
          buf.append("</span>");
-	 buf.append(ev.formatResult());
-	 buf.append("</div>");
+         buf.append(ev.formatResult());
+         buf.append("</div>");
        }
       else {
          buf.append("<div align='left'>");
          buf.append(expr);
          buf.append(" = ");
-	 buf.append("<span style='color:red;'>");
-	 buf.append(ev.getError().trim());
-	 buf.append("</span>");
+         buf.append("<span style='color:red;'>");
+         buf.append(ev.getError().trim());
+         buf.append("</span>");
          buf.append("</div>");
        }
     }
@@ -269,9 +269,9 @@ private String getFrameHtml(String desc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Insertion methods							*/
-/*										*/
+/*                                                                              */
+/*      Insertion methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private Element findElementById(String id)
@@ -305,9 +305,9 @@ private void insertBeforeEnd(Element e,String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Implementations of widgets for drawing					*/
-/*										*/
+/*                                                                              */
+/*      Implementations of widgets for drawing                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class InteractPanel extends SwingGridPanel {
@@ -327,7 +327,7 @@ private class InteractPanel extends SwingGridPanel {
       super.paintComponent(g0);
     }
 
-}	// end of inner class InteractPanel
+}       // end of inner class InteractPanel
 
 
 
@@ -353,15 +353,15 @@ private class InteractEditor extends SwingEditorPane implements CaretListener {
       if (getSelectionStart() != getSelectionEnd()) copy();
     }
 
-}	// end of inner class InteractEditor
+}       // end of inner class InteractEditor
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Type in action listener 						*/
-/*										*/
+/*                                                                              */
+/*      Type in action listener                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ExprTypein implements ActionListener {
@@ -376,7 +376,7 @@ private final class ExprTypein implements ActionListener {
       tfld.setText("");
     }
    
-}	// end of inner class ExprTypein
+}       // end of inner class ExprTypein
 
 
 private class HistoryAction extends AbstractAction {
@@ -414,7 +414,7 @@ private class HistoryAction extends AbstractAction {
 }       // end of inner class HistoryAction
 
 
-}	// end of class BddtInteractionBubble
+}       // end of class BddtInteractionBubble
 
 
 

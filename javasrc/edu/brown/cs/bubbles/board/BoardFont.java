@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardFont.java							*/
-/*										*/
-/*	Bubbles default font handling						*/
-/*										*/
+/*                                                                              */
+/*              BoardFont.java                                                  */
+/*                                                                              */
+/*      Bubbles default font handling                                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -41,26 +41,26 @@ public class BoardFont implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static BoardProperties		font_properties = BoardProperties.getProperties("Board");
+private static BoardProperties          font_properties = BoardProperties.getProperties("Board");
 
-private static Map<String,String>	family_map = new HashMap<String,String>();
+private static Map<String,String>       family_map = new HashMap<String,String>();
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Static access methods						       */
-/*										*/
+/*                                                                              */
+/*      Static access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the default font for the given family
+ *      Return the default font for the given family
  **/
 
 public static Font getFont(String fam,int style,int sz)
@@ -89,7 +89,7 @@ private static Font getMappedFont(String prop,String dfam,int style,int sz)
 
 
 
-}	// end of class BoardFont
+}       // end of class BoardFont
 
 
 

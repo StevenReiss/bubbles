@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BowiFactory.java						*/
-/*										*/
-/*	BowiFactory								*/
-/*										*/
+/*                                                                              */
+/*              BowiFactory.java                                                */
+/*                                                                              */
+/*      BowiFactory                                                             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Ian Strickman		      	*/
+/*      Copyright 2010 Brown University -- Ian Strickman                        */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -34,22 +34,22 @@ public final class BowiFactory {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static BowiFactory the_factory = new BowiFactory();
 private static BowiTaskManager my_task_manager;
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the singleton instance of the Bass search bubble factory.
+ *      Return the singleton instance of the Bass search bubble factory.
  **/
 
 public static BowiFactory getFactory()
@@ -57,16 +57,16 @@ public static BowiFactory getFactory()
    return the_factory;
 }
 
-private BowiFactory()				{ }
+private BowiFactory()                           { }
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Called by initialization to ensure that the search package is set up correctly.
+ *      Called by initialization to ensure that the search package is set up correctly.
  **/
 
 public static void setup()
@@ -75,7 +75,7 @@ public static void setup()
 }
 
 /**
- *	Called to initialize once BudaRoot is setup
+ *      Called to initialize once BudaRoot is setup
  **/
 
 public static void initialize(BudaRoot br)
@@ -84,9 +84,9 @@ public static void initialize(BudaRoot br)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Task methods								*/
-/*										*/
+/*                                                                              */
+/*      Task methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**

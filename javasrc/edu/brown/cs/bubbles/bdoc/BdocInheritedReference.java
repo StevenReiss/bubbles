@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocInherited Reference.java					*/
-/*										*/
-/*	Bubbles Environment Documentation reference to an inherited item	*/
-/*										*/
+/*                                                                              */
+/*              BdocInherited Reference.java                                    */
+/*                                                                              */
+/*      Bubbles Environment Documentation reference to an inherited item        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,23 +47,23 @@ class BdocInheritedReference extends BassNameBase implements BdocConstants, Bass
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BdocReference base_reference;
-private String	sub_class;
-private String	bdoc_name;
-private String	key_name;
-private String	name_head;
+private String  sub_class;
+private String  bdoc_name;
+private String  key_name;
+private String  name_head;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocInheritedReference(BdocReference br,String cls)
@@ -81,19 +81,19 @@ BdocInheritedReference(BdocReference br,String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	BassNameBase methods							*/
-/*										*/
+/*                                                                              */
+/*      BassNameBase methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProject()		{ return base_reference.getProject(); }
+@Override public String getProject()            { return base_reference.getProject(); }
 
 @Override protected String getSymbolName()
 {
    return BDOC_DOC_PREFIX + bdoc_name;
 }
 
-@Override protected String getParameters()	{ return base_reference.getParameters(); }
+@Override protected String getParameters()      { return base_reference.getParameters(); }
 
 @Override protected String getKey()
 {
@@ -105,9 +105,9 @@ BdocInheritedReference(BdocReference br,String cls)
 }
 
 
-@Override protected String getLocalName()	{ return base_reference.getLocalName(); }
+@Override protected String getLocalName()       { return base_reference.getLocalName(); }
 
-@Override public String getNameHead()		{ return name_head; }
+@Override public String getNameHead()           { return name_head; }
 
 
 /**
@@ -120,17 +120,17 @@ BdocInheritedReference(BdocReference br,String cls)
 /**
  * Method to access the digested name of the doc
  */
-String getDigestedName()	 { return bdoc_name; }
+String getDigestedName()         { return bdoc_name; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-URI getReferenceUrl()			{ return base_reference.getReferenceUrl(); }
+URI getReferenceUrl()                   { return base_reference.getReferenceUrl(); }
 
 
 @Override public String getDisplayName()
@@ -154,9 +154,9 @@ BdocReference findRelatedReference(URI u)
 
 
 /********************************************************************************/
-/*										*/
-/*	Name matching methods							*/
-/*										*/
+/*                                                                              */
+/*      Name matching methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 boolean matchName(String nm)
@@ -172,9 +172,9 @@ boolean matchName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble()
@@ -198,9 +198,9 @@ boolean matchName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -216,7 +216,7 @@ void outputXml(IvyXmlWriter xw)
 
 
 
-}	// end of class BdocReference
+}       // end of class BdocReference
 
 
 

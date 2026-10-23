@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdocDocItem.java						*/
-/*										*/
-/*	Bubbles Environment Documentation bubbles javadoc generic item		*/
-/*										*/
+/*                                                                              */
+/*              BdocDocItem.java                                                */
+/*                                                                              */
+/*      Bubbles Environment Documentation bubbles javadoc generic item          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -54,15 +54,15 @@ abstract class BdocDocItem implements BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected StringBuffer		item_description;
-private   String		description_text;
-protected List<SubItemImpl>	sub_items;
-protected URI			ref_url;
+protected StringBuffer          item_description;
+private   String                description_text;
+protected List<SubItemImpl>     sub_items;
+protected URI                   ref_url;
 
 private static Map<String,ItemRelation> sub_types;
 
@@ -96,9 +96,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BdocDocItem(URI u)
@@ -112,9 +112,9 @@ protected BdocDocItem(URI u)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 String getDescription()
@@ -123,16 +123,16 @@ String getDescription()
       description_text = item_description.toString();
       // TODO: reformat initial <PRE>...</PRE> area to not be fixed width
       for ( ; ; ) {
-	 boolean fnd = false;
-	 for (String s : HTML_REMOVALS) {
-	    if (description_text.endsWith(s) || description_text.endsWith(s.toLowerCase())) {
-	       int ln0 = description_text.length();
-	       int ln1 = s.length();
-	       description_text = description_text.substring(0,ln0-ln1);
-	       fnd = true;
-	     }
-	  }
-	 if (!fnd) break;
+         boolean fnd = false;
+         for (String s : HTML_REMOVALS) {
+            if (description_text.endsWith(s) || description_text.endsWith(s.toLowerCase())) {
+               int ln0 = description_text.length();
+               int ln1 = s.length();
+               description_text = description_text.substring(0,ln0-ln1);
+               fnd = true;
+             }
+          }
+         if (!fnd) break;
        }
     }
    return description_text;
@@ -145,8 +145,8 @@ List<SubItem> getItems(ItemRelation r)
 
    for (SubItemImpl si : sub_items) {
       if (si.getRelation() == r) {
-	 if (rslt == null) rslt = new ArrayList<SubItem>();
-	 rslt.add(si);
+         if (rslt == null) rslt = new ArrayList<SubItem>();
+         rslt.add(si);
        }
     }
 
@@ -156,9 +156,9 @@ List<SubItem> getItems(ItemRelation r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Parsing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Parsing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void loadUrl(URI u) throws IOException
@@ -186,7 +186,7 @@ void scanItem(URI u)
          start = doc.getElementById(id);
        }
       if (start != null && start.tagName().equals("a")) {
-	 start = start.nextElementSibling();
+         start = start.nextElementSibling();
        }
     }
    else {
@@ -199,15 +199,15 @@ void scanItem(URI u)
 }
 
 
-void extractItem(Element elt)	    { }
+void extractItem(Element elt)       { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Description methods							*/
-/*										*/
+/*                                                                              */
+/*      Description methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 protected void addRawHtmlDivToDescription(Element e0,boolean br)
@@ -215,10 +215,10 @@ protected void addRawHtmlDivToDescription(Element e0,boolean br)
    if (item_description != null && e0 != null) {
       String html = e0.html();
       if (html != null) {
-	 item_description.append("<div>");
-	 item_description.append(html);
-	 item_description.append("</div>");
-	 if (br) item_description.append("<br/>");
+         item_description.append("<div>");
+         item_description.append(html);
+         item_description.append("</div>");
+         if (br) item_description.append("<br/>");
        }
     }
 }
@@ -226,9 +226,9 @@ protected void addRawHtmlDivToDescription(Element e0,boolean br)
 
 
 /********************************************************************************/
-/*										*/
-/*	General subitm handling 						*/
-/*										*/
+/*                                                                              */
+/*      General subitm handling                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 protected void scanSubitems(Element e0)
@@ -271,14 +271,14 @@ protected void scanSubItem(Element dt)
    for (Element nitm = dt.nextElementSibling(); nitm != null; nitm = nitm.nextElementSibling()) {
       if (nitm.tagName().equals("dt")) break;
       if (nitm.tagName().equals("dd")) {
-	 Element sitmlnk = nitm.select("a").first();
-	 if (sitmlnk == null) continue;
-	 String hr = sitmlnk.attr("href");
-	 if (hr == null) continue;
-	 SubItemImpl curitm = new SubItemImpl(lr);
-	 curitm.setName(sitmlnk.text());
-	 curitm.setUrl(ref_url,hr);
-	 addSubitem(curitm);
+         Element sitmlnk = nitm.select("a").first();
+         if (sitmlnk == null) continue;
+         String hr = sitmlnk.attr("href");
+         if (hr == null) continue;
+         SubItemImpl curitm = new SubItemImpl(lr);
+         curitm.setName(sitmlnk.text());
+         curitm.setUrl(ref_url,hr);
+         addSubitem(curitm);
        }
     }
 }
@@ -302,9 +302,9 @@ protected ItemRelation getListTypeFromName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Subitem methods 							*/
-/*										*/
+/*                                                                              */
+/*      Subitem methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void addSubitem(SubItemImpl itm)
@@ -314,9 +314,9 @@ void addSubitem(SubItemImpl itm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Parsing helper methods							*/
-/*										*/
+/*                                                                              */
+/*      Parsing helper methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 protected static String getHtmlString(String s)
@@ -340,9 +340,9 @@ protected static void addText(StringBuffer buf,String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation for an internal item					*/
-/*										*/
+/*                                                                              */
+/*      Representation for an internal item                                     */
+/*                                                                              */
 /********************************************************************************/
 
 protected static class SubItemImpl implements SubItem {
@@ -376,15 +376,15 @@ protected static class SubItemImpl implements SubItem {
       addText(item_desc,s);
     }
 
-   ItemRelation getRelation()			{ return item_relation; }
+   ItemRelation getRelation()                   { return item_relation; }
 
    @Override public String getName() {
       if (item_name == null) return null;
       return item_name.toString();
     }
 
-   @Override public URI getItemUrl()		{ return item_url; }
-   @Override public String getRelativeUrl()	{ return relative_url; }
+   @Override public URI getItemUrl()            { return item_url; }
+   @Override public String getRelativeUrl()     { return relative_url; }
    @Override public String getDescription() {
       if (item_desc == null) return null;
       return item_desc.toString();
@@ -400,13 +400,13 @@ protected static class SubItemImpl implements SubItem {
       return buf.toString();
     }
 
-}	// end of inner class SubItemImpl
+}       // end of inner class SubItemImpl
 
 
 
 
 
-}	// end of abstract class BdocDocItem
+}       // end of abstract class BdocDocItem
 
 
 

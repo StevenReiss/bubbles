@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpBreakSet.java						*/
-/*										*/
-/*	BUblles Mint Partnership breakpoint set maintainer			*/
-/*										*/
+/*                                                                              */
+/*              BumpBreakSet.java                                               */
+/*                                                                              */
+/*      BUblles Mint Partnership breakpoint set maintainer                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,26 +50,26 @@ class BumpBreakSet implements BumpConstants, BumpConstants.BumpBreakModel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<String,BumpBreakImpl>	current_breakpoints;
+private Map<String,BumpBreakImpl>       current_breakpoints;
 private Map<BumpBreakpointHandler,File> break_handlers;
 
-private BumpClient		bump_client;
-private BumpBreakMode		break_mode;
-private BumpExceptionMode	exception_mode;
+private BumpClient              bump_client;
+private BumpBreakMode           break_mode;
+private BumpExceptionMode       exception_mode;
 
 private File                    dummy_file = new File("");
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpBreakSet(BumpClient bc)
@@ -84,17 +84,17 @@ BumpBreakSet(BumpClient bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint creation/deletion/editing methods				*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint creation/deletion/editing methods                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Add a breakpoint at the give line of the given file.  The class is optional.
+ *      Add a breakpoint at the give line of the given file.  The class is optional.
  **/
 
 @Override public boolean addLineBreakpoint(String proj,File file,String cls,int line,
-					   BumpBreakMode mode)
+                                           BumpBreakMode mode)
 {
    if (mode == BumpBreakMode.DEFAULT) mode = break_mode;
 
@@ -104,25 +104,25 @@ BumpBreakSet(BumpClient bc)
 
 
 /**
- *	Add an exception breakpoint for the given class which should be a subclass
- *	of Throwable.  The emode parameters indicates when the breakpoint should be
- *	triggered (i.e. when the caught or uncaught exceptions).
+ *      Add an exception breakpoint for the given class which should be a subclass
+ *      of Throwable.  The emode parameters indicates when the breakpoint should be
+ *      triggered (i.e. when the caught or uncaught exceptions).
  **/
 
 @Override public void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode emode,
-						BumpBreakMode mode,boolean subclass)
+                                                BumpBreakMode mode,boolean subclass)
 {
    if (mode == BumpBreakMode.DEFAULT) mode = break_mode;
    if (emode == BumpExceptionMode.DEFAULT) emode = exception_mode;
 
    bump_client.addExceptionBreakpoint(proj,cls,emode.isCaught(),emode.isUncaught(),
-					 mode.isSuspendVm(),subclass);
+                                         mode.isSuspendVm(),subclass);
 }
 
 
 /**
- *	Clear all breakpoints at the given line of the given file.  The cls parameter is
- *	optional.
+ *      Clear all breakpoints at the given line of the given file.  The cls parameter is
+ *      optional.
  **/
 
 @Override public void clearLineBreakpoint(String proj,File file,String cls,int line)
@@ -133,9 +133,9 @@ BumpBreakSet(BumpClient bc)
 
 
 /**
- *	Toggle a line breakpoint for the given file.  If a line breakpoint already
- *	exists at this line it is removed; otherwise a new breakpoint is created with
- *	the current default settings.
+ *      Toggle a line breakpoint for the given file.  If a line breakpoint already
+ *      exists at this line it is removed; otherwise a new breakpoint is created with
+ *      the current default settings.
  **/
 
 @Override public void toggleBreakpoint(String proj,File file,int line,BumpBreakMode mode)
@@ -148,8 +148,8 @@ BumpBreakSet(BumpClient bc)
    for (BumpBreakpoint bb : bump_client.getBreakpoints(file)) {
       int lno = bb.getIntProperty("LINE");
       if (lno == line) {
-	  cls = bb.getProperty("CLASS");
-	  fnd = true;
+          cls = bb.getProperty("CLASS");
+          fnd = true;
        }
     }
 
@@ -203,7 +203,7 @@ BumpBreakSet(BumpClient bc)
    for (BumpBreakpoint bb : bump_client.getBreakpoints(file)) {
       int lno = bb.getIntProperty("LINE");
       if (lno == line) {
-	 return bb;
+         return bb;
        }
     }
 
@@ -226,7 +226,7 @@ BumpBreakSet(BumpClient bc)
 
 
 /**
- *	Remove breakpoint
+ *      Remove breakpoint
  **/
 
 @Override public boolean removeBreakpoint(String id)
@@ -276,13 +276,13 @@ BumpBreakSet(BumpClient bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Parameter setting modes 						*/
-/*										*/
+/*                                                                              */
+/*      Parameter setting modes                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Set the default breakpoint mode.  The parameter can not be DEFAULT.
+ *      Set the default breakpoint mode.  The parameter can not be DEFAULT.
  **/
 
 @Override public void setDefaultBreakMode(BumpBreakMode md)
@@ -293,7 +293,7 @@ BumpBreakSet(BumpClient bc)
 
 
 /**
- *	Set the default exception mode.  The parameter can not be DEFAULT.
+ *      Set the default exception mode.  The parameter can not be DEFAULT.
  **/
 
 @Override public void setDefaultExceptionMode(BumpExceptionMode md)
@@ -305,9 +305,9 @@ BumpBreakSet(BumpClient bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addBreakpointHandler(File f,BumpBreakpointHandler bh)
@@ -330,9 +330,9 @@ synchronized void removeBreakpointHandler(BumpBreakpointHandler bh)
 
 
 /********************************************************************************/
-/*										*/
-/*	Set access methods							*/
-/*										*/
+/*                                                                              */
+/*      Set access methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 List<BumpBreakpoint> getBreakpoints(File f)
@@ -341,9 +341,9 @@ List<BumpBreakpoint> getBreakpoints(File f)
 
    synchronized (current_breakpoints) {
       for (BumpBreakImpl bp : current_breakpoints.values()) {
-	 if (fileMatch(f,bp)) {
-	    rslt.add(bp);
-	  }
+         if (fileMatch(f,bp)) {
+            rslt.add(bp);
+          }
        }
     }
 
@@ -353,9 +353,9 @@ List<BumpBreakpoint> getBreakpoints(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Maintenance methods							*/
-/*										*/
+/*                                                                              */
+/*      Maintenance methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void handleUpdate(Element ep)
@@ -369,22 +369,22 @@ void handleUpdate(Element ep)
 
    synchronized (current_breakpoints) {
       for (Element be : IvyXml.children(ep,"BREAKPOINT")) {
-	 String id = IvyXml.getAttrString(be,"ID");
-	 if (reason.equals("REMOVE")) {
-	    BumpBreakImpl bbi = current_breakpoints.remove(id);
-	    if (bbi != null) rem.add(bbi);
-	  }
-	 else {
-	    BumpBreakImpl bbi = current_breakpoints.get(id);
-	    if (bbi != null) {
-	       if (bbi.update(be)) upd.add(bbi);
-	     }
-	    else {
-	       bbi = new BumpBreakImpl(be);
-	       current_breakpoints.put(id,bbi);
-	       add.add(bbi);
-	     }
-	  }
+         String id = IvyXml.getAttrString(be,"ID");
+         if (reason.equals("REMOVE")) {
+            BumpBreakImpl bbi = current_breakpoints.remove(id);
+            if (bbi != null) rem.add(bbi);
+          }
+         else {
+            BumpBreakImpl bbi = current_breakpoints.get(id);
+            if (bbi != null) {
+               if (bbi.update(be)) upd.add(bbi);
+             }
+            else {
+               bbi = new BumpBreakImpl(be);
+               current_breakpoints.put(id,bbi);
+               add.add(bbi);
+             }
+          }
        }
     }
 
@@ -393,13 +393,13 @@ void handleUpdate(Element ep)
       File f = ent.getValue();
       if (f == dummy_file) f = null;
       for (BumpBreakImpl bbi : rem) {
-	 if (fileMatch(f,bbi)) hdlr.handleBreakpointRemoved(bbi);
+         if (fileMatch(f,bbi)) hdlr.handleBreakpointRemoved(bbi);
        }
       for (BumpBreakImpl bbi : add) {
-	 if (fileMatch(f,bbi)) hdlr.handleBreakpointAdded(bbi);
+         if (fileMatch(f,bbi)) hdlr.handleBreakpointAdded(bbi);
        }
       for (BumpBreakImpl bbi : upd) {
-	 if (fileMatch(f,bbi)) hdlr.handleBreakpointChanged(bbi);
+         if (fileMatch(f,bbi)) hdlr.handleBreakpointChanged(bbi);
        }
     }
 }
@@ -407,9 +407,9 @@ void handleUpdate(Element ep)
 
 
 /********************************************************************************/
-/*										*/
-/*	Break handling methods							*/
-/*										*/
+/*                                                                              */
+/*      Break handling methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean fileMatch(File forfile,BumpBreakImpl bp)
@@ -420,7 +420,7 @@ private boolean fileMatch(File forfile,BumpBreakImpl bp)
 
 
 
-}	// end of class BumpBreakSet
+}       // end of class BumpBreakSet
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoPackageDialog.java 					*/
-/*										*/
-/*	BUbbles Environment New Objects creator new package dialog		*/
-/*										*/
+/*                                                                              */
+/*              BuenoPackageDialog.java                                         */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator new package dialog              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -41,14 +41,14 @@ class BuenoPackageDialog extends BuenoAbstractDialog implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoPackageDialog(BudaBubble source,Point locale,
-			    BuenoProperties known,BuenoLocation insert,
-			    BuenoBubbleCreator newer)
+                            BuenoProperties known,BuenoLocation insert,
+                            BuenoBubbleCreator newer)
 {
    super(source,locale,known,insert,newer,BuenoType.NEW_PACKAGE);
 }
@@ -56,9 +56,9 @@ BuenoPackageDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Package dialog panel setup						*/
-/*										*/
+/*                                                                              */
+/*      Package dialog panel setup                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void setupPanel(SwingGridPanel pnl)
@@ -67,8 +67,8 @@ BuenoPackageDialog(BudaBubble source,Point locale,
    if (pkg == null) {
       pkg = insertion_point.getPackage();
       if (pkg != null) {
-	 int idx = pkg.lastIndexOf(".");
-	 if (idx >= 0) property_set.put(BuenoKey.KEY_PACKAGE,pkg.substring(0,idx+1));
+         int idx = pkg.lastIndexOf(".");
+         if (idx >= 0) property_set.put(BuenoKey.KEY_PACKAGE,pkg.substring(0,idx+1));
        }
     }
 
@@ -84,9 +84,9 @@ BuenoPackageDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void doCreate(BudaBubbleArea bba,Point p)
@@ -117,7 +117,7 @@ BuenoPackageDialog(BudaBubble source,Point locale,
 
 
 
-}	// end of class BuenoPackageDialog
+}       // end of class BuenoPackageDialog
 
 
 

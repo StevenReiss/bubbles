@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleDocumentEvent.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor document event class			*/
-/*										*/
+/*                                                                              */
+/*              BaleDocumentEvent.java                                          */
+/*                                                                              */
+/*      Bubble Annotated Language Editor document event class                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,15 +49,15 @@ import java.util.List;
 
 
 class BaleDocumentEvent implements DocumentEvent, UndoableEdit, BaleConstants,
-	BurpSharedEdit, BurpPlayableEdit
+        BurpSharedEdit, BurpPlayableEdit
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleDocument base_document;
@@ -72,9 +72,9 @@ private Position doc_position;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocumentEvent(BaleDocument d,int off,int len,EventType et,UndoableEdit ed,BaleElementEvent ee)
@@ -91,15 +91,15 @@ BaleDocumentEvent(BaleDocument d,int off,int len,EventType et,UndoableEdit ed,Ba
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public Document getDocument() 			{ return base_document; }
-@Override public int getLength()				{ return edit_length; }
-@Override public int getOffset()				{ return doc_offset; }
-@Override public DocumentEvent.EventType getType()		{ return event_type; }
+@Override public Document getDocument()                         { return base_document; }
+@Override public int getLength()                                { return edit_length; }
+@Override public int getOffset()                                { return doc_offset; }
+@Override public DocumentEvent.EventType getType()              { return event_type; }
 @Override public Document getBaseEditDocument()
 {
    if (base_document == null) return null;
@@ -143,9 +143,9 @@ UndoableEdit getEdit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Undoable Edit methods							*/
-/*										*/
+/*                                                                              */
+/*      Undoable Edit methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean addEdit(UndoableEdit ed)
@@ -221,7 +221,7 @@ UndoableEdit getEdit()
    if (the_edit != null) {
       base_document.baleWriteLock();
       try {
-	 the_edit.redo();
+         the_edit.redo();
        }
       finally { base_document.baleWriteUnlock(); }
     }
@@ -242,7 +242,7 @@ UndoableEdit getEdit()
       base_document.baleWriteLock();
       base_document.markChanged();
       try {
-	 the_edit.undo();
+         the_edit.undo();
        }
       catch (CannotUndoException e) { }
       finally { base_document.baleWriteUnlock(); }
@@ -258,8 +258,8 @@ UndoableEdit getEdit()
       BurpPlayableEdit ed = (BurpPlayableEdit) the_edit;
       base_document.baleWriteLock();
       try {
-	 base_document.markChanged();
-	 ed.playUndo(d);
+         base_document.markChanged();
+         ed.playUndo(d);
        }
       catch (CannotUndoException e) { }
       finally { base_document.baleWriteUnlock(); }
@@ -277,8 +277,8 @@ UndoableEdit getEdit()
       BurpPlayableEdit ed = (BurpPlayableEdit) the_edit;
       base_document.baleWriteLock();
       try {
-	 base_document.markChanged();
-	 fg = ed.playUndo(d,rng);
+         base_document.markChanged();
+         fg = ed.playUndo(d,rng);
        }
       catch (CannotUndoException e) { }
       finally { base_document.baleWriteUnlock(); }
@@ -313,9 +313,9 @@ UndoableEdit getEdit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Position save methods for undo/redo					*/
-/*										*/
+/*                                                                              */
+/*      Position save methods for undo/redo                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void savePosition()
@@ -341,7 +341,7 @@ private void restorePosition()
 }
 
 
-}	// end of class BaleDocumentEvent
+}       // end of class BaleDocumentEvent
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BstyleChecker.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BstyleChecker.java                                              */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,14 +56,14 @@ class BstyleChecker implements BstyleConstants, AuditListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BstyleMain			bstyle_main;
-private Map<String,ConfigData>	 project_configs;
-private ConfigData    			default_config;
+private BstyleMain                      bstyle_main;
+private Map<String,ConfigData>   project_configs;
+private ConfigData                      default_config;
 private Map<String,ProjectChecker>      project_checkers;
 private Map<String,Set<Violation>>      all_errors; 
 private Map<Violation,String>           module_names;
@@ -73,9 +73,9 @@ private static final long               CHANGE_TIME = 100;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BstyleChecker(BstyleMain bm)
@@ -91,8 +91,8 @@ BstyleChecker(BstyleMain bm)
 
    for (String nm : bp.stringPropertyNames()) {
       if (nm.startsWith("Bstyle.config.file.")) {
-	 int idx = nm.lastIndexOf(".");
-	 String proj = nm.substring(idx+1);
+         int idx = nm.lastIndexOf(".");
+         String proj = nm.substring(idx+1);
          String cfile = bp.getProperty(nm);
          project_configs.put(proj,new ConfigData(cfile));
          IvyLog.logD("BSTYLE","Use configuration " + cfile + " for " + proj);
@@ -100,7 +100,7 @@ BstyleChecker(BstyleMain bm)
       else if (nm.equals("Bstyle.config.file")) {
          String cfile = bp.getProperty(nm);
          IvyLog.logD("BSTYLE","Default configuration " + cfile);
-	 default_config = new ConfigData(cfile);
+         default_config = new ConfigData(cfile);
        }
     }
    
@@ -112,9 +112,9 @@ BstyleChecker(BstyleMain bm)
 
 
 /********************************************************************************/
-/*										*/
-/*     Processing methods							*/
-/*										*/
+/*                                                                              */
+/*     Processing methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void processProject(String proj,Collection<BstyleFile> files)
@@ -262,9 +262,9 @@ private void outputViolation(Violation v,BstyleFile bf,String mod,IvyXmlWriter x
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration methods							*/
-/*										*/
+/*                                                                              */
+/*      Configuration methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private Configuration buildConfiguration(String proj,String configpath)
@@ -286,26 +286,26 @@ private Configuration buildConfiguration(String proj,String configpath)
    String xprops = null;
    for (String nm : bp.stringPropertyNames()) {
       if (nm.equals("Bstyle.config.properties." + proj)) {
-	 xprops = bp.getProperty(nm);
+         xprops = bp.getProperty(nm);
        }
       else if (nm.equals("Bstyle.config.properties")) {
-	 dfltprops = bp.getProperty(nm);
+         dfltprops = bp.getProperty(nm);
        }
     }
    if (xprops != null) xprops = dfltprops;
    if (xprops != null) {
       StringTokenizer tok = new StringTokenizer(xprops);
       while (tok.hasMoreTokens()) {
-	 String t = tok.nextToken();
-	 int idx = t.indexOf("=");
-	 if (idx > 0) {
-	    String key = t.substring(0,idx);
-	    String v = t.substring(idx+1);
-	    props.put(key,v);
-	  }
-	 else {
-	    props.put(t,"true");
-	  }
+         String t = tok.nextToken();
+         int idx = t.indexOf("=");
+         if (idx > 0) {
+            String key = t.substring(0,idx);
+            String v = t.substring(idx+1);
+            props.put(key,v);
+          }
+         else {
+            props.put(t,"true");
+          }
        }
     }
    PropertiesExpander res = new PropertiesExpander(props);
@@ -313,8 +313,8 @@ private Configuration buildConfiguration(String proj,String configpath)
 
    try {
       Configuration cfg = ConfigurationLoader.loadConfiguration(
-	    configpath, res, ConfigurationLoader.IgnoredModulesOptions.OMIT,
-	    mode);
+            configpath, res, ConfigurationLoader.IgnoredModulesOptions.OMIT,
+            mode);
       return cfg;
     }
    catch (CheckstyleException e) {
@@ -327,9 +327,9 @@ private Configuration buildConfiguration(String proj,String configpath)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle error returns							*/
-/*										*/
+/*                                                                              */
+/*      Handle error returns                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -439,7 +439,7 @@ private class ConfigData {
          config_dlm = 0;
        }
       project_config = null;
-      // 	 Configuration cfg = getConfiguration(proj,bp.getProperty(nm));
+      //         Configuration cfg = getConfiguration(proj,bp.getProperty(nm));
     }
    
    Configuration getConfiguration(String proj) {
@@ -534,7 +534,7 @@ private final class ProjectChecker extends Thread {
 
 
 
-}	// end of class BstyleChecker
+}       // end of class BstyleChecker
 
 
 

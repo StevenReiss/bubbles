@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattFactory.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool factory class for bubbles integration	*/
-/*										*/
+/*                                                                              */
+/*              BattFactory.java                                                */
+/*                                                                              */
+/*      Bubble Automated Testing Tool factory class for bubbles integration     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -68,31 +68,31 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 
 public final class BattFactory implements BattConstants, BudaConstants.ButtonListener,
-		MintConstants, BaleConstants, BudaConstants
+                MintConstants, BaleConstants, BudaConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BoardProperties 	batt_props;
-private boolean 		server_running;
-private BattModeler		batt_model;
-private ErrorStatus		error_status;
+private BoardProperties         batt_props;
+private boolean                 server_running;
+private BattModeler             batt_model;
+private ErrorStatus             error_status;
 private SwingEventListenerList<BattPopupHandler> popup_handlers;
 
-private static BattFactory	the_factory = null;
+private static BattFactory      the_factory = null;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized BattFactory getFactory()
@@ -121,9 +121,9 @@ private BattFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -140,10 +140,10 @@ public static void initialize(BudaRoot br)
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case SERVER :
-	 bf.startBattServer();
-	 break;
+         bf.startBattServer();
+         break;
       default:
-	 break;
+         break;
     }
 
    BaleFactory.getFactory().addContextListener(new BattContexter(bf));
@@ -155,9 +155,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get all test cases for a methods					*/
-/*										*/
+/*                                                                              */
+/*      Get all test cases for a methods                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public List<BattTest> getAllTestCases(String mthd)
@@ -169,14 +169,14 @@ public List<BattTest> getAllTestCases(String mthd)
    for (BattTestCase btc : batt_model.getAllTests()) {
       UseMode um = btc.usesMethod(mthd);
       switch (um) {
-	 case UNKNOWN :
-	 case INDIRECT :
-	 case DIRECT :
-	    all.add(btc);
-	    break;
-	 case NONE :
-	 default:
-	    break;
+         case UNKNOWN :
+         case INDIRECT :
+         case DIRECT :
+            all.add(btc);
+            break;
+         case NONE :
+         default:
+            break;
        }
     }
 
@@ -359,9 +359,9 @@ public String findTestClasses(String project,String classname,String methodname,
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu button handling							*/
-/*										*/
+/*                                                                              */
+/*      Menu button handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -390,9 +390,9 @@ void handleExternalPopups(JPopupMenu menu,BudaBubble bbl,BattTestCase tc)
 
 
 /********************************************************************************/
-/*										*/
-/*	BattBubble setup							*/
-/*										*/
+/*                                                                              */
+/*      BattBubble setup                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble createStatusBubble()
@@ -403,9 +403,9 @@ BudaBubble createStatusBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Batt agent setup							*/
-/*										*/
+/*                                                                              */
+/*      Batt agent setup                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void updateTests()
@@ -558,12 +558,12 @@ void startBattServer()
       String s1 = bs.getLibraryPath("battjunit.jar");
       String s2 = bs.getLibraryPath("battagent.jar");
       if (s0 == null || s1 == null || s2 == null) {
-	 BoardProperties sp = BoardProperties.getProperties("System");
-	 String s3 = sp.getProperty("edu.brown.cs.bubbles.jar");
-	 BoardLog.logX("BATT",
+         BoardProperties sp = BoardProperties.getProperties("System");
+         String s3 = sp.getProperty("edu.brown.cs.bubbles.jar");
+         BoardLog.logX("BATT",
                "Missing batt file " + s0 + " " + s1 + " " + s2 + " " + s3);
-	 server_running = true;
-	 return;
+         server_running = true;
+         return;
        }
       args.add("-u");
       args.add(s1);
@@ -578,32 +578,32 @@ void startBattServer()
        }
 
       for (int i = 0; i < 100; ++i) {
-	 MintDefaultReply rply = new MintDefaultReply();
-	 mc.send("<BATT DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
-	 String rslt;
-	 if (i == 0) rslt = rply.waitForString(1000);
-	 else rslt = rply.waitForString();
-	 if (rslt != null) {
-	    server_running = true;
-	    break;
-	  }
-	 if (i == 0) {
-	    try {
-	       IvyExec exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
-	       BoardLog.logD("BATT","Run " + exec.getCommand());
-	    }
-	    catch (IOException e) {
-	       break;
-	     }
-	  }
-	 try {
-	    wait(2000);
-	  }
-	 catch (InterruptedException e) { }
+         MintDefaultReply rply = new MintDefaultReply();
+         mc.send("<BATT DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
+         String rslt;
+         if (i == 0) rslt = rply.waitForString(1000);
+         else rslt = rply.waitForString();
+         if (rslt != null) {
+            server_running = true;
+            break;
+          }
+         if (i == 0) {
+            try {
+               IvyExec exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
+               BoardLog.logD("BATT","Run " + exec.getCommand());
+            }
+            catch (IOException e) {
+               break;
+             }
+          }
+         try {
+            wait(2000);
+          }
+         catch (InterruptedException e) { }
        }
       if (!server_running) {
-	 BoardLog.logE("BATT","Unable to start batt server");
-	 server_running = true; 	// don't try again
+         BoardLog.logE("BATT","Unable to start batt server");
+         server_running = true;         // don't try again
        }
     }
 }
@@ -612,9 +612,9 @@ void startBattServer()
 
 
 /********************************************************************************/
-/*										*/
-/*	Batt editor context listener						*/
-/*										*/
+/*                                                                              */
+/*      Batt editor context listener                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BattContexter implements BaleContextListener {
@@ -681,7 +681,7 @@ private static class BattContexter implements BaleContextListener {
    
    
 
-}	// end of inner class BattContexter
+}       // end of inner class BattContexter
 
 
 
@@ -716,7 +716,7 @@ private static class TestDisplayAction extends AbstractAction {
        }
     }
 
-}	// end of inner class TestDisplayAction
+}       // end of inner class TestDisplayAction
 
 
 
@@ -780,15 +780,15 @@ private static class NewTestAction extends AbstractAction {
       return typ;
     }
 
-}	// end of inner class NewTestAction
+}       // end of inner class NewTestAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create a launch configuration				*/
-/*										*/
+/*                                                                              */
+/*      Methods to create a launch configuration                                */
+/*                                                                              */
 /********************************************************************************/
 
 public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
@@ -798,9 +798,9 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
 
    for (BumpLaunchConfig blc : brm.getLaunchConfigurations()) {
       if (!blc.isWorkingCopy() && blc.getLaunchType().isTestCase()) {
-	 if (blc.getTestName() != null && blc.getTestName().equals(btc.getMethodName()) &&
-	       btc.getClassName().equals(blc.getMainClass()))
-	    return blc;
+         if (blc.getTestName() != null && blc.getTestName().equals(btc.getMethodName()) &&
+               btc.getClassName().equals(blc.getMainClass()))
+            return blc;
        }
     }
 
@@ -823,8 +823,8 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
    BumpLaunchConfig blc = null;
    for (BumpLaunchType blt : brm.getLaunchTypes()) {
       if (blt.isTestCase()) {
-	 blc = brm.createLaunchConfiguration(nm,blt);
-	 break;
+         blc = brm.createLaunchConfiguration(nm,blt);
+         break;
       }
    }
    if (blc == null) return null;
@@ -853,9 +853,9 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
 
 
 /********************************************************************************/
-/*										*/
-/*	ErrorStatus -- maintain file error status				*/
-/*										*/
+/*                                                                              */
+/*      ErrorStatus -- maintain file error status                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupErrorHandler()
@@ -908,28 +908,28 @@ private class ErrorStatus implements BumpConstants.BumpProblemHandler {
 
    private boolean isError(BumpProblem bp) {
       switch (bp.getErrorType()) {
-	 case ERROR :
-	 case FATAL :
-	    return true;
-	 default :
-	    return false;
+         case ERROR :
+         case FATAL :
+            return true;
+         default :
+            return false;
        }
     }
 
    private void addProblem(BumpProblem bp) {
       if (isError(bp)) {
-	 File bf = bp.getFile();
-	 check_files.remove(bf);
-	 error_files.add(bf);
+         File bf = bp.getFile();
+         check_files.remove(bf);
+         error_files.add(bf);
        }
     }
 
-}	// end of inner class ErrorStatus
+}       // end of inner class ErrorStatus
 
 
 
 
-}	// end of class BattFactory
+}       // end of class BattFactory
 
 
 

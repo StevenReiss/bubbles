@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaSpacer.java 						*/
-/*										*/
-/*	BUblles Display Area bubble spacer					*/
-/*										*/
+/*                                                                              */
+/*              BudaSpacer.java                                                 */
+/*                                                                              */
+/*      BUblles Display Area bubble spacer                                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Andrew Bragdon    */
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Andrew Bragdon    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -49,30 +49,30 @@ class BudaSpacer implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaBubbleArea		bubble_area;
-private Configuration		start_config;
+private BudaBubbleArea          bubble_area;
+private Configuration           start_config;
 
-private static final int	BUBBLE_SPACE = 6;
+private static final int        BUBBLE_SPACE = 6;
 
-private static final long	MAX_SPACING_TIME = 1000;
+private static final long       MAX_SPACING_TIME = 1000;
 
-private static final boolean		KEEP_BUBBLES_ON_SCREEN = false;
-private static final boolean		DONT_GO_OFF_TOP = false;
-private static final boolean		DONT_GO_OFF_BOTTOM = false;
-private static final boolean		DONT_GO_OFF_LEFT = false;
-private static final boolean		DONT_GO_OFF_RIGHT = false;
+private static final boolean            KEEP_BUBBLES_ON_SCREEN = false;
+private static final boolean            DONT_GO_OFF_TOP = false;
+private static final boolean            DONT_GO_OFF_BOTTOM = false;
+private static final boolean            DONT_GO_OFF_LEFT = false;
+private static final boolean            DONT_GO_OFF_RIGHT = false;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaSpacer(BudaBubbleArea ba)
@@ -103,9 +103,9 @@ BudaSpacer(BudaBubbleArea ba,Collection<BudaBubble> bbs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Execution methods							*/
-/*										*/
+/*                                                                              */
+/*      Execution methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void makeRoomFor(BudaBubble bb)
@@ -123,12 +123,12 @@ void makeRoomFor(BudaBubble bb)
    if (best != null) {
       Collection<BudaBubble> del = new ArrayList<>();
       for (BubbleProxy bp : best.getBubbles()) {
-	 if (bp.isMoved()) {
-	    Rectangle r = getInnerBounds(bp.getPlacement());
-	    bubble_area.addMovingBubble(bp.getBubble());
-	    del.add(bp.getBubble());
-	    bubble_area.moveBubble(bp.getBubble(),r.getLocation(),false);
-	  }
+         if (bp.isMoved()) {
+            Rectangle r = getInnerBounds(bp.getPlacement());
+            bubble_area.addMovingBubble(bp.getBubble());
+            del.add(bp.getBubble());
+            bubble_area.moveBubble(bp.getBubble(),r.getLocation(),false);
+          }
        }
       bubble_area.removeMovingBubbles(del);
     }
@@ -150,21 +150,21 @@ private Collection<Configuration> makeAMove(Configuration cur,Adjustment mvd,int
 
 
 private Collection<Configuration> makeAMoveInternal(List<Configuration> rslt,
-						       Configuration cur,
-						       Adjustment mvd,int recurse,long when)
+                                                       Configuration cur,
+                                                       Adjustment mvd,int recurse,long when)
 {
    if (!mvd.hasChanges()) {
       rslt.add(cur);
     }
    else {
       for (BubbleProxy bp : mvd.getMoved()) {
-	 BubbleProxy cpb = cur.getProxy(bp.getBubble());
-	 if (cpb != null) cpb.setPlacement(bp.getPlacement());
+         BubbleProxy cpb = cur.getProxy(bp.getBubble());
+         if (cpb != null) cpb.setPlacement(bp.getPlacement());
        }
       for (Adjustment adj : generateMoveSets(cur,mvd)) {
-	 makeAMoveInternal(rslt,new Configuration(cur),adj,recurse+1,when);
-	 long ts = System.currentTimeMillis() - when;
-	 if (ts > MAX_SPACING_TIME && ts < 10000) break;      // avoid debugging problems
+         makeAMoveInternal(rslt,new Configuration(cur),adj,recurse+1,when);
+         long ts = System.currentTimeMillis() - when;
+         if (ts > MAX_SPACING_TIME && ts < 10000) break;      // avoid debugging problems
        }
     }
 
@@ -188,17 +188,17 @@ private Collection<Adjustment> generateMoveSets(Configuration cur,Adjustment mvd
    // Otherwise, we collect all the movement paths that overlap each bubble.
    for (BubbleProxy bp : cur.getBubbles()) {
       if (!mvd.contains(bp)) {
-	 // bp overlaps with something in moved
-	 List<Movement> ovl = findMovementsForOverlappingBubble(bp,mvmts);
-	 if (ovl.size() > 0) {
-	    if (bp.isMoved()) {
-	       if (bp.overlaps(cur.getBubbles(),true)) {
-		  // this adjustment is invalid -- it generates a cycle of movements
-		  return new ArrayList<>();
-		}
-	     }
-	    else overlapped.put(bp,ovl);
-	  }
+         // bp overlaps with something in moved
+         List<Movement> ovl = findMovementsForOverlappingBubble(bp,mvmts);
+         if (ovl.size() > 0) {
+            if (bp.isMoved()) {
+               if (bp.overlaps(cur.getBubbles(),true)) {
+                  // this adjustment is invalid -- it generates a cycle of movements
+                  return new ArrayList<>();
+                }
+             }
+            else overlapped.put(bp,ovl);
+          }
        }
     }
 
@@ -216,14 +216,14 @@ private Collection<Adjustment> generateMoveSets(Configuration cur,Adjustment mvd
     }
 
    // this adds the movement of every bubble to every other bubble.  It's a way
-   //	of creating group-like movements
+   //   of creating group-like movements
    // It adds a lot to the combinatorical complexity, but it gets better results
 
    for (Map.Entry<BubbleProxy,List<BubbleProxy>> poss : possibles.entrySet()) {
       for (Map.Entry<BubbleProxy,List<Movement>> moves : cascaded.entrySet()) {
-	 if (moves.getKey().getBubble() != poss.getKey().getBubble()) {
-	    poss.getValue().addAll(moveBubble(poss.getKey(),moves.getValue()));
-	  }
+         if (moves.getKey().getBubble() != poss.getKey().getBubble()) {
+            poss.getValue().addAll(moveBubble(poss.getKey(),moves.getValue()));
+          }
        }
     }
 
@@ -245,17 +245,17 @@ private Collection<Adjustment> generateMoveSetsFromBubbleMoves(
    else {
       int count = 0;
       for (Map.Entry<BubbleProxy,List<BubbleProxy>> choice : possibles.entrySet()) {
-	 if (count++ == idx) {
-	    for (BubbleProxy move : choice.getValue()) {
-	       // skip movement if it will overlap a moved bubble
-	       //   OR if it overlaps another bubble being moved
-	       if (move.overlaps(cur.getBubbles(),true) ||
-		      move.overlaps(changes.getMoved(),false)) continue;
-	       Adjustment adj = new Adjustment(changes);
-	       adj.add(move);
-	       rslt.addAll(generateMoveSetsFromBubbleMoves(idx+1,cur,adj,possibles));
-	     }
-	  }
+         if (count++ == idx) {
+            for (BubbleProxy move : choice.getValue()) {
+               // skip movement if it will overlap a moved bubble
+               //   OR if it overlaps another bubble being moved
+               if (move.overlaps(cur.getBubbles(),true) ||
+                      move.overlaps(changes.getMoved(),false)) continue;
+               Adjustment adj = new Adjustment(changes);
+               adj.add(move);
+               rslt.addAll(generateMoveSetsFromBubbleMoves(idx+1,cur,adj,possibles));
+             }
+          }
        }
     }
 
@@ -266,7 +266,7 @@ private Collection<Adjustment> generateMoveSetsFromBubbleMoves(
 
 
 private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubble,
-						 List<Movement> tomove)
+                                                 List<Movement> tomove)
 {
    List<BubbleProxy> movements = new ArrayList<BubbleProxy>();
    if (tomove.isEmpty()) return movements;
@@ -278,7 +278,7 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
       if (rct == null) rct = new Rectangle(mv.getBounds());
       else rct = rct.union(mv.getBounds());
       dir.setLocation(Math.abs(dir.x) > Math.abs(mv.getX()) ? dir.x : mv.getX(),
-			 Math.abs(dir.y) > Math.abs(mv.getY()) ? dir.y : mv.getY());
+                         Math.abs(dir.y) > Math.abs(mv.getY()) ? dir.y : mv.getY());
     }
    if (rct == null) return movements;
 
@@ -289,16 +289,16 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
    if (bubble.getBubble().getMovement().okRight() && dir.x >= 0) {
       int x0;
       if (dir.x == 0 || Math.abs(rct.x + rct.width - tl.x) < Math.abs(dir.x))
-	 x0 = rct.x + rct.width;
+         x0 = rct.x + rct.width;
       else
-	 x0 = tl.x + dir.x;
+         x0 = tl.x + dir.x;
 
       BubbleProxy bp2 = new BubbleProxy(bubble,new Rectangle(x0,tl.y,sz.width,sz.height),false);
       if (bubbleOnScreen(bp2)) {
 
-	 double key = bp2.getMovementDistance();
-	 while (best.containsKey(key)) key += 0.000001;
-	 best.put(key,bp2);
+         double key = bp2.getMovementDistance();
+         while (best.containsKey(key)) key += 0.000001;
+         best.put(key,bp2);
        }
     }
 
@@ -306,14 +306,14 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
    if (bubble.getBubble().getMovement().okDown() && dir.y >= 0) {
       int y0;
       if (dir.y == 0 || Math.abs(rct.y + rct.height - tl.y) < Math.abs(dir.y))
-	 y0 = rct.y + rct.height;
+         y0 = rct.y + rct.height;
       else
-	 y0 = tl.y + dir.y;
+         y0 = tl.y + dir.y;
       BubbleProxy bp2 = new BubbleProxy(bubble,new Rectangle(tl.x,y0,sz.width,sz.height),false);
       if (bubbleOnScreen(bp2)) {
-	 double key = bp2.getMovementDistance();
-	 while (best.containsKey(key)) key += 0.000001;
-	 best.put(key,bp2);
+         double key = bp2.getMovementDistance();
+         while (best.containsKey(key)) key += 0.000001;
+         best.put(key,bp2);
        }
     }
 
@@ -321,15 +321,15 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
    if (bubble.getBubble().getMovement().okLeft() && dir.x <= 0) {
       int x0;
       if (dir.x == 0 || Math.abs(rct.x - 1 - sz.width - tl.x) < Math.abs(dir.x))
-	 x0 = rct.x - 1 - sz.width;
+         x0 = rct.x - 1 - sz.width;
       else
-	 x0 = tl.x + dir.x;
+         x0 = tl.x + dir.x;
 
       BubbleProxy bp2 = new BubbleProxy(bubble,new Rectangle(x0,tl.y,sz.width,sz.height),false);
       if (bubbleOnScreen(bp2)) {
-	 double key = bp2.getMovementDistance();
-	 while (best.containsKey(key)) key += 0.000001;
-	 best.put(key,bp2);
+         double key = bp2.getMovementDistance();
+         while (best.containsKey(key)) key += 0.000001;
+         best.put(key,bp2);
        }
     }
 
@@ -337,14 +337,14 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
    if (bubble.getBubble().getMovement().okUp() && dir.y <= 0) {
       int y0;
       if (dir.y == 0 || Math.abs(tl.y - (rct.y - sz.height - 1)) < Math.abs(dir.y))
-	 y0 = rct.y - sz.height - 1;
+         y0 = rct.y - sz.height - 1;
       else
-	 y0 = tl.y + dir.y;
+         y0 = tl.y + dir.y;
       BubbleProxy bp2 = new BubbleProxy(bubble,new Rectangle(tl.x,y0,sz.width,sz.height),false);
       if (bubbleOnScreen(bp2)) {
-	 double key = bp2.getMovementDistance();
-	 while (best.containsKey(key)) key += 0.000001;
-	 best.put(key,bp2);
+         double key = bp2.getMovementDistance();
+         while (best.containsKey(key)) key += 0.000001;
+         best.put(key,bp2);
        }
     }
 
@@ -430,8 +430,8 @@ private Configuration evaluate(List<Configuration> cfgs)
    for (Configuration c : cfgs) {
       double score = c.getScore();
       if (bestv < 0 || score < bestv) {
-	 bestv = score;
-	 bestc = c;
+         bestv = score;
+         bestc = c;
        }
     }
 
@@ -470,9 +470,9 @@ private static Rectangle getInnerBounds(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Adjustment								*/
-/*										*/
+/*                                                                              */
+/*      Adjustment                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Adjustment {
@@ -491,40 +491,40 @@ private static class Adjustment {
    Adjustment(Adjustment a) {
       this();
       for (BubbleProxy bp : a.getMoved()) {
-	 moved_bubbles.add(new BubbleProxy(bp));
+         moved_bubbles.add(new BubbleProxy(bp));
        }
     }
 
-   boolean hasChanges() 		{ return moved_bubbles.size() > 0; }
-   Iterable<BubbleProxy> getMoved()	{ return moved_bubbles; }
+   boolean hasChanges()                 { return moved_bubbles.size() > 0; }
+   Iterable<BubbleProxy> getMoved()     { return moved_bubbles; }
 
-   void add(BubbleProxy bp)		{ moved_bubbles.add(bp); }
+   void add(BubbleProxy bp)             { moved_bubbles.add(bp); }
 
    boolean contains(BubbleProxy b) {
       for (BubbleProxy bp : moved_bubbles) {
-	 if (bp.getBubble() == b.getBubble()) return true;
+         if (bp.getBubble() == b.getBubble()) return true;
        }
       return false;
     }
 
    boolean hasOverlap() {
       for (BubbleProxy bp1 : moved_bubbles) {
-	 for (BubbleProxy bp2 : moved_bubbles) {
-	    if (bp1 != bp2 && bp1.getPlacement().intersects(bp2.getPlacement())) return true;
-	  }
+         for (BubbleProxy bp2 : moved_bubbles) {
+            if (bp1 != bp2 && bp1.getPlacement().intersects(bp2.getPlacement())) return true;
+          }
        }
       return false;
     }
 
-}	// end of inner class Adjustment
+}       // end of inner class Adjustment
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Movement								*/
-/*										*/
+/*                                                                              */
+/*      Movement                                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Movement {
@@ -537,24 +537,24 @@ private static class Movement {
       move_direction = new Point(x,y);
     }
 
-   Rectangle getBounds()			{ return move_bounds; }
-   int getX()					{ return move_direction.x; }
-   int getY()					{ return move_direction.y; }
+   Rectangle getBounds()                        { return move_bounds; }
+   int getX()                                   { return move_direction.x; }
+   int getY()                                   { return move_direction.y; }
 
-}	// end of inner class Movement
+}       // end of inner class Movement
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration								*/
-/*										*/
+/*                                                                              */
+/*      Configuration                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Configuration {
 
-   private Map<BudaBubble,BubbleProxy>	bubble_set;
+   private Map<BudaBubble,BubbleProxy>  bubble_set;
    private BudaBubbleArea bubble_area;
 
    Configuration(BudaBubbleArea ba) {
@@ -583,8 +583,8 @@ private static class Configuration {
    double getScore() {
       double score = 0;
       for (BubbleProxy bp : bubble_set.values()) {
-	 if (bp.isOffScreen(bubble_area.getHeight())) score += 1000000;
-	 score += bp.getMovementScore();
+         if (bp.isOffScreen(bubble_area.getHeight())) score += 1000000;
+         score += bp.getMovementScore();
        }
       return score;
     }
@@ -594,26 +594,26 @@ private static class Configuration {
       if (bp != null) bp.setMoved();
     }
 
-   Iterable<BubbleProxy> getBubbles()		{ return bubble_set.values(); }
+   Iterable<BubbleProxy> getBubbles()           { return bubble_set.values(); }
 
 
-}	// end of inner class Configuration
+}       // end of inner class Configuration
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Holder of information for a bubble during placement			*/
-/*										*/
+/*                                                                              */
+/*      Holder of information for a bubble during placement                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BubbleProxy {
 
-   private BudaBubble	for_bubble;
-   private Rectangle	start_place;
-   private Rectangle	curr_place;
-   private boolean	is_moved;
+   private BudaBubble   for_bubble;
+   private Rectangle    start_place;
+   private Rectangle    curr_place;
+   private boolean      is_moved;
 
    BubbleProxy(BudaBubble bb) {
       for_bubble = bb;
@@ -636,7 +636,7 @@ private static class BubbleProxy {
       is_moved = bp.is_moved;
     }
 
-   BudaBubble getBubble()				{ return for_bubble; }
+   BudaBubble getBubble()                               { return for_bubble; }
 
    boolean isOffScreen(int maxy) {
       return (curr_place.y + curr_place.height/2 > maxy);
@@ -654,10 +654,10 @@ private static class BubbleProxy {
       return Point2D.distance(start_place.x,start_place.y,curr_place.x,curr_place.y);
     }
 
-   void setMoved()					{ is_moved = true; }
-   boolean isMoved()					{ return is_moved; }
+   void setMoved()                                      { is_moved = true; }
+   boolean isMoved()                                    { return is_moved; }
 
-   Rectangle getPlacement()				{ return curr_place; }
+   Rectangle getPlacement()                             { return curr_place; }
    void setPlacement(Rectangle r) {
       curr_place.setBounds(r);
       is_moved = true;
@@ -671,20 +671,20 @@ private static class BubbleProxy {
 
    boolean overlaps(Iterable<BubbleProxy> all,boolean movedonly) {
       for (BubbleProxy bp : all) {
-	 if (bp.getBubble() != for_bubble && (!movedonly || bp.isMoved())) {
-	    if (bp.getPlacement().intersects(curr_place)) return true;
-	  }
+         if (bp.getBubble() != for_bubble && (!movedonly || bp.isMoved())) {
+            if (bp.getPlacement().intersects(curr_place)) return true;
+          }
        }
       return false;
     }
 
-}	// end of inner class BubbleProxy
+}       // end of inner class BubbleProxy
 
 
 
 
 
-}	// end of class BudaSpacer
+}       // end of class BudaSpacer
 
 
 

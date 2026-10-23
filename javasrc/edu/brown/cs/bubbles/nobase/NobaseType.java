@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseType.java 						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              NobaseType.java                                                 */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -36,12 +36,12 @@ class NobaseType implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected String	type_name;
+protected String        type_name;
 
 private static NobaseType undef_type = new UndefinedType();
 private static NobaseType unknown_type = new UnknownType();
@@ -55,32 +55,32 @@ private static NobaseType any_type = new AnyType();
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
-static NobaseType createUndefined()		{ return undef_type; }
+static NobaseType createUndefined()             { return undef_type; }
 
-static NobaseType createUnknown()		{ return unknown_type; }
+static NobaseType createUnknown()               { return unknown_type; }
 
-static NobaseType createNull()			{ return null_type; }
+static NobaseType createNull()                  { return null_type; }
 
-static NobaseType createBoolean()		{ return bool_type; }
+static NobaseType createBoolean()               { return bool_type; }
 
-static NobaseType createNumber()		{ return number_type; }
+static NobaseType createNumber()                { return number_type; }
 
-static NobaseType createString()		{ return string_type; }
+static NobaseType createString()                { return string_type; }
 
-static NobaseType createObject()		{ return new ObjectType(); }
+static NobaseType createObject()                { return new ObjectType(); }
 
-static NobaseType createClass() 		{ return new ClassType(); }
+static NobaseType createClass()                 { return new ClassType(); }
 
-static NobaseType createList()			{ return new ListType(); }
+static NobaseType createList()                  { return new ListType(); }
 
-static NobaseType createFunction()		{ return new CompletionType(); }
+static NobaseType createFunction()              { return new CompletionType(); }
 
-static NobaseType createAnyType()		{ return any_type; }
+static NobaseType createAnyType()               { return any_type; }
 
 static NobaseType createUnion(NobaseType... typs)
 {
@@ -91,9 +91,9 @@ static NobaseType createUnion(NobaseType... typs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private NobaseType(String nm)
@@ -104,12 +104,12 @@ private NobaseType(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()				{ return type_name; }
+String getName()                                { return type_name; }
 
 boolean isAnyType()                             { return false; }
 
@@ -146,9 +146,9 @@ NobaseType mergeWith(NobaseType t)
 
 
 /********************************************************************************/
-/*										*/
-/*	Undefined type								*/
-/*										*/
+/*                                                                              */
+/*      Undefined type                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class UndefinedType extends NobaseType {
@@ -157,14 +157,14 @@ private static class UndefinedType extends NobaseType {
       super("undefined");
     }
 
-}	// end of inner class UndefinedType
+}       // end of inner class UndefinedType
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Null type								*/
-/*										*/
+/*                                                                              */
+/*      Null type                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NullType extends NobaseType {
@@ -173,7 +173,7 @@ private static class NullType extends NobaseType {
       super("null");
     }
 
-}	// end of inner class NullType
+}       // end of inner class NullType
 
 
 
@@ -194,9 +194,9 @@ private static class UnknownType extends NobaseType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Boolean type								*/
-/*										*/
+/*                                                                              */
+/*      Boolean type                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BooleanType extends NobaseType {
@@ -205,14 +205,14 @@ private static class BooleanType extends NobaseType {
       super("boolean");
     }
 
-}	// end of inner class BooleanType
+}       // end of inner class BooleanType
 
 
 
 /********************************************************************************/
-/*										*/
-/*	String Type								*/
-/*										*/
+/*                                                                              */
+/*      String Type                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class StringType extends NobaseType {
@@ -221,13 +221,13 @@ private static class StringType extends NobaseType {
       super("string");
     }
 
-}	// end of inner class StringType
+}       // end of inner class StringType
 
 
 /********************************************************************************/
-/*										*/
-/*	Numeric Types								*/
-/*										*/
+/*                                                                              */
+/*      Numeric Types                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NumberType extends NobaseType {
@@ -236,14 +236,14 @@ private static class NumberType extends NobaseType {
       super("number");
     }
 
-}	// end of inner class NumberType
+}       // end of inner class NumberType
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Object Types								*/
-/*										*/
+/*                                                                              */
+/*      Object Types                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ObjectType extends NobaseType {
@@ -252,14 +252,14 @@ private static class ObjectType extends NobaseType {
       super("object");
     }
 
-}	// end of inner class ObjectType
+}       // end of inner class ObjectType
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class Types								*/
-/*										*/
+/*                                                                              */
+/*      Class Types                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ClassType extends NobaseType {
@@ -277,9 +277,9 @@ private static class ClassType extends NobaseType {
 
 
 /********************************************************************************/
-/*										*/
-/*	List Type								*/
-/*										*/
+/*                                                                              */
+/*      List Type                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ListType extends NobaseType {
@@ -288,15 +288,15 @@ private static class ListType extends NobaseType {
       super("list");
     }
 
-}	// end of inner class ListType
+}       // end of inner class ListType
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Completion type 							*/
-/*										*/
+/*                                                                              */
+/*      Completion type                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CompletionType extends NobaseType {
@@ -305,16 +305,16 @@ private static class CompletionType extends NobaseType {
       super("function");
     }
 
-}	// end of inner class CompletionType
+}       // end of inner class CompletionType
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Any Type								*/
-/*										*/
+/*                                                                              */
+/*      Any Type                                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AnyType extends NobaseType {
@@ -325,7 +325,7 @@ private static class AnyType extends NobaseType {
 
    boolean isAnyType()                  { return true; }
    
-}	// end of inner class AnyType
+}       // end of inner class AnyType
 
 
 
@@ -383,7 +383,7 @@ private static final class TypeComparator implements Comparator<NobaseType> {
    
 }       // end of inner class TypeComparator
 
-}	// end of class NobaseType
+}       // end of class NobaseType
 
 
 

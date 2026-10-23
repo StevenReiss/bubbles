@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvfmLibrary.java						*/
-/*										*/
-/*	Collection of all current virtual files 				*/
-/*										*/
+/*                                                                              */
+/*              BvfmLibrary.java                                                */
+/*                                                                              */
+/*      Collection of all current virtual files                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,23 +49,23 @@ class BvfmLibrary implements BvfmConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<BvfmVirtualFile,File>	file_set;
-private Map<String,BvfmVirtualFile>	file_names;
-private File				library_directory;
-private BvfmCodeRepository		virtual_code_repo;
-private BvfmGroupRepository		virtual_group_repo;
+private Map<BvfmVirtualFile,File>       file_set;
+private Map<String,BvfmVirtualFile>     file_names;
+private File                            library_directory;
+private BvfmCodeRepository              virtual_code_repo;
+private BvfmGroupRepository             virtual_group_repo;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvfmLibrary()
@@ -88,9 +88,9 @@ BvfmLibrary()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BvfmVirtualFile getVirtualFileForName(String nm)
@@ -101,9 +101,9 @@ BvfmVirtualFile getVirtualFileForName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update operations							*/
-/*										*/
+/*                                                                              */
+/*      Update operations                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void addVirtualFile(BvfmVirtualFile bvf)
@@ -112,8 +112,8 @@ void addVirtualFile(BvfmVirtualFile bvf)
    File f = new File(library_directory,nm + ".bvf");
    if (f.exists()) {
       for (int i = 0; ; ++i) {
-	 f = new File(library_directory,nm + "_" + i + ".bvf");
-	 if (!f.exists()) break;
+         f = new File(library_directory,nm + "_" + i + ".bvf");
+         if (!f.exists()) break;
        }
     }
    file_set.put(bvf,f);
@@ -140,7 +140,7 @@ void editVirtualFile(BvfmVirtualFile bvf)
    for (Iterator<BvfmVirtualFile> it = file_names.values().iterator(); it.hasNext(); ) {
       BvfmVirtualFile ovf = it.next();
       if (ovf == bvf) {
-	 it.remove();
+         it.remove();
        }
     }
    file_names.put(bvf.getName(),bvf);
@@ -165,9 +165,9 @@ private void save(BvfmVirtualFile bvf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Repository actions							*/
-/*										*/
+/*                                                                              */
+/*      Repository actions                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void updateRepository()
@@ -180,9 +180,9 @@ private void updateRepository()
 
 
 /********************************************************************************/
-/*										*/
-/*	Load library								*/
-/*										*/
+/*                                                                              */
+/*      Load library                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void loadLibrary()
@@ -190,10 +190,10 @@ void loadLibrary()
    for (File f : library_directory.listFiles(new VirtualFileFilter())) {
       Element xml = IvyXml.loadXmlFromFile(f);
       if (xml != null && IvyXml.isElement(xml,"VIRTUALFILE")) {
-	 BvfmVirtualFile bvf = new BvfmVirtualFile(xml);
-	 if (bvf.isEmpty() || bvf.getName() == null) continue;
-	 file_set.put(bvf,f);
-	 file_names.put(bvf.getName(),bvf);
+         BvfmVirtualFile bvf = new BvfmVirtualFile(xml);
+         if (bvf.isEmpty() || bvf.getName() == null) continue;
+         file_set.put(bvf,f);
+         file_names.put(bvf.getName(),bvf);
        }
     }
    updateRepository();
@@ -209,14 +209,14 @@ private static final class VirtualFileFilter implements FileFilter {
       return false;
     }
 
-}	// end of inner class VirtualFileFilter
+}       // end of inner class VirtualFileFilter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	BASS Repository methods for code elements				*/
-/*										*/
+/*                                                                              */
+/*      BASS Repository methods for code elements                               */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BvfmCodeRepository implements BassUpdatableRepository {
@@ -247,15 +247,15 @@ private final class BvfmCodeRepository implements BassUpdatableRepository {
    @Override public void reloadRepository() {
     }
 
-}	// end of inner class BvfmCodeRepository
+}       // end of inner class BvfmCodeRepository
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bass Repository methods for general groups				*/
-/*										*/
+/*                                                                              */
+/*      Bass Repository methods for general groups                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BvfmGroupRepository implements BassUpdatableRepository {
@@ -282,7 +282,7 @@ private final class BvfmGroupRepository implements BassUpdatableRepository {
    @Override public void reloadRepository() {
     }
 
-}	// end of inner class BvfmGroupRepository
+}       // end of inner class BvfmGroupRepository
 
 
 private class GroupName extends BvfmRepoName {
@@ -305,7 +305,7 @@ private class GroupName extends BvfmRepoName {
       return BVFM_GROUP_PREFIX + virtual_file.getName();
     }
 
-}	// end of inner class GroupName
+}       // end of inner class GroupName
 
 private class CodeName extends BvfmRepoName {
 
@@ -330,12 +330,12 @@ private class CodeName extends BvfmRepoName {
       return code_prefix + "VirtualFile:" + virtual_file.getName();
     }
    
-}	// end of inner class GroupName
+}       // end of inner class GroupName
 
 
 
 
-}	// end of class BvfmLibrary
+}       // end of class BvfmLibrary
 
 
 

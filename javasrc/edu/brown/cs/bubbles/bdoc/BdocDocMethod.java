@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocDocMethod.java						*/
-/*										*/
-/*	Bubbles Environment Documentation bubbles javadoc field detail		*/
-/*										*/
+/*                                                                              */
+/*              BdocDocMethod.java                                              */
+/*                                                                              */
+/*      Bubbles Environment Documentation bubbles javadoc field detail          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -41,9 +41,9 @@ class BdocDocMethod extends BdocDocItem implements BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocDocMethod(URI u) throws IOException
@@ -71,7 +71,7 @@ BdocDocMethod(URI u) throws IOException
 
 
 
-}	// end of class BdocDocMethod
+}       // end of class BdocDocMethod
 
 
 

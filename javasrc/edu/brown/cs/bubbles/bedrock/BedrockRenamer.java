@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockRenamer.java						*/
-/*										*/
-/*	Handle editor-related commands for Bubbles				*/
-/*										*/
+/*                                                                              */
+/*              BedrockRenamer.java                                             */
+/*                                                                              */
+/*      Handle editor-related commands for Bubbles                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,19 +57,19 @@ class BedrockRenamer implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BedrockPlugin	our_plugin;
+private BedrockPlugin   our_plugin;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockRenamer(BedrockPlugin bp)
@@ -81,19 +81,19 @@ BedrockRenamer(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Renaming commands							*/
-/*										*/
+/*                                                                              */
+/*      Renaming commands                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 void rename(String proj,String bid,String file,int start,int end,String name,String handle,
-	       String newname,
-	       boolean keeporig, boolean getters,boolean setters, boolean dohier,
-	       boolean qual,boolean refs,boolean dosimilar,boolean textocc,
-	       boolean doedit,
-	       String filespat,IvyXmlWriter xw)
-	throws BedrockException
+               String newname,
+               boolean keeporig, boolean getters,boolean setters, boolean dohier,
+               boolean qual,boolean refs,boolean dosimilar,boolean textocc,
+               boolean doedit,
+               String filespat,IvyXmlWriter xw)
+        throws BedrockException
 // CHECKSTYLE:ON
 {
    ICompilationUnit icu = our_plugin.getCompilationUnit(proj,file);
@@ -116,40 +116,40 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
    if (relt == null) throw new BedrockException("Item to rename not found");
 
    BedrockPlugin.logD("RENAME CHECK " + relt.getElementType() + " " +
-			 relt.getParent().getElementType());
+                         relt.getParent().getElementType());
 
    switch (relt.getElementType()) {
       case IJavaElement.COMPILATION_UNIT :
-	 throw new BedrockException("Compilation unit renaming not supported yet");
+         throw new BedrockException("Compilation unit renaming not supported yet");
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
       case IJavaElement.PACKAGE_FRAGMENT :
-	 throw new BedrockException("Package renaming not supported yet");
+         throw new BedrockException("Package renaming not supported yet");
       case IJavaElement.FIELD :
       case IJavaElement.LOCAL_VARIABLE :
       case IJavaElement.TYPE_PARAMETER :
-	 break;
+         break;
       case IJavaElement.METHOD :
-	 IMethod mthd = (IMethod) relt;
-	 try {
-	    if (mthd.isConstructor()) throw new BedrockException("Constructor renaming not supported yet");
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IMethod mthd = (IMethod) relt;
+         try {
+            if (mthd.isConstructor()) throw new BedrockException("Constructor renaming not supported yet");
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.TYPE :
-	 IJavaElement pelt = relt.getParent();
-	 if (pelt.getElementType() == IJavaElement.COMPILATION_UNIT) {
-	    ITypeRoot xcu = (ITypeRoot) pelt;
-	    if (relt == xcu.findPrimaryType()) {
-	       throw new BedrockException("Compilation unit renaming based on type not supported yet");
-	     }
-	  }
-	 break;
+         IJavaElement pelt = relt.getParent();
+         if (pelt.getElementType() == IJavaElement.COMPILATION_UNIT) {
+            ITypeRoot xcu = (ITypeRoot) pelt;
+            if (relt == xcu.findPrimaryType()) {
+               throw new BedrockException("Compilation unit renaming based on type not supported yet");
+             }
+          }
+         break;
       default :
-	 throw new BedrockException("Invalid element type to rename");
+         throw new BedrockException("Invalid element type to rename");
    }
 
    SearchPattern sp = SearchPattern.createPattern(relt,IJavaSearchConstants.ALL_OCCURRENCES,
-						     SearchPattern.R_EXACT_MATCH);
+                                                     SearchPattern.R_EXACT_MATCH);
 
    List<ICompilationUnit> worku = new ArrayList<ICompilationUnit>();
    for (IJavaElement je : BedrockJava.getAllProjects()) {
@@ -178,9 +178,9 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for Java search handling					*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for Java search handling                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FindHandler extends SearchRequestor {
@@ -195,7 +195,7 @@ private static class FindHandler extends SearchRequestor {
 
    @Override public void acceptSearchMatch(SearchMatch mat) {
       if (reportMatch(mat)) {
-	 all_matches.add(mat);
+         all_matches.add(mat);
        }
     }
 
@@ -207,7 +207,7 @@ private static class FindHandler extends SearchRequestor {
       return true;
     }
 
-}	// end of subclass FindHandler
+}       // end of subclass FindHandler
 
 
 
@@ -222,7 +222,7 @@ private interface FindFilter {
 
 
 
-}	// end of class BedrockRenamer
+}       // end of class BedrockRenamer
 
 
 

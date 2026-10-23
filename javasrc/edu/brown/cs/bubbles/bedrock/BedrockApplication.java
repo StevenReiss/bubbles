@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockApplication.java 					*/
-/*										*/
-/*	Main class for the Eclipse RCP interface				*/
-/*										*/
+/*                                                                              */
+/*              BedrockApplication.java                                         */
+/*                                                                              */
+/*      Main class for the Eclipse RCP interface                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -69,24 +69,24 @@ public class BedrockApplication implements IApplication, BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean exit_ok;
 private Display base_display;
-private int	exit_ctr;
+private int     exit_ctr;
 private boolean is_setup;
 private boolean from_eclipse;
 
 private Location base_location;
 
-private static boolean	use_display = false;
-private static boolean	tiny_display = false;
-private static boolean	hide_display = false;
-private static boolean	exit_atend = true;
-private static boolean	show_atend = false;
+private static boolean  use_display = false;
+private static boolean  tiny_display = false;
+private static boolean  hide_display = false;
+private static boolean  exit_atend = true;
+private static boolean  show_atend = false;
 
 private static BedrockApplication      the_app;
 
@@ -94,9 +94,9 @@ private static BedrockApplication      the_app;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BedrockApplication()
@@ -121,9 +121,9 @@ BedrockApplication(boolean ecl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Static methods								*/
-/*										*/
+/*                                                                              */
+/*      Static methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static void enterApplication()
@@ -153,12 +153,12 @@ static void stopApplication()
       the_app.checkActive();
       BedrockPlugin.logD("BEDROCK STOP NEXT " + ctr + " " + the_app.exit_ctr + " " + the_app.exit_ok);
       if (ctr == the_app.exit_ctr && the_app.exit_ok) {
-	 try {
-	    the_app.base_display.syncExec(new Shutdown());
-	  }
-	 catch (Throwable t) {
-	    System.exit(1);
-	  }
+         try {
+            the_app.base_display.syncExec(new Shutdown());
+          }
+         catch (Throwable t) {
+            System.exit(1);
+          }
        }
     }
 }
@@ -170,37 +170,37 @@ private static final class Shutdown implements Runnable {
    @Override public void run() {
       BedrockPlugin.logD("BEDROCK SHUTDOWN " + show_atend + " " + exit_atend);
       if (show_atend) {
-	 for (Shell sh1 : the_app.base_display.getShells()) {
-	    BedrockPlugin.logD("SHELL1 " + sh1.isVisible() + " " + sh1.getText());
-	    sh1.setVisible(true);
-	  }
-	 Shell sh = the_app.base_display.getActiveShell();
-	 if (sh != null) sh.setVisible(true);
+         for (Shell sh1 : the_app.base_display.getShells()) {
+            BedrockPlugin.logD("SHELL1 " + sh1.isVisible() + " " + sh1.getText());
+            sh1.setVisible(true);
+          }
+         Shell sh = the_app.base_display.getActiveShell();
+         if (sh != null) sh.setVisible(true);
        }
       if (exit_atend) {
-	 try {
-	    IWorkbench wb = PlatformUI.getWorkbench();
-	    IWorkbenchWindow wbw = wb.getActiveWorkbenchWindow();
-	    if (wbw != null) {
-	       boolean fg1 = wbw.close();
-	       if (!fg1) {
-		  BedrockPlugin.logD("Workbench window close failed " + wb.isClosing());
-		}
-	     }
-//	    boolean fg = wb.close();
-//	    if (!fg) {
-//	       BedrockPlugin.logD("Workbench close failed " + wb.isClosing());
-//	     }
-	  }
-	 catch (Throwable t) {
-	    BedrockPlugin.logE("Problem closing workbench: " + t,t);
-	  }
+         try {
+            IWorkbench wb = PlatformUI.getWorkbench();
+            IWorkbenchWindow wbw = wb.getActiveWorkbenchWindow();
+            if (wbw != null) {
+               boolean fg1 = wbw.close();
+               if (!fg1) {
+                  BedrockPlugin.logD("Workbench window close failed " + wb.isClosing());
+                }
+             }
+//          boolean fg = wb.close();
+//          if (!fg) {
+//             BedrockPlugin.logD("Workbench close failed " + wb.isClosing());
+//           }
+          }
+         catch (Throwable t) {
+            BedrockPlugin.logE("Problem closing workbench: " + t,t);
+          }
        }
       BedrockPlugin.logD("SHUTDOWN OVER");
       new Stopper().start();
     }
 
-}	// end of inner class Shutdown
+}       // end of inner class Shutdown
 
 
 
@@ -213,17 +213,17 @@ private static class Stopper extends Thread {
 
    @Override public void run() {
       synchronized (this) {
-	 try {
-	    wait(1000);
-	  }
-	 catch (InterruptedException e) {
-	  }
-	 BedrockPlugin.logD("Forcing EXIT After delay");
-	 System.exit(0);
+         try {
+            wait(1000);
+          }
+         catch (InterruptedException e) {
+          }
+         BedrockPlugin.logD("Forcing EXIT After delay");
+         System.exit(0);
        }
     }
 
-}	// end of inner class Stopper
+}       // end of inner class Stopper
 
 
 
@@ -247,7 +247,7 @@ private synchronized void waitForSetup()
    while (!is_setup) {
       BedrockPlugin.logD("BEDROCK: wait for setup");
       try {
-	 wait();
+         wait();
        }
       catch (InterruptedException e) { }
     }
@@ -269,9 +269,9 @@ private synchronized void noteSetup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Start/stop methods							*/
-/*										*/
+/*                                                                              */
+/*      Start/stop methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Object start(IApplicationContext ctx) throws Exception
@@ -284,9 +284,9 @@ private synchronized void noteSetup()
    if (base_location != null) {
       boolean fg = base_location.lock();
       if (!fg) {
-	 BedrockPlugin.logD("BEDROCK: eclipse/bedrock already running");
-	 base_location = null;
-	 return IApplication.EXIT_OK;
+         BedrockPlugin.logD("BEDROCK: eclipse/bedrock already running");
+         base_location = null;
+         return IApplication.EXIT_OK;
        }
     }
 
@@ -301,63 +301,63 @@ private synchronized void noteSetup()
       else if (s.startsWith("-btiny")) tiny_display = true;
       else if (s.startsWith("-bhide")) hide_display = true;
       else if (s.startsWith("-bnone")) {
-	 use_display = false;
-	 tiny_display = false;
-	 hide_display = false;
+         use_display = false;
+         tiny_display = false;
+         hide_display = false;
        }
-      else hide_display = true; 		// default
+      else hide_display = true;                 // default
     }
 
    if ((use_display || tiny_display || hide_display) &&
-	  !PlatformUI.isWorkbenchRunning()) {
+          !PlatformUI.isWorkbenchRunning()) {
       int sts = PlatformUI.RETURN_UNSTARTABLE;
       BedrockPlugin.logI("DISPLAY START " + use_display + " " + hide_display + " " + tiny_display);
       try {
-	 if (base_display == null) base_display = Display.getDefault();
-	 if (base_display == null) base_display = PlatformUI.createDisplay();
-	 BedrockPlugin.logI("DISPLAY = " + base_display + " " + Display.getDefault());
-	 EndChecker ec = new EndChecker();
-	 ec.start();
-	 is_setup = false;
-	 // perhaps run this is SWT thread?
-	 sts = PlatformUI.createAndRunWorkbench(base_display,new WbAdvisor());
+         if (base_display == null) base_display = Display.getDefault();
+         if (base_display == null) base_display = PlatformUI.createDisplay();
+         BedrockPlugin.logI("DISPLAY = " + base_display + " " + Display.getDefault());
+         EndChecker ec = new EndChecker();
+         ec.start();
+         is_setup = false;
+         // perhaps run this is SWT thread?
+         sts = PlatformUI.createAndRunWorkbench(base_display,new WbAdvisor());
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Start status: " + t);
-	 BedrockPlugin.logE("Bad start",t);
-	 t.printStackTrace();
+         BedrockPlugin.logE("Start status: " + t);
+         BedrockPlugin.logE("Bad start",t);
+         t.printStackTrace();
        }
       IWorkspace ws = ResourcesPlugin.getWorkspace();
       if (ws != null) {
-	 IWorkspaceRoot wr = ws.getRoot();
-	 IPath wp = wr.getFullPath();
-	 File wf = wp.toFile();
-	 File cf = new File(wf,".clone");
-	 try {
-	    FileWriter fw = new FileWriter(cf);
-	    fw.close();
-	  }
-	 catch (IOException e) { }
+         IWorkspaceRoot wr = ws.getRoot();
+         IPath wp = wr.getFullPath();
+         File wf = wp.toFile();
+         File cf = new File(wf,".clone");
+         try {
+            FileWriter fw = new FileWriter(cf);
+            fw.close();
+          }
+         catch (IOException e) { }
        }
       if (base_display == null) {
-	 BedrockPlugin.logI("Alternative Start");
-	 try {
-	    IWorkbench wb = PlatformUI.getWorkbench();
-	    base_display = wb.getDisplay();
-	  }
-	 catch (Throwable t) {
-	    BedrockPlugin.logE("Start1 status:",t);
-	  }
-	 if (base_display != null) {
-	    try {
-	       // Class<?> c1 = org.eclipse.jface.resource.ColorRegistry.class;
-	       JavaUI.getColorManager();
-	     }
-	    catch (Throwable t) {
-	       BedrockPlugin.logE("Start1a status",t);
-	     }
-	  }
-	 noteSetup();
+         BedrockPlugin.logI("Alternative Start");
+         try {
+            IWorkbench wb = PlatformUI.getWorkbench();
+            base_display = wb.getDisplay();
+          }
+         catch (Throwable t) {
+            BedrockPlugin.logE("Start1 status:",t);
+          }
+         if (base_display != null) {
+            try {
+               // Class<?> c1 = org.eclipse.jface.resource.ColorRegistry.class;
+               JavaUI.getColorManager();
+             }
+            catch (Throwable t) {
+               BedrockPlugin.logE("Start1a status",t);
+             }
+          }
+         noteSetup();
        }
 
       BedrockPlugin.logD("SETUP STATUS " + sts);
@@ -365,24 +365,24 @@ private synchronized void noteSetup()
       // this fails with RETURN_UNSTARTABLE
       if (sts == PlatformUI.RETURN_OK) return IApplication.EXIT_OK;
       else if (sts == PlatformUI.RETURN_RESTART || base_display == null)
-	 return IApplication.EXIT_RELAUNCH;
+         return IApplication.EXIT_RELAUNCH;
       else {
-	 exit_ok = false;
-	 BedrockPlugin.logD("BEDROCK: START STATUS = " + sts);
-	 if (hide_display) {
-	    if (the_app != null && the_app.base_display != null) {
-	       for (Shell sh1 : the_app.base_display.getShells()) {
-		  BedrockPlugin.logD("SHELL2 " + sh1.isVisible() + " " + sh1.getText());
-		  sh1.setVisible(false);
-		}
-	     }
-	    Shell sh = base_display.getActiveShell();
-	    if (sh != null) sh.setVisible(false);
-	  }
-	 exit_atend = true;
-	 show_atend = false;
-	 // forceLoads();
-	 noteSetup();
+         exit_ok = false;
+         BedrockPlugin.logD("BEDROCK: START STATUS = " + sts);
+         if (hide_display) {
+            if (the_app != null && the_app.base_display != null) {
+               for (Shell sh1 : the_app.base_display.getShells()) {
+                  BedrockPlugin.logD("SHELL2 " + sh1.isVisible() + " " + sh1.getText());
+                  sh1.setVisible(false);
+                }
+             }
+            Shell sh = base_display.getActiveShell();
+            if (sh != null) sh.setVisible(false);
+          }
+         exit_atend = true;
+         show_atend = false;
+         // forceLoads();
+         noteSetup();
        }
     }
    else {
@@ -393,20 +393,20 @@ private synchronized void noteSetup()
    for ( ; ; ) {
       int ctr = exit_ctr;
       BedrockPlugin.logD("WAIT ON " + ctr + " " + this);
-      synchronized (this) {		   // wait until exit request
-	 while (!exit_ok) {
-	    try {
-	       wait(15000);
-	     }
-	    catch (InterruptedException e) { }
-	    if (!exit_ok) {
-	       BedrockPlugin bp = BedrockPlugin.getPlugin();
-	       IvyXmlWriter xw = bp.beginMessage("PING");
-	       String resp = bp.finishMessageWait(xw);
-	       if (resp == null) exit_ok = true;
-	     }
-	    BedrockPlugin.logD("PRECHECK " + exit_ok + " " + exit_ctr + " " + ctr);
-	  }
+      synchronized (this) {                // wait until exit request
+         while (!exit_ok) {
+            try {
+               wait(15000);
+             }
+            catch (InterruptedException e) { }
+            if (!exit_ok) {
+               BedrockPlugin bp = BedrockPlugin.getPlugin();
+               IvyXmlWriter xw = bp.beginMessage("PING");
+               String resp = bp.finishMessageWait(xw);
+               if (resp == null) exit_ok = true;
+             }
+            BedrockPlugin.logD("PRECHECK " + exit_ok + " " + exit_ctr + " " + ctr);
+          }
        }
       checkActive();
       BedrockPlugin.logD("EXIT CHECK " + exit_ok + " " + exit_ctr + " " + ctr);
@@ -439,8 +439,8 @@ private void checkActive()
    String resp = bp.finishMessageWait(xw,5000);
    synchronized (this) {
       if (resp != null) {
-	 exit_ok = false;
-	 ++exit_ctr;
+         exit_ok = false;
+         ++exit_ctr;
        }
     }
 }
@@ -486,13 +486,13 @@ void startedBubbles(boolean hide)
 
    if (base_display != null && hide_display) {
       for (Shell sh1 : base_display.getShells()) {
-	 BedrockPlugin.logD("SHELL4 " + sh1.isVisible() + " " + sh1.getText());
-//	 sh1.setVisible(false);
+         BedrockPlugin.logD("SHELL4 " + sh1.isVisible() + " " + sh1.getText());
+//       sh1.setVisible(false);
        }
       Shell sh = base_display.getActiveShell();
       if (sh != null) {
-	 // this makes eclipse unusable for some reason -- try to fix
-	 sh.setVisible(false);
+         // this makes eclipse unusable for some reason -- try to fix
+         sh.setVisible(false);
        }
     }
 
@@ -501,9 +501,9 @@ void startedBubbles(boolean hide)
 
 
 /********************************************************************************/
-/*										*/
-/*	Workbench advisor							*/
-/*										*/
+/*                                                                              */
+/*      Workbench advisor                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class WbAdvisor extends WorkbenchAdvisor {
@@ -536,25 +536,25 @@ private final class WbAdvisor extends WorkbenchAdvisor {
       noteSetup();
 
       if (hide_display) {
-	 for (Shell sh1 : the_app.base_display.getShells()) {
-	    BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
-	    sh1.setVisible(false);
-	  }
-	 Shell sh = base_display.getActiveShell();
-	 if (sh != null) {
-	    BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
-	    sh.setVisible(false);
-	    // sh.close();
-	  }
+         for (Shell sh1 : the_app.base_display.getShells()) {
+            BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
+            sh1.setVisible(false);
+          }
+         Shell sh = base_display.getActiveShell();
+         if (sh != null) {
+            BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
+            sh.setVisible(false);
+            // sh.close();
+          }
        }
       if (tiny_display) {
-	 Shell sh = base_display.getActiveShell();
-	 sh.setMinimumSize(1,1);
-	 sh.setSize(1,1);
+         Shell sh = base_display.getActiveShell();
+         sh.setMinimumSize(1,1);
+         sh.setSize(1,1);
        }
     }
 
-}	// end of inner class WbAdvisor
+}       // end of inner class WbAdvisor
 
 
 
@@ -591,16 +591,16 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
 
    private void hideWindows() {
       if (use_display || hide_display) {
-	 Set<Shell> done = new HashSet<Shell>();
-	 for (Shell sh1 : base_display.getShells()) {
-	    hideShell(sh1,done);
-	  }
-	 Shell sh = the_app.base_display.getActiveShell();
-	 hideShell(sh,done);
-	 IWorkbenchWindowConfigurer cfg = getWindowConfigurer();
-	 IWorkbenchWindow win = cfg.getWindow();
-	 sh = win.getShell();
-	 hideShell(sh,done);
+         Set<Shell> done = new HashSet<Shell>();
+         for (Shell sh1 : base_display.getShells()) {
+            hideShell(sh1,done);
+          }
+         Shell sh = the_app.base_display.getActiveShell();
+         hideShell(sh,done);
+         IWorkbenchWindowConfigurer cfg = getWindowConfigurer();
+         IWorkbenchWindow win = cfg.getWindow();
+         sh = win.getShell();
+         hideShell(sh,done);
        }
     }
 
@@ -609,18 +609,18 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
       if (done.contains(sh)) return;
       BedrockPlugin.logD("SHELLX " + sh.isVisible() + " " + sh + " " + sh.getText());
       if (hide_display) {
-	 sh.setVisible(false);
-	 sh.setEnabled(false);
-	 sh.setMinimized(true);
-	 sh.addShellListener(new WbShellRemover());
-	 for (Composite c = sh.getParent(); c != null; c = c.getParent()) {
-	    c.setVisible(false);
-	  }
+         sh.setVisible(false);
+         sh.setEnabled(false);
+         sh.setMinimized(true);
+         sh.addShellListener(new WbShellRemover());
+         for (Composite c = sh.getParent(); c != null; c = c.getParent()) {
+            c.setVisible(false);
+          }
        }
       done.add(sh);
     }
 
-}	// end of inner class WbWindowAdvisor
+}       // end of inner class WbWindowAdvisor
 
 
 private final class WbShellRemover extends ShellAdapter {
@@ -635,18 +635,18 @@ private final class WbShellRemover extends ShellAdapter {
       Shell sh = (Shell) e.getSource();
       String what = sh.toString();
       BedrockPlugin.logD("ACTIVE SHELL " + what + " " + sh.getClass().getName() + " " +
-	sh.getMinimumSize() + " " + sh.isVisible());
+        sh.getMinimumSize() + " " + sh.isVisible());
       if (hide_display) {
-	 if (!is_setup) sh.setVisible(false);
-	 else if (what.contains("{Eclipse}")) sh.setVisible(false);
-	 else {
-	    sh.setVisible(false);
-	  }
+         if (!is_setup) sh.setVisible(false);
+         else if (what.contains("{Eclipse}")) sh.setVisible(false);
+         else {
+            sh.setVisible(false);
+          }
        }
       BedrockPlugin.logD("BEDROCK: ACTIVE SHELL RESULT " + sh.isVisible());
     }
 
-}	// end of WbShellRemover
+}       // end of WbShellRemover
 
 
 
@@ -656,9 +656,9 @@ private final class WbShellRemover extends ShellAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread to check for termination 					*/
-/*										*/
+/*                                                                              */
+/*      Thread to check for termination                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class EndChecker extends Thread {
@@ -685,21 +685,21 @@ private class EndChecker extends Thread {
             else {
                BedrockPlugin.logD("BEDROCK: END CHECKER " + ctr);
                if (++ctr >= 3) {
-        	  BedrockPlugin.logI("BEDROCK: End checker stopping");
-        	  xw = bp.beginMessage("STOP");
-        	  bp.finishMessage(xw);
-        	  bp.forceExit();
-        	}
+                  BedrockPlugin.logI("BEDROCK: End checker stopping");
+                  xw = bp.beginMessage("STOP");
+                  bp.finishMessage(xw);
+                  bp.forceExit();
+                }
              }
           }
        }
    }
 
-}	// end of inner class EndChecker
+}       // end of inner class EndChecker
 
 
 
-}	// end of class BedrockApplication
+}       // end of class BedrockApplication
 
 
 

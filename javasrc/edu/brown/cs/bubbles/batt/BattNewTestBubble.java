@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattNewTestBubble.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool class for defining new tests		*/
-/*										*/
+/*                                                                              */
+/*              BattNewTestBubble.java                                          */
+/*                                                                              */
+/*      Bubble Automated Testing Tool class for defining new tests              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -65,26 +65,26 @@ class BattNewTestBubble implements BattConstants, BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NewTestMode		test_mode;
-private String			method_name;
-private BumpLocation		method_data;
-private BattTestBubbleCallback	user_callback;
-private String			button_name;
-private String			in_project;
-private String			in_class;
-private boolean 		create_class;
+private NewTestMode             test_mode;
+private String                  method_name;
+private BumpLocation            method_data;
+private BattTestBubbleCallback  user_callback;
+private String                  button_name;
+private String                  in_project;
+private String                  in_class;
+private boolean                 create_class;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattNewTestBubble(String mthd,BumpLocation loc,String inprj,String incls,boolean newcls,NewTestMode md)
@@ -119,9 +119,9 @@ BattNewTestBubble(BattTestBubbleCallback cbk)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble createNewTestBubble()
@@ -133,13 +133,13 @@ BudaBubble createNewTestBubble()
    switch (test_mode) {
       default :
       case USER_CODE :
-	 String nm = getTestMethodName();
-	 createNewTestMethod(method_name,nm,in_project,in_class,create_class,null);
-	 bb = BaleFactory.getFactory().createMethodBubble(in_project,nm);
-	 break;
+         String nm = getTestMethodName();
+         createNewTestMethod(method_name,nm,in_project,in_class,create_class,null);
+         bb = BaleFactory.getFactory().createMethodBubble(in_project,nm);
+         break;
       case INPUT_OUTPUT :
-	 bb = new CallMethodBubble(method_name);
-	 break;
+         bb = new CallMethodBubble(method_name);
+         break;
     }
 
    return bb;
@@ -176,9 +176,9 @@ private String getTestMethodName()
 
 
 /********************************************************************************/
-/*										*/
-/*	User method handling							*/
-/*										*/
+/*                                                                              */
+/*      User method handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void createNewTestMethod(String fnm,String nm,String ipnm,String icnm,boolean newcls,String cnts)
@@ -192,9 +192,9 @@ private void createNewTestMethod(String fnm,String nm,String ipnm,String icnm,bo
    if (newcls) {
       String xnm = null;
       if (cnm.endsWith("Test")) {
-	 xnm = cnm;
-	 int ln = xnm.length();
-	 xnm = xnm.substring(0,ln-4);
+         xnm = cnm;
+         int ln = xnm.length();
+         xnm = xnm.substring(0,ln-4);
        }
       BuenoProperties props = new BuenoProperties();
       props.put(BuenoKey.KEY_ADD_COMMENT,Boolean.TRUE);
@@ -207,10 +207,10 @@ private void createNewTestMethod(String fnm,String nm,String ipnm,String icnm,bo
       int idx1 = cnnm.lastIndexOf(".");
       if (idx1 < 0) pkg = null;
       else {
-	 pkg = cnnm.substring(0,idx1);
-	 cnnm = cnnm.substring(idx1+1);
-	 props.put(BuenoKey.KEY_PACKAGE, pkg);
-	 props.put(BuenoKey.KEY_NAME, cnnm);
+         pkg = cnnm.substring(0,idx1);
+         cnnm = cnnm.substring(idx1+1);
+         props.put(BuenoKey.KEY_PACKAGE, pkg);
+         props.put(BuenoKey.KEY_NAME, cnnm);
        }
       props.put(BuenoKey.KEY_IMPORTS, "import org.junit.*;");
       BuenoLocation loc = BuenoFactory.getFactory().createLocation(ipnm,cnm,pkg,false);
@@ -250,9 +250,9 @@ private void createNewTestMethod(String fnm,String nm,String ipnm,String icnm,bo
 
 
 /********************************************************************************/
-/*										*/
-/*	Input Output method handling						*/
-/*										*/
+/*                                                                              */
+/*      Input Output method handling                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class CallMethodBubble extends BudaBubble implements ActionListener, StatusUpdate {
@@ -264,8 +264,8 @@ private class CallMethodBubble extends BudaBubble implements ActionListener, Sta
    
    CallMethodBubble(String fnm) {
       test_area = new NewTestArea(this);
-      for (int i = 0; i < 3; ++i) {		   // initial test cases
-	 test_area.addTestCase();
+      for (int i = 0; i < 3; ++i) {                // initial test cases
+         test_area.addTestCase();
        }
 
       JPanel pnl = new JPanel(new BorderLayout());
@@ -311,7 +311,7 @@ private class CallMethodBubble extends BudaBubble implements ActionListener, Sta
       if (rslt == null) return;
 
       if (user_callback != null) {
-	 user_callback.handleTestCases(rslt);
+         user_callback.handleTestCases(rslt);
        }
       // create new method
       // bring up bubble on that method
@@ -321,14 +321,14 @@ private class CallMethodBubble extends BudaBubble implements ActionListener, Sta
       if (generate_button != null) generate_button.setEnabled(test_area.validate());
     }
 
-}	// end of inner class CallMethodBubble
+}       // end of inner class CallMethodBubble
 
 
 
 /********************************************************************************/
-/*										*/
-/*	NewTestArea -- holder of a set of test cases				*/
-/*										*/
+/*                                                                              */
+/*      NewTestArea -- holder of a set of test cases                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class NewTestArea implements BattNewTestPanel {
@@ -345,9 +345,9 @@ private class NewTestArea implements BattNewTestPanel {
       test_panel.setInsets(2);
     }
 
-   @Override public JPanel getPanel()		{ return test_panel; }
+   @Override public JPanel getPanel()           { return test_panel; }
 
-   int getTestRow(NewTestCase tc)		{ return test_cases.indexOf(tc); }
+   int getTestRow(NewTestCase tc)               { return test_cases.indexOf(tc); }
 
    void addTestCell(NewTestCase tc,JComponent c,int pos,int span) {
       int r = getTestRow(tc);
@@ -360,7 +360,7 @@ private class NewTestArea implements BattNewTestPanel {
       status_update.itemUpdated();
     }
 
-   void resetSubsequentTests(NewTestCase tc)			{ }
+   void resetSubsequentTests(NewTestCase tc)                    { }
 
    void ensureEmptyTest() {
       boolean needtest = false;
@@ -416,14 +416,14 @@ private class NewTestArea implements BattNewTestPanel {
       return ltc;
     }
 
-}	// end of inner class NewTestArea
+}       // end of inner class NewTestArea
 
 
 
 /********************************************************************************/
-/*										*/
-/*	NewTestCase -- implementation of a test case				*/
-/*										*/
+/*                                                                              */
+/*      NewTestCase -- implementation of a test case                            */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class NewTestCase implements BattCallTest, CaretListener, ActionListener, FocusListener {
@@ -499,7 +499,7 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
 
    abstract void setup();
 
-   void invalidate()				{ is_checked = false; }
+   void invalidate()                            { is_checked = false; }
    boolean validate(BattNewTestChecker tc) {
       if (!is_checked) {
          last_error = check(tc);
@@ -533,19 +533,19 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
       test_area.handleUpdate(this);
     }
 
-   @Override public void focusGained(FocusEvent e)		{ }
+   @Override public void focusGained(FocusEvent e)              { }
    @Override public void focusLost(FocusEvent e) {
       // validate the test case here
     }
 
-}	// end of inner class NewTestCase
+}       // end of inner class NewTestCase
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Call Test case								*/
-/*										*/
+/*                                                                              */
+/*      Call Test case                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static final NewTestOp [] CALL_OPS = { 
@@ -635,7 +635,7 @@ private class CallTestCase extends NewTestCase {
 }
 
 
-}	// end of class BattNewTestBubble
+}       // end of class BattNewTestBubble
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamNoteBubble.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items note bubble		*/
-/*										*/
+/*                                                                              */
+/*              BeamNoteBubble.java                                             */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items note bubble               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -119,15 +119,15 @@ import java.util.regex.Pattern;
 
 
 public class BeamNoteBubble extends BudaBubble implements BeamConstants,
-	BudaConstants.BudaBubbleOutputer, BudaConstants.Scalable
+        BudaConstants.BudaBubbleOutputer, BudaConstants.Scalable
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 enum HtmlState {
@@ -135,13 +135,13 @@ enum HtmlState {
 }
 
 
-private NoteArea		note_area;
-private String			note_name;
+private NoteArea                note_area;
+private String                  note_name;
 private transient BeamNoteAnnotation note_annot;
-private Color			top_color;
-private Color			bottom_color;
+private Color                   top_color;
+private Color                   bottom_color;
 
-private static BoardProperties	beam_properties = BoardProperties.getProperties("Beam");
+private static BoardProperties  beam_properties = BoardProperties.getProperties("Beam");
 
 private static Map<String,Document> file_documents;
 
@@ -156,8 +156,8 @@ private static final Pattern LOCATION_PATTERN =
 
 
 
-private static Color		default_top_color;
-private static Color		default_bottom_color;
+private static Color            default_top_color;
+private static Color            default_bottom_color;
 
 
 static {
@@ -179,12 +179,12 @@ private static final Pattern TEMP_NAME = Pattern.compile("Note_\\d{12}_\\d{1,4}.
 
 
 /********************************************************************************/
-/*										*/
-/*	Keymap for notes							*/
-/*										*/
+/*                                                                              */
+/*      Keymap for notes                                                        */
+/*                                                                              */
 /********************************************************************************/
 
-private static Keymap		note_keymap;
+private static Keymap           note_keymap;
 
 private static Action strike_thru_action = new StrikeThruAction();
 private static Action fg_black_action = new NoteEditorKit.NoteColorAction("foreground-black",Color.BLACK);
@@ -272,9 +272,9 @@ private static Action findAction(Action [] noteacts,String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamNoteBubble()
@@ -331,7 +331,7 @@ BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 {
    if (note_name != null) {
       if (note_area.getText().length() == 0 || note_annot == null) {
-	 if (!isUserName()) deleteNote();
+         if (!isUserName()) deleteNote();
        }
       note_annot = null;
       note_name = null;
@@ -341,9 +341,9 @@ BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaContentNameType getContentType()
@@ -366,9 +366,9 @@ BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 
 
 /********************************************************************************/
-/*										*/
-/*	Saved Note Creation							*/
-/*										*/
+/*                                                                              */
+/*      Saved Note Creation                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static BudaBubble createSavedNoteBubble()
@@ -378,8 +378,8 @@ static BudaBubble createSavedNoteBubble()
    Object [] namearr = names.toArray();
 
    Object sel = JOptionPane.showInputDialog(null,"Choose Saved Note",
-	 "Saved Note Selector",JOptionPane.QUESTION_MESSAGE,null,
-	 namearr,null);
+         "Saved Note Selector",JOptionPane.QUESTION_MESSAGE,null,
+         namearr,null);
    if (sel == null) return null;
 
    String name = sel.toString() + ".html";
@@ -391,9 +391,9 @@ static BudaBubble createSavedNoteBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Set default note color							*/
-/*										*/
+/*                                                                              */
+/*      Set default note color                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 static void setDefaultNoteColor(BudaBubbleArea bba)
@@ -409,27 +409,27 @@ static void setDefaultNoteColor(BudaBubbleArea bba)
     }
    JCheckBox cbx = pnl.addBoolean("Make this Permanent",false,null);
    int sts = JOptionPane.showOptionDialog(bba,pnl,"Choose Note Default Color",JOptionPane.OK_CANCEL_OPTION,
-	 JOptionPane.QUESTION_MESSAGE,null,null,null);
+         JOptionPane.QUESTION_MESSAGE,null,null,null);
    if (sts == JOptionPane.OK_OPTION) {
       if (crc !=  null) {
-	 default_top_color = crc.getFirstColor();
-	 default_bottom_color = crc.getSecondColor();
-	 if (default_bottom_color.getRGB() == default_top_color.getRGB())
-	    default_bottom_color = default_top_color;
+         default_top_color = crc.getFirstColor();
+         default_bottom_color = crc.getSecondColor();
+         if (default_bottom_color.getRGB() == default_top_color.getRGB())
+            default_bottom_color = default_top_color;
        }
       else {
-	 default_top_color = cc.getColor();
-	 default_bottom_color = default_top_color;
+         default_top_color = cc.getColor();
+         default_bottom_color = default_top_color;
        }
       if (cbx.isSelected()) {
-	 beam_properties.setProperty(NOTE_TOP_COLOR_PROP,default_top_color);
-	 beam_properties.setProperty(NOTE_BOTTOM_COLOR_PROP,default_bottom_color);
-	 try {
-	    beam_properties.save();
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BEAM","Problem saving properties",e);
-	  }
+         beam_properties.setProperty(NOTE_TOP_COLOR_PROP,default_top_color);
+         beam_properties.setProperty(NOTE_BOTTOM_COLOR_PROP,default_bottom_color);
+         try {
+            beam_properties.save();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BEAM","Problem saving properties",e);
+          }
        }
     }
 }
@@ -437,9 +437,9 @@ static void setDefaultNoteColor(BudaBubbleArea bba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -455,9 +455,9 @@ static void setDefaultNoteColor(BudaBubbleArea bba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Color actions								*/
-/*										*/
+/*                                                                              */
+/*      Color actions                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class SetColorAction extends AbstractAction {
@@ -473,30 +473,30 @@ private class SetColorAction extends AbstractAction {
       SwingColorRangeChooser crc = null;
       SwingColorButton cc = null;
       if (default_top_color == default_bottom_color) {
-	 cc = pnl.addColorField("Note Color",top_color,null);
+         cc = pnl.addColorField("Note Color",top_color,null);
        }
       else {
-	 crc = pnl.addColorRangeField("Note Color",top_color,bottom_color,null);
+         crc = pnl.addColorRangeField("Note Color",top_color,bottom_color,null);
        }
       int sts = JOptionPane.showOptionDialog(BeamNoteBubble.this,pnl,"Choose Color for this Note",
-	    JOptionPane.OK_CANCEL_OPTION,
-	    JOptionPane.QUESTION_MESSAGE,null,null,null);
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE,null,null,null);
       if (sts == JOptionPane.OK_OPTION) {
-	 Color tc;
-	 Color bc;
-	 if (crc !=  null) {
-	    tc = crc.getFirstColor();
-	    bc = crc.getSecondColor();
-	  }
-	 else {
-	    tc = cc.getColor();
-	    bc = tc;
-	  }
-	 setNoteColor(tc,bc);
+         Color tc;
+         Color bc;
+         if (crc !=  null) {
+            tc = crc.getFirstColor();
+            bc = crc.getSecondColor();
+          }
+         else {
+            tc = cc.getColor();
+            bc = tc;
+          }
+         setNoteColor(tc,bc);
        }
     }
 
-}	// end of inner class SetColorAction
+}       // end of inner class SetColorAction
 
 
 
@@ -514,9 +514,9 @@ public void setNoteColor(Color top,Color bot)
    note_area.repaint();
 }
 
-Color getTopColor()			{ return top_color; }
+Color getTopColor()                     { return top_color; }
 
-Color getBottomColor()			{ return bottom_color; }
+Color getBottomColor()                  { return bottom_color; }
 
 public void setEditable(boolean ed)
 {
@@ -527,9 +527,9 @@ public void setEditable(boolean ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Scaling requests							*/
-/*										*/
+/*                                                                              */
+/*      Scaling requests                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setScaleFactor(double sf)
@@ -546,9 +546,9 @@ public void setEditable(boolean ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /*********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -562,9 +562,9 @@ public void setEditable(boolean ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Save interface								*/
-/*										*/
+/*                                                                              */
+/*      Save interface                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleSaveRequest()
@@ -582,9 +582,9 @@ public void setEditable(boolean ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Annotation interface							*/
-/*										*/
+/*                                                                              */
+/*      Annotation interface                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void clearAnnotation(BeamNoteAnnotation na)
@@ -595,9 +595,9 @@ void clearAnnotation(BeamNoteAnnotation na)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for loading and saving notes					*/
-/*										*/
+/*                                                                              */
+/*      Methods for loading and saving notes                                    */
+/*                                                                              */
 /********************************************************************************/
 
 static void updateNote(String name,String cnts)
@@ -632,19 +632,19 @@ private synchronized void loadNote(boolean force)
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
-	 BumpClient bc = BumpClient.getBump();
-	 try {
-	    File tmp = File.createTempFile("BUBBLES_NOTE_",".html");
-	    File f = bc.getRemoteFile(tmp,"NOTE",new File(note_name));
-	    if (f != null) loadNoteFromFile(f,force);
-	    tmp.delete();
-	  }
-	 catch (IOException e) { }
-	 break;
+         BumpClient bc = BumpClient.getBump();
+         try {
+            File tmp = File.createTempFile("BUBBLES_NOTE_",".html");
+            File f = bc.getRemoteFile(tmp,"NOTE",new File(note_name));
+            if (f != null) loadNoteFromFile(f,force);
+            tmp.delete();
+          }
+         catch (IOException e) { }
+         break;
       case SERVER :
       case NORMAL :
-	 loadNoteFromFile(getNoteFile(),force);
-	 break;
+         loadNoteFromFile(getNoteFile(),force);
+         break;
     }
 }
 
@@ -658,9 +658,9 @@ private void loadNoteFromFile(File f,boolean force)
       StringBuffer cbuf = new StringBuffer();
       char [] buf = new char[1024];
       for ( ; ; ) {
-	 int ln = fr.read(buf);
-	 if (ln < 0) break;
-	 cbuf.append(buf,0,ln);
+         int ln = fr.read(buf);
+         if (ln < 0) break;
+         cbuf.append(buf,0,ln);
        }
       cnts = cbuf.toString();
     }
@@ -675,12 +675,12 @@ private void loadNoteFromFile(File f,boolean force)
       String c1s = matcher.group(1);
       String c2s = matcher.group(2);
       try {
-	 int v1 = Integer.parseInt(c1s,16);
-	 int v2 = Integer.parseInt(c2s,16);
-	 boolean fg = (v1 & 0xff000000) != 0;
-	 Color c1 = new Color(v1,fg);
-	 Color c2 = new Color(v2,fg);
-	 setNoteColor(c1,c2);
+         int v1 = Integer.parseInt(c1s,16);
+         int v2 = Integer.parseInt(c2s,16);
+         boolean fg = (v1 & 0xff000000) != 0;
+         Color c1 = new Color(v1,fg);
+         Color c2 = new Color(v2,fg);
+         setNoteColor(c1,c2);
        }
       catch (NumberFormatException e) { }
     }
@@ -708,34 +708,34 @@ private synchronized void saveNote()
 
    switch (bs.getRunMode()) {
       case CLIENT :
-	 break;
+         break;
       case SERVER :
       case NORMAL :
-	 try {
-	    FileWriter fw = new FileWriter(getNoteFile());
-	    fw.write(txt);
-	    fw.close();
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BEAM","Problem writing note file",e);
-	  }
-	 break;
+         try {
+            FileWriter fw = new FileWriter(getNoteFile());
+            fw.write(txt);
+            fw.close();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BEAM","Problem writing note file",e);
+          }
+         break;
     }
 
    switch (bs.getRunMode()) {
       case CLIENT :
       case NORMAL :
-	 MintControl mc = bs.getMintControl();
-	 IvyXmlWriter xw = new IvyXmlWriter();
-	 xw.begin("BEAM");
-	 xw.field("TYPE","NOTE");
-	 xw.field("NAME",note_name);
-	 xw.cdataElement("TEXT",txt);
-	 xw.end("BEAM");
-	 mc.send(xw.toString());
-	 break;
+         MintControl mc = bs.getMintControl();
+         IvyXmlWriter xw = new IvyXmlWriter();
+         xw.begin("BEAM");
+         xw.field("TYPE","NOTE");
+         xw.field("NAME",note_name);
+         xw.cdataElement("TEXT",txt);
+         xw.end("BEAM");
+         mc.send(xw.toString());
+         break;
       case SERVER :
-	 break;
+         break;
     }
 }
 
@@ -751,44 +751,44 @@ private String fixupHtmlText(String txt)
    for (int i = 0; i < txt.length(); ++i) {
       char c = txt.charAt(i);
       switch (state) {
-	 case LINE :
-	    if (c == ' ') {
-	       if (pos <= indent) break;
-	       else state = HtmlState.TEXT;
-	     }
-	    else if (c == '\n') state = HtmlState.LINE;
-	    else {
-	       i -= 1;
-	       state = HtmlState.TEXT;
-	       continue;
-	     }
-	    break;
-	 case TAG :
-	    if (c == '>') {
-	       if (txt.charAt(i-1) == '/') indent -= 2;
-	       state = HtmlState.TEXT;
-	     }
-	    else if (c == '"') state = HtmlState.STRING2;
-	    else if (c == '\'') state = HtmlState.STRING1;
-	    break;
-	 case STRING1 :
-	    if (c == '\'') state = HtmlState.TAG;
-	    break;
-	 case STRING2 :
-	    if (c == '"') state = HtmlState.TAG;
-	    break;
-	 case TEXT :
-	    if (c == '\n') state = HtmlState.LINE;
-	    else if (c == '<') {
-	       if (i+1 <= txt.length() && txt.charAt(i+1) == '/') indent -= 2;
-	       else indent += 2;
-	       state = HtmlState.TAG;
-	     }
-	    else if (c == ' ' && pos > indent) {
-	       buf.append("&nbsp;");
-	       c = 0;
-	     }
-	    break;
+         case LINE :
+            if (c == ' ') {
+               if (pos <= indent) break;
+               else state = HtmlState.TEXT;
+             }
+            else if (c == '\n') state = HtmlState.LINE;
+            else {
+               i -= 1;
+               state = HtmlState.TEXT;
+               continue;
+             }
+            break;
+         case TAG :
+            if (c == '>') {
+               if (txt.charAt(i-1) == '/') indent -= 2;
+               state = HtmlState.TEXT;
+             }
+            else if (c == '"') state = HtmlState.STRING2;
+            else if (c == '\'') state = HtmlState.STRING1;
+            break;
+         case STRING1 :
+            if (c == '\'') state = HtmlState.TAG;
+            break;
+         case STRING2 :
+            if (c == '"') state = HtmlState.TAG;
+            break;
+         case TEXT :
+            if (c == '\n') state = HtmlState.LINE;
+            else if (c == '<') {
+               if (i+1 <= txt.length() && txt.charAt(i+1) == '/') indent -= 2;
+               else indent += 2;
+               state = HtmlState.TAG;
+             }
+            else if (c == ' ' && pos > indent) {
+               buf.append("&nbsp;");
+               c = 0;
+             }
+            break;
        }
 
       if (c == 0) continue;
@@ -805,14 +805,14 @@ private synchronized void deleteNote()
 {
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
-	 BumpClient bc = BumpClient.getBump();
-	 bc.deleteRemoteFile("NOTE",new File(note_name));
-	 break;
+         BumpClient bc = BumpClient.getBump();
+         bc.deleteRemoteFile("NOTE",new File(note_name));
+         break;
       case SERVER :
       case NORMAL :
-	 File f = getNoteFile();
-	 f.delete();
-	 break;
+         File f = getNoteFile();
+         f.delete();
+         break;
     }
 }
 
@@ -836,9 +836,9 @@ private void createFileName()
 
 
 /********************************************************************************/
-/*										*/
-/*	File management for saved notes 					*/
-/*										*/
+/*                                                                              */
+/*      File management for saved notes                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean isUserName()
@@ -861,40 +861,40 @@ private static List<String> getSavedNoteNames()
    switch (BoardSetup.getSetup().getRunMode()) {
       case SERVER :
       case NORMAL :
-	 File dir = BoardSetup.getBubblesWorkingDirectory();
-	 for (File f : dir.listFiles()) {
-	    if (f.isDirectory()) continue;
-	    if (!f.canRead()) continue;
-	    if (!f.getName().endsWith(".html")) continue;
-	    if (!isUserName(f.getName())) continue;
-	    String s = f.getName();
-	    int idx = s.lastIndexOf(".html");
-	    s = s.substring(0,idx);
-	    rslt.add(s);
-	  }
-	 break;
+         File dir = BoardSetup.getBubblesWorkingDirectory();
+         for (File f : dir.listFiles()) {
+            if (f.isDirectory()) continue;
+            if (!f.canRead()) continue;
+            if (!f.getName().endsWith(".html")) continue;
+            if (!isUserName(f.getName())) continue;
+            String s = f.getName();
+            int idx = s.lastIndexOf(".html");
+            s = s.substring(0,idx);
+            rslt.add(s);
+          }
+         break;
       case CLIENT :
-	 try {
-	    BumpClient bc = BumpClient.getBump();
-	    File tmp = File.createTempFile("BUBBLES_NOTE_",".html");
-	    File f = bc.remoteFileAction("LIST",tmp,"NOTE",null);
-	    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-	       for ( ; ; ) {
-		  String s = br.readLine();
-		  if (s == null) break;
-		  if (!isUserName(s)) continue;
-		  if (!s.endsWith(".html")) continue;
-		  int idx = s.lastIndexOf(".html");
-		  s = s.substring(0,idx);
-		  rslt.add(s);
-		}
-	     }
-	    tmp.delete();
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BEAM","Problem loading remote saved note list",e);
-	 }
-	 break;
+         try {
+            BumpClient bc = BumpClient.getBump();
+            File tmp = File.createTempFile("BUBBLES_NOTE_",".html");
+            File f = bc.remoteFileAction("LIST",tmp,"NOTE",null);
+            try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+               for ( ; ; ) {
+                  String s = br.readLine();
+                  if (s == null) break;
+                  if (!isUserName(s)) continue;
+                  if (!s.endsWith(".html")) continue;
+                  int idx = s.lastIndexOf(".html");
+                  s = s.substring(0,idx);
+                  rslt.add(s);
+                }
+             }
+            tmp.delete();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BEAM","Problem loading remote saved note list",e);
+         }
+         break;
     }
 
    return rslt;
@@ -915,12 +915,12 @@ private void setNoteName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Configurator interface							*/
-/*										*/
+/*                                                                              */
+/*      Configurator interface                                                  */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()		{ return "BEAM"; }
+@Override public String getConfigurator()               { return "BEAM"; }
 
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -938,9 +938,9 @@ private void setNoteName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Note area implementation						*/
-/*										*/
+/*                                                                              */
+/*      Note area implementation                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class NoteArea extends JEditorPane
@@ -1006,14 +1006,14 @@ private class NoteArea extends JEditorPane
       super.paintComponent(g0);
     }
 
-}	// end of inner class NoteArea
+}       // end of inner class NoteArea
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions for renaming notes						*/
-/*										*/
+/*                                                                              */
+/*      Actions for renaming notes                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class NameNote extends AbstractAction {
@@ -1035,12 +1035,12 @@ private class NameNote extends AbstractAction {
        }
     }
 
-}	// end of inner class NameNode
+}       // end of inner class NameNode
 
 
 
 private class NamePanel extends SwingGridPanel
-	implements ActionListener, UndoableEditListener {
+        implements ActionListener, UndoableEditListener {
 
    private JTextField name_field;
    private JCheckBox remove_button;
@@ -1058,9 +1058,9 @@ private class NamePanel extends SwingGridPanel
    String getNoteName() {
       String nm = name_field.getText();
       if (remove_button.isSelected()) {
-	 if (nm == null || nm.length() == 0 || nm.equals(note_name)) {
-	    return null;
-	  }
+         if (nm == null || nm.length() == 0 || nm.equals(note_name)) {
+            return null;
+          }
        }
       if (nm == null || nm.length() == 0) return note_name;
       else return nm;
@@ -1068,10 +1068,10 @@ private class NamePanel extends SwingGridPanel
 
    @Override public void actionPerformed(ActionEvent evt) {
       if (evt.getSource() == remove_button) {
-	 if (remove_button.isSelected()) {
-	    name_field.setText("");
-	  }
-	 else if (isUserName()) name_field.setText(note_name);
+         if (remove_button.isSelected()) {
+            name_field.setText("");
+          }
+         else if (isUserName()) name_field.setText(note_name);
        }
     }
 
@@ -1080,15 +1080,15 @@ private class NamePanel extends SwingGridPanel
       else remove_button.setSelected(false);
     }
 
-}	// end of inner class NamePanel
+}       // end of inner class NamePanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor Kit for notes							*/
-/*										*/
+/*                                                                              */
+/*      Editor Kit for notes                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NoteEditorKit extends HTMLEditorKit
@@ -1109,11 +1109,11 @@ private static class NoteEditorKit extends HTMLEditorKit
      private static final long serialVersionUID = 1;
 
      NoteFontSizeAction(String nm,int sz) {
-	super(nm,sz);
-	putValue(ACTION_COMMAND_KEY,nm);
+        super(nm,sz);
+        putValue(ACTION_COMMAND_KEY,nm);
       }
 
-   }	// end of inner class NoteFontSizeAction
+   }    // end of inner class NoteFontSizeAction
 
 
    private static class NoteColorAction extends ForegroundAction {
@@ -1121,13 +1121,13 @@ private static class NoteEditorKit extends HTMLEditorKit
       private static final long serialVersionUID = 1;
 
       NoteColorAction(String nm,Color c) {
-	 super(nm,c);
-	 putValue(ACTION_COMMAND_KEY,nm);
+         super(nm,c);
+         putValue(ACTION_COMMAND_KEY,nm);
        }
 
-    }	// end of inner class NoteColorAction
+    }   // end of inner class NoteColorAction
 
-}	// end of inner class NoteEditorKit
+}       // end of inner class NoteEditorKit
 
 
 private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
@@ -1142,17 +1142,17 @@ private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
    @Override public void actionPerformed(ActionEvent e) {
       JEditorPane editor = getEditor(e);
       if (editor != null) {
-	 StyledEditorKit kit = getStyledEditorKit(editor);
-	 MutableAttributeSet attr = kit.getInputAttributes();
-	 boolean on = (StyleConstants.isStrikeThrough(attr));
-	 boolean val = !on;
-	 SimpleAttributeSet sas = new SimpleAttributeSet();
-	 StyleConstants.setStrikeThrough(sas,val);
-	 setCharacterAttributes(editor,sas,false);
+         StyledEditorKit kit = getStyledEditorKit(editor);
+         MutableAttributeSet attr = kit.getInputAttributes();
+         boolean on = (StyleConstants.isStrikeThrough(attr));
+         boolean val = !on;
+         SimpleAttributeSet sas = new SimpleAttributeSet();
+         StyleConstants.setStrikeThrough(sas,val);
+         setCharacterAttributes(editor,sas,false);
        }
     }
 
-}	// end of inner class StrikeThruAction
+}       // end of inner class StrikeThruAction
 
 
 
@@ -1171,14 +1171,14 @@ private static class SaveAction extends AbstractAction {
       bb.saveNote();
     }
 
-}	// end of inner class SaveAction
+}       // end of inner class SaveAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks to handle automatic saving					*/
-/*										*/
+/*                                                                              */
+/*      Callbacks to handle automatic saving                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ComponentHandler extends ComponentAdapter {
@@ -1189,14 +1189,14 @@ private final class ComponentHandler extends ComponentAdapter {
        }
     }
 
-}	// end of inner class ComponentHandler
+}       // end of inner class ComponentHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Link listener								*/
-/*										*/
+/*                                                                              */
+/*      Link listener                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class LinkListener extends HTMLEditorKit.LinkController {
@@ -1223,7 +1223,7 @@ private final class LinkListener extends HTMLEditorKit.LinkController {
        }
     }
 
-}	// end of inner class LinkListener
+}       // end of inner class LinkListener
 
 
 private boolean checkForGoto(JEditorPane ed,Point pt0)
@@ -1233,38 +1233,38 @@ private boolean checkForGoto(JEditorPane ed,Point pt0)
       int start = Math.max(0,pos-100);
       int end = Math.min(ed.getDocument().getLength(),pos+100);
       try {
-	 String txt = ed.getText(start,end-start);
-	 int p0 = pos - start;
-	 for (int i = p0; i >= 0; --i) {
-	    if (i >= txt.length()) continue;
-	    if (txt.charAt(i) == '\n') {
-	       start = start + i + 1;
-	       txt = txt.substring(i+1);
-	       break;
-	     }
-	  }
-	 p0 = pos-start;
-	 if (p0 < 0) return false;
-	 for (int i = p0; i < txt.length(); ++i) {
-	    if (txt.charAt(i) == '\n') {
-	       txt = txt.substring(0,i);
-	       break;
+         String txt = ed.getText(start,end-start);
+         int p0 = pos - start;
+         for (int i = p0; i >= 0; --i) {
+            if (i >= txt.length()) continue;
+            if (txt.charAt(i) == '\n') {
+               start = start + i + 1;
+               txt = txt.substring(i+1);
+               break;
+             }
+          }
+         p0 = pos-start;
+         if (p0 < 0) return false;
+         for (int i = p0; i < txt.length(); ++i) {
+            if (txt.charAt(i) == '\n') {
+               txt = txt.substring(0,i);
+               break;
                
-	     }
-	  }
-	 Matcher m = LOCATION_PATTERN.matcher(txt);
-	 if (m.find()) {
-	    int spos = m.start();
-	    int epos = m.end();
-	    if (spos <= p0 && epos >= p0) {
-	       int lno = Integer.parseInt(m.group(3));
-	       GotoLine gl = new GotoLine(m.group(1),m.group(2),lno);
-	       if (gl.isValid()) {
+             }
+          }
+         Matcher m = LOCATION_PATTERN.matcher(txt);
+         if (m.find()) {
+            int spos = m.start();
+            int epos = m.end();
+            if (spos <= p0 && epos >= p0) {
+               int lno = Integer.parseInt(m.group(3));
+               GotoLine gl = new GotoLine(m.group(1),m.group(2),lno);
+               if (gl.isValid()) {
                   gl.perform();
                   return true;
                 }
-	     }
-	  }
+             }
+          }
        }
       catch (BadLocationException ex) { }
     }
@@ -1319,7 +1319,7 @@ private class GotoLine {
       goto_locs = locs;
     }
    
-   boolean isValid()			{ return goto_locs != null; }
+   boolean isValid()                    { return goto_locs != null; }
    
    void perform() {
       if (goto_locs != null && goto_locs.size() > 0) createBubble();
@@ -1330,7 +1330,7 @@ private class GotoLine {
       bf.createBubbleStack(BeamNoteBubble.this,null,null,false,goto_locs,null);
     }
    
-}	// end of inner class GotoLine
+}       // end of inner class GotoLine
 
 
 
@@ -1338,19 +1338,19 @@ private static final class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 try {
-	    BeamFactory.showBrowser(u.toURI());
-	  }
-	 catch (URISyntaxException ex) { }
+         URL u = e.getURL();
+         try {
+            BeamFactory.showBrowser(u.toURI());
+          }
+         catch (URISyntaxException ex) { }
        }
     }
 
-}	// end of inner class HyperListener
+}       // end of inner class HyperListener
 
 
 
-}	// end of class BeamNoteBubble
+}       // end of class BeamNoteBubble
 
 
 

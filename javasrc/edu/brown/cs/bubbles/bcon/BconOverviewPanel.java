@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconOverviewPanel.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer overview context panel		*/
-/*										*/
+/*                                                                              */
+/*              BconOverviewPanel.java                                          */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer overview context panel               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -59,35 +59,35 @@ import java.util.TreeMap;
 
 
 class BconOverviewPanel implements BconConstants, BudaConstants.BubbleViewCallback,
-	BconConstants.BconPanel, BudaConstants
+        BconConstants.BconPanel, BudaConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<File,BconOverviewClass> class_views;
 
-private BudaBubbleArea		bubble_area;
-private DrawingPanel		drawing_area;
-private ScaleType		scale_type;
-private Point			base_point;
-private BconOverviewClass	focus_class;
-private Rectangle		focus_region;
-private boolean 		is_vertical;
-private Set<BudaBubble> 	active_bubbles;
+private BudaBubbleArea          bubble_area;
+private DrawingPanel            drawing_area;
+private ScaleType               scale_type;
+private Point                   base_point;
+private BconOverviewClass       focus_class;
+private Rectangle               focus_region;
+private boolean                 is_vertical;
+private Set<BudaBubble>         active_bubbles;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconOverviewPanel(BudaBubbleArea bba,Point base)
@@ -122,23 +122,23 @@ BconOverviewPanel(BudaBubbleArea bba,Point base)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public JComponent getComponent()		{ return drawing_area; }
+@Override public JComponent getComponent()              { return drawing_area; }
 
 
-Collection<BudaBubble> getActiveBubbles()		{ return active_bubbles; }
+Collection<BudaBubble> getActiveBubbles()               { return active_bubbles; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu methods								*/
-/*										*/
+/*                                                                              */
+/*      Menu methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -154,21 +154,21 @@ Collection<BudaBubble> getActiveBubbles()		{ return active_bubbles; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility methods 							*/
-/*										*/
+/*                                                                              */
+/*      Utility methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void addAllBubbles()
 {
    for (BudaBubble bb : bubble_area.getBubblesInRegion(focus_region)) {
       if (!active_bubbles.contains(bb)) {
-	 active_bubbles.add(bb);
-	 checkAddFile(bb);
-	 Collection<BconRegion> rgns = findBubbleRegions(bb);
-	 if (rgns != null) {
-	    for (BconRegion br : rgns) br.setHasBubble(true);
-	 }
+         active_bubbles.add(bb);
+         checkAddFile(bb);
+         Collection<BconRegion> rgns = findBubbleRegions(bb);
+         if (rgns != null) {
+            for (BconRegion br : rgns) br.setHasBubble(true);
+         }
        }
     }
 }
@@ -190,9 +190,9 @@ private void computeRegion()
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods for bubble updates					*/
-/*										*/
+/*                                                                              */
+/*      Callback methods for bubble updates                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void focusChanged(BudaBubble bb,boolean set)
@@ -205,10 +205,10 @@ private void computeRegion()
    Collection<BconRegion> rgns = findBubbleRegions(bb);
    if (rgns != null && rgns.size() > 0) {
       for (BconRegion br : rgns) {
-	 br.setHasFocus(set);
-	 if (set) {
-	    focus_class = class_views.get(bb.getContentFile());
-	 }
+         br.setHasFocus(set);
+         if (set) {
+            focus_class = class_views.get(bb.getContentFile());
+         }
       }
       drawing_area.repaint();
    }
@@ -227,7 +227,7 @@ private void computeRegion()
    Collection<BconRegion> rgns = findBubbleRegions(bb);
    if (rgns != null && rgns.size() > 0) {
       for (BconRegion br : rgns) {
-	 br.setHasBubble(true);
+         br.setHasBubble(true);
       }
       drawing_area.repaint();
    }
@@ -253,9 +253,9 @@ private void computeRegion()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find region for a bubble					*/
-/*										*/
+/*                                                                              */
+/*      Methods to find region for a bubble                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private Collection<BconRegion> findBubbleRegions(BudaBubble bb)
@@ -305,9 +305,9 @@ private boolean checkAddFile(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Auxilliary methods for bubble deciphering				*/
-/*										*/
+/*                                                                              */
+/*      Auxilliary methods for bubble deciphering                               */
+/*                                                                              */
 /********************************************************************************/
 
 private String getClassName(BudaBubble bb)
@@ -319,24 +319,24 @@ private String getClassName(BudaBubble bb)
 
    switch (bb.getContentType()) {
       case NONE :
-	 break;
+         break;
       case CLASS :
-	 break;
+         break;
       case FIELD :
       case CLASS_ITEM :
-	 idx = nm.lastIndexOf(".");
-	 if (idx >= 0) nm = nm.substring(0,idx);
-	 break;
+         idx = nm.lastIndexOf(".");
+         if (idx >= 0) nm = nm.substring(0,idx);
+         break;
       case METHOD :
-	 idx = nm.indexOf("(");
-	 if (idx >= 0) nm = nm.substring(0,idx);
-	 idx = nm.lastIndexOf(".");
-	 if (idx >= 0) nm = nm.substring(0,idx);
-	 break;
+         idx = nm.indexOf("(");
+         if (idx >= 0) nm = nm.substring(0,idx);
+         idx = nm.lastIndexOf(".");
+         if (idx >= 0) nm = nm.substring(0,idx);
+         break;
       case OVERVIEW :
       case NOTE : 
       default:
-	 break;
+         break;
     }
 
    idx = nm.indexOf("$");
@@ -350,8 +350,8 @@ private String getClassName(BudaBubble bb)
       int i0 = nm0.lastIndexOf(".");
       if (i0 < 0) break;
       if (nm0.substring(i0+1).equals(file)) {
-	 nm = nm0;
-	 break;
+         nm = nm0;
+         break;
        }
       else nm0 = nm0.substring(0,i0);
     }
@@ -363,9 +363,9 @@ private String getClassName(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing helper methods							*/
-/*										*/
+/*                                                                              */
+/*      Drawing helper methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private double getRelativeHeight(double lines,double maxlines)
@@ -374,16 +374,16 @@ private double getRelativeHeight(double lines,double maxlines)
 
    switch (scale_type) {
       case SCALE_EXPAND :
-	 break;
+         break;
       case SCALE_LINEAR :
-	 ht0 = lines / maxlines;
-	 break;
+         ht0 = lines / maxlines;
+         break;
       case SCALE_SQRT :
-	 ht0 = Math.sqrt(lines)/Math.sqrt(maxlines);
-	 break;
+         ht0 = Math.sqrt(lines)/Math.sqrt(maxlines);
+         break;
       case SCALE_LOG :
-	 ht0 = Math.log(lines+1)/Math.log(maxlines+1);
-	 break;
+         ht0 = Math.log(lines+1)/Math.log(maxlines+1);
+         break;
     }
 
    return ht0;
@@ -393,9 +393,9 @@ private double getRelativeHeight(double lines,double maxlines)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel for drawing							*/
-/*										*/
+/*                                                                              */
+/*      Panel for drawing                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOutputer {
@@ -428,14 +428,14 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       Rectangle2D.Double trex;
       if (is_vertical) {
          wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-        	  ct * NAME_SPACE)/ct;
+                  ct * NAME_SPACE)/ct;
          ht = d.height - 2 * TB_MARGIN_SPACE;
          trex = new Rectangle2D.Double(0,TB_MARGIN_SPACE,NAME_SPACE,ht);
        }
       else {
          wd = d.width - 2 * LR_MARGIN_SPACE;
          ht = (d.height - 2 * TB_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-        	  ct * NAME_SPACE)/ct;
+                  ct * NAME_SPACE)/ct;
          trex = new Rectangle2D.Double(LR_MARGIN_SPACE,0,wd,NAME_SPACE);
        }
    
@@ -473,7 +473,7 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
        }
     }
 
-   @Override public String getConfigurator()		{ return "BCON"; }
+   @Override public String getConfigurator()            { return "BCON"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","OVERVIEW");
       xw.element("POINT",base_point);
@@ -487,56 +487,56 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       double wd;
       double ht;
       if (is_vertical) {
-	 wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-		  ct * NAME_SPACE)/ct;
-	 ht = d.height - 2 * TB_MARGIN_SPACE;
+         wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
+                  ct * NAME_SPACE)/ct;
+         ht = d.height - 2 * TB_MARGIN_SPACE;
        }
       else {
-	 wd = d.width - 2 * LR_MARGIN_SPACE;
-	 ht = (d.height - 2 * TB_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-		  ct * NAME_SPACE)/ct;
+         wd = d.width - 2 * LR_MARGIN_SPACE;
+         ht = (d.height - 2 * TB_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
+                  ct * NAME_SPACE)/ct;
        }
 
       int mxln = 1;
       for (BconOverviewClass cv : class_views.values()) {
-	 mxln = Math.max(mxln,cv.getLineCount());
+         mxln = Math.max(mxln,cv.getLineCount());
        }
 
       int idx = 0;
       double ht0 = ht;
       double wd0 = wd;
       for (BconOverviewClass cv : class_views.values()) {
-	 int lct = cv.getLineCount();
-	 double sz0 = getRelativeHeight(lct,mxln);
-	 double ln0;
+         int lct = cv.getLineCount();
+         double sz0 = getRelativeHeight(lct,mxln);
+         double ln0;
          double x0;
          double y0;
          double x1;
          double y1;
 
-	 if (is_vertical) {
-	    x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
-	    x1 = x0 + NAME_SPACE;
-	    y1 = TB_MARGIN_SPACE;
-	    ht0 = ht * sz0;
-	    ln0 = (e.getY() - y1)*lct/ht0;
-	  }
-	 else {
-	    x1 = LR_MARGIN_SPACE;
-	    y0 = TB_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + ht);
-	    y1 = y0 + NAME_SPACE;
-	    wd0 = wd * sz0;
-	    ln0 = (e.getX() - x1)*lct/wd0;
-	  }
+         if (is_vertical) {
+            x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
+            x1 = x0 + NAME_SPACE;
+            y1 = TB_MARGIN_SPACE;
+            ht0 = ht * sz0;
+            ln0 = (e.getY() - y1)*lct/ht0;
+          }
+         else {
+            x1 = LR_MARGIN_SPACE;
+            y0 = TB_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + ht);
+            y1 = y0 + NAME_SPACE;
+            wd0 = wd * sz0;
+            ln0 = (e.getX() - x1)*lct/wd0;
+          }
 
-	 if (e.getX() >= x1 && e.getX() <= x1+wd0 && e.getY() >= y1 && e.getY() <= y1+ht0) {
-	    double z0 = (is_vertical ? ht0 : wd0);
-	    int ln1 = (int) Math.floor(ln0 - 2*lct/z0);
-	    int ln2 = (int) Math.ceil(ln0 + 2*lct/z0);
-	    return cv.computeToolTip(ln1,ln2);
-	  }
+         if (e.getX() >= x1 && e.getX() <= x1+wd0 && e.getY() >= y1 && e.getY() <= y1+ht0) {
+            double z0 = (is_vertical ? ht0 : wd0);
+            int ln1 = (int) Math.floor(ln0 - 2*lct/z0);
+            int ln2 = (int) Math.ceil(ln0 + 2*lct/z0);
+            return cv.computeToolTip(ln1,ln2);
+          }
 
-	 ++idx;
+         ++idx;
        }
       return null;
     }
@@ -549,67 +549,67 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       double wd;
       double ht;
       if (is_vertical) {
-	 wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-		  ct * NAME_SPACE)/ct;
-	 ht = d.height - 2 * TB_MARGIN_SPACE;
+         wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
+                  ct * NAME_SPACE)/ct;
+         ht = d.height - 2 * TB_MARGIN_SPACE;
        }
       else {
-	 wd = d.width - 2 * LR_MARGIN_SPACE;
-	 ht = (d.height - 2 * TB_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
-		  ct * NAME_SPACE)/ct;
+         wd = d.width - 2 * LR_MARGIN_SPACE;
+         ht = (d.height - 2 * TB_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
+                  ct * NAME_SPACE)/ct;
        }
 
       int mxln = 1;
       for (BconOverviewClass cv : class_views.values()) {
-	 mxln = Math.max(mxln,cv.getLineCount());
+         mxln = Math.max(mxln,cv.getLineCount());
        }
 
       int idx = 0;
       double ht0 = ht;
       double wd0 = wd;
       for (BconOverviewClass cv : class_views.values()) {
-	 int lct = cv.getLineCount();
-	 double sz0 = getRelativeHeight(lct,mxln);
-	 double ln0;
+         int lct = cv.getLineCount();
+         double sz0 = getRelativeHeight(lct,mxln);
+         double ln0;
          double x0;
          double y0;
          double x1;
          double y1;
 
-	 if (is_vertical) {
-	    x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
-	    x1 = x0 + NAME_SPACE;
-	    y1 = TB_MARGIN_SPACE;
-	    ht0 = ht * sz0;
-	    ln0 = (e.getY() - y1)*lct/ht0;
-	  }
-	 else {
-	    x1 = LR_MARGIN_SPACE;
-	    y0 = TB_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + ht);
-	    y1 = y0 + NAME_SPACE;
-	    wd0 = wd * sz0;
-	    ln0 = (e.getX() - x1)*lct/wd0;
-	  }
+         if (is_vertical) {
+            x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
+            x1 = x0 + NAME_SPACE;
+            y1 = TB_MARGIN_SPACE;
+            ht0 = ht * sz0;
+            ln0 = (e.getY() - y1)*lct/ht0;
+          }
+         else {
+            x1 = LR_MARGIN_SPACE;
+            y0 = TB_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + ht);
+            y1 = y0 + NAME_SPACE;
+            wd0 = wd * sz0;
+            ln0 = (e.getX() - x1)*lct/wd0;
+          }
 
-	 if (e.getX() >= x1 && e.getX() <= x1+wd0 && e.getY() >= y1 && e.getY() <= y1+ht0) {
-	    cv.handleMousePress(e,(int) (ln0 + 0.5));
-	    return;
-	  }
+         if (e.getX() >= x1 && e.getX() <= x1+wd0 && e.getY() >= y1 && e.getY() <= y1+ht0) {
+            cv.handleMousePress(e,(int) (ln0 + 0.5));
+            return;
+          }
 
-	 ++idx;
+         ++idx;
        }
     }
 
 
 
-}	// end of inner class DrawingPanel
+}       // end of inner class DrawingPanel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Mouser extends MouseAdapter {
@@ -624,13 +624,13 @@ private static class Mouser extends MouseAdapter {
       for_panel.handleMouseEvent(e);
     }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 
-}	// end of class BconOverviewPanel
+}       // end of class BconOverviewPanel
 
 
 

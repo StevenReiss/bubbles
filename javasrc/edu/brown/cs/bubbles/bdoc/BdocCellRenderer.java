@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocCellRenderer.java						*/
-/*										*/
-/*	Bubble Environment Documentation cell display				*/
-/*										*/
+/*                                                                              */
+/*              BdocCellRenderer.java                                           */
+/*                                                                              */
+/*      Bubble Environment Documentation cell display                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -65,30 +65,30 @@ class BdocCellRenderer extends DefaultTreeCellRenderer implements BdocConstants,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
 
 private BdocPanel for_panel;
-private int	  tree_width;
+private int       tree_width;
 
 private boolean is_selected;
 private boolean has_focus;
-private JComponent	item_component;
-private JEditorPane	name_component;
-private JEditorPane	desc_component;
-private Icon		open_icon;
-private Icon		closed_icon;
+private JComponent      item_component;
+private JEditorPane     name_component;
+private JEditorPane     desc_component;
+private Icon            open_icon;
+private Icon            closed_icon;
 
 
-private Color	select_color = UIManager.getColor("Tree.selectionForeground");
-private Color	plain_color = UIManager.getColor("Tree.textForeground");
-private Color	select_back = UIManager.getColor("Tree.selectionBackground");
-private Color	plain_back = UIManager.getColor("Tree.textBackground");
-private Color	border_select = UIManager.getColor("Tree.selectionBorderColor");
+private Color   select_color = UIManager.getColor("Tree.selectionForeground");
+private Color   plain_color = UIManager.getColor("Tree.textForeground");
+private Color   select_back = UIManager.getColor("Tree.selectionBackground");
+private Color   plain_back = UIManager.getColor("Tree.textBackground");
+private Color   border_select = UIManager.getColor("Tree.selectionBorderColor");
 
 
 
@@ -127,9 +127,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocCellRenderer(BdocPanel pnl)
@@ -157,24 +157,24 @@ BdocCellRenderer(BdocPanel pnl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-void setTreeWidth(int w)			{ tree_width = w; }
+void setTreeWidth(int w)                        { tree_width = w; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Return component for the cell						*/
-/*										*/
+/*                                                                              */
+/*      Return component for the cell                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Component getTreeCellRendererComponent(JTree t,Object val,boolean sel,boolean exp,
-							   boolean leaf,int row,boolean focus)
+                                                           boolean leaf,int row,boolean focus)
 {
    if (val instanceof DefaultMutableTreeNode) {
       val = ((DefaultMutableTreeNode) val).getUserObject();
@@ -182,7 +182,7 @@ void setTreeWidth(int w)			{ tree_width = w; }
 
    if (!leaf) {
       if (val instanceof ItemRelation && RELATION_NAMES.get(val) != null) {
-	 val = RELATION_NAMES.get(val);
+         val = RELATION_NAMES.get(val);
        }
       return treeComponent(t,val,sel,exp,leaf,row,focus);
     }
@@ -203,9 +203,9 @@ void setTreeWidth(int w)			{ tree_width = w; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle subitem display							*/
-/*										*/
+/*                                                                              */
+/*      Handle subitem display                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupSubitemDisplay()
@@ -229,13 +229,13 @@ private void setupSubitemDisplay()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle simple components						*/
-/*										*/
+/*                                                                              */
+/*      Handle simple components                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
-				     boolean leaf,int row,boolean focus)
+                                     boolean leaf,int row,boolean focus)
 {
    String s = t.convertValueToText(val,sel,exp,leaf,row,focus);
 
@@ -254,13 +254,13 @@ private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle internal components						*/
-/*										*/
+/*                                                                              */
+/*      Handle internal components                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private Component treeComponent(JTree t,Object val,boolean sel,boolean exp,
-				   boolean leaf,int row,boolean focus)
+                                   boolean leaf,int row,boolean focus)
 {
    String s = t.convertValueToText(val,sel,exp,leaf,row,focus);
 
@@ -282,9 +282,9 @@ private Component treeComponent(JTree t,Object val,boolean sel,boolean exp,
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle painting 							*/
-/*										*/
+/*                                                                              */
+/*      Handle painting                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -320,9 +320,9 @@ private void paintFocus(Graphics g, int x, int y, int w, int h, Color notcolor)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hyperlink manager							*/
-/*										*/
+/*                                                                              */
+/*      Hyperlink manager                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class DocLinker implements HyperlinkListener {
@@ -338,15 +338,15 @@ private final class DocLinker implements HyperlinkListener {
        }
     }
 
-}	// end of inner class DocLinker
+}       // end of inner class DocLinker
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	ItemNamePane -- handle item name					*/
-/*										*/
+/*                                                                              */
+/*      ItemNamePane -- handle item name                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ItemNamePane extends JEditorPane {
@@ -367,15 +367,15 @@ private class ItemNamePane extends JEditorPane {
       return BdocPanel.computeEditorSize(this,tree_width - 24);
     }
 
-}	// end of inner class ItemNamePane
+}       // end of inner class ItemNamePane
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	ItemDescPane -- handle item descrition					*/
-/*										*/
+/*                                                                              */
+/*      ItemDescPane -- handle item descrition                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class ItemDescPane extends SwingEditorPane {
@@ -394,16 +394,16 @@ private class ItemDescPane extends SwingEditorPane {
       return BdocPanel.computeEditorSize(this,tree_width - 48);
     }
 
-   @Override public void repaint()					{ }
-   @Override public void repaint(long t,int x,int y,int w,int h)	{ }
-   @Override public void repaint(Rectangle r)				{ }
+   @Override public void repaint()                                      { }
+   @Override public void repaint(long t,int x,int y,int w,int h)        { }
+   @Override public void repaint(Rectangle r)                           { }
 
-}	// end of inner class ItemDescPane
-
-
+}       // end of inner class ItemDescPane
 
 
-}	// end of class BdocCellRenderer
+
+
+}       // end of class BdocCellRenderer
 
 
 

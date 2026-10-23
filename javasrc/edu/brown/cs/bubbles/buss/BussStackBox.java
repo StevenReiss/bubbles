@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BussStackBox.java						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack contents				*/
-/*										*/
+/*                                                                              */
+/*              BussStackBox.java                                               */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack contents                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -81,9 +81,9 @@ class BussStackBox extends JTree implements BussConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BussBubble buss_bubble;
@@ -95,9 +95,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BussStackBox(BussTreeModel mdl, int contentWidth, BussBubble bussbubble)
@@ -153,9 +153,9 @@ static void registerKeys()
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree actions								*/
-/*										*/
+/*                                                                              */
+/*      Tree actions                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void expandAll()
@@ -171,9 +171,9 @@ private void expandAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -184,9 +184,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintComponent(Graphics g)
@@ -206,9 +206,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Drag/drop handler							*/
-/*										*/
+/*                                                                              */
+/*      Drag/drop handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Transferer extends TransferHandler {
@@ -245,7 +245,7 @@ private final class Transferer extends TransferHandler {
           }
        }
     }
-}	// end of inner class Transferer
+}       // end of inner class Transferer
 
 
 
@@ -262,8 +262,8 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
        }
     }
 
-   boolean isValid()			{ return tree_entries.size() > 0; }
-   List<BussEntry> getEntries() 	{ return tree_entries; }
+   boolean isValid()                    { return tree_entries.size() > 0; }
+   List<BussEntry> getEntries()         { return tree_entries; }
 
 
    @Override public Object getTransferData(DataFlavor df) {
@@ -293,15 +293,15 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
       return rslt;
     }
 
-}	// end of inner class TransferBubble
+}       // end of inner class TransferBubble
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Selection change							*/
-/*										*/
+/*                                                                              */
+/*      Selection change                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Selector implements TreeSelectionListener
@@ -319,14 +319,14 @@ private final class Selector implements TreeSelectionListener
        }
     }
 
-}	// end of inner class Selector
+}       // end of inner class Selector
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Keyboard action methods 						*/
-/*										*/
+/*                                                                              */
+/*      Keyboard action methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -396,8 +396,8 @@ private void createAllBubbles(TreeNode tn,BudaRoot br,Rectangle loc)
     }
    else {
       for (Enumeration<?> e = tn.children(); e.hasMoreElements(); ) {
-	 TreeNode ctn = (TreeNode) e.nextElement();
-	 createAllBubbles(ctn,br,loc);
+         TreeNode ctn = (TreeNode) e.nextElement();
+         createAllBubbles(ctn,br,loc);
        }
     }
 }
@@ -413,8 +413,8 @@ private void createEntryBubble(BussEntry be,BudaRoot root,Rectangle loc)
 
    BudaBubble sbb = bbl.getSourceBubble();
    if (sbb != null && sbb.getContentName() != null && sbb.getContentFile() != null &&
-	    sbb.getContentName().equals(bb.getContentName()) &&
-	    sbb.getContentFile().equals(bb.getContentFile()))
+            sbb.getContentName().equals(bb.getContentName()) &&
+            sbb.getContentFile().equals(bb.getContentFile()))
       return;
 
    if (root != null && loc != null) {
@@ -444,7 +444,7 @@ private class ShowAllAction extends AbstractAction implements ActionListener {
       createAllBubbles();
     }
 
-}	// end of inner class ShowAllAction
+}       // end of inner class ShowAllAction
 
 
 
@@ -462,7 +462,7 @@ private class ShowSelectedAction extends AbstractAction implements ActionListene
       createSelectedBubble();
     }
 
-}	// end of inner class ShowSelectedAction
+}       // end of inner class ShowSelectedAction
 
 
 
@@ -480,15 +480,15 @@ private class DeleteSelectedAction extends AbstractAction implements ActionListe
       deleteSelected();
     }
    
-}	// end of inner class DeleteSelectedAction
+}       // end of inner class DeleteSelectedAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Classes for maintaining bubble windows as part of the bubble stack	*/
-/*										*/
+/*                                                                              */
+/*      Classes for maintaining bubble windows as part of the bubble stack      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BussBubbleCallback implements BubbleViewCallback {
@@ -524,11 +524,11 @@ private static class BussBubbleCallback implements BubbleViewCallback {
       return false;
    }
 
-}	// end of inner class EditorBubbleCallback
+}       // end of inner class EditorBubbleCallback
 
 
 
-}	// end of class BussStackBox
+}       // end of class BussStackBox
 
 
 

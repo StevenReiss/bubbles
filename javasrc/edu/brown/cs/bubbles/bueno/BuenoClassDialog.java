@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoClassDialog.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator new method dialog		*/
-/*										*/
+/*                                                                              */
+/*              BuenoClassDialog.java                                           */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator new method dialog               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,14 +43,14 @@ class BuenoClassDialog extends BuenoAbstractDialog implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
-			    BuenoProperties known,BuenoLocation insert,
-			    BuenoBubbleCreator newer)
+                            BuenoProperties known,BuenoLocation insert,
+                            BuenoBubbleCreator newer)
 {
    super(source,locale,known,insert,newer,typ);
 
@@ -87,9 +87,9 @@ BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Class dialog panel setup						*/
-/*										*/
+/*                                                                              */
+/*      Class dialog panel setup                                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void setupPanel(SwingGridPanel pnl)
@@ -102,9 +102,9 @@ BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void doCreate(BudaBubbleArea bba,Point p)
@@ -125,9 +125,9 @@ BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Get the full name of the new method					*/
-/*										*/
+/*                                                                              */
+/*      Get the full name of the new method                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private String getClassName()
@@ -147,7 +147,7 @@ private String getClassName()
 
 
 
-}	// end of class BuenoClassDialog
+}       // end of class BuenoClassDialog
 
 
 

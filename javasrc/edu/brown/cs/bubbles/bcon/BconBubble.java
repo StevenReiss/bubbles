@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconBubble.java 						*/
-/*										*/
-/*	Bubbles Environment Context Viewer constants				*/
-/*										*/
+/*                                                                              */
+/*              BconBubble.java                                                 */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer constants                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,12 +40,12 @@ class BconBubble extends BudaBubble implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BconPanel	for_panel;
+private BconPanel       for_panel;
 
 private static final long serialVersionUID = 1;
 
@@ -54,9 +54,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconBubble(BconPanel pnl)
@@ -87,7 +87,7 @@ BconBubble(BconPanel pnl)
 
 BconPanel getPanel()                    { return for_panel; }
 
-}	// end of class BconBubble
+}       // end of class BconBubble
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardPluginManager.java 					*/
-/*										*/
-/*	Plugin dialog and management						*/
-/*										*/
+/*                                                                              */
+/*              BoardPluginManager.java                                         */
+/*                                                                              */
+/*      Plugin dialog and management                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -74,9 +74,9 @@ public class BoardPluginManager implements BoardConstants, ActionListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program -- run standalone						*/
-/*										*/
+/*                                                                              */
+/*      Main program -- run standalone                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -96,16 +96,16 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private SwingListSet<PluginData>	avail_set;
-private SwingListSet<PluginData>	install_set;
-private JList<PluginData>		avail_list;
-private JList<PluginData>		install_list;
-private JDialog 			working_dialog;
+private SwingListSet<PluginData>        avail_set;
+private SwingListSet<PluginData>        install_set;
+private JList<PluginData>               avail_list;
+private JList<PluginData>               install_list;
+private JDialog                         working_dialog;
 
 private static Set<PluginData> all_plugins = null;
 
@@ -114,9 +114,9 @@ private static boolean                  use_http = false;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BoardPluginManager()
@@ -127,9 +127,9 @@ public BoardPluginManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	Manage Plugin Dialog							*/
-/*										*/
+/*                                                                              */
+/*      Manage Plugin Dialog                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 public void managePlugins()
@@ -146,9 +146,9 @@ public void managePlugins()
 
 
 /********************************************************************************/
-/*										*/
-/*	User interaction panel							*/
-/*										*/
+/*                                                                              */
+/*      User interaction panel                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private JPanel setupPanel()
@@ -177,10 +177,10 @@ private JPanel setupPanel()
    install_set = new SwingListSet<>();
    for (PluginData pd : all_plugins) {
       if (pd.isInstalled()) {
-	 install_set.addElement(pd);
+         install_set.addElement(pd);
        }
       else {
-	 avail_set.addElement(pd);
+         avail_set.addElement(pd);
        }
     }
    avail_list = new PluginList(avail_set);
@@ -236,16 +236,16 @@ private class PluginList extends JList<PluginData> {
       return null;
     }
 
-}	// end of inner class PluginList
+}       // end of inner class PluginList
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent evt)
@@ -274,8 +274,8 @@ private class PluginList extends JList<PluginData> {
     }
    else if (cmd.equals("REMOVE")) {
       for (PluginData pd : install_list.getSelectedValuesList()) {
-	 install_set.removeElement(pd);
-	 avail_set.addElement(pd);
+         install_set.removeElement(pd);
+         avail_set.addElement(pd);
        }
     }
    if (cmd.equals("CANCEL")) {
@@ -295,11 +295,11 @@ private void handleInstalls()
     }
    for (PluginData pd : install_set) {
       try {
-	 if (!pd.isInstalled()) pd.install();
+         if (!pd.isInstalled()) pd.install();
        }
       catch (IOException e) {
-	 JOptionPane.showMessageDialog(null,"Problem installing " + pd.getName() + ": " +
-	       e,"Bubbles Plugin Problem",JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null,"Problem installing " + pd.getName() + ": " +
+               e,"Bubbles Plugin Problem",JOptionPane.ERROR_MESSAGE);
        }
     }
 }
@@ -308,9 +308,9 @@ private void handleInstalls()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle bubbles update							*/
-/*										*/
+/*                                                                              */
+/*      Handle bubbles update                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 public void updatePlugins()
@@ -319,7 +319,7 @@ public void updatePlugins()
    for (PluginData pd : all_plugins) {
       System.err.println("BOARDUPDATE: Update plugin " + pd.getName() + " " + pd.isInstalled());
       if (pd.isInstalled()) {
-	 pd.update();
+         pd.update();
        }
     }
 }
@@ -355,9 +355,9 @@ private boolean checkCanInstall(PluginData pd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle resources							*/
-/*										*/
+/*                                                                              */
+/*      Handle resources                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr)
@@ -370,27 +370,27 @@ public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr
    if (!dirf.exists()) dirf.mkdir();
    if (dirf.exists()) {
       try {
-	 JarFile jf = new JarFile(jarf);
-	 for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements(); ) {
-	    JarEntry je = e.nextElement();
-	    String nm = je.getName();
-	    if (fltr.accept(nm)) {
-	       File usedir = dirf;
-	       String pnm = nm;
-	       while (pnm.contains("/")) {
-		  int idx = pnm.indexOf("/");
-		  usedir = new File(usedir,pnm.substring(0,idx));
-		  if (!usedir.exists()) usedir.mkdir();
-		  pnm = pnm.substring(idx+1);
-		}
-	       File tgt = new File(usedir,pnm);
-	       if (!tgt.exists()) {
-		  InputStream ins = jf.getInputStream(je);
-		  IvyFile.copyFile(ins,tgt);
-		}
-	     }
-	  }
-	 jf.close();
+         JarFile jf = new JarFile(jarf);
+         for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements(); ) {
+            JarEntry je = e.nextElement();
+            String nm = je.getName();
+            if (fltr.accept(nm)) {
+               File usedir = dirf;
+               String pnm = nm;
+               while (pnm.contains("/")) {
+                  int idx = pnm.indexOf("/");
+                  usedir = new File(usedir,pnm.substring(0,idx));
+                  if (!usedir.exists()) usedir.mkdir();
+                  pnm = pnm.substring(idx+1);
+                }
+               File tgt = new File(usedir,pnm);
+               if (!tgt.exists()) {
+                  InputStream ins = jf.getInputStream(je);
+                  IvyFile.copyFile(ins,tgt);
+                }
+             }
+          }
+         jf.close();
        }
       catch (IOException e) { }
     }
@@ -402,9 +402,9 @@ public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr
 
 
 /********************************************************************************/
-/*										*/
-/*	Find available plugins							*/
-/*										*/
+/*                                                                              */
+/*      Find available plugins                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static synchronized void getPluginData()
@@ -449,9 +449,9 @@ private static synchronized void getPluginData()
 
 
 /********************************************************************************/
-/*										*/
-/*	Plugin information							*/
-/*										*/
+/*                                                                              */
+/*      Plugin information                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class PluginData implements Comparable<PluginData> {
@@ -500,13 +500,13 @@ private static class PluginData implements Comparable<PluginData> {
       checkInstalled();
     }
 
-   boolean isInstalled()		{ return plugin_installed; }
-   String getName()			{ return plugin_name; }
-   String getDescription()		{ return plugin_description; }
+   boolean isInstalled()                { return plugin_installed; }
+   String getName()                     { return plugin_name; }
+   String getDescription()              { return plugin_description; }
    List<String> getRequiredPlugins()    { return plugin_requires; }
    String getWarning()                  { return plugin_warning; }
 
-   @Override public String toString()	{ return plugin_name; }
+   @Override public String toString()   { return plugin_name; }
 
    void install() throws IOException {
       if (plugin_installed) return;
@@ -525,15 +525,15 @@ private static class PluginData implements Comparable<PluginData> {
    
       URL u = null;
       try { 
-	 u = new URI(plugin_url).toURL();
+         u = new URI(plugin_url).toURL();
       }
       catch (URISyntaxException e) {
-	 throw new IOException("BAD URI",e);
+         throw new IOException("BAD URI",e);
       }
       InputStream uins = u.openConnection().getInputStream();
       IvyFile.copyFile(uins,p1);
       plugin_file = p1;
-      installResource();		// should no longer be needed
+      installResource();                // should no longer be needed
       plugin_installed = true;
     }
 
@@ -563,12 +563,12 @@ private static class PluginData implements Comparable<PluginData> {
       if (plugin_file == null) return;
       plugin_file.deleteOnExit();
       for (String main : plugin_mains) {
-	 try {
-	    Class<?> c = Class.forName(main);
-	    Method m = c.getMethod("remove");
-	    m.invoke(null);
-	  }
-	 catch (Exception e) { }
+         try {
+            Class<?> c = Class.forName(main);
+            Method m = c.getMethod("remove");
+            m.invoke(null);
+          }
+         catch (Exception e) { }
        }
       uninstallResource();
       plugin_installed = false;
@@ -577,8 +577,8 @@ private static class PluginData implements Comparable<PluginData> {
    void uninstallResource() {
       File ivv = BoardProperties.getPropertyDirectory();
       for (String res : plugin_resources) {
-	 File f1 = new File(ivv,res);
-	 f1.delete();
+         File f1 = new File(ivv,res);
+         f1.delete();
        }
     }
 
@@ -638,11 +638,11 @@ private static class PluginData implements Comparable<PluginData> {
       return plugin_name.compareTo(pd.plugin_name);
     }
 
-}	// end of inner class PluginData
+}       // end of inner class PluginData
 
 
 
-}	// end of class BoardPluginManager
+}       // end of class BoardPluginManager
 
 
 

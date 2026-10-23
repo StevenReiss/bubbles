@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalPackageHierarchy.java					*/
-/*										*/
-/*	Compute package hierarchy						*/
-/*										*/
+/*                                                                              */
+/*              BanalPackageHierarchy.java                                      */
+/*                                                                              */
+/*      Compute package hierarchy                                               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -47,23 +47,23 @@ class BanalPackageHierarchy extends BanalDefaultVisitor implements BanalConstant
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	project_name;
+private String  project_name;
 private DependNode cur_package;
 private Map<String,DependNode> node_map;
-private int	cycle_counter;
+private int     cycle_counter;
 private Set<BanalMethod> possible_methods;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BanalPackageHierarchy(BanalProjectManager pm, String proj)
@@ -92,9 +92,9 @@ BanalPackageHierarchy(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods 							*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 Map<String,BanalHierarchyNode> getHierarchy()
@@ -105,9 +105,9 @@ Map<String,BanalHierarchyNode> getHierarchy()
 
 
 /********************************************************************************/
-/*										*/
-/*	Scanning methods							*/
-/*										*/
+/*                                                                              */
+/*      Scanning methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean checkUseProject(String proj)
@@ -203,9 +203,9 @@ Map<String,BanalHierarchyNode> getHierarchy()
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper functions							*/
-/*										*/
+/*                                                                              */
+/*      Helper functions                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private String findPackage(BanalClass bc)
@@ -274,9 +274,9 @@ private void reference(String pkg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Analysis methods							*/
-/*										*/
+/*                                                                              */
+/*      Analysis methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void doAnalysis()
@@ -292,15 +292,15 @@ private void doAnalysis()
 
    while (!todo.isEmpty()) {
       if (work.isEmpty()) {
-	 work.addAll(removeCycle(todo));
+         work.addAll(removeCycle(todo));
        }
       while (!work.isEmpty()) {
-	 DependNode nd = work.remove();
-	 todo.remove(nd);
-	 done.add(nd);
+         DependNode nd = work.remove();
+         todo.remove(nd);
+         done.add(nd);
          IvyLog.logD("BANAL","Work on " + nd.getName());
-	 Collection<DependNode> next = nd.useNode();
-	 if (next != null) work.addAll(next);
+         Collection<DependNode> next = nd.useNode();
+         if (next != null) work.addAll(next);
        }
     } 
 }
@@ -316,7 +316,7 @@ private Collection<DependNode> removeCycle(Set<DependNode> nodes)
       Set<DependNode> cyc = new HashSet<>();
       boolean added = findCycle(dn,nodes,cyc);
       if (!cyc.isEmpty()) {
-	 if (best == null || (bestadded && !added) || 
+         if (best == null || (bestadded && !added) || 
                cyc.size() < best.size()) {
             best = cyc;
             bestadded = added;
@@ -372,9 +372,9 @@ private boolean findCycle(DependNode dn,Collection<DependNode> nodes,
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void output(IvyXmlWriter xw)
@@ -390,9 +390,9 @@ void output(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph structure for dependcies						*/
-/*										*/
+/*                                                                              */
+/*      Graph structure for dependcies                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class DependNode implements BanalHierarchyNode {
@@ -419,11 +419,11 @@ private class DependNode implements BanalHierarchyNode {
     }
 
 
-   @Override public String getName()	{ return node_name; }
-   @Override public int getLevel()	{ return node_level; }
-   @Override public int getCycle()	{ return cycle_id; }
+   @Override public String getName()    { return node_name; }
+   @Override public int getLevel()      { return node_level; }
+   @Override public int getCycle()      { return cycle_id; }
    
-   int getNumDepend()			{ return num_depend; }
+   int getNumDepend()                   { return num_depend; }
 
    void addDepend(DependNode n) {
       if (depends_on.add(n)) {
@@ -498,12 +498,12 @@ private class DependNode implements BanalHierarchyNode {
       xw.end("NODE");
     }
 
-}	// end of inner class DependNode
+}       // end of inner class DependNode
 
 
 
 
-}	// end of class BanalPackageHierarchy
+}       // end of class BanalPackageHierarchy
 
 
 

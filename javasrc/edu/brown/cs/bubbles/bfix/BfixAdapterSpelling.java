@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterSpelling.java					*/
-/*										*/
-/*	Handle spelling correction						*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterSpelling.java                                        */
+/*                                                                              */
+/*      Handle spelling correction                                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -51,9 +51,9 @@ class BfixAdapterSpelling extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private int min_size;
@@ -68,13 +68,13 @@ static {
    spell_problems = new ArrayList<SpellProblem>();
    for (String s : props.stringPropertyNames()) {
       if (s.startsWith("Bfix.correct.spelling.problem")) {
-	 String txt = props.getString(s,null);
-	 StringTokenizer tok = new StringTokenizer(txt,";");
-	 while (tok.hasMoreTokens()) {
-	    String desc = tok.nextToken().trim();
-	    SpellProblem sp = new SpellProblem(desc);
-	    spell_problems.add(sp);
-	  }
+         String txt = props.getString(s,null);
+         StringTokenizer tok = new StringTokenizer(txt,";");
+         while (tok.hasMoreTokens()) {
+            String desc = tok.nextToken().trim();
+            SpellProblem sp = new SpellProblem(desc);
+            spell_problems.add(sp);
+          }
        }
     }
    Element xml = BumpClient.getBump().getLanguageData();
@@ -99,9 +99,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterSpelling()
@@ -113,13 +113,13 @@ BfixAdapterSpelling()
    spell_problems = new ArrayList<SpellProblem>();
    for (String s : props.stringPropertyNames()) {
       if (s.startsWith("Bfix.correct.spelling.problem")) {
-	 String txt = props.getString(s,null);
-	 StringTokenizer tok = new StringTokenizer(txt,";");
-	 while (tok.hasMoreTokens()) {
-	    String desc = tok.nextToken().trim();
-	    SpellProblem sp = new SpellProblem(desc);
-	    spell_problems.add(sp);
-	  }
+         String txt = props.getString(s,null);
+         StringTokenizer tok = new StringTokenizer(txt,";");
+         while (tok.hasMoreTokens()) {
+            String desc = tok.nextToken().trim();
+            SpellProblem sp = new SpellProblem(desc);
+            spell_problems.add(sp);
+          }
        }
     }
    
@@ -138,9 +138,9 @@ BfixAdapterSpelling()
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Method Implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
@@ -168,9 +168,9 @@ BfixAdapterSpelling()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get candidates for spelling correction					*/
-/*										*/
+/*                                                                              */
+/*      Get candidates for spelling correction                                  */
+/*                                                                              */
 /********************************************************************************/
 
 List<String> getSpellingCandidates(BfixCorrector corr,BumpProblem bp)
@@ -206,10 +206,10 @@ List<String> getSpellingCandidates(BfixCorrector corr,BumpProblem bp)
    if (nelt != null) {
       BaleWindowElement nnelt = nelt.getNextCharacterElement();
       if (nnelt != null && nnelt.isIdentifier() && (nnelt.getStartOffset() - elt.getEndOffset()) == 1) {
-	 int neloff = nnelt.getEndOffset();
-	 if (corr.getEndOffset() < 0 || neloff + 1 < corr.getEndOffset()) {
-	    txt1 = document.getWindowText(elstart,neloff - elstart);
-	  }
+         int neloff = nnelt.getEndOffset();
+         if (corr.getEndOffset() < 0 || neloff + 1 < corr.getEndOffset()) {
+            txt1 = document.getWindowText(elstart,neloff - elstart);
+          }
        }
     }
    if (txt1 != null && !txt1.contains(" ")) rslt.add(txt1);
@@ -221,9 +221,9 @@ List<String> getSpellingCandidates(BfixCorrector corr,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Spell fixing worker							*/
-/*										*/
+/*                                                                              */
+/*      Spell fixing worker                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SpellFixer extends BfixFixer {
@@ -241,7 +241,7 @@ private static class SpellFixer extends BfixFixer {
       fix_size = min;
     }
 
-   @Override protected String getMemoId()	{ return for_identifier; }
+   @Override protected String getMemoId()       { return for_identifier; }
 
    // CHECKSTYLE:OFF
    @Override protected BfixRunnableFix findFix() {
@@ -412,14 +412,14 @@ private static class SpellFixer extends BfixFixer {
       return "SpellFixer: " + for_identifier;
     }
    
-}	// end of class BfixAdapterSpelling
+}       // end of class BfixAdapterSpelling
 
 
 
 /********************************************************************************/
-/*										*/
-/*	SpellFix -- potential spelling fixup					*/
-/*										*/
+/*                                                                              */
+/*      SpellFix -- potential spelling fixup                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SpellFix implements Comparable<SpellFix> {
@@ -434,9 +434,9 @@ private static class SpellFix implements Comparable<SpellFix> {
       text_delta = d;
     }
 
-   String getText()			{ return new_text; }
-   String getOriginalText()		{ return original_text; }
-   double getEditCount()		{ return text_delta; }
+   String getText()                     { return new_text; }
+   String getOriginalText()             { return original_text; }
+   double getEditCount()                { return text_delta; }
 
    @Override public int compareTo(SpellFix sf) {
       double d = getEditCount() - sf.getEditCount();
@@ -445,14 +445,14 @@ private static class SpellFix implements Comparable<SpellFix> {
       return new_text.compareTo(sf.new_text);
     }
 
-}	// end of inner class SpellFix
+}       // end of inner class SpellFix
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to perform the spelling correction				*/
-/*										*/
+/*                                                                              */
+/*      Class to perform the spelling correction                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SpellDoer extends BfixFixDoer {
@@ -480,17 +480,17 @@ private static class SpellDoer extends BfixFixDoer {
       return testEdit(edit,sareas,"SpellingCorrection",false);
     }
 
-   @Override public double getRegionOrder()		{ return 0; } 
+   @Override public double getRegionOrder()             { return 0; } 
 
-}	// end of inner class SpellDoer
+}       // end of inner class SpellDoer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Spelling problem cases							*/
-/*										*/
+/*                                                                              */
+/*      Spelling problem cases                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SpellProblem {
@@ -503,8 +503,8 @@ private static class SpellProblem {
    SpellProblem(String desc) {
       desc = desc.trim();
       if (desc.startsWith("^")) {
-	 starts_with = true;
-	 desc = desc.substring(1);
+         starts_with = true;
+         desc = desc.substring(1);
        }
       else starts_with = false;
       original_identifier = null;
@@ -512,31 +512,31 @@ private static class SpellProblem {
       using_suffix = null;
       StringTokenizer tok = new StringTokenizer(desc,",");
       if (tok.hasMoreTokens()) {
-	 original_identifier = tok.nextToken().trim();
-	 if (original_identifier.equals("*")) original_identifier = null;
+         original_identifier = tok.nextToken().trim();
+         if (original_identifier.equals("*")) original_identifier = null;
        }
       if (tok.hasMoreTokens()) {
-	 target_identifier = tok.nextToken().trim();
-	 if (target_identifier.equals("*")) target_identifier = null;
+         target_identifier = tok.nextToken().trim();
+         if (target_identifier.equals("*")) target_identifier = null;
        }
       if (tok.hasMoreTokens()) {
-	 using_suffix = tok.nextToken().trim();
-	 if (using_suffix.equals("*")) using_suffix = null;
+         using_suffix = tok.nextToken().trim();
+         if (using_suffix.equals("*")) using_suffix = null;
        }
     }
 
    boolean ignore(String orig,String txt) {
       if (original_identifier != null) {
-	 if (starts_with && !orig.startsWith(original_identifier)) return false;
-	 else if (!starts_with && !orig.equals(original_identifier)) return false;
+         if (starts_with && !orig.startsWith(original_identifier)) return false;
+         else if (!starts_with && !orig.equals(original_identifier)) return false;
        }
       if (target_identifier != null) {
-	 if (starts_with && !txt.startsWith(target_identifier)) return false;
-	 if (!starts_with && !txt.equals(target_identifier)) return false;
+         if (starts_with && !txt.startsWith(target_identifier)) return false;
+         if (!starts_with && !txt.equals(target_identifier)) return false;
        }
       if (using_suffix != null) {
-	 if (!orig.equals(txt + using_suffix) && !txt.equals(orig + using_suffix))
-	    return false;
+         if (!orig.equals(txt + using_suffix) && !txt.equals(orig + using_suffix))
+            return false;
        }
       return true;
     }
@@ -547,22 +547,22 @@ private static class SpellProblem {
       if (original_identifier != null) buf.append(original_identifier);
       else buf.append("*");
       if (target_identifier != null) {
-	 buf.append(",");
-	 buf.append(target_identifier);
+         buf.append(",");
+         buf.append(target_identifier);
        }
       else if (using_suffix != null) buf.append(",*");
       if (using_suffix != null) {
-	 buf.append(",");
-	 buf.append(using_suffix);
+         buf.append(",");
+         buf.append(using_suffix);
        }
       return buf.toString();
     }
 
-}	// end of inner class SpellProblem
+}       // end of inner class SpellProblem
 
 
 
-}	// end of class BfixAdapterSpelling
+}       // end of class BfixAdapterSpelling
 
 
 /* end of BfixAdapterSpelling.java */

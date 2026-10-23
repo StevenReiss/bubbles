@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrMonitor.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BvcrMonitor.java                                                */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,22 +47,22 @@ class BvcrMonitor implements BvcrConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BvcrMain	bvcr_control;
+private BvcrMain        bvcr_control;
 private MintControl mint_control;
 private boolean is_done;
-private int	delay_count;
+private int     delay_count;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrMonitor(BvcrMain bm,String mint)
@@ -95,9 +95,9 @@ BvcrMain getBvcrMain()                  { return bvcr_control; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Server implementation							*/
-/*										*/
+/*                                                                              */
+/*      Server implementation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void server()
@@ -110,11 +110,11 @@ void server()
    
    synchronized (this) {
       while (!is_done || delay_count > 0) {
-	 if (!checkEclipse()) is_done = true;
-	 try {
-	    wait(30000L);
-	  }
-	 catch (InterruptedException e) { }
+         if (!checkEclipse()) is_done = true;
+         try {
+            wait(30000L);
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -166,9 +166,9 @@ synchronized void endDelay()
 
 
 /********************************************************************************/
-/*										*/
-/*	Project management							*/
-/*										*/
+/*                                                                              */
+/*      Project management                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void loadProjects()
@@ -182,7 +182,7 @@ void loadProjects()
 
    if (!IvyXml.isElement(r,"RESULT")) {
       IvyLog.logE("BVCR","Problem getting project information: " +
-	    IvyXml.convertXmlToString(r));
+            IvyXml.convertXmlToString(r));
       System.exit(2);
     }
 
@@ -194,9 +194,9 @@ void loadProjects()
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 IvyLog.logE("BVCR","Problem opening project " + pnm + ": " +
-	       IvyXml.convertXmlToString(pr));
-	 continue;
+         IvyLog.logE("BVCR","Problem opening project " + pnm + ": " +
+               IvyXml.convertXmlToString(pr));
+         continue;
        }
       Element ppr = IvyXml.getChild(pr,"PROJECT");
       BvcrProject bp = new BvcrProject(ppr);
@@ -209,9 +209,9 @@ void loadProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic command to find changes to a file 				*/
-/*										*/
+/*                                                                              */
+/*      Basic command to find changes to a file                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleFindChanges(String proj,String file,IvyXmlWriter xw)
@@ -241,9 +241,9 @@ private void handleEndUpdate()
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic command to find history of a file 				*/
-/*										*/
+/*                                                                              */
+/*      Basic command to find history of a file                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void findHistory(String proj,String file,IvyXmlWriter xw)
@@ -257,9 +257,9 @@ private void findHistory(String proj,String file,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic command to find version differences				*/
-/*										*/
+/*                                                                              */
+/*      Basic command to find version differences                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleFileDiffs(String proj,String file,String vfr,String vto,IvyXmlWriter xw)
@@ -270,9 +270,9 @@ private void handleFileDiffs(String proj,String file,String vfr,String vto,IvyXm
 
 
 /********************************************************************************/
-/*										*/
-/*	List projects under version control					*/
-/*										*/
+/*                                                                              */
+/*      List projects under version control                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleListProjects(IvyXmlWriter xw)
@@ -295,9 +295,9 @@ private void handleListProjects(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	List all versions associated with project				*/
-/*										*/
+/*                                                                              */
+/*      List all versions associated with project                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleListVersions(IvyXmlWriter xw,String proj)
@@ -310,9 +310,9 @@ private void handleListVersions(IvyXmlWriter xw,String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Show status of new/changed files in the project 			*/
-/*										*/
+/*                                                                              */
+/*      Show status of new/changed files in the project                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleShowChangedFiles(IvyXmlWriter xw,String proj,boolean ign)
@@ -325,9 +325,9 @@ private void handleShowChangedFiles(IvyXmlWriter xw,String proj,boolean ign)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle request to update a set of files 				*/
-/*										*/
+/*                                                                              */
+/*      Handle request to update a set of files                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleIgnoreFiles(IvyXmlWriter xw,String proj,List<String> files)
@@ -402,9 +402,9 @@ private void handleStash(IvyXmlWriter xw,String proj,String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle messages from eclipse						*/
-/*										*/
+/*                                                                              */
+/*      Handle messages from eclipse                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class EclipseHandler implements MintHandler {
@@ -438,7 +438,7 @@ private final class EclipseHandler implements MintHandler {
              }
           }
          else if (cmd.equals("PING")) {
-            msg.replyTo();			// we don't count for eclipse
+            msg.replyTo();                      // we don't count for eclipse
           }
          else if (cmd.equals("STOP")) {
             serverDone();
@@ -452,7 +452,7 @@ private final class EclipseHandler implements MintHandler {
        }
     }
 
-}	// end of inner class EclipseHandler
+}       // end of inner class EclipseHandler
 
 
 
@@ -463,15 +463,15 @@ private final class ExitHandler implements MintHandler {
       serverDone();
     }
 
-}	// end of inner class ExitHandler
+}       // end of inner class ExitHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle command requests from bubbles or elsewhere			*/
-/*										*/
+/*                                                                              */
+/*      Handle command requests from bubbles or elsewhere                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CommandHandler implements MintHandler {
@@ -631,12 +631,12 @@ private final class CommandHandler implements MintHandler {
       msg.replyTo(rply);
    }
 
-}	// end of inner class CommandHandler
+}       // end of inner class CommandHandler
 
 
 
 
-}	// end of class BvcrMonitor
+}       // end of class BvcrMonitor
 
 
 

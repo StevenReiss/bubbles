@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattInstrument.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool javaagent instrumenter			*/
-/*										*/
+/*                                                                              */
+/*              BattInstrument.java                                             */
+/*                                                                              */
+/*      Bubble Automated Testing Tool javaagent instrumenter                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,22 +57,22 @@ class BattInstrument implements BattConstants, ClassFileTransformer
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BattAgent	for_agent;
-private String		class_name;
-private int		method_id;
-private int		block_id;
+private BattAgent       for_agent;
+private String          class_name;
+private int             method_id;
+private int             block_id;
 private CodeSizeEvaluator size_eval;
-private Set<String>	user_classes;
+private Set<String>     user_classes;
 private Map<String,byte []> transform_map;
 
-private static boolean	do_debug = false;
-private static boolean	pre_load = false;
-private static boolean	write_output = false;
+private static boolean  do_debug = false;
+private static boolean  pre_load = false;
+private static boolean  write_output = false;
 
 private static final String [] SYSTEM_PACKAGES = new String [] {
    "java/",
@@ -91,9 +91,9 @@ private static final String [] SYSTEM_PACKAGES = new String [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattInstrument(BattAgent agt)
@@ -107,9 +107,9 @@ BattInstrument(BattAgent agt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void setClasses(String [] clsset)
@@ -134,21 +134,21 @@ void setClasses(String [] clsset)
       String s2 = s1.replace("$",".");
       Class<?> cc = null;
       try {
-//	 for_agent.logD("BATTAGENT: TRY " + s1);
-	 cc = Class.forName(s1);
+//       for_agent.logD("BATTAGENT: TRY " + s1);
+         cc = Class.forName(s1);
        }
       catch (Throwable t) {
-	 for_agent.logD("BATTAGENT: NOT FOUND: " + s1 + " " + t);
-	 try {
-	    cc = Class.forName(s2);
-	    for_agent.logD("BATTAGENT: FOUND: " + s2);
-	  }
-	 catch (Throwable xt) { 
-	    for_agent.logD("BATTAGENT: Problem loading " + s + " " + xt);
-	 }
+         for_agent.logD("BATTAGENT: NOT FOUND: " + s1 + " " + t);
+         try {
+            cc = Class.forName(s2);
+            for_agent.logD("BATTAGENT: FOUND: " + s2);
+          }
+         catch (Throwable xt) { 
+            for_agent.logD("BATTAGENT: Problem loading " + s + " " + xt);
+         }
        }
       if (cc == null) {
-	 for_agent.logD("BATTAGENT: Class " + s + " not found");
+         for_agent.logD("BATTAGENT: Class " + s + " not found");
       }
     }
 }
@@ -168,20 +168,20 @@ Map<String,byte []> getProblemTransforms()
 
 
 /********************************************************************************/
-/*										*/
-/*	Transformation methods							*/
-/*										*/
+/*                                                                              */
+/*      Transformation methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public byte [] transform(ClassLoader ldr,String name,Class<?> cls,
-			    ProtectionDomain dom,byte [] buf)
+                            ProtectionDomain dom,byte [] buf)
 {
    if (do_debug) {
       for_agent.logD("BATTAGENT: CHECK " + name + " " + Thread.currentThread().getName() + " " + cls);
       if (name.contains("SesameExecRunner$MasterThread")) {
-	 Thread.dumpStack();
-	 // TODO: Determine why this trys to load the class from within the class
-	 return null;
+         Thread.dumpStack();
+         // TODO: Determine why this trys to load the class from within the class
+         return null;
        }
     }
 
@@ -192,10 +192,10 @@ Map<String,byte []> getProblemTransforms()
 
    if (user_classes == null) {
       if (isBattClass(name) || isSystemClass(name)) {
-	 if (do_debug) {
-	    for_agent.logD("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
-	  }
-	 return null;
+         if (do_debug) {
+            for_agent.logD("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
+          }
+         return null;
        }
     }
    else {
@@ -203,9 +203,9 @@ Map<String,byte []> getProblemTransforms()
       String name1 = name;
       if (idx > 0) name1 = name.substring(0,idx);
       if (!user_classes.contains(name) && !user_classes.contains(name1)) {
-	 if (isBattClass(name) || isSystemClass(name)) return null;
-	 for_agent.logD("BATTAGENT: Skip user class " + name);
-	 return null;
+         if (isBattClass(name) || isSystemClass(name)) return null;
+         for_agent.logD("BATTAGENT: Skip user class " + name);
+         return null;
       }
    }
    
@@ -256,10 +256,10 @@ private byte [] instrument(String name,byte [] buf)
       String n1 = name + ".class";
       File f1 = new File(f,n1);
       try (FileOutputStream ots = new FileOutputStream(f1)) {
-	 ots.write(rsltcode); 
+         ots.write(rsltcode); 
       }
       catch (IOException e) {
-	 for_agent.logD("BATTAGENT: Problem writing class file: " + e);
+         for_agent.logD("BATTAGENT: Problem writing class file: " + e);
       }
    }
    
@@ -297,9 +297,9 @@ private boolean isSystemClass(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Transformer								*/
-/*										*/
+/*                                                                              */
+/*      Transformer                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class BattTransformer extends ClassVisitor {
@@ -335,16 +335,16 @@ private class BattTransformer extends ClassVisitor {
     }
    
    @Override public MethodVisitor visitMethod(int acc,String name,String desc,String sgn,
-						 String [] exc) {
+                                                 String [] exc) {
       method_id = for_agent.getMethodId(class_name,name,desc);
 
       MethodVisitor mv = super.visitMethod(acc,name,desc,sgn,exc);
       if (name.equals("<clinit>")) return mv;
 
       if (do_debug) {
-	 Textifier output = new Textifier();
-	 mv = new TraceMethodVisitor(mv,output);
-	 mv = new Tracer(mv,name,output);
+         Textifier output = new Textifier();
+         mv = new TraceMethodVisitor(mv,output);
+         mv = new Tracer(mv,name,output);
        }
 
       String sup = null;
@@ -358,23 +358,23 @@ private class BattTransformer extends ClassVisitor {
       return mv;
     }
 
-}	// end of inner class BattTransformer
+}       // end of inner class BattTransformer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Method visitor to add coverage calls					*/
-/*										*/
+/*                                                                              */
+/*      Method visitor to add coverage calls                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class CoverageSetup extends MethodVisitor {
 
-   private boolean	block_next;
-   private String	super_class;
-   private Set<Label>	branch_targets;
-   private int		last_line;
+   private boolean      block_next;
+   private String       super_class;
+   private Set<Label>   branch_targets;
+   private int          last_line;
 
    CoverageSetup(MethodVisitor v,String sclass) {
       super(ASM_API,v);
@@ -387,9 +387,9 @@ private class CoverageSetup extends MethodVisitor {
    @Override public void visitCode() {
       super.visitCode();
       if (super_class == null) {
-	 addCall(method_id,"handleEntry");
-	 block_next = true;
-	 checkBlock();
+         addCall(method_id,"handleEntry");
+         block_next = true;
+         checkBlock();
        }
     }
 
@@ -414,18 +414,18 @@ private class CoverageSetup extends MethodVisitor {
 
    @Override public void visitInsn(int opc) {
       switch (opc) {
-	 case Opcodes.IRETURN :
-	 case Opcodes.LRETURN :
-	 case Opcodes.FRETURN :
-	 case Opcodes.DRETURN :
-	 case Opcodes.ARETURN :
-	 case Opcodes.RETURN :
-	    addCall(method_id,"handleExit");
-	    block_next = true;
-	    break;
-	 default :
-	    checkBlock();
-	    break;
+         case Opcodes.IRETURN :
+         case Opcodes.LRETURN :
+         case Opcodes.FRETURN :
+         case Opcodes.DRETURN :
+         case Opcodes.ARETURN :
+         case Opcodes.RETURN :
+            addCall(method_id,"handleExit");
+            block_next = true;
+            break;
+         default :
+            checkBlock();
+            break;
        }
       super.visitInsn(opc);
     }
@@ -454,7 +454,7 @@ private class CoverageSetup extends MethodVisitor {
 
    @Override public void visitLineNumber(int line,Label start) {
       if (!block_next) {
-	 for_agent.noteLineNumber(line,size_eval.getMinSize(),method_id,block_id);
+         for_agent.noteLineNumber(line,size_eval.getMinSize(),method_id,block_id);
        }
       last_line = line;
       super.visitLineNumber(line,start);
@@ -514,7 +514,7 @@ private class CoverageSetup extends MethodVisitor {
       if (!block_next) return;
       int bid = for_agent.getBlockId(method_id,size_eval.getMinSize());
       if (last_line > 0) {
-	 for_agent.noteLineNumber(last_line,size_eval.getMinSize(),method_id,bid);
+         for_agent.noteLineNumber(last_line,size_eval.getMinSize(),method_id,bid);
        }
       addCall(bid,"handleBlockEntry");
       block_id = bid;
@@ -529,15 +529,15 @@ private class CoverageSetup extends MethodVisitor {
       super.visitMethodInsn(Opcodes.INVOKESTATIC,"edu/brown/cs/bubbles/batt/BattAgent",rtn,"(I)V",false);
     }
 
-}	// end of inner class CoverageSetup
+}       // end of inner class CoverageSetup
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tracer									*/
-/*										*/
+/*                                                                              */
+/*      Tracer                                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class Tracer extends MethodVisitor {
@@ -556,11 +556,11 @@ private class Tracer extends MethodVisitor {
       for_agent.logD(String.valueOf(output_printer.getText()));
     }
 
-}	// end of inner class Tracer
+}       // end of inner class Tracer
 
 
 
-}	// end of class BattInstrument
+}       // end of class BattInstrument
 
 
 

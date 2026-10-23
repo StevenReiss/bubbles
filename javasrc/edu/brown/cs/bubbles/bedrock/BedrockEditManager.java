@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockEditManager.java 					*/
-/*										*/
-/*	Handle editor-related commands for Bubbles (updated version)		*/
-/*										*/
+/*                                                                              */
+/*              BedrockEditManager.java                                         */
+/*                                                                              */
+/*      Handle editor-related commands for Bubbles (updated version)            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -121,9 +121,9 @@ class BedrockEditManager implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockPlugin our_plugin;
@@ -137,20 +137,20 @@ private int active_edits;
 private int active_waits;
 private int java_version;
 
-private static final int	QUEUE_SIZE = 1000;
-private static final int	CORE_SIZE = 1;
-private static final int	MAX_SIZE = 8;
-private static final long	KEEP_ALIVE = 1000L;
-private static final TimeUnit	KEEP_ALIVE_UNIT = TimeUnit.SECONDS;
-private static final int	DEAD_COUNT = 10;
+private static final int        QUEUE_SIZE = 1000;
+private static final int        CORE_SIZE = 1;
+private static final int        MAX_SIZE = 8;
+private static final long       KEEP_ALIVE = 1000L;
+private static final TimeUnit   KEEP_ALIVE_UNIT = TimeUnit.SECONDS;
+private static final int        DEAD_COUNT = 10;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockEditManager(BedrockPlugin bp)
@@ -182,23 +182,23 @@ BedrockEditManager(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Worker thread pool setup						*/
-/*										*/
+/*                                                                              */
+/*      Worker thread pool setup                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void start()
 {
    thread_pool = new ThreadPoolExecutor(CORE_SIZE,MAX_SIZE,KEEP_ALIVE,KEEP_ALIVE_UNIT,
-					   edit_queue);
+                                           edit_queue);
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Parameter commands							*/
-/*										*/
+/*                                                                              */
+/*      Parameter commands                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void handleParameter(String bid,String name,String value) throws BedrockException
@@ -209,10 +209,10 @@ void handleParameter(String bid,String name,String value) throws BedrockExceptio
     }
    else if (name.equals("ELIDEDELAY")) {
       try {
-	 setElideDelay(bid,Long.parseLong(value));
+         setElideDelay(bid,Long.parseLong(value));
        }
       catch (NumberFormatException e) {
-	 throw new BedrockException("Bad elide delay value: " + value);
+         throw new BedrockException("Bad elide delay value: " + value);
        }
     }
    else {
@@ -223,13 +223,13 @@ void handleParameter(String bid,String name,String value) throws BedrockExceptio
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic editing commands							*/
-/*										*/
+/*                                                                              */
+/*      Basic editing commands                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handleStartFile(String proj,String bid,String file,String id,boolean cnts,IvyXmlWriter xw)
-		throws BedrockException
+                throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
 
@@ -255,8 +255,8 @@ void handleStartFile(String proj,String bid,String file,String id,boolean cnts,I
       String s = fd.getCurrentContents();
       if (s == null) xw.emptyElement("EMPTY");
       else {
-	 byte [] data = s.getBytes();
-	 xw.bytesElement("CONTENTS",data);
+         byte [] data = s.getBytes();
+         xw.bytesElement("CONTENTS",data);
        }
     }
    else xw.emptyElement("SUCCESS");
@@ -274,8 +274,8 @@ void handleFinishFile(String proj,String bid,String file)
 
 
 void handleEdit(String proj,String sid,String file,String id,List<EditData> edits,
-		   IvyXmlWriter xw)
-	throws BedrockException
+                   IvyXmlWriter xw)
+        throws BedrockException
 {
    FileData fd = findFile(proj,file,sid);
 
@@ -291,41 +291,41 @@ void handleEdit(String proj,String sid,String file,String id,List<EditData> edit
       TextEdit te = null;
 
       if (eds.getText() != null) {
-	 // TODO: this only works for insertions, not for replace
-	 String s = eds.getText();
-	 if (!fd.getLineSeparator().equals("\n")) s = s.replace("\n",fd.getLineSeparator());
-	 BedrockPlugin.logD("EDIT REPLACE " + sid + " " + eds.getOffset() + " " +
-			       eds.getLength() + " " +
-			       s.length() + " " + fd.getLineSeparator().length());
-	 te = new ReplaceEdit(eds.getOffset(),eds.getLength(),s);
-	 fd.noteEdit(sid,eds.getOffset(),eds.getLength(),s.length());
+         // TODO: this only works for insertions, not for replace
+         String s = eds.getText();
+         if (!fd.getLineSeparator().equals("\n")) s = s.replace("\n",fd.getLineSeparator());
+         BedrockPlugin.logD("EDIT REPLACE " + sid + " " + eds.getOffset() + " " +
+                               eds.getLength() + " " +
+                               s.length() + " " + fd.getLineSeparator().length());
+         te = new ReplaceEdit(eds.getOffset(),eds.getLength(),s);
+         fd.noteEdit(sid,eds.getOffset(),eds.getLength(),s.length());
        }
       else {
-	 int delta = 0;
-	 delta = fd.getLineSeparator().length() - 1;
-	 int off = eds.getOffset();
-	 int len = eds.getLength();
+         int delta = 0;
+         delta = fd.getLineSeparator().length() - 1;
+         int off = eds.getOffset();
+         int len = eds.getLength();
 
-	 if (delta > 0) {			// handle crlf pairs being deleted
-	    String s = fd.getContents(sid);
-	    for (int i = 0; i < len; ++i) {
-	       char c = s.charAt(i+off);
-	       if (c == '\r') ++len;
-	     }
-	  }
+         if (delta > 0) {                       // handle crlf pairs being deleted
+            String s = fd.getContents(sid);
+            for (int i = 0; i < len; ++i) {
+               char c = s.charAt(i+off);
+               if (c == '\r') ++len;
+             }
+          }
 
-	 BedrockPlugin.logD("EDIT DELETE " + eds.getOffset() + " " + eds.getLength() + " " +
-			       len + " " + fd.getLineSeparator().length());
-	 te = new DeleteEdit(off,len);
-	 fd.noteEdit(sid,off,len,0);
+         BedrockPlugin.logD("EDIT DELETE " + eds.getOffset() + " " + eds.getLength() + " " +
+                               len + " " + fd.getLineSeparator().length());
+         te = new DeleteEdit(off,len);
+         fd.noteEdit(sid,off,len,0);
        }
       if (xe == null) xe = te;
       else if (!havemult) {
-	 MultiTextEdit mte = new MultiTextEdit();
-	 mte.addChild(xe);
-	 mte.addChild(te);
-	 xe = mte;
-	 havemult = true;
+         MultiTextEdit mte = new MultiTextEdit();
+         mte.addChild(xe);
+         mte.addChild(te);
+         xe = mte;
+         havemult = true;
        }
     }
 
@@ -334,13 +334,13 @@ void handleEdit(String proj,String sid,String file,String id,List<EditData> edit
    EditTask et = new EditTask(fd,sid,id);
    try {
       synchronized (thread_pool) {
-	 thread_pool.execute(et);
-	 ++active_edits;
+         thread_pool.execute(et);
+         ++active_edits;
        }
     }
    catch (RejectedExecutionException ex) {
       BedrockPlugin.logE("Edit task rejected " + ex + " " +
-			    edit_queue.size() + " " + thread_pool.getActiveCount());
+                            edit_queue.size() + " " + thread_pool.getActiveCount());
     }
 
    xw.emptyElement("SUCCESS");
@@ -365,10 +365,10 @@ void waitForEdits()
       active_waits++;
       thread_pool.notifyAll();
       while (active_edits > 0) {
-	 try {
-	    thread_pool.wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            thread_pool.wait();
+          }
+         catch (InterruptedException e) { }
        }
       --active_waits;
     }
@@ -377,13 +377,13 @@ void waitForEdits()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle code completion					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle code completion                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void handleGetCompletions(String proj,String bid,String file,int offset,IvyXmlWriter xw)
-		throws BedrockException
+                throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
 
@@ -405,20 +405,20 @@ void handleGetCompletions(String proj,String bid,String file,int offset,IvyXmlWr
 
 
 /********************************************************************************/
-/*										*/
-/*	Elision commands							*/
-/*										*/
+/*                                                                              */
+/*      Elision commands                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void elisionSetup(String proj,String bid,String file,boolean compute,
-		     Collection<Element> rgns,IvyXmlWriter xw)
-	throws BedrockException
+                     Collection<Element> rgns,IvyXmlWriter xw)
+        throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
 
    if (fd == null) {
       throw new BedrockException("Compilation unit for file " + file +
-				    " not available for elision");
+                                    " not available for elision");
     }
 
    CompilationUnit cu = fd.getAstRoot(bid);
@@ -431,18 +431,18 @@ void elisionSetup(String proj,String bid,String file,boolean compute,
       be = fd.getElider(bid);
       be.clearElideData();
       for (Element r : rgns) {
-	 double p = IvyXml.getAttrDouble(r,"PRIORITY",-1);
-	 int soff = IvyXml.getAttrInt(r,"START");
-	 int eoff = IvyXml.getAttrInt(r,"END");
-	 if (soff < 0 || eoff < 0) throw new BedrockException("Missing start or end offset for elision region");
-	 if (p >= 0) be.addElidePriority(soff,eoff,p);
-	 else be.addElideRegion(soff,eoff);
+         double p = IvyXml.getAttrDouble(r,"PRIORITY",-1);
+         int soff = IvyXml.getAttrInt(r,"START");
+         int eoff = IvyXml.getAttrInt(r,"END");
+         if (soff < 0 || eoff < 0) throw new BedrockException("Missing start or end offset for elision region");
+         if (p >= 0) be.addElidePriority(soff,eoff,p);
+         else be.addElideRegion(soff,eoff);
        }
     }
    else if (compute) {
       be = fd.checkElider(bid);
     }
-   else fd.clearElider(bid);		// no regions and no compute
+   else fd.clearElider(bid);            // no regions and no compute
 
    if (compute) {
       xw.begin("ELISION");
@@ -456,9 +456,9 @@ void elisionSetup(String proj,String bid,String file,boolean compute,
 
 
 /********************************************************************************/
-/*										*/
-/*	Remote file editing commands						*/
-/*										*/
+/*                                                                              */
+/*      Remote file editing commands                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void fileElide(byte [] bytes,IvyXmlWriter xw)
@@ -482,9 +482,9 @@ void fileElide(byte [] bytes,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Commitment commands							*/
-/*										*/
+/*                                                                              */
+/*      Commitment commands                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void handleCommit(String proj,String bid,boolean refresh,boolean save,
@@ -495,40 +495,40 @@ synchronized void handleCommit(String proj,String bid,boolean refresh,boolean sa
    if (files == null || files.size() == 0) {
       Collection<IFile> fset = null;
       try {
-	 if (proj != null) {
-	    fset = our_plugin.getProjectManager().getAllSourceFiles(proj);
-	 }
+         if (proj != null) {
+            fset = our_plugin.getProjectManager().getAllSourceFiles(proj);
+         }
       }
       catch (BedrockException e) { }
 
       if (fset != null && !fset.isEmpty()) {
-	 for (IFile f : fset) {
-	    IPath fp = f.getFullPath();
-	    String fnm = fp.toOSString();
-	    FileData fd = file_map.get(fnm);
-	    if (fd != null) {
-	       commitFile(fd,refresh,save,compile,xw);
-	     }
-	  }
+         for (IFile f : fset) {
+            IPath fp = f.getFullPath();
+            String fnm = fp.toOSString();
+            FileData fd = file_map.get(fnm);
+            if (fd != null) {
+               commitFile(fd,refresh,save,compile,xw);
+             }
+          }
        }
       else {
-	 for (FileData fd : file_map.values()) {
-	    if (refresh || !save || fd.hasChanged())
-	       commitFile(fd,refresh,save,compile,xw);
-	  }
+         for (FileData fd : file_map.values()) {
+            if (refresh || !save || fd.hasChanged())
+               commitFile(fd,refresh,save,compile,xw);
+          }
        }
     }
    else {
       for (Element e : files) {
-	 String fnm = IvyXml.getAttrString(e,"NAME");
-	 if (fnm == null) fnm = IvyXml.getText(e);
-	 FileData fd = file_map.get(fnm);
-	 if (fd != null) {
-	    boolean r = IvyXml.getAttrBool(e,"REFRESH",refresh);
-	    boolean s = IvyXml.getAttrBool(e,"SAVE",save);
-	    boolean c = IvyXml.getAttrBool(e,"COMPILE",compile);
-	    commitFile(fd,r,s,c,xw);
-	  }
+         String fnm = IvyXml.getAttrString(e,"NAME");
+         if (fnm == null) fnm = IvyXml.getText(e);
+         FileData fd = file_map.get(fnm);
+         if (fd != null) {
+            boolean r = IvyXml.getAttrBool(e,"REFRESH",refresh);
+            boolean s = IvyXml.getAttrBool(e,"SAVE",save);
+            boolean c = IvyXml.getAttrBool(e,"COMPILE",compile);
+            commitFile(fd,r,s,c,xw);
+          }
        }
     }
 
@@ -555,7 +555,7 @@ private void commitFile(FileData fd,boolean refresh,boolean save,boolean compile
     }
    try {
       fd.commit(refresh,save,compile);
-      fd.getLength();			// force setupDefaultBuffer
+      fd.getLength();                   // force setupDefaultBuffer
     }
    catch (JavaModelException e) {
       if (xw != null) xw.field("ERROR",e.toString());
@@ -570,7 +570,7 @@ synchronized void updateFiles(String proj)
    IProject ip = null;
    if (proj != null) {
       try {
-	 ip = our_plugin.getProjectManager().findProjectForFile(proj,null);
+         ip = our_plugin.getProjectManager().findProjectForFile(proj,null);
        }
       catch (BedrockException e) { }
     }
@@ -584,19 +584,19 @@ synchronized void updateFiles(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Renaming commands							*/
-/*										*/
+/*                                                                              */
+/*      Renaming commands                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 void rename(String proj,String bid,String file,int start,int end,String name,String handle,
-	       String newname,
-	       boolean keeporig, boolean getters,boolean setters, boolean dohier,
-	       boolean qual,boolean refs,boolean dosimilar,boolean textocc,
-	       boolean doedit,
-	       String filespat,IvyXmlWriter xw)
-	throws BedrockException
+               String newname,
+               boolean keeporig, boolean getters,boolean setters, boolean dohier,
+               boolean qual,boolean refs,boolean dosimilar,boolean textocc,
+               boolean doedit,
+               String filespat,IvyXmlWriter xw)
+        throws BedrockException
 // CHECKSTYLE:ON
 {
    FileData fd = file_map.get(file);
@@ -628,32 +628,32 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
    String id = null;
    switch (relt.getElementType()) {
       case IJavaElement.COMPILATION_UNIT :
-	 id = IJavaRefactorings.RENAME_COMPILATION_UNIT;
-	 break;
+         id = IJavaRefactorings.RENAME_COMPILATION_UNIT;
+         break;
       case IJavaElement.FIELD :
-	 IField ifld = (IField) relt;
-	 try {
-	    if (ifld.isEnumConstant()) id = IJavaRefactorings.RENAME_ENUM_CONSTANT;
-	    else id = IJavaRefactorings.RENAME_FIELD;
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IField ifld = (IField) relt;
+         try {
+            if (ifld.isEnumConstant()) id = IJavaRefactorings.RENAME_ENUM_CONSTANT;
+            else id = IJavaRefactorings.RENAME_FIELD;
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
       case IJavaElement.PACKAGE_FRAGMENT :
-	 id = IJavaRefactorings.RENAME_PACKAGE;
-	 break;
+         id = IJavaRefactorings.RENAME_PACKAGE;
+         break;
       case IJavaElement.LOCAL_VARIABLE :
-	 id = IJavaRefactorings.RENAME_LOCAL_VARIABLE;
-	 break;
+         id = IJavaRefactorings.RENAME_LOCAL_VARIABLE;
+         break;
       case IJavaElement.TYPE :
-	 id = IJavaRefactorings.RENAME_TYPE;
-	 break;
+         id = IJavaRefactorings.RENAME_TYPE;
+         break;
       case IJavaElement.TYPE_PARAMETER :
-	 id = IJavaRefactorings.RENAME_TYPE_PARAMETER;
-	 break;
+         id = IJavaRefactorings.RENAME_TYPE_PARAMETER;
+         break;
       case IJavaElement.METHOD :
-	 id = IJavaRefactorings.RENAME_METHOD;
-	 break;
+         id = IJavaRefactorings.RENAME_METHOD;
+         break;
       case IJavaElement.ANNOTATION :
       case IJavaElement.CLASS_FILE :
       case IJavaElement.IMPORT_CONTAINER :
@@ -662,7 +662,7 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
       case IJavaElement.JAVA_MODEL :
       case IJavaElement.JAVA_PROJECT :
       case IJavaElement.PACKAGE_DECLARATION :
-	 break;
+         break;
     }
    if (id == null) throw new BedrockException("Invalid element type to rename");
 
@@ -705,34 +705,34 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
    try {
       Refactoring refactor = renamer.createRefactoring(sts);
       if (refactor == null) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CREATE");
-	 xw.textElement("RENAMER",renamer.toString());
-	 xw.textElement("REFACTOR",renamer.toString());
-	 xw.textElement("STATUS",sts.toString());
-	 xw.end("FAILURE");
-	 return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CREATE");
+         xw.textElement("RENAMER",renamer.toString());
+         xw.textElement("REFACTOR",renamer.toString());
+         xw.textElement("STATUS",sts.toString());
+         xw.end("FAILURE");
+         return;
        }
 
       refactor.setValidationContext(null);
 
       // this seems to reset files from disk (mutliple times)
       try {
-	 sts = refactor.checkAllConditions(new NullProgressMonitor());
+         sts = refactor.checkAllConditions(new NullProgressMonitor());
        }
       catch (Throwable e) {
-	 BedrockPlugin.logE("Problem with refactoring",e);
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CHECK");
-	 xw.end("FAILURE");
-	 return;
+         BedrockPlugin.logE("Problem with refactoring",e);
+         xw.begin("FAILURE");
+         xw.field("TYPE","CHECK");
+         xw.end("FAILURE");
+         return;
        }
       if (!sts.isOK()) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CHECK");
-	 BedrockUtil.outputStatus(sts,xw);
-	 xw.end("FAILURE");
-	 if (sts.hasFatalError()) return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CHECK");
+         BedrockUtil.outputStatus(sts,xw);
+         xw.end("FAILURE");
+         if (sts.hasFatalError()) return;
        }
       BedrockPlugin.logD("RENAME: Refactoring checked");
 
@@ -740,12 +740,12 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
       BedrockPlugin.logD("RENAME: Refactoring change created");
 
       if (doedit && chng != null) {
-	 chng.perform(new NullProgressMonitor());
+         chng.perform(new NullProgressMonitor());
        }
       else if (chng != null) {
-	 xw.begin("EDITS");
-	 BedrockUtil.outputChange(chng,xw);
-	 xw.end("EDITS");
+         xw.begin("EDITS");
+         BedrockUtil.outputChange(chng,xw);
+         xw.end("EDITS");
        }
     }
    catch (CoreException e) {
@@ -758,7 +758,7 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
 
 
 void renameResource(String proj,String bid,String file,String newname,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    FileData fd = file_map.get(file);
    ICompilationUnit icu;
@@ -778,9 +778,9 @@ void renameResource(String proj,String bid,String file,String newname,IvyXmlWrit
 
 
 /********************************************************************************/
-/*										*/
-/*	Move refactoring commands						*/
-/*										*/
+/*                                                                              */
+/*      Move refactoring commands                                               */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
@@ -788,7 +788,7 @@ void moveElement(String proj,String bid,String what,
       String file,int start,int end,String name,String handle,
       String target,boolean qual,boolean refs,boolean doedit,
       IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 // CHECKSTYLE:ON
 {
    FileData fd = findFile(proj,file,null);
@@ -801,17 +801,17 @@ void moveElement(String proj,String bid,String what,
       ICompilationUnit icu = fd.getEditableUnit(bid);
       IJavaElement [] elts;
       try {
-	 elts = icu.codeSelect(start,end-start);
+         elts = icu.codeSelect(start,end-start);
        }
       catch (JavaModelException e) {
-	 throw new BedrockException("Bad location: " + e,e);
+         throw new BedrockException("Bad location: " + e,e);
        }
 
       for (IJavaElement ije : elts) {
-	 if (handle != null && !handle.equals(ije.getHandleIdentifier())) continue;
-	 if (name != null && !name.equals(ije.getElementName())) continue;
-	 relt = ije;
-	 break;
+         if (handle != null && !handle.equals(ije.getHandleIdentifier())) continue;
+         if (name != null && !name.equals(ije.getElementName())) continue;
+         relt = ije;
+         break;
        }
     }
    if (relt == null) throw new BedrockException("Item to rename not found");
@@ -825,14 +825,14 @@ void moveElement(String proj,String bid,String what,
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
       case IJavaElement.PACKAGE_FRAGMENT :
       case IJavaElement.TYPE :
-	 rfc = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
-	 tgt = our_plugin.getProjectManager().findPackageFragment(proj,target);
-	 break;
+         rfc = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
+         tgt = our_plugin.getProjectManager().findPackageFragment(proj,target);
+         break;
       case IJavaElement.METHOD :
-	 rfc = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE_METHOD);
-	 break;
+         rfc = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE_METHOD);
+         break;
       default :
-	 throw new BedrockException("Invalid element type to rename");
+         throw new BedrockException("Invalid element type to rename");
     }
 
    if (rfc == null) {
@@ -855,11 +855,11 @@ void moveElement(String proj,String bid,String what,
       md.setMoveResources(ifls,iflds,icus);
       sts = md.validateDescriptor();
       if (!sts.isOK()) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","VALIDATE");
-	 BedrockUtil.outputStatus(sts,xw);
-	 xw.end("FAILURE");
-	 return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","VALIDATE");
+         BedrockUtil.outputStatus(sts,xw);
+         xw.end("FAILURE");
+         return;
        }
       }
    else if (rfd instanceof MoveMethodDescriptor) {
@@ -870,34 +870,34 @@ void moveElement(String proj,String bid,String what,
    try {
       Refactoring refactor = rfd.createRefactoring(sts);
       if (refactor == null) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CREATE");
-	 if (sts != null) xw.textElement("STATUS",sts.toString());
-	 xw.end("FAILURE");
-	 return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CREATE");
+         if (sts != null) xw.textElement("STATUS",sts.toString());
+         xw.end("FAILURE");
+         return;
       }
 
       refactor.setValidationContext(null);
 
       sts = refactor.checkAllConditions(new NullProgressMonitor());
       if (!sts.isOK()) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CHECK");
-	 BedrockUtil.outputStatus(sts,xw);
-	 xw.end("FAILURE");
-	 if (sts.hasFatalError()) return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CHECK");
+         BedrockUtil.outputStatus(sts,xw);
+         xw.end("FAILURE");
+         if (sts.hasFatalError()) return;
        }
 
       Change chng = refactor.createChange(new NullProgressMonitor());
       BedrockPlugin.logD("RENAME: Refactoring change created");
 
       if (doedit && chng != null) {
-	 chng.perform(new NullProgressMonitor());
+         chng.perform(new NullProgressMonitor());
       }
       else if (chng != null) {
-	 xw.begin("EDITS");
-	 BedrockUtil.outputChange(chng,xw);
-	 xw.end("EDITS");
+         xw.begin("EDITS");
+         BedrockUtil.outputChange(chng,xw);
+         xw.end("EDITS");
       }
    }
    catch (CoreException e) {
@@ -908,15 +908,15 @@ void moveElement(String proj,String bid,String what,
 
 
 /********************************************************************************/
-/*										*/
-/*	Method extraction commands						*/
-/*										*/
+/*                                                                              */
+/*      Method extraction commands                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void extractMethod(String proj,String bid,String file,int start,int end,String newname,
-		      boolean replacedups,boolean cmmts,boolean exceptions,
-		      IvyXmlWriter xw)
-	throws BedrockException
+                      boolean replacedups,boolean cmmts,boolean exceptions,
+                      IvyXmlWriter xw)
+        throws BedrockException
 {
    FileData fd = file_map.get(file);
    ICompilationUnit icu = fd.getEditableUnit(bid);
@@ -934,7 +934,7 @@ void extractMethod(String proj,String bid,String file,int start,int end,String n
 
    RefactoringContribution rc1 = RefactoringCore.getRefactoringContribution(id);
    RefactoringDescriptor rd1 = rc1.createDescriptor(id,proj,"Bedrock extract method",
-						       null,rargs,RefactoringDescriptor.NONE);
+                                                       null,rargs,RefactoringDescriptor.NONE);
    ExtractMethodDescriptor emd = (ExtractMethodDescriptor) rd1;
 
    RefactoringStatus sts = emd.validateDescriptor();
@@ -950,11 +950,11 @@ void extractMethod(String proj,String bid,String file,int start,int end,String n
 
       sts = refactor.checkAllConditions(new NullProgressMonitor());
       if (!sts.isOK()) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CHECK");
-	 BedrockUtil.outputStatus(sts,xw);
-	 xw.end("FAILURE");
-	 if (sts.hasFatalError()) return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CHECK");
+         BedrockUtil.outputStatus(sts,xw);
+         xw.end("FAILURE");
+         if (sts.hasFatalError()) return;
        }
 
       Change chng = refactor.createChange(new NullProgressMonitor());
@@ -971,14 +971,14 @@ void extractMethod(String proj,String bid,String file,int start,int end,String n
 
 
 /********************************************************************************/
-/*										*/
-/*	Method extraction commands						*/
-/*										*/
+/*                                                                              */
+/*      Method extraction commands                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void executeRefactoring(String proj,String bid,String file,String id,Element argset,
-		      IvyXmlWriter xw)
-	throws BedrockException
+                      IvyXmlWriter xw)
+        throws BedrockException
 {
    FileData fd = file_map.get(file);
    ICompilationUnit icu = fd.getEditableUnit(bid);
@@ -992,7 +992,7 @@ void executeRefactoring(String proj,String bid,String file,String id,Element arg
 
    RefactoringContribution rc1 = RefactoringCore.getRefactoringContribution(xid);
    RefactoringDescriptor rd1 = rc1.createDescriptor(xid,proj,"Bedrock refactoring: " + id,
-						       null,rargs,RefactoringDescriptor.NONE);
+                                                       null,rargs,RefactoringDescriptor.NONE);
    JavaRefactoringDescriptor jrd = (JavaRefactoringDescriptor) rd1;
    RefactoringStatus sts = jrd.validateDescriptor();
    if (!sts.isOK()) {
@@ -1007,11 +1007,11 @@ void executeRefactoring(String proj,String bid,String file,String id,Element arg
 
       sts = refactor.checkAllConditions(new NullProgressMonitor());
       if (!sts.isOK()) {
-	 xw.begin("FAILURE");
-	 xw.field("TYPE","CHECK");
-	 BedrockUtil.outputStatus(sts,xw);
-	 xw.end("FAILURE");
-	 if (sts.hasFatalError()) return;
+         xw.begin("FAILURE");
+         xw.field("TYPE","CHECK");
+         BedrockUtil.outputStatus(sts,xw);
+         xw.end("FAILURE");
+         if (sts.hasFatalError()) return;
        }
 
       Change chng = refactor.createChange(new NullProgressMonitor());
@@ -1054,18 +1054,18 @@ private Map<String,String> getArguments(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Formatting commands							*/
-/*										*/
+/*                                                                              */
+/*      Formatting commands                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void formatCode(String proj,String bid,String file,int spos,int epos,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
 
    if (fd == null) throw new BedrockException("Compilation unit for file " + file +
-						 " not available for formatting");
+                                                 " not available for formatting");
 
    ICompilationUnit icu = fd.getEditableUnit(bid);
    String cnts = null;
@@ -1107,52 +1107,52 @@ void formatCode(String proj,String bid,String file,int spos,int epos,IvyXmlWrite
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle FIX IMPORTS command						*/
-/*										*/
+/*                                                                              */
+/*      Handle FIX IMPORTS command                                              */
+/*                                                                              */
 /********************************************************************************/
 
 public void handleFixImports(String proj,String bid,String file,int demand,int staticdemand,
       String order,String add,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
 
    if (fd == null) throw new BedrockException("Compilation unit for file " + file +
-	 " not available for import fixup");
+         " not available for import fixup");
 
    CompilationUnit cu = fd.getDefaultRoot(bid);
 
    try {
       IJavaProject ijp = null;
       if (proj != null) {
-	 IProject ip = our_plugin.getProjectManager().findProject(proj);
-	 ijp = JavaCore.create(ip);
+         IProject ip = our_plugin.getProjectManager().findProject(proj);
+         ijp = JavaCore.create(ip);
        }
       if (order == null) {
-	 order = PreferenceConstants.getPreference("org.eclipse.jdt.ui.importorder",ijp);
+         order = PreferenceConstants.getPreference("org.eclipse.jdt.ui.importorder",ijp);
        }
       if (demand <= 0) {
-	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
+         String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
                ijp);
-	 if (s != null) {
-	    try {
-	       demand = Integer.parseInt(s);
-	     }
-	    catch (NumberFormatException e) { }
-	  }
-	 if (demand <= 0) demand = 99;
+         if (s != null) {
+            try {
+               demand = Integer.parseInt(s);
+             }
+            catch (NumberFormatException e) { }
+          }
+         if (demand <= 0) demand = 99;
        }
       if (staticdemand <= 0) {
-	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
+         String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
                ijp);
-	 if (s != null) {
-	    try {
-	       staticdemand = Integer.parseInt(s);
-	     }
-	    catch (NumberFormatException e) { }
-	  }
-	 if (staticdemand <= 0) staticdemand = demand;
+         if (s != null) {
+            try {
+               staticdemand = Integer.parseInt(s);
+             }
+            catch (NumberFormatException e) { }
+          }
+         if (staticdemand <= 0) staticdemand = demand;
        }
     }
    catch (Throwable t) {
@@ -1168,29 +1168,29 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
       if (demand > 0) imp.setOnDemandImportThreshold(demand);
       if (staticdemand > 0) imp.setStaticOnDemandImportThreshold(staticdemand);
       if (order != null && !order.isEmpty()) {
-	 String [] ord = order.split("[;,]");
-	 imp.setImportOrder(ord);
+         String [] ord = order.split("[;,]");
+         imp.setImportOrder(ord);
        }
       if (add != null) {
-	 if (add.startsWith("static ")) {
-	    int idx = add.indexOf(" ");
-	    add = add.substring(idx+1).trim();
-	    idx = add.lastIndexOf(".");
-	    String cls = add.substring(0,idx);
-	    String itm = add.substring(idx+1);
-	    imp.addStaticImport(cls,itm,false);
-	  }
-	 else {
-	    imp.addImport(add);
-	  }
+         if (add.startsWith("static ")) {
+            int idx = add.indexOf(" ");
+            add = add.substring(idx+1).trim();
+            idx = add.lastIndexOf(".");
+            String cls = add.substring(0,idx);
+            String itm = add.substring(idx+1);
+            imp.addStaticImport(cls,itm,false);
+          }
+         else {
+            imp.addImport(add);
+          }
        }
       else {
          BedrockFixImports bfi = new BedrockFixImports();
          Set<ITypeBinding> imports = bfi.findImports(cu);
          for (ITypeBinding tb : imports) {
-	    BedrockPlugin.logD("Add type to importrewrite: " + tb.getQualifiedName());
-	    imp.addImport(tb);
-	  }
+            BedrockPlugin.logD("Add type to importrewrite: " + tb.getQualifiedName());
+            imp.addImport(tb);
+          }
          Set<IBinding> statics = bfi.findStaticImports(cu);
          for (IBinding sb : statics) {
             BedrockPlugin.logD("Add static to importrewrite: " + sb.getName());
@@ -1200,7 +1200,7 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
        }
       TextEdit te = imp.rewriteImports(null);
       if (te != null) {
-	 BedrockUtil.outputTextEdit(te,xw);
+         BedrockUtil.outputTextEdit(te,xw);
        }
     }
    catch (Exception e) {
@@ -1211,9 +1211,9 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle GETEXPECTEDTYPE command						*/
-/*										*/
+/*                                                                              */
+/*      Handle GETEXPECTEDTYPE command                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void handleGetExpectedType(String proj,String bid,String file,int line,IvyXmlWriter xw)
@@ -1243,22 +1243,22 @@ void handleGetExpectedType(String proj,String bid,String file,int line,IvyXmlWri
 
 
 /********************************************************************************/
-/*										*/
-/*	Text Region extraction commands 					*/
-/*										*/
+/*                                                                              */
+/*      Text Region extraction commands                                         */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
-		       boolean statics,
-		       boolean compunit,
-		       boolean imports,
-		       boolean pkgfg,
-		       boolean topdecls,
-		       boolean fields,
-		       boolean all,
-		       IvyXmlWriter xw)
-	throws BedrockException
+                       boolean statics,
+                       boolean compunit,
+                       boolean imports,
+                       boolean pkgfg,
+                       boolean topdecls,
+                       boolean fields,
+                       boolean all,
+                       IvyXmlWriter xw)
+        throws BedrockException
 // CHECKSTYLE:ON
 {
    if (file == null) {
@@ -1282,8 +1282,8 @@ void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
       xw.field("START",0);
       int ln = fd.getLength();
       if (ln < 0) {
-	 File f = new File(file);
-	 ln = (int) f.length();
+         File f = new File(file);
+         ln = (int) f.length();
        }
       xw.field("END",ln);
       xw.end("RANGE");
@@ -1296,42 +1296,42 @@ void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
       int len = atd.getLength();
       int epos = -1;
       for (Object o : atd.bodyDeclarations()) {
-	 ASTNode an = (ASTNode) o;
-	 int apos = cu.getExtendedStartPosition(an);
-	 if (epos < 0 || epos >= apos) epos = apos-1;
+         ASTNode an = (ASTNode) o;
+         int apos = cu.getExtendedStartPosition(an);
+         if (epos < 0 || epos >= apos) epos = apos-1;
        }
-      if (epos < 0) {		     // no body declarations
-	 xw.begin("RANGE");
-	 xw.field("PATH",file);
-	 xw.field("START",start);
-	 xw.field("END",xpos+xlen);
-	 xw.end("RANGE");
+      if (epos < 0) {                // no body declarations
+         xw.begin("RANGE");
+         xw.field("PATH",file);
+         xw.field("START",start);
+         xw.field("END",xpos+xlen);
+         xw.end("RANGE");
        }
       else {
-	 xw.begin("RANGE");
-	 xw.field("PATH",file);
-	 xw.field("START",start);
-	 xw.field("END",epos);
-	 xw.end("RANGE");
-	 xw.begin("RANGE");
-	 xw.field("PATH",file);
-	 xw.field("START",spos+len-1);
-	 xw.field("END",xpos+xlen);
-	 xw.end("RANGE");
+         xw.begin("RANGE");
+         xw.field("PATH",file);
+         xw.field("START",start);
+         xw.field("END",epos);
+         xw.end("RANGE");
+         xw.begin("RANGE");
+         xw.field("PATH",file);
+         xw.field("START",spos+len-1);
+         xw.field("END",xpos+xlen);
+         xw.end("RANGE");
        }
     }
 
    if (pkgfg) {
       PackageDeclaration pkg = cu.getPackage();
       if (pkg != null) {
-	 outputRange(cu,pkg,file,xw);
+         outputRange(cu,pkg,file,xw);
        }
     }
 
    if (imports) {
       for (Iterator<?> it = cu.imports().iterator(); it.hasNext(); ) {
-	 ImportDeclaration id = (ImportDeclaration) it.next();
-	 outputRange(cu,id,file,xw);
+         ImportDeclaration id = (ImportDeclaration) it.next();
+         outputRange(cu,id,file,xw);
        }
     }
 
@@ -1340,113 +1340,113 @@ void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
       int len = atd.getLength();
       int epos = -1;
       for (Object o : atd.bodyDeclarations()) {
-	 ASTNode an = (ASTNode) o;
-	 int apos = cu.getExtendedStartPosition(an);
-	 if (epos < 0 || epos >= apos) epos = apos-1;
+         ASTNode an = (ASTNode) o;
+         int apos = cu.getExtendedStartPosition(an);
+         if (epos < 0 || epos >= apos) epos = apos-1;
        }
-      if (epos < 0) {		     // no body declarations
-	 xw.begin("RANGE");
-	 xw.field("PATH",file);
-	 xw.field("START",spos);
-	 xw.field("END",spos+len);
-	 xw.end("RANGE");
+      if (epos < 0) {                // no body declarations
+         xw.begin("RANGE");
+         xw.field("PATH",file);
+         xw.field("START",spos);
+         xw.field("END",spos+len);
+         xw.end("RANGE");
        }
       else {
-	 xw.begin("RANGE");
-	 xw.field("PATH",file);
-	 xw.field("START",spos);
-	 xw.field("END",epos);
-	 xw.end("RANGE");
+         xw.begin("RANGE");
+         xw.field("PATH",file);
+         xw.field("START",spos);
+         xw.field("END",epos);
+         xw.end("RANGE");
        }
     }
 
    if ((statics || all) && atd != null) {
       for (Object o : atd.bodyDeclarations()) {
-	 ASTNode an = (ASTNode) o;
-	 if (an.getNodeType() == ASTNode.INITIALIZER) {
-	    outputRange(cu,an,file,xw);
-	  }
+         ASTNode an = (ASTNode) o;
+         if (an.getNodeType() == ASTNode.INITIALIZER) {
+            outputRange(cu,an,file,xw);
+          }
        }
     }
 
    if (fields && atd != null) {
       for (Object o : atd.bodyDeclarations()) {
-	 ASTNode an = (ASTNode) o;
-	 switch (an.getNodeType()) {
-	    case ASTNode.FIELD_DECLARATION :
-	       outputRange(cu,an,file,xw);
-	       break;
-	    case ASTNode.ENUM_CONSTANT_DECLARATION :
-	       outputRange(cu,an,file,xw);
-	       break;
-	  }
+         ASTNode an = (ASTNode) o;
+         switch (an.getNodeType()) {
+            case ASTNode.FIELD_DECLARATION :
+               outputRange(cu,an,file,xw);
+               break;
+            case ASTNode.ENUM_CONSTANT_DECLARATION :
+               outputRange(cu,an,file,xw);
+               break;
+          }
        }
       if (atd instanceof EnumDeclaration) {
-	 for (Object o : ((EnumDeclaration) atd).enumConstants()) {
-	    ASTNode an = (ASTNode) o;
-	    switch (an.getNodeType()) {
-	       case ASTNode.FIELD_DECLARATION :
-		  outputRange(cu,an,file,xw);
-		  break;
-	       case ASTNode.ENUM_CONSTANT_DECLARATION :
-		  outputRange(cu,an,file,xw);
-		  break;
-	    }
-	 }
+         for (Object o : ((EnumDeclaration) atd).enumConstants()) {
+            ASTNode an = (ASTNode) o;
+            switch (an.getNodeType()) {
+               case ASTNode.FIELD_DECLARATION :
+                  outputRange(cu,an,file,xw);
+                  break;
+               case ASTNode.ENUM_CONSTANT_DECLARATION :
+                  outputRange(cu,an,file,xw);
+                  break;
+            }
+         }
       }
     }
 
    if (all && atd != null) {
       for (Object o : atd.bodyDeclarations()) {
-	 ASTNode an = (ASTNode) o;
-	 IJavaElement elt = null;
-	 switch (an.getNodeType()) {
-	    case ASTNode.ANNOTATION_TYPE_DECLARATION :
-	    case ASTNode.ENUM_DECLARATION :
-	    case ASTNode.TYPE_DECLARATION :
-	       AbstractTypeDeclaration atdecl = (AbstractTypeDeclaration) an;
-	       ITypeBinding atbnd = atdecl.resolveBinding();
-	       if (atbnd != null) elt = atbnd.getJavaElement();
-	       break;
-	    case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION :
-	       break;
-	    case ASTNode.ENUM_CONSTANT_DECLARATION :
-	       EnumConstantDeclaration ecdecl = (EnumConstantDeclaration) an;
-	       IVariableBinding ecbnd = ecdecl.resolveVariable();
-	       if (ecbnd != null) elt = ecbnd.getJavaElement();
-	       break;
-	    case ASTNode.FIELD_DECLARATION :
-	       FieldDeclaration fdecl = (FieldDeclaration) an;
-	       for (Iterator<?> it = fdecl.fragments().iterator(); it.hasNext(); ) {
-		  VariableDeclarationFragment vdf = (VariableDeclarationFragment) it.next();
-		  IVariableBinding vbnd = vdf.resolveBinding();
-		  if (vbnd != null) {
-		     IJavaElement velt = vbnd.getJavaElement();
-		     if (velt != null) BedrockUtil.outputJavaElement(velt,xw);
-		   }
-		}
-	       break;
-	    case ASTNode.INITIALIZER :
-	       break;
-	    case ASTNode.METHOD_DECLARATION :
-	       MethodDeclaration mdecl = (MethodDeclaration) an;
-	       IMethodBinding mbnd = mdecl.resolveBinding();
-	       if (mbnd != null) elt = mbnd.getJavaElement();
-	       break;
-	    default :
-	       break;
-	 }
-	 if (elt != null) BedrockUtil.outputJavaElement(elt,false,xw);
+         ASTNode an = (ASTNode) o;
+         IJavaElement elt = null;
+         switch (an.getNodeType()) {
+            case ASTNode.ANNOTATION_TYPE_DECLARATION :
+            case ASTNode.ENUM_DECLARATION :
+            case ASTNode.TYPE_DECLARATION :
+               AbstractTypeDeclaration atdecl = (AbstractTypeDeclaration) an;
+               ITypeBinding atbnd = atdecl.resolveBinding();
+               if (atbnd != null) elt = atbnd.getJavaElement();
+               break;
+            case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION :
+               break;
+            case ASTNode.ENUM_CONSTANT_DECLARATION :
+               EnumConstantDeclaration ecdecl = (EnumConstantDeclaration) an;
+               IVariableBinding ecbnd = ecdecl.resolveVariable();
+               if (ecbnd != null) elt = ecbnd.getJavaElement();
+               break;
+            case ASTNode.FIELD_DECLARATION :
+               FieldDeclaration fdecl = (FieldDeclaration) an;
+               for (Iterator<?> it = fdecl.fragments().iterator(); it.hasNext(); ) {
+                  VariableDeclarationFragment vdf = (VariableDeclarationFragment) it.next();
+                  IVariableBinding vbnd = vdf.resolveBinding();
+                  if (vbnd != null) {
+                     IJavaElement velt = vbnd.getJavaElement();
+                     if (velt != null) BedrockUtil.outputJavaElement(velt,xw);
+                   }
+                }
+               break;
+            case ASTNode.INITIALIZER :
+               break;
+            case ASTNode.METHOD_DECLARATION :
+               MethodDeclaration mdecl = (MethodDeclaration) an;
+               IMethodBinding mbnd = mdecl.resolveBinding();
+               if (mbnd != null) elt = mbnd.getJavaElement();
+               break;
+            default :
+               break;
+         }
+         if (elt != null) BedrockUtil.outputJavaElement(elt,false,xw);
       }
     }
 
    if (all && topdecls) {
       for (Object o : cu.types()) {
-	 AbstractTypeDeclaration td = (AbstractTypeDeclaration) o;
-	 IJavaElement elt = null;
-	 ITypeBinding atbnd = td.resolveBinding();
-	 if (atbnd != null) elt = atbnd.getJavaElement();
-	 if (elt != null) BedrockUtil.outputJavaElement(elt,false,xw);
+         AbstractTypeDeclaration td = (AbstractTypeDeclaration) o;
+         IJavaElement elt = null;
+         ITypeBinding atbnd = td.resolveBinding();
+         if (atbnd != null) elt = atbnd.getJavaElement();
+         if (elt != null) BedrockUtil.outputJavaElement(elt,false,xw);
        }
     }
 }
@@ -1474,13 +1474,13 @@ private AbstractTypeDeclaration findTypeDecl(String cls,List<?> typs)
       if (!(typs.get(i) instanceof AbstractTypeDeclaration)) continue;
       AbstractTypeDeclaration d = (AbstractTypeDeclaration) typs.get(i);
       if (cls != null) {
-	 ITypeBinding tb = d.resolveBinding();
-	 if (tb != null && !cls.equals(tb.getQualifiedName())) {
-	    if (cls.startsWith(tb.getQualifiedName() + ".")) {
-	       atd = findTypeDecl(cls,d.bodyDeclarations());
-	     }
-	    continue;
-	  }
+         ITypeBinding tb = d.resolveBinding();
+         if (tb != null && !cls.equals(tb.getQualifiedName())) {
+            if (cls.startsWith(tb.getQualifiedName() + ".")) {
+               atd = findTypeDecl(cls,d.bodyDeclarations());
+             }
+            continue;
+          }
        }
       atd = d;
     }
@@ -1512,14 +1512,14 @@ private String baseClassName(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private buffer commands 						*/
-/*										*/
+/*                                                                              */
+/*      Private buffer commands                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 String createPrivateBuffer(String proj,String bid,String pid,String file,String frompid,
       IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
    if (fd == null) throw new BedrockException("File not found");
@@ -1528,16 +1528,16 @@ String createPrivateBuffer(String proj,String bid,String pid,String file,String 
 
    if (pid == null) {
       for (int i = 0; i < 100; ++i) {
-	 int v = (int) (Math.random() * 10000000);
-	 pid = "PID_" + v;
-	 pbd = fd.createPrivateBuffer(pid,frompid);
-	 if (pbd != null) break;
+         int v = (int) (Math.random() * 10000000);
+         pid = "PID_" + v;
+         pbd = fd.createPrivateBuffer(pid,frompid);
+         if (pbd != null) break;
        }
     }
    else {
       pbd = fd.createPrivateBuffer(pid,frompid);
       if (pbd == null)
-	 throw new BedrockException("Buffer id " + pid + " already used");
+         throw new BedrockException("Buffer id " + pid + " already used");
     }
 
    // do this now in case it fails
@@ -1556,12 +1556,12 @@ String createPrivateBuffer(String proj,String bid,String pid,String file,String 
    OpenTask et = new OpenTask(fd,pid);
    try {
       synchronized (thread_pool) {
-	 thread_pool.execute(et);
+         thread_pool.execute(et);
        }
     }
    catch (RejectedExecutionException ex) {
       BedrockPlugin.logE("Open task rejected " + ex + " " +
-			    edit_queue.size() + " " + thread_pool.getActiveCount());
+                            edit_queue.size() + " " + thread_pool.getActiveCount());
     }
 
    xw.text(pid);
@@ -1581,13 +1581,13 @@ void removePrivateBuffer(String proj,String bid,String file) throws BedrockExcep
 
 
 /********************************************************************************/
-/*										*/
-/*	Delete commands 							*/
-/*										*/
+/*                                                                              */
+/*      Delete commands                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void handleDelete(String proj,String what,String path)
-	throws BedrockException
+        throws BedrockException
 {
    IResource rs = null;
    FileData fd = null;
@@ -1602,7 +1602,7 @@ void handleDelete(String proj,String what,String path)
    else if (what.equals("FILE")) {
       fd = file_map.get(path);
       if (fd != null) {
-	 rs = fd.getSearchUnit().getResource();
+         rs = fd.getSearchUnit().getResource();
        }
       if (rs == null) throw new BedrockException("Can't find file to delete");
     }
@@ -1612,7 +1612,7 @@ void handleDelete(String proj,String what,String path)
       String file = getFileFromClass(proj,bcls);
       fd = file_map.get(file);
       try {
-	 if (ijp != null) ityp = ijp.findType(bcls);
+         if (ijp != null) ityp = ijp.findType(bcls);
        }
       catch (JavaModelException e) { }
       if (ityp == null) throw new BedrockException("Can't find class to delete");
@@ -1621,19 +1621,19 @@ void handleDelete(String proj,String what,String path)
    else if (what.equals("PACKAGE")) {
       IPackageFragmentRoot ipfr = null;
       try {
-	 for (IPackageFragmentRoot pfr : ijp.getAllPackageFragmentRoots()) {
-	    try {
-	       if (!pfr.isExternal() && !pfr.isArchive() &&
-		     pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
-		  ipfr = pfr;
-		  break;
-		}
-	     }
-	    catch (JavaModelException e) { }
-	  }
+         for (IPackageFragmentRoot pfr : ijp.getAllPackageFragmentRoots()) {
+            try {
+               if (!pfr.isExternal() && !pfr.isArchive() &&
+                     pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                  ipfr = pfr;
+                  break;
+                }
+             }
+            catch (JavaModelException e) { }
+          }
        }
       catch (JavaModelException e) {
-	 throw new BedrockException("Problem finding package root: " + e,e);
+         throw new BedrockException("Problem finding package root: " + e,e);
        }
       if (ipfr == null) throw new BedrockException("Can't find source fragment root");
       IPackageFragment ifr = ipfr.getPackageFragment(path);
@@ -1651,12 +1651,12 @@ void handleDelete(String proj,String what,String path)
    if (rs != null) {
       BedrockPlugin.logD("Delete resource " + rs);
       try {
-	 BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Deleting " + path);
-	 rs.delete(IResource.FORCE|IResource.KEEP_HISTORY|IResource.ALWAYS_DELETE_PROJECT_CONTENT,pm);
-	 pm.finish();
+         BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Deleting " + path);
+         rs.delete(IResource.FORCE|IResource.KEEP_HISTORY|IResource.ALWAYS_DELETE_PROJECT_CONTENT,pm);
+         pm.finish();
        }
       catch (CoreException e) {
-	 throw new BedrockException("Problem with delete",e);
+         throw new BedrockException("Problem with delete",e);
        }
     }
 
@@ -1715,13 +1715,13 @@ void findByLine(String proj,String bid,String file,int line,int offset,IvyXmlWri
    
 
 /********************************************************************************/
-/*										*/
-/*	Methods to update a key-based item					*/
-/*										*/
+/*                                                                              */
+/*      Methods to update a key-based item                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void findByKey(String proj,String bid,String key,String file,IvyXmlWriter xw)
-		throws BedrockException
+                throws BedrockException
 {
    FileData fd = findFile(proj,file,bid);
    if (fd == null) return;
@@ -1745,12 +1745,12 @@ private IJavaElement findElementForKey(IJavaElement elt,String key)
    if (elt instanceof IParent) {
       IParent ip = (IParent) elt;
       try {
-	 if (ip.hasChildren()) {
-	    for (IJavaElement je : ip.getChildren()) {
-	       IJavaElement re = findElementForKey(je,key);
-	       if (re != null) return re;
-	     }
-	  }
+         if (ip.hasChildren()) {
+            for (IJavaElement je : ip.getChildren()) {
+               IJavaElement re = findElementForKey(je,key);
+               if (re != null) return re;
+             }
+          }
        }
       catch (JavaModelException e) { }
     }
@@ -1761,9 +1761,9 @@ private IJavaElement findElementForKey(IJavaElement elt,String key)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get a list of active java elements				*/
-/*										*/
+/*                                                                              */
+/*      Methods to get a list of active java elements                           */
+/*                                                                              */
 /********************************************************************************/
 
 // This shouldn't be needed since edits in a window should also be made in the default
@@ -1785,39 +1785,39 @@ void getActiveElements(IJavaElement root,List<IJavaElement> rslt)
       case IJavaElement.TYPE :
       case IJavaElement.TYPE_PARAMETER :
       default :
-	 break;
+         break;
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	 IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
-	 try {
-	    if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
-	       IJavaElement [] chld = pfr.getChildren();
-	       for (IJavaElement c : chld) getActiveElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
+         try {
+            if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
+               IJavaElement [] chld = pfr.getChildren();
+               for (IJavaElement c : chld) getActiveElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.JAVA_PROJECT :
       case IJavaElement.PACKAGE_FRAGMENT :
-	 IParent par = (IParent) root;
-	 try {
-	    if (par.hasChildren()) {
-	       IJavaElement [] chld = par.getChildren();
-	       for (IJavaElement c : chld) getActiveElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IParent par = (IParent) root;
+         try {
+            if (par.hasChildren()) {
+               IJavaElement [] chld = par.getChildren();
+               for (IJavaElement c : chld) getActiveElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.COMPILATION_UNIT :
-	 ICompilationUnit cu = (ICompilationUnit) root;
-	 IProject ip = cu.getJavaProject().getProject();
-	 File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
-	 String fnm = f.getPath();
-	 FileData fd = file_map.get(fnm);
-	 if (fd == null) rslt.add(cu);
-	 else {
-	    rslt.add(fd.getSearchUnit());
-	  }
-	 break;
+         ICompilationUnit cu = (ICompilationUnit) root;
+         IProject ip = cu.getJavaProject().getProject();
+         File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
+         String fnm = f.getPath();
+         FileData fd = file_map.get(fnm);
+         if (fd == null) rslt.add(cu);
+         else {
+            rslt.add(fd.getSearchUnit());
+          }
+         break;
     }
 }
 
@@ -1840,38 +1840,38 @@ void getWorkingElements(IJavaElement root,List<ICompilationUnit> rslt)
       case IJavaElement.TYPE :
       case IJavaElement.TYPE_PARAMETER :
       default :
-	 break;
+         break;
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	 IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
-	 try {
-	    if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
-	       IJavaElement [] chld = pfr.getChildren();
-	       for (IJavaElement c : chld) getWorkingElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
+         try {
+            if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
+               IJavaElement [] chld = pfr.getChildren();
+               for (IJavaElement c : chld) getWorkingElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.JAVA_PROJECT :
       case IJavaElement.PACKAGE_FRAGMENT :
-	 IParent par = (IParent) root;
-	 try {
-	    if (par.hasChildren()) {
-	       IJavaElement [] chld = par.getChildren();
-	       for (IJavaElement c : chld) getWorkingElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IParent par = (IParent) root;
+         try {
+            if (par.hasChildren()) {
+               IJavaElement [] chld = par.getChildren();
+               for (IJavaElement c : chld) getWorkingElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.COMPILATION_UNIT :
-	 ICompilationUnit cu = (ICompilationUnit) root;
-	 IProject ip = cu.getJavaProject().getProject();
-	 File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
-	 String fnm = f.getPath();
-	 FileData fd = file_map.get(fnm);
-	 if (fd != null && fd.hasChanged()) {
-	    rslt.add(fd.getEditableUnit(null));
-	  }
-	 break;
+         ICompilationUnit cu = (ICompilationUnit) root;
+         IProject ip = cu.getJavaProject().getProject();
+         File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
+         String fnm = f.getPath();
+         FileData fd = file_map.get(fnm);
+         if (fd != null && fd.hasChanged()) {
+            rslt.add(fd.getEditableUnit(null));
+          }
+         break;
     }
 }
 
@@ -1893,48 +1893,48 @@ void getCompilationElements(IJavaElement root,List<ICompilationUnit> rslt)
       case IJavaElement.TYPE :
       case IJavaElement.TYPE_PARAMETER :
       default :
-	 break;
+         break;
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	 IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
-	 try {
-	    if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
-	       IJavaElement [] chld = pfr.getChildren();
-	       for (IJavaElement c : chld) getCompilationElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IPackageFragmentRoot pfr = (IPackageFragmentRoot) root;
+         try {
+            if (pfr.getKind() == IPackageFragmentRoot.K_SOURCE && pfr.hasChildren()) {
+               IJavaElement [] chld = pfr.getChildren();
+               for (IJavaElement c : chld) getCompilationElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.JAVA_PROJECT :
       case IJavaElement.PACKAGE_FRAGMENT :
-	 IParent par = (IParent) root;
-	 try {
-	    if (par.hasChildren()) {
-	       IJavaElement [] chld = par.getChildren();
-	       for (IJavaElement c : chld) getCompilationElements(c,rslt);
-	     }
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IParent par = (IParent) root;
+         try {
+            if (par.hasChildren()) {
+               IJavaElement [] chld = par.getChildren();
+               for (IJavaElement c : chld) getCompilationElements(c,rslt);
+             }
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.COMPILATION_UNIT :
-	 ICompilationUnit cu = (ICompilationUnit) root;
-	 IProject ip = cu.getJavaProject().getProject();
-	 File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
-	 String fnm = f.getPath();
-	 FileData fd = file_map.get(fnm);
-	 if (fd != null) {
-	    rslt.add(fd.getEditableUnit(null));
-	  }
-	 else rslt.add(cu);
-	 break;
+         ICompilationUnit cu = (ICompilationUnit) root;
+         IProject ip = cu.getJavaProject().getProject();
+         File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
+         String fnm = f.getPath();
+         FileData fd = file_map.get(fnm);
+         if (fd != null) {
+            rslt.add(fd.getEditableUnit(null));
+          }
+         else rslt.add(cu);
+         break;
     }
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get the compilation unit					*/
-/*										*/
+/*                                                                              */
+/*      Methods to get the compilation unit                                     */
+/*                                                                              */
 /********************************************************************************/
 
 ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockException
@@ -1989,13 +1989,13 @@ private String getFileFromClass(String proj,String cls) throws BedrockException
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for managing file data						*/
-/*										*/
+/*                                                                              */
+/*      Methods for managing file data                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized FileData findFile(String proj,String file,String bid)
-		throws BedrockException
+                throws BedrockException
 {
    FileData fd = file_map.get(file);
 
@@ -2005,7 +2005,7 @@ private synchronized FileData findFile(String proj,String file,String bid)
       f1 = IvyFile.getCanonical(f1);
       fd = file_map.get(f1.getPath());
       if (fd != null) {
-	 file_map.put(file,fd);
+         file_map.put(file,fd);
        }
     }
    
@@ -2017,18 +2017,18 @@ private synchronized FileData findFile(String proj,String file,String bid)
       ICompilationUnit icu = null;
       icu = our_plugin.getProjectManager().getCompilationUnit(proj,file);
       if (icu == null && proj != null) {
-	 icu = our_plugin.getProjectManager().getCompilationUnit(null,file);
-	 if (icu != null) proj = null;
+         icu = our_plugin.getProjectManager().getCompilationUnit(null,file);
+         if (icu != null) proj = null;
        }
       if (icu == null) return null;
 
       BedrockPlugin.logD("START FILE " + proj + " " + file + " " + bid + " " +
-			    icu.isWorkingCopy() + " " + icu.hasResourceChanged() + " " +
-			    icu.isOpen() + " " +
-			    icu.getOwner() + " " +
-			    System.identityHashCode(icu) + " " +
-			    System.identityHashCode(icu.getPrimary()) + " " +
-			    f1.getPath());
+                            icu.isWorkingCopy() + " " + icu.hasResourceChanged() + " " +
+                            icu.isOpen() + " " +
+                            icu.getOwner() + " " +
+                            System.identityHashCode(icu) + " " +
+                            System.identityHashCode(icu.getPrimary()) + " " +
+                            f1.getPath());
 
       icu = icu.getPrimary();
 
@@ -2037,7 +2037,7 @@ private synchronized FileData findFile(String proj,String file,String bid)
       file_map.put(f1.getPath(),fd);
     }
 
-   if (bid != null) fd.getCurrentId(bid);		// force user for this file
+   if (bid != null) fd.getCurrentId(bid);               // force user for this file
 
    return fd;
 }
@@ -2061,9 +2061,9 @@ synchronized boolean isFileOpen(String file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Background compilation and analysis task				*/
-/*										*/
+/*                                                                              */
+/*      Background compilation and analysis task                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class EditTask implements Runnable {
@@ -2080,77 +2080,77 @@ private class EditTask implements Runnable {
 
    @Override public void run() {
       try {
-	 performEdit();
+         performEdit();
        }
       finally {
-	 doneEdit();
+         doneEdit();
        }
     }
 
    private void performEdit() {
       BedrockPlugin.logD("Start perform edit " + for_id + " " + bedrock_id + " " +
-			    file_data.getCurrentId(bedrock_id));
+                            file_data.getCurrentId(bedrock_id));
       if (file_data.getCurrentId(bedrock_id) != null &&
-	     !file_data.getCurrentId(bedrock_id).equals(for_id))
-	 return;
+             !file_data.getCurrentId(bedrock_id).equals(for_id))
+         return;
 
       long delay = getElideDelay(bedrock_id);
 
       if (delay > 0) {
-	 synchronized (thread_pool) {
-	    if (active_waits == 0) {
-	       try {
-		  thread_pool.wait(delay);
-	       }
-	       catch (InterruptedException e) { }
-	     }
-	  }
+         synchronized (thread_pool) {
+            if (active_waits == 0) {
+               try {
+                  thread_pool.wait(delay);
+               }
+               catch (InterruptedException e) { }
+             }
+          }
        }
 
       CompilationUnit cu = null;
       synchronized (file_data) {
-	 if (file_data.getCurrentId(bedrock_id) != null &&
-	       !file_data.getCurrentId(bedrock_id).equals(for_id))
-	    return;
+         if (file_data.getCurrentId(bedrock_id) != null &&
+               !file_data.getCurrentId(bedrock_id).equals(for_id))
+            return;
 
-	 BedrockPlugin.logD("BUILD AST " + for_id + " " + bedrock_id);
-	 cu = file_data.getAstRoot(bedrock_id);
+         BedrockPlugin.logD("BUILD AST " + for_id + " " + bedrock_id);
+         cu = file_data.getAstRoot(bedrock_id);
        }
 
       if (cu == null && for_id.startsWith("PID_")) {
-	 IvyXmlWriter xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
-	 xw.field("FILE",file_data.getFileName());
-	 xw.field("ID",for_id);
-	 xw.field("FAILURE",true);
-	 our_plugin.finishMessage(xw);
+         IvyXmlWriter xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
+         xw.field("FILE",file_data.getFileName());
+         xw.field("ID",for_id);
+         xw.field("FAILURE",true);
+         our_plugin.finishMessage(xw);
        }
 
       if (file_data.getCurrentId(bedrock_id) != null &&
-	     !file_data.getCurrentId(bedrock_id).equals(for_id)) {
-	 BedrockPlugin.logD("Discarding AST " + file_data.getCurrentId(bedrock_id) + " " + for_id);
-	 return;
+             !file_data.getCurrentId(bedrock_id).equals(for_id)) {
+         BedrockPlugin.logD("Discarding AST " + file_data.getCurrentId(bedrock_id) + " " + for_id);
+         return;
        }
 
       if (getAutoElide(bedrock_id) && cu != null) {
-	 // System.err.println("BEDROCK: ELIDE " + for_id);
-	 BedrockElider be = file_data.checkElider(bedrock_id);
-	 if (be != null) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("ELISION",bedrock_id);
-	    xw.field("FILE",file_data.getFileName());
-	    xw.field("ID",for_id);
-	    xw.begin("ELISION");
-	    if (be.computeElision(cu,xw)) {
-	       if (file_data.getCurrentId(bedrock_id) == null ||
-		      file_data.getCurrentId(bedrock_id).equals(for_id)) {
-		  xw.end("ELISION");
-		  our_plugin.finishMessage(xw);
-		}
-	     }
-	  }
+         // System.err.println("BEDROCK: ELIDE " + for_id);
+         BedrockElider be = file_data.checkElider(bedrock_id);
+         if (be != null) {
+            IvyXmlWriter xw = our_plugin.beginMessage("ELISION",bedrock_id);
+            xw.field("FILE",file_data.getFileName());
+            xw.field("ID",for_id);
+            xw.begin("ELISION");
+            if (be.computeElision(cu,xw)) {
+               if (file_data.getCurrentId(bedrock_id) == null ||
+                      file_data.getCurrentId(bedrock_id).equals(for_id)) {
+                  xw.end("ELISION");
+                  our_plugin.finishMessage(xw);
+                }
+             }
+          }
        }
     }
 
-}	// end of innerclass EditTask
+}       // end of innerclass EditTask
 
 
 
@@ -2167,45 +2167,45 @@ private class OpenTask implements Runnable {
    @Override public void run() {
       BedrockPlugin.logD("RUNNING open task for " + bedrock_id);
       try {
-	 file_data.getAstRoot(bedrock_id);
+         file_data.getAstRoot(bedrock_id);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem running open task",t);
+         BedrockPlugin.logE("Problem running open task",t);
        }
       BedrockPlugin.logD("FINISHED open task for " + bedrock_id);
     }
 
-}	// end of inner class OpenTask
+}       // end of inner class OpenTask
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for holding data about a file					*/
-/*										*/
+/*                                                                              */
+/*      Class for holding data about a file                                     */
+/*                                                                              */
 /********************************************************************************/
 /********************************************************************************/
-/*										*/
-/*	The FileData structure represents all the information about a file.	*/
-/*	It contains the basic compilation unit (the Primary unit), and the	*/
-/*	default buffer (PrimaryUnit.getBuffer()).  This means that it should	*/
-/*	reflect whatever changes are being done inside Eclipse.  The code here	*/
-/*	should make every external (non-private) edit in all other external	*/
-/*	buffers and in the default buffer as well.				*/
-/*										*/
-/*	Note that the default buffer can be a working copy rather than the	*/
-/*	original.  This happens if the version of Eclipse has that file open	*/
-/*	currently.								*/
-/*										*/
-/*	A BufferData structure represents a external Code Bubbles or a private	*/
-/*	buffer.  It should be a working copy of the original compilation unit	*/
-/*	(and should maintain that status at all times).  It also should have	*/
-/*	its own IBuffer corresponding to that working copy.			*/
-/*										*/
-/*	All non-private buffers (default and BufferData) should be registered	*/
-/*	with the FileData structure to monitor changes. 			*/
-/*										*/
+/*                                                                              */
+/*      The FileData structure represents all the information about a file.     */
+/*      It contains the basic compilation unit (the Primary unit), and the      */
+/*      default buffer (PrimaryUnit.getBuffer()).  This means that it should    */
+/*      reflect whatever changes are being done inside Eclipse.  The code here  */
+/*      should make every external (non-private) edit in all other external     */
+/*      buffers and in the default buffer as well.                              */
+/*                                                                              */
+/*      Note that the default buffer can be a working copy rather than the      */
+/*      original.  This happens if the version of Eclipse has that file open    */
+/*      currently.                                                              */
+/*                                                                              */
+/*      A BufferData structure represents a external Code Bubbles or a private  */
+/*      buffer.  It should be a working copy of the original compilation unit   */
+/*      (and should maintain that status at all times).  It also should have    */
+/*      its own IBuffer corresponding to that working copy.                     */
+/*                                                                              */
+/*      All non-private buffers (default and BufferData) should be registered   */
+/*      with the FileData structure to monitor changes.                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class FileData implements IBufferChangedListener {
@@ -2267,13 +2267,13 @@ private class FileData implements IBufferChangedListener {
 
    ICompilationUnit getBaseUnit() {
       try {
-	 if (!working_unit.isConsistent()) {
-	    BedrockPlugin.logD("Make base unit consistent");
-	    working_unit.commitWorkingCopy(true,null);
-	  }
+         if (!working_unit.isConsistent()) {
+            BedrockPlugin.logD("Make base unit consistent");
+            working_unit.commitWorkingCopy(true,null);
+          }
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem getting base unit",e);
+         BedrockPlugin.logE("Problem getting base unit",e);
        }
 
       return comp_unit;
@@ -2295,21 +2295,21 @@ private class FileData implements IBufferChangedListener {
       if (last_ast != null) return last_ast;
 
       try {
-	 CompilationUnit cu = null;
-	 int fgs = ICompilationUnit.FORCE_PROBLEM_DETECTION | ICompilationUnit.ENABLE_STATEMENTS_RECOVERY |
-	       ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
-	 cu = working_unit.reconcile(java_version,fgs,copy_owner,null);
-	 if (cu != null && bid != null) {
-	    last_ast = cu;
-	  }
-	 return cu;
+         CompilationUnit cu = null;
+         int fgs = ICompilationUnit.FORCE_PROBLEM_DETECTION | ICompilationUnit.ENABLE_STATEMENTS_RECOVERY |
+               ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
+         cu = working_unit.reconcile(java_version,fgs,copy_owner,null);
+         if (cu != null && bid != null) {
+            last_ast = cu;
+          }
+         return cu;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
+         BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
-	 BedrockPlugin.logD("Source: " + default_buffer.getText(0,default_buffer.getLength()));
+         BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
+         BedrockPlugin.logD("Source: " + default_buffer.getText(0,default_buffer.getLength()));
        }
 
       return null;
@@ -2319,35 +2319,35 @@ private class FileData implements IBufferChangedListener {
       boolean chngfg = hasChanged();
 
       if (bid != null && buffer_map.get(bid) != null) {
-	 // handle private buffers
-	 PrivateBufferData bd = buffer_map.get(bid);
-	 bd.applyEdit(xe);
+         // handle private buffers
+         PrivateBufferData bd = buffer_map.get(bid);
+         bd.applyEdit(xe);
        }
       else {
-	 try {
-	    synchronized (this) {
-	       last_edit = bid;
-	       BedrockPlugin.logD("APPLY EDIT FOR " + bid);
-	       working_unit.applyTextEdit(xe,null);
-	       setCurrentId(bid,id);
-	       BedrockPlugin.logD("END APPLY EDIT");
-	       last_edit = null;
-	       last_ast = null;
-	     }
-	  }
-	 catch (JavaModelException e) {
-	    throw new BedrockException("Problem applying text edit",e);
-	  }
-	 if (!chngfg && hasChanged()) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("FILECHANGE");
-	    xw.field("FILE",file_name);
-	    our_plugin.finishMessage(xw);
-	  }
+         try {
+            synchronized (this) {
+               last_edit = bid;
+               BedrockPlugin.logD("APPLY EDIT FOR " + bid);
+               working_unit.applyTextEdit(xe,null);
+               setCurrentId(bid,id);
+               BedrockPlugin.logD("END APPLY EDIT");
+               last_edit = null;
+               last_ast = null;
+             }
+          }
+         catch (JavaModelException e) {
+            throw new BedrockException("Problem applying text edit",e);
+          }
+         if (!chngfg && hasChanged()) {
+            IvyXmlWriter xw = our_plugin.beginMessage("FILECHANGE");
+            xw.field("FILE",file_name);
+            our_plugin.finishMessage(xw);
+          }
        }
     }
 
-   String getFileName() 			{ return file_name; }
-   IProject getProject()			{ return for_project; }
+   String getFileName()                         { return file_name; }
+   IProject getProject()                        { return for_project; }
    String getLineSeparator() {
       if (line_separator == null) checkLineSeparator();
       return line_separator;
@@ -2382,7 +2382,7 @@ private class FileData implements IBufferChangedListener {
       return getUser(bid).getElider();
     }
 
-   ICompilationUnit getBaseCompUnit()		{ return comp_unit; }
+   ICompilationUnit getBaseCompUnit()           { return comp_unit; }
 
    synchronized boolean hasChanged() {
       if (default_buffer == null) return false;
@@ -2453,18 +2453,18 @@ private class FileData implements IBufferChangedListener {
       if (sid == null) return null;
 
       synchronized (buffer_users) {
-	 UserData ud = buffer_users.get(sid);
-	 if (ud == null) {
-	    if (buffer_map.get(sid) != null || sid.startsWith("PID_")) {
-	       BedrockPlugin.logX("Attempt to get user for private buffer");
-	       return null;
-	     }
-	    ud = new UserData(this,sid,comp_unit,false);
-	    buffer_users.put(sid,ud);
-	    BedrockPlugin.logD("ADD USER " + sid + " FOR " + file_name + " " +
-		  buffer_users.size());
-	  }
-	 return ud;
+         UserData ud = buffer_users.get(sid);
+         if (ud == null) {
+            if (buffer_map.get(sid) != null || sid.startsWith("PID_")) {
+               BedrockPlugin.logX("Attempt to get user for private buffer");
+               return null;
+             }
+            ud = new UserData(this,sid,comp_unit,false);
+            buffer_users.put(sid,ud);
+            BedrockPlugin.logD("ADD USER " + sid + " FOR " + file_name + " " +
+                  buffer_users.size());
+          }
+         return ud;
        }
    }
 
@@ -2472,33 +2472,33 @@ private class FileData implements IBufferChangedListener {
    {
       if (sid == null) return;
       synchronized (buffer_users) {
-	 buffer_users.remove(sid);
+         buffer_users.remove(sid);
        }
       BedrockPlugin.logD("REMOVE USER " + sid + " for " + file_name);
    }
 
    private PrivateBufferData createPrivateBuffer(String sid,String opid) throws BedrockException {
       synchronized (buffer_map) {
-	 PrivateBufferData bd = buffer_map.get(sid);
-	 if (bd != null) return null;
-	 ICompilationUnit cu = null;
-	 if (opid == null) cu = comp_unit;
-	 else {
-	    PrivateBufferData obd = buffer_map.get(opid);
-	    if (obd == null) return null;
-	    cu = obd.getEditableUnit();
-	  }
-	 bd = new PrivateBufferData(this,sid,cu);
-	 buffer_map.put(sid,bd);
-	 return bd;
+         PrivateBufferData bd = buffer_map.get(sid);
+         if (bd != null) return null;
+         ICompilationUnit cu = null;
+         if (opid == null) cu = comp_unit;
+         else {
+            PrivateBufferData obd = buffer_map.get(opid);
+            if (obd == null) return null;
+            cu = obd.getEditableUnit();
+          }
+         bd = new PrivateBufferData(this,sid,cu);
+         buffer_map.put(sid,bd);
+         return bd;
        }
     }
 
    private void removePrivateBuffer(String sid) {
       BedrockPlugin.logD("Remove private buffer " + sid);
       synchronized (buffer_map) {
-	 PrivateBufferData bd = buffer_map.remove(sid);
-	 if (bd != null) bd.free();
+         PrivateBufferData bd = buffer_map.remove(sid);
+         if (bd != null) bd.free();
        }
     }
 
@@ -2524,7 +2524,7 @@ private class FileData implements IBufferChangedListener {
 
    @Override public void bufferChanged(BufferChangedEvent evt) {
       BedrockPlugin.logD("Buffer check change " + doing_change + " " + last_edit + " " +
-        		    System.identityHashCode(evt.getBuffer()));
+                            System.identityHashCode(evt.getBuffer()));
       if (doing_change) return;
       doing_change = true;
       try {
@@ -2533,20 +2533,20 @@ private class FileData implements IBufferChangedListener {
          int off = evt.getOffset();
          String txt = evt.getText();
          BedrockPlugin.logD("Buffer change " + file_name + " " + len + " " + off + " " +
-        		       (txt == null) + " " + (buf == default_buffer) + " " +
-        		       System.identityHashCode(default_buffer) + " " +
-        		       System.identityHashCode(buf) + " " +
-        		       Thread.currentThread().getName());
+                               (txt == null) + " " + (buf == default_buffer) + " " +
+                               System.identityHashCode(default_buffer) + " " +
+                               System.identityHashCode(buf) + " " +
+                               Thread.currentThread().getName());
          if (len == 0 && off == 0 && txt == null) {
             // buffer closed event
             if (buf != default_buffer && default_buffer != null) {
                BedrockPlugin.logEX("Unknown buffer for buffer switch " + buf.hashCode() + " " +
-        			      System.identityHashCode(default_buffer));
+                                      System.identityHashCode(default_buffer));
                return;
              }
             if (default_buffer == null) return;
             BedrockPlugin.logEX("Buffer switch occurred for " + file_name + " " +
-        			  safe_update + " " + System.identityHashCode(default_buffer));
+                                  safe_update + " " + System.identityHashCode(default_buffer));
             if (buf != default_buffer) {
                default_buffer = null;
                if (!safe_update) update_on_open = true;
@@ -2594,78 +2594,78 @@ private class FileData implements IBufferChangedListener {
    private void checkLineSeparator() {
       line_separator = null;
       if (default_buffer != null) {
-	 int ln = default_buffer.getLength();
-	 boolean havecr = false;
-	 for (int i = 0; i < ln; ++i) {
-	    char c = default_buffer.getChar(i);
-	    if (c == '\r') havecr = true;
-	    else if (c == '\n') {
-	       if (havecr) line_separator = "\r\n";
-	       else line_separator = "\n";
-	       break;
-	     }
-	    else {
-	       if (havecr) {
-		  line_separator = "\r";
-		  break;
-		}
-	     }
-	  }
+         int ln = default_buffer.getLength();
+         boolean havecr = false;
+         for (int i = 0; i < ln; ++i) {
+            char c = default_buffer.getChar(i);
+            if (c == '\r') havecr = true;
+            else if (c == '\n') {
+               if (havecr) line_separator = "\r\n";
+               else line_separator = "\n";
+               break;
+             }
+            else {
+               if (havecr) {
+                  line_separator = "\r";
+                  break;
+                }
+             }
+          }
        }
 
       if (line_separator == null && comp_unit != null) {
-	 try {
-	    line_separator = comp_unit.findRecommendedLineSeparator();
-	  }
-	 catch (JavaModelException e) { }
+         try {
+            line_separator = comp_unit.findRecommendedLineSeparator();
+          }
+         catch (JavaModelException e) { }
        }
 
       if (line_separator == null) {
-	 QualifiedName qn0 = new QualifiedName("line","separator");
-	 for (IResource ir = default_buffer.getUnderlyingResource(); ir != null; ir = ir.getParent()) {
-	    String ls = null;
-	    try {
-	       ls = ir.getPersistentProperty(qn0);
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logE("EXCEPTION ON LINE SEPARATOR: " + e,e);
-	     }
-	    if (ls != null) {
-	       BedrockPlugin.logD("LINE SEPARATOR STRING = '" + ls + "'");
-	       if (ls.equals("\\n")) line_separator = "\n";
-	       else if (ls.equals("\\r\\n")) line_separator = "\r\n";
-	       else if (ls.equals("\\r")) line_separator = "\r";
-	       else line_separator = ls;
-	       break;
-	     }
-	  }
+         QualifiedName qn0 = new QualifiedName("line","separator");
+         for (IResource ir = default_buffer.getUnderlyingResource(); ir != null; ir = ir.getParent()) {
+            String ls = null;
+            try {
+               ls = ir.getPersistentProperty(qn0);
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logE("EXCEPTION ON LINE SEPARATOR: " + e,e);
+             }
+            if (ls != null) {
+               BedrockPlugin.logD("LINE SEPARATOR STRING = '" + ls + "'");
+               if (ls.equals("\\n")) line_separator = "\n";
+               else if (ls.equals("\\r\\n")) line_separator = "\r\n";
+               else if (ls.equals("\\r")) line_separator = "\r";
+               else line_separator = ls;
+               break;
+             }
+          }
        }
       if (line_separator == null) line_separator = System.getProperty("line.separator");
     }
 
    private synchronized IBuffer setupDefaultBuffer() {
       if (default_buffer != null) {
-	 if (!default_buffer.isClosed()) return default_buffer;
-	 default_buffer = null;
+         if (!default_buffer.isClosed()) return default_buffer;
+         default_buffer = null;
        }
 
       BedrockPlugin.logD("Set up default buffer for " + file_name);
 
       copy_owner.suppressErrors(true);
       try {
-	 if (working_unit != null) working_unit.discardWorkingCopy();
-	 working_unit = comp_unit.getWorkingCopy(copy_owner,null);
-	 default_buffer = working_unit.getBuffer();
-	 default_buffer.addBufferChangedListener(this);
+         if (working_unit != null) working_unit.discardWorkingCopy();
+         working_unit = comp_unit.getWorkingCopy(copy_owner,null);
+         default_buffer = working_unit.getBuffer();
+         default_buffer.addBufferChangedListener(this);
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem creating working copy: " + e,e);
+         BedrockPlugin.logE("Problem creating working copy: " + e,e);
        }
       catch (Throwable t) {
-	 throw new Error("Problem getting editable unit: " + t,t);
+         throw new Error("Problem getting editable unit: " + t,t);
        }
       finally {
-	 copy_owner.suppressErrors(false);
+         copy_owner.suppressErrors(false);
        }
 
       if (update_on_open) updateOnOpen();
@@ -2677,40 +2677,40 @@ private class FileData implements IBufferChangedListener {
    private void updateOnOpen() {
       update_on_open = false;
       if (safe_update) {
-	 safe_update = false;
-	 return;
+         safe_update = false;
+         return;
        }
 
       BedrockPlugin.logD("Update on Open " + file_name + " " + default_buffer);
 
       if (default_buffer != null) {
-	 String nbuf = default_buffer.getText(0, default_buffer.getLength());
-	 for (String user : buffer_users.keySet()) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
-	    xw.field("FILE",file_name);
-	    xw.field("LENGTH",nbuf.length());
-	    xw.field("OFFSET",0);
-	    xw.field("COMPLETE",true);
-	    byte [] data = nbuf.getBytes();
-	    xw.bytesElement("CONTENTS",data);
-	    our_plugin.finishMessage(xw);
-	  }
+         String nbuf = default_buffer.getText(0, default_buffer.getLength());
+         for (String user : buffer_users.keySet()) {
+            IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
+            xw.field("FILE",file_name);
+            xw.field("LENGTH",nbuf.length());
+            xw.field("OFFSET",0);
+            xw.field("COMPLETE",true);
+            byte [] data = nbuf.getBytes();
+            xw.bytesElement("CONTENTS",data);
+            our_plugin.finishMessage(xw);
+          }
        }
       else {
-	 for (String user : buffer_users.keySet()) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
-	    xw.field("FILE",file_name);
-	    xw.field("LENGTH",0);
-	    xw.field("OFFSET",0);
-	    xw.field("COMPLETE",true);
-	    xw.field("REMOVE",true);
-	    our_plugin.finishMessage(xw);
-	  }
+         for (String user : buffer_users.keySet()) {
+            IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
+            xw.field("FILE",file_name);
+            xw.field("LENGTH",0);
+            xw.field("OFFSET",0);
+            xw.field("COMPLETE",true);
+            xw.field("REMOVE",true);
+            our_plugin.finishMessage(xw);
+          }
        }
     }
 
 
-}	// end of innerclass FileData
+}       // end of innerclass FileData
 
 
 
@@ -2737,13 +2737,13 @@ private class PrivateBufferData {
 
    void free() {
       if (is_setup) {
-	 if (comp_unit.isWorkingCopy()) {
-	    try {
-	       comp_unit.discardWorkingCopy();
-	     }
-	    catch (JavaModelException e) { }
-	  }
-	 comp_unit = null;
+         if (comp_unit.isWorkingCopy()) {
+            try {
+               comp_unit.discardWorkingCopy();
+             }
+            catch (JavaModelException e) { }
+          }
+         comp_unit = null;
        }
     }
 
@@ -2751,25 +2751,25 @@ private class PrivateBufferData {
       if (is_setup) return comp_unit;
       BedrockPlugin.logD("Set up " + bedrock_id + " " + file_data.getFileName());
       try {
-	 comp_unit = file_data.getBaseCompUnit();
-	 // comp_unit.getSource() being null causes NullPointerException
-	 if (comp_unit.getSource() != null) {
-	    copy_owner.suppressErrors(true);
-	    comp_unit = comp_unit.getWorkingCopy(copy_owner,null);
-	    copy_owner.suppressErrors(false);
-	  }
-	 else {
-	    BedrockPlugin.logE("Compilation unit lacking source for " + bedrock_id + " " +
-				  file_data.getFileName() + " " + comp_unit.isOpen() + " " + comp_unit.isWorkingCopy() +
-				  " " + comp_unit.getSource() + " " + comp_unit.getBuffer().getLength());
-	  }
-	 is_setup = true;
+         comp_unit = file_data.getBaseCompUnit();
+         // comp_unit.getSource() being null causes NullPointerException
+         if (comp_unit.getSource() != null) {
+            copy_owner.suppressErrors(true);
+            comp_unit = comp_unit.getWorkingCopy(copy_owner,null);
+            copy_owner.suppressErrors(false);
+          }
+         else {
+            BedrockPlugin.logE("Compilation unit lacking source for " + bedrock_id + " " +
+                                  file_data.getFileName() + " " + comp_unit.isOpen() + " " + comp_unit.isWorkingCopy() +
+                                  " " + comp_unit.getSource() + " " + comp_unit.getBuffer().getLength());
+          }
+         is_setup = true;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem creating working copy: " + e,e);
+         BedrockPlugin.logE("Problem creating working copy: " + e,e);
        }
       catch (Throwable t) {
-	 throw new Error("Problem getting editable unit: " + t,t);
+         throw new Error("Problem getting editable unit: " + t,t);
        }
 
       return comp_unit;
@@ -2790,19 +2790,19 @@ private class PrivateBufferData {
       ICompilationUnit icu = getEditableUnit();
       CompilationUnit cu = null;
       try {
-	 copy_owner.suppressErrors(false);
-	 cu = icu.reconcile(java_version,true,true,copy_owner,null);
-	 if (cu == null) cu = last_ast;
-	 else last_ast = cu;
-	 if (last_ast == null) getDefaultRoot();
+         copy_owner.suppressErrors(false);
+         cu = icu.reconcile(java_version,true,true,copy_owner,null);
+         if (cu == null) cu = last_ast;
+         else last_ast = cu;
+         if (last_ast == null) getDefaultRoot();
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem getting AST for file " +
-			       file_data.getFileName() + ": " + e,e);
+         BedrockPlugin.logE("Problem getting AST for file " +
+                               file_data.getFileName() + ": " + e,e);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem getting AST for file " +
-			       file_data.getFileName() + ": " + t,t);
+         BedrockPlugin.logE("Problem getting AST for file " +
+                               file_data.getFileName() + ": " + t,t);
        }
       return last_ast;
     }
@@ -2810,16 +2810,16 @@ private class PrivateBufferData {
    synchronized void applyEdit(TextEdit xe) throws BedrockException {
       ICompilationUnit icu = getEditableUnit();
       try {
-	 icu.applyTextEdit(xe,null);
+         icu.applyTextEdit(xe,null);
        }
       catch (JavaModelException e) {
-	 throw new BedrockException("Problem editing source file " + file_data.getFileName() +
-				       " " + xe,e);
+         throw new BedrockException("Problem editing source file " + file_data.getFileName() +
+                                       " " + xe,e);
        }
       last_ast = null;
     }
 
-}	// end of innerclass BufferData
+}       // end of innerclass BufferData
 
 
 
@@ -2836,14 +2836,14 @@ private class UserData {
       dead_count = 0;
     }
 
-   String getCurrentId()			{ return current_id; }
-   void setCurrentId(String id) 		{ current_id = id; }
+   String getCurrentId()                        { return current_id; }
+   void setCurrentId(String id)                 { current_id = id; }
 
-   BedrockElider checkElider()			{ return elision_data; }
-   void clearElider()				{ elision_data = null; }
+   BedrockElider checkElider()                  { return elision_data; }
+   void clearElider()                           { elision_data = null; }
    synchronized BedrockElider getElider() {
       if (elision_data == null) {
-	 elision_data = new BedrockElider();
+         elision_data = new BedrockElider();
        }
       return elision_data;
     }
@@ -2854,21 +2854,21 @@ private class UserData {
 
    boolean noteAlive(boolean alive) {
       if (alive) {
-	 dead_count = 0;
+         dead_count = 0;
        }
       else if (++dead_count >= DEAD_COUNT) return true;
       return false;
     }
 
-}	// end of innerclass UserData
+}       // end of innerclass UserData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Working copy owner							*/
-/*										*/
+/*                                                                              */
+/*      Working copy owner                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class DefaultCopyOwner extends WorkingCopyOwner {
@@ -2886,14 +2886,14 @@ private class DefaultCopyOwner extends WorkingCopyOwner {
    @Override public IBuffer createBuffer(ICompilationUnit cu) {
       IBuffer buf = super.createBuffer(cu);
       BedrockPlugin.logD("CREATE BUFFER " + buf.getLength() +
-			    " " + for_file.getFileName() + " " + buf.hashCode());
+                            " " + for_file.getFileName() + " " + buf.hashCode());
       return buf;
     }
 
    @Override public IProblemRequestor getProblemRequestor(ICompilationUnit ic) {
       if (problem_handler == null) {
-	 problem_handler = new ProblemHandler(for_file,null,ic,false);
-	 problem_handler.setSuppressErrors(suppress_errors);
+         problem_handler = new ProblemHandler(for_file,null,ic,false);
+         problem_handler.setSuppressErrors(suppress_errors);
        }
       return problem_handler;
     }
@@ -2903,7 +2903,7 @@ private class DefaultCopyOwner extends WorkingCopyOwner {
       if (problem_handler != null) problem_handler.setSuppressErrors(fg);
     }
 
-}	// end of inner class DefaultCopyOwner
+}       // end of inner class DefaultCopyOwner
 
 
 
@@ -2922,27 +2922,27 @@ private class CopyOwner extends DefaultCopyOwner {
       IBuffer buf = super.createBuffer(cu);
       String cnts = for_file.getContents(null);
       BedrockPlugin.logD("CREATE BUFFER1 " + bedrock_id + " " + is_private + " " + (cnts == null) +
-			    " " + for_file.getFileName() + " " + buf.hashCode());
+                            " " + for_file.getFileName() + " " + buf.hashCode());
       if (cnts != null) buf.setContents(cnts);
       return buf;
     }
 
    @Override public IProblemRequestor getProblemRequestor(ICompilationUnit ic) {
       if (problem_handler == null) {
-	 problem_handler = new ProblemHandler(for_file,bedrock_id,ic,is_private);
-	 problem_handler.setSuppressErrors(suppress_errors);
+         problem_handler = new ProblemHandler(for_file,bedrock_id,ic,is_private);
+         problem_handler.setSuppressErrors(suppress_errors);
        }
       return problem_handler;
     }
 
-}	// end of innerclass CopyOwner
+}       // end of innerclass CopyOwner
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to handle compilation problems					*/
-/*										*/
+/*                                                                              */
+/*      Class to handle compilation problems                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProblemHandler implements IProblemRequestor {
@@ -2961,7 +2961,7 @@ private class ProblemHandler implements IProblemRequestor {
       suppress_errors = false;
     }
 
-   void setSuppressErrors(boolean fg)		{ suppress_errors = fg; }
+   void setSuppressErrors(boolean fg)           { suppress_errors = fg; }
 
    @Override public void acceptProblem(IProblem ip) {
       BedrockPlugin.logD("Note problem for " + is_private + " " + suppress_errors);
@@ -2972,7 +2972,7 @@ private class ProblemHandler implements IProblemRequestor {
 
    @Override public void beginReporting() {
       BedrockPlugin.logD("Begin error reporting for " + is_private + " " +
-			    suppress_errors);
+                            suppress_errors);
       problem_set = null;
     }
 
@@ -2982,27 +2982,27 @@ private class ProblemHandler implements IProblemRequestor {
 
       IvyXmlWriter xw;
       if (is_private) {
-	 if (bedrock_id != null) {
-	    xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
-	    xw.field("FILE",file_data.getFileName());
-	    xw.field("ID",bedrock_id);
-	  }
-	 else return;
+         if (bedrock_id != null) {
+            xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
+            xw.field("FILE",file_data.getFileName());
+            xw.field("ID",bedrock_id);
+          }
+         else return;
        }
       else if (file_data != null) {
-	 xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
-	 xw.field("FILE",file_data.getFileName());
+         xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
+         xw.field("FILE",file_data.getFileName());
        }
       else return;
 
       if (file_data != null && file_data.getProject() != null) {
-	 xw.field("PROJECT",file_data.getProject().getName());
+         xw.field("PROJECT",file_data.getProject().getName());
        }
       xw.begin("MESSAGES");
       if (problem_set != null) {
-	 for (IProblem ip : problem_set) {
-	    BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
-	  }
+         for (IProblem ip : problem_set) {
+            BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
+          }
        }
       xw.end("MESSAGES");
 
@@ -3012,9 +3012,9 @@ private class ProblemHandler implements IProblemRequestor {
       xw.close();
     }
 
-   @Override public boolean isActive()			{ return true; }
+   @Override public boolean isActive()                  { return true; }
 
-}	// end of innerclass ProblemHandler
+}       // end of innerclass ProblemHandler
 
 
 
@@ -3025,9 +3025,9 @@ private class ProblemHandler implements IProblemRequestor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to handle completion information					*/
-/*										*/
+/*                                                                              */
+/*      Class to handle completion information                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class CompletionHandler extends CompletionRequestor {
@@ -3042,17 +3042,17 @@ private class CompletionHandler extends CompletionRequestor {
       setAllowsRequiredProposals(CompletionProposal.FIELD_REF,CompletionProposal.TYPE_IMPORT,true);
       setAllowsRequiredProposals(CompletionProposal.FIELD_REF,CompletionProposal.FIELD_IMPORT,true);
       for (int i = 1; i <= 27; ++i) {
-	 setIgnored(i,false);
+         setIgnored(i,false);
        }
 
       bedrock_id = bid;
       xml_writer = xw;
       if (xw != null) {
-	 generate_message = false;
+         generate_message = false;
        }
       else {
-	 generate_message = true;
-	 xml_writer = our_plugin.beginMessage("COMPLETIONS",bedrock_id);
+         generate_message = true;
+         xml_writer = our_plugin.beginMessage("COMPLETIONS",bedrock_id);
        }
     }
 
@@ -3073,21 +3073,21 @@ private class CompletionHandler extends CompletionRequestor {
       BedrockUtil.outputProblem(null,ip,xml_writer);
     }
 
-}	// end of innerclass CompletionHandler
+}       // end of innerclass CompletionHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold parameter settings for bedrock client			*/
-/*										*/
+/*                                                                              */
+/*      Class to hold parameter settings for bedrock client                     */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean getAutoElide(String id) { return getParameters(id).getAutoElide(); }
-private long getElideDelay(String id)	{ return getParameters(id).getElideDelay(); }
+private long getElideDelay(String id)   { return getParameters(id).getElideDelay(); }
 
-private void setAutoElide(String id,boolean v)	{ getParameters(id).setAutoElide(v); }
-private void setElideDelay(String id,long v)	{ getParameters(id).setElideDelay(v); }
+private void setAutoElide(String id,boolean v)  { getParameters(id).setAutoElide(v); }
+private void setElideDelay(String id,long v)    { getParameters(id).setElideDelay(v); }
 
 
 private ParamSettings getParameters(String id)
@@ -3112,19 +3112,19 @@ private static class ParamSettings {
       elide_delay = 0;
     }
 
-   boolean getAutoElide()		{ return auto_elide; }
-   long getElideDelay() 		{ return elide_delay; }
+   boolean getAutoElide()               { return auto_elide; }
+   long getElideDelay()                 { return elide_delay; }
 
-   void setAutoElide(boolean fg)	{ auto_elide = fg; }
-   void setElideDelay(long v)		{ elide_delay = v; }
+   void setAutoElide(boolean fg)        { auto_elide = fg; }
+   void setElideDelay(long v)           { elide_delay = v; }
 
-}	// end of inner class ParamSettings
-
-
+}       // end of inner class ParamSettings
 
 
 
-}	// end of class BedrockEditManager
+
+
+}       // end of class BedrockEditManager
 
 
 

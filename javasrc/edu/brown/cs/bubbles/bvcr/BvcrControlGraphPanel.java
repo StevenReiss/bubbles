@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrControlGraphPanel.java					*/
-/*										*/
-/*	Graphical view of program versions					*/
-/*										*/
+/*                                                                              */
+/*              BvcrControlGraphPanel.java                                      */
+/*                                                                              */
+/*      Graphical view of program versions                                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -61,27 +61,27 @@ import java.util.Map;
 
 
 class BvcrControlGraphPanel extends BudaBubble implements BvcrConstants,
-	BvcrConstants.BvcrProjectUpdated, BudaConstants.BudaBubbleOutputer
+        BvcrConstants.BvcrProjectUpdated, BudaConstants.BudaBubbleOutputer
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BvcrControlPanel	control_panel;
-private BvcrControlVersion	current_version;
-private JButton 		change_button;
-private VersionHistoryGraph	petal_graph;
+private BvcrControlPanel        control_panel;
+private BvcrControlVersion      current_version;
+private JButton                 change_button;
+private VersionHistoryGraph     petal_graph;
 private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrControlGraphPanel(BvcrControlPanel pnl)
@@ -133,9 +133,9 @@ BvcrControlGraphPanel(BvcrControlPanel pnl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods							*/
-/*										*/
+/*                                                                              */
+/*      Callback methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void projectUpdated(BvcrControlPanel pnl)
@@ -162,16 +162,16 @@ private void setCurrentSelection()
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph panel								*/
-/*										*/
+/*                                                                              */
+/*      Graph panel                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class VersionHistoryGraph extends JPanel {
 
-   private PetalEditor		petal_editor;
-   private PetalModelDefault	petal_model;
-   private PetalLayoutMethod	layout_method;
+   private PetalEditor          petal_editor;
+   private PetalModelDefault    petal_model;
+   private PetalLayoutMethod    layout_method;
    private static final long serialVersionUID = 1;
    
    VersionHistoryGraph() {
@@ -210,15 +210,15 @@ private class VersionHistoryGraph extends JPanel {
 
    @Override public void paint(Graphics g) {
       for (PetalNode pn : petal_model.getNodes()) {
-	 if (pn instanceof Node) {
+         if (pn instanceof Node) {
             // fixup here?
-	  }
+          }
        }
       super.paint(g);
     }
 
    private final class Model extends PetalModelDefault {
-    }	// end of inner class Model
+    }   // end of inner class Model
 
    private class Node extends PetalNodeDefault {
       
@@ -234,28 +234,28 @@ private class VersionHistoryGraph extends JPanel {
          return "<html>" + for_node.getHtmlDescription();
        }
    
-    }	// end of inner class Node
+    }   // end of inner class Node
 
    private class Arc extends PetalArcDefault {
       
       private static final long serialVersionUID = 1;
       
       Arc(Node f,Node t) {
-	 super(f,t);
-	 setSourceEnd(new PetalArcEndDefault(PetalArcEnd.PETAL_ARC_END_ARROW));
+         super(f,t);
+         setSourceEnd(new PetalArcEndDefault(PetalArcEnd.PETAL_ARC_END_ARROW));
        }
 
-    }	// end of inner class Arc
+    }   // end of inner class Arc
 
-}	// end of inner class VersionHistoryGraph
+}       // end of inner class VersionHistoryGraph
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ChangeVersionAction extends AbstractAction {
@@ -267,7 +267,7 @@ private final class ChangeVersionAction extends AbstractAction {
       control_panel.setVersion(current_version);
     }
 
-}	// end of inner class ChangeVersionAction
+}       // end of inner class ChangeVersionAction
 
 
 private final class ShowTableAction extends AbstractAction {
@@ -283,7 +283,7 @@ private final class ShowTableAction extends AbstractAction {
       bba.addBubble(pnl,bbl,null,BudaConstants.PLACEMENT_LOGICAL);
     }
 
-}	// end of inner class ShowTableAction
+}       // end of inner class ShowTableAction
 
 
 
@@ -303,7 +303,7 @@ private final class ShowTableAction extends AbstractAction {
 
 
 
-}	// end of class BvcrControlGraphPanel
+}       // end of class BvcrControlGraphPanel
 
 
 

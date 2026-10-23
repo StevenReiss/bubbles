@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseMain.java 						*/
-/*										*/
-/*	Main program for Node-Bubbles base package				*/
-/*										*/
+/*                                                                              */
+/*              NobaseMain.java                                                 */
+/*                                                                              */
+/*      Main program for Node-Bubbles base package                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -62,9 +62,9 @@ public final class NobaseMain implements NobaseConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -78,10 +78,10 @@ public static void main(String [] args)
 
    synchronized (pm) {
       while (!pm.shutdown_mint) {
-	 try {
-	    pm.wait(5000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            pm.wait(5000);
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -90,30 +90,30 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File			root_directory;
-private String			mint_handle;
-private MintControl		mint_control;
-private boolean 		shutdown_mint;
-private int			num_clients;
-private NobaseEditor		nobase_editor;
-private NobaseProjectManager	project_manager;
-private NobaseFileManager	file_manager;
-private NobaseSearch		nobase_search;
-private NobaseDebugManager	nobase_debug;
-private IParser 		nobase_parser;
-private File			work_directory;
-private Object			send_sema;
-private NobaseThreadPool	thread_pool;
-private Timer			nobase_timer;
-private Pinger			nobase_pinger;
-private NobasePreferences	system_prefs;
+private File                    root_directory;
+private String                  mint_handle;
+private MintControl             mint_control;
+private boolean                 shutdown_mint;
+private int                     num_clients;
+private NobaseEditor            nobase_editor;
+private NobaseProjectManager    project_manager;
+private NobaseFileManager       file_manager;
+private NobaseSearch            nobase_search;
+private NobaseDebugManager      nobase_debug;
+private IParser                 nobase_parser;
+private File                    work_directory;
+private Object                  send_sema;
+private NobaseThreadPool        thread_pool;
+private Timer                   nobase_timer;
+private Pinger                  nobase_pinger;
+private NobasePreferences       system_prefs;
 
-private static NobaseMain		nobase_main;
+private static NobaseMain               nobase_main;
 
 private static PrintStream log_file = null;
 private static NobaseLogLevel log_level = NobaseLogLevel.DEBUG;
@@ -122,12 +122,12 @@ private static boolean use_stderr = false;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
-public static NobaseMain getNobaseMain()	{ return nobase_main; }
+public static NobaseMain getNobaseMain()        { return nobase_main; }
 
 
 
@@ -160,12 +160,12 @@ private NobaseMain(String [] args)
 
    if (log_file == null) {
       try {
-	 File f4 = new File(work_directory,"nobase_log.log");
-	 log_file = new PrintStream(new FileOutputStream(f4),true);
+         File f4 = new File(work_directory,"nobase_log.log");
+         log_file = new PrintStream(new FileOutputStream(f4),true);
        }
       catch (FileNotFoundException e) {
-	 log_file = null;
-	 NobaseMain.logE("Error initialising file: " + e.getMessage());
+         log_file = null;
+         NobaseMain.logE("Error initialising file: " + e.getMessage());
        }
     }
 
@@ -194,9 +194,9 @@ private NobaseMain(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void start()
@@ -222,35 +222,35 @@ private void start()
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning methods						*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
 {
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-m") && i+1 < args.length) {           // -m <mint handle>
-	    mint_handle = args[++i];
-	  }
-	 else if (args[i].startsWith("-ws") && i+1 < args.length) {     // -ws <workspace>
-	    work_directory = new File(args[++i]);
-	    work_directory = IvyFile.getCanonical(work_directory);
-	  }
-	 else if (args[i].startsWith("-log") && i+1 < args.length) {     // -log <logfile>
-	    try {
-	       log_file = new PrintStream(new FileOutputStream(args[++i]));
-	       use_stderr = false;
-	     }
-	    catch (IOException e) {
-	       System.err.println("NOBASE: Can't open log file " + args[i]);
-	     }
-	  }
-	 else if (args[i].startsWith("-err")) {                         // -err
-	    use_stderr = true;
-	  }
-	 else badArgs();
+         if (args[i].startsWith("-m") && i+1 < args.length) {           // -m <mint handle>
+            mint_handle = args[++i];
+          }
+         else if (args[i].startsWith("-ws") && i+1 < args.length) {     // -ws <workspace>
+            work_directory = new File(args[++i]);
+            work_directory = IvyFile.getCanonical(work_directory);
+          }
+         else if (args[i].startsWith("-log") && i+1 < args.length) {     // -log <logfile>
+            try {
+               log_file = new PrintStream(new FileOutputStream(args[++i]));
+               use_stderr = false;
+             }
+            catch (IOException e) {
+               System.err.println("NOBASE: Can't open log file " + args[i]);
+             }
+          }
+         else if (args[i].startsWith("-err")) {                         // -err
+            use_stderr = true;
+          }
+         else badArgs();
        }
       else badArgs();
     }
@@ -268,16 +268,16 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-NobaseProjectManager getProjectManager()		{ return project_manager; }
+NobaseProjectManager getProjectManager()                { return project_manager; }
 
-NobaseFileManager getFileManager()			{ return file_manager; }
+NobaseFileManager getFileManager()                      { return file_manager; }
 
-IParser getParser()					{ return nobase_parser; }
+IParser getParser()                                     { return nobase_parser; }
 
 public NobaseProject getProject(String p) throws NobaseException
 {
@@ -291,20 +291,20 @@ public NobaseFile getFileData(String fnm)
 
 
 
-NobasePreferences getSystemPreferences()		{ return system_prefs; }
+NobasePreferences getSystemPreferences()                { return system_prefs; }
 
 
-public File getWorkSpaceDirectory()			{ return work_directory; }
+public File getWorkSpaceDirectory()                     { return work_directory; }
 
-public File getRootDirectory()				{ return root_directory; }
+public File getRootDirectory()                          { return root_directory; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Command processing							*/
-/*										*/
+/*                                                                              */
+/*      Command processing                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
@@ -319,288 +319,288 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 
    switch (cmd) {
       case "PING" :
-	 xw.text("PONG");
-	 break;
+         xw.text("PONG");
+         break;
       case "PROJECTS" :
-	 project_manager.handleListProjects(xw);
-	 break;
+         project_manager.handleListProjects(xw);
+         break;
       case "OPENPROJECT" :
-	 project_manager.handleOpenProject(proj,IvyXml.getAttrBool(xml,"FILES",false),
-	       IvyXml.getAttrBool(xml,"PATHS",false),
-	       IvyXml.getAttrBool(xml,"CLASSES",false),
-	       IvyXml.getAttrBool(xml,"OPTIONS",false),xw);
-	 break;
+         project_manager.handleOpenProject(proj,IvyXml.getAttrBool(xml,"FILES",false),
+               IvyXml.getAttrBool(xml,"PATHS",false),
+               IvyXml.getAttrBool(xml,"CLASSES",false),
+               IvyXml.getAttrBool(xml,"OPTIONS",false),xw);
+         break;
       case "BUILDPROJECT" :
-	 project_manager.handleBuildProject(proj,IvyXml.getAttrBool(xml,"CLEAN"),
-	       IvyXml.getAttrBool(xml,"FULL"),
-	       IvyXml.getAttrBool(xml,"REFRESH"),xw);
-	 break;
+         project_manager.handleBuildProject(proj,IvyXml.getAttrBool(xml,"CLEAN"),
+               IvyXml.getAttrBool(xml,"FULL"),
+               IvyXml.getAttrBool(xml,"REFRESH"),xw);
+         break;
       case "CREATEPROJECT" :
-	 project_manager.handleCreateProject(IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"DIR"),xw);
-	 break;
+         project_manager.handleCreateProject(IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"DIR"),xw);
+         break;
       case "EDITPROJECT" :
-	 project_manager.handleEditProject(proj,IvyXml.getChild(xml,"PROJECT"),xw);
-	 break;
+         project_manager.handleEditProject(proj,IvyXml.getChild(xml,"PROJECT"),xw);
+         break;
       case "CREATEDIRECTORY" :
       case "CREATEPACKAGE" :
-	 project_manager.handleCreatePackage(proj,IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrBool(xml,"FORCE"),xw);
-	 break;
+         project_manager.handleCreatePackage(proj,IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrBool(xml,"FORCE"),xw);
+         break;
       case "FINDPACKAGE" :
-	 project_manager.handleFindPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
-	 break;
+         project_manager.handleFindPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
+         break;
       case "CREATEFILE" :
       case "CREATECLASS" :
-	 project_manager.handleNewModule(proj,IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrBool(xml,"FORCE"),
-	       IvyXml.getTextElement(xml,"CONTENTS"),xw);
-	 break;
+         project_manager.handleNewModule(proj,IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrBool(xml,"FORCE"),
+               IvyXml.getTextElement(xml,"CONTENTS"),xw);
+         break;
       case "STARTFILE" :
-	 nobase_editor.handleStartFile(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"ID"),
-	       IvyXml.getAttrBool(xml,"CONTENTS",false),xw);
-	 break;
+         nobase_editor.handleStartFile(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"ID"),
+               IvyXml.getAttrBool(xml,"CONTENTS",false),xw);
+         break;
       case "EDITPARAM" :
-	 nobase_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"VALUE"));
-	 break;
+         nobase_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"VALUE"));
+         break;
       case "EDITFILE" :
-	 nobase_editor.handleEdit(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"ID"),
-	       getEditSet(xml),xw);
-	 break;
+         nobase_editor.handleEdit(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"ID"),
+               getEditSet(xml),xw);
+         break;
       case "COMMIT" :
-	 nobase_editor.handleCommit(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrBool(xml,"REFRESH",false),
-	       IvyXml.getAttrBool(xml,"SAVE",false),
-	       getElements(xml,"FILE"),xw);
-	 break;
+         nobase_editor.handleCommit(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrBool(xml,"REFRESH",false),
+               IvyXml.getAttrBool(xml,"SAVE",false),
+               getElements(xml,"FILE"),xw);
+         break;
       case "ELIDESET" :
-	 nobase_editor.elisionSetup(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrBool(xml,"COMPUTE",true),
-	       getElements(xml,"REGION"),xw);
-	 break;
+         nobase_editor.elisionSetup(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrBool(xml,"COMPUTE",true),
+               getElements(xml,"REGION"),xw);
+         break;
       case "PATTERNSEARCH" :
-	 project_manager.handlePatternSearch(proj,IvyXml.getAttrString(xml,"PATTERN"),
-	       IvyXml.getAttrString(xml,"FOR"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",true),
-	       IvyXml.getAttrBool(xml,"SYSTEM",false),xw);
-	 break;
+         project_manager.handlePatternSearch(proj,IvyXml.getAttrString(xml,"PATTERN"),
+               IvyXml.getAttrString(xml,"FOR"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",true),
+               IvyXml.getAttrBool(xml,"SYSTEM",false),xw);
+         break;
       case "FINDBYKEY" :
-	 project_manager.handleKeySearch(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"KEY"),xw);
-	 break;
+         project_manager.handleKeySearch(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"KEY"),xw);
+         break;
       case "FINDDEFINITIONS" :
-	 project_manager.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",false),
-	       IvyXml.getAttrBool(xml,"IMPLS",false),
-	       IvyXml.getAttrBool(xml,"TYPE",false),
-	       false,false,xw);
-	 break;
+         project_manager.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",false),
+               IvyXml.getAttrBool(xml,"IMPLS",false),
+               IvyXml.getAttrBool(xml,"TYPE",false),
+               false,false,xw);
+         break;
       case "FINDREFERENCES" :
-	 project_manager.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrBool(xml,"DEFS",true),
-	       IvyXml.getAttrBool(xml,"REFS",true),
-	       IvyXml.getAttrBool(xml,"IMPLS",false),
-	       IvyXml.getAttrBool(xml,"TYPE",false),
-	       IvyXml.getAttrBool(xml,"RONLY",false),
-	       IvyXml.getAttrBool(xml,"WONLY",false),xw);
-	 break;
+         project_manager.handleFindAll(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrBool(xml,"DEFS",true),
+               IvyXml.getAttrBool(xml,"REFS",true),
+               IvyXml.getAttrBool(xml,"IMPLS",false),
+               IvyXml.getAttrBool(xml,"TYPE",false),
+               IvyXml.getAttrBool(xml,"RONLY",false),
+               IvyXml.getAttrBool(xml,"WONLY",false),xw);
+         break;
       case "GETFULLYQUALIFIEDNAME" :
-	 project_manager.getFullyQualifiedName(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),
-	       IvyXml.getAttrInt(xml,"END"),xw);
-	 break;
+         project_manager.getFullyQualifiedName(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),
+               IvyXml.getAttrInt(xml,"END"),xw);
+         break;
       case "FINDREGIONS" :
-	 project_manager.getTextRegions(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"CLASS"),
-	       IvyXml.getAttrBool(xml,"PREFIX",false),
-	       IvyXml.getAttrBool(xml,"STATICS",false),
-	       IvyXml.getAttrBool(xml,"COMPUNIT",false),
-	       IvyXml.getAttrBool(xml,"IMPORTS",false),
-	       IvyXml.getAttrBool(xml,"PACKAGE",false),
-	       IvyXml.getAttrBool(xml,"TOPDECLS",false),
-	       IvyXml.getAttrBool(xml,"FIELDS",false),
-	       IvyXml.getAttrBool(xml,"ALL",false),xw);
-	 break;
+         project_manager.getTextRegions(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrString(xml,"CLASS"),
+               IvyXml.getAttrBool(xml,"PREFIX",false),
+               IvyXml.getAttrBool(xml,"STATICS",false),
+               IvyXml.getAttrBool(xml,"COMPUNIT",false),
+               IvyXml.getAttrBool(xml,"IMPORTS",false),
+               IvyXml.getAttrBool(xml,"PACKAGE",false),
+               IvyXml.getAttrBool(xml,"TOPDECLS",false),
+               IvyXml.getAttrBool(xml,"FIELDS",false),
+               IvyXml.getAttrBool(xml,"ALL",false),xw);
+         break;
       case "GETALLNAMES" :
-	 project_manager.handleGetAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       getSet(xml,"FILE"),
-	       IvyXml.getAttrString(xml,"BACKGROUND"),xw);
-	 break;
+         project_manager.handleGetAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
+               getSet(xml,"FILE"),
+               IvyXml.getAttrString(xml,"BACKGROUND"),xw);
+         break;
       case "SEARCH" :
-	 nobase_search.handleTextSearch(proj,IvyXml.getAttrInt(xml,"FLAGS",0),
-	       IvyXml.getTextElement(xml,"PATTERN"),
-	       IvyXml.getAttrInt(xml,"MAX",MAX_TEXT_SEARCH_RESULTS),xw);
-	 break;
+         nobase_search.handleTextSearch(proj,IvyXml.getAttrInt(xml,"FLAGS",0),
+               IvyXml.getTextElement(xml,"PATTERN"),
+               IvyXml.getAttrInt(xml,"MAX",MAX_TEXT_SEARCH_RESULTS),xw);
+         break;
       case "GETCOMPLETIONS" :
-	 project_manager.getCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"OFFSET"),xw);
-	  break;
+         project_manager.getCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"OFFSET"),xw);
+          break;
       case "LANGUAGEDATA" :
-	 nobase_debug.handleLanguageData(xw);
-	 break;
+         nobase_debug.handleLanguageData(xw);
+         break;
       case "LAUNCHQUERY" :
-	 nobase_debug.handleLaunchQuery(proj, IvyXml.getAttrString(xml,"QUERY"),
-		  IvyXml.getAttrBool(xml,"OPTION"),xw);
-	 break;
+         nobase_debug.handleLaunchQuery(proj, IvyXml.getAttrString(xml,"QUERY"),
+                  IvyXml.getAttrBool(xml,"OPTION"),xw);
+         break;
       case "GETRUNCONFIG" :
-	 nobase_debug.getRunConfigurations(xw);
-	 break;
+         nobase_debug.getRunConfigurations(xw);
+         break;
       case "NEWRUNCONFIG" :
-	 nobase_debug.getNewRunConfiguration(proj,
-	       IvyXml.getAttrString(xml,"NAME"),
-	       IvyXml.getAttrString(xml,"CLONE"),xw);
-	 break;
+         nobase_debug.getNewRunConfiguration(proj,
+               IvyXml.getAttrString(xml,"NAME"),
+               IvyXml.getAttrString(xml,"CLONE"),xw);
+         break;
       case "EDITRUNCONFIG" :
-	 nobase_debug.editRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrEnum(xml,"PROP",NobaseConfigAttribute.NONE),
-	       IvyXml.getAttrString(xml,"VALUE"),xw);
-	 break;
+         nobase_debug.editRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrEnum(xml,"PROP",NobaseConfigAttribute.NONE),
+               IvyXml.getAttrString(xml,"VALUE"),xw);
+         break;
       case "SAVERUNCONFIG" :
-	 nobase_debug.saveRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
-	 break;
+         nobase_debug.saveRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
+         break;
       case "DELETERUNCONFIG" :
-	 nobase_debug.deleteRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
-	 break;
+         nobase_debug.deleteRunConfiguration(IvyXml.getAttrString(xml,"LAUNCH"),xw);
+         break;
       case "GETALLBREAKPOINTS" :
-	 nobase_debug.getAllBreakpoints(xw);
-	 break;
+         nobase_debug.getAllBreakpoints(xw);
+         break;
       case "ADDLINEBREAKPOINT" :
-	 nobase_debug.setLineBreakpoint(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getTextElement(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"LINE"),
-	       IvyXml.getAttrBool(xml,"TRACE",false));
-	 break;
+         nobase_debug.setLineBreakpoint(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getTextElement(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"LINE"),
+               IvyXml.getAttrBool(xml,"TRACE",false));
+         break;
       case "ADDEXCEPTIONBREAKPOINT" :
-	 nobase_debug.setExceptionBreakpoint(proj,IvyXml.getAttrBool(xml,"CAUGHT",false),
-	       IvyXml.getAttrBool(xml,"UNCAUGHT",true),
-	       IvyXml.getAttrBool(xml,"CHECKED",false));
-	 break;
+         nobase_debug.setExceptionBreakpoint(proj,IvyXml.getAttrBool(xml,"CAUGHT",false),
+               IvyXml.getAttrBool(xml,"UNCAUGHT",true),
+               IvyXml.getAttrBool(xml,"CHECKED",false));
+         break;
       case "EDITBREAKPOINT" :
-	 nobase_debug.editBreakpoint(IvyXml.getAttrString(xml,"ID"),
-	       IvyXml.getAttrString(xml,"PROP"),
-	       IvyXml.getAttrString(xml,"VALUE"),
-	       IvyXml.getAttrString(xml,"PROP1"),
-	       IvyXml.getAttrString(xml,"VALUE1"),
-	       IvyXml.getAttrString(xml,"PROP2"),
-	       IvyXml.getAttrString(xml,"VALUE2"));
-	 break;
+         nobase_debug.editBreakpoint(IvyXml.getAttrString(xml,"ID"),
+               IvyXml.getAttrString(xml,"PROP"),
+               IvyXml.getAttrString(xml,"VALUE"),
+               IvyXml.getAttrString(xml,"PROP1"),
+               IvyXml.getAttrString(xml,"VALUE1"),
+               IvyXml.getAttrString(xml,"PROP2"),
+               IvyXml.getAttrString(xml,"VALUE2"));
+         break;
       case "CLEARALLLINEBREAKPOINTS" :
-	 nobase_debug.clearLineBreakpoints(proj,null,0);
-	 break;
+         nobase_debug.clearLineBreakpoints(proj,null,0);
+         break;
       case "CLEARLINEBREAKPOINT" :
-	 nobase_debug.clearLineBreakpoints(proj,IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"LINE"));
-	 break;
+         nobase_debug.clearLineBreakpoints(proj,IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"LINE"));
+         break;
       case "START" :
-	 nobase_debug.runProject(IvyXml.getAttrString(xml,"NAME"),xw);
-	 break;
+         nobase_debug.runProject(IvyXml.getAttrString(xml,"NAME"),xw);
+         break;
       case "DEBUGACTION" :
-	 nobase_debug.debugAction(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrString(xml,"TARGET"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getAttrEnum(xml,"ACTION",NobaseDebugAction.NONE),xw);
-	 break;
+         nobase_debug.debugAction(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrString(xml,"TARGET"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getAttrEnum(xml,"ACTION",NobaseDebugAction.NONE),xw);
+         break;
       case "CONSOLEINPUT" :
-	 nobase_debug.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getTextElement(xml,"INPUT"));
-	 break;
+         nobase_debug.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getTextElement(xml,"INPUT"));
+         break;
       case "GETSTACKFRAMES" :
-	 nobase_debug.getStackFrames(IvyXml.getAttrString(xml,"LAUNCH"),
-	       IvyXml.getAttrInt(xml,"COUNT",-1),
-	       IvyXml.getAttrInt(xml,"DEPTH",0),xw);
-	 break;
+         nobase_debug.getStackFrames(IvyXml.getAttrString(xml,"LAUNCH"),
+               IvyXml.getAttrInt(xml,"COUNT",-1),
+               IvyXml.getAttrInt(xml,"DEPTH",0),xw);
+         break;
       case "VARVAL" :
-	 nobase_debug.getVariableValue(IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getTextElement(xml,"VAR"),
-	       IvyXml.getAttrInt(xml,"DEPTH",1),xw);
-	 break;
+         nobase_debug.getVariableValue(IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getTextElement(xml,"VAR"),
+               IvyXml.getAttrInt(xml,"DEPTH",1),xw);
+         break;
       case "VARDETAIL" :
-	 nobase_debug.getVariableValue(IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getTextElement(xml,"VAR"),-1,xw);
-	 break;
+         nobase_debug.getVariableValue(IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getTextElement(xml,"VAR"),-1,xw);
+         break;
       case "EVALUATE" :
-	 nobase_debug.evaluateExpression(proj,
-	       IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getTextElement(xml,"EXPR"),
-	       IvyXml.getAttrString(xml,"THREAD"),
-	       IvyXml.getAttrString(xml,"FRAME"),
-	       IvyXml.getAttrBool(xml,"IMPLICIT",false),
-	       IvyXml.getAttrBool(xml,"BREAK",true),
-	       IvyXml.getAttrString(xml,"REPLYID"),xw);
-	 break;
+         nobase_debug.evaluateExpression(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getTextElement(xml,"EXPR"),
+               IvyXml.getAttrString(xml,"THREAD"),
+               IvyXml.getAttrString(xml,"FRAME"),
+               IvyXml.getAttrBool(xml,"IMPLICIT",false),
+               IvyXml.getAttrBool(xml,"BREAK",true),
+               IvyXml.getAttrString(xml,"REPLYID"),xw);
+         break;
       case "RENAME" :
-	 nobase_editor.handleRename(proj,IvyXml.getAttrString(xml,"BID","*"),
-	       IvyXml.getAttrString(xml,"FILE"),
-	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
-	       IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
-	       IvyXml.getAttrString(xml,"NEWNAME"),
-	       IvyXml.getAttrBool(xml,"UPDATEREFS",true),
-	       IvyXml.getAttrBool(xml,"DOEDIT",false),
-	       IvyXml.getAttrString(xml,"FILES"),xw);
-	 break;
+         nobase_editor.handleRename(proj,IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+               IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
+               IvyXml.getAttrString(xml,"NEWNAME"),
+               IvyXml.getAttrBool(xml,"UPDATEREFS",true),
+               IvyXml.getAttrBool(xml,"DOEDIT",false),
+               IvyXml.getAttrString(xml,"FILES"),xw);
+         break;
       case "FORMATCODE" :
-	 xw.close();
-	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
-	
+         xw.close();
+         throw new NobaseException("Unimplemented NOBASE command " + cmd);
+        
       case "RENAMERESOURCE" :                   // only used for java
       case "FILEELIDE" :                        // only used for system files in Java
       case "MOVEELEMENT" :                      // only used for java
-	 xw.close();
-	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
+         xw.close();
+         throw new NobaseException("Unimplemented NOBASE command " + cmd);
       case "ENTER" :
-	 if (num_clients == 0 && nobase_pinger == null) {
-	    nobase_pinger = new Pinger();
-	    nobase_timer.schedule(nobase_pinger,30000,30000);
-	  }
-	 ++num_clients;
-	 xw.text(Integer.toString(num_clients));
-	 break;
+         if (num_clients == 0 && nobase_pinger == null) {
+            nobase_pinger = new Pinger();
+            nobase_timer.schedule(nobase_pinger,30000,30000);
+          }
+         ++num_clients;
+         xw.text(Integer.toString(num_clients));
+         break;
       case "EXIT" :
-	 if (--num_clients <= 0) {
-	    logD("Stopping application");
-	    shutdown_mint = true;
-	  }
-	 break;
+         if (--num_clients <= 0) {
+            logD("Stopping application");
+            shutdown_mint = true;
+          }
+         break;
       case "LOGLEVEL" :
-	 log_level = IvyXml.getAttrEnum(xml,"LEVEL",NobaseLogLevel.ERROR);
-	 break;
+         log_level = IvyXml.getAttrEnum(xml,"LEVEL",NobaseLogLevel.ERROR);
+         break;
       case "GETHOST" :
-	 handleGetHost(xw);
-	 break;
+         handleGetHost(xw);
+         break;
       case "PREFERENCES" :
-	 project_manager.handleGetPreferences(proj,xw);
-	 break;
+         project_manager.handleGetPreferences(proj,xw);
+         break;
       case "SETPREFERENCES" :
-	 Element pxml = IvyXml.getChild(xml,"profile");
-	 if (pxml == null) pxml = IvyXml.getChild(xml,"OPTIONS");
-	 project_manager.handleSetPreferences(proj,pxml);
-	 break;
+         Element pxml = IvyXml.getChild(xml,"profile");
+         if (pxml == null) pxml = IvyXml.getChild(xml,"OPTIONS");
+         project_manager.handleSetPreferences(proj,pxml);
+         break;
       case "FINDHIERARCHY" :
-	 break;
+         break;
       case "CREATEPRIVATE" :
       case "PRIVATEEDIT" :
       case "REMOVEPRIVATE" :
-	 break;
+         break;
       case "SAVEWORKSPACE" :
-	 xw.text("SAVED");
-	 break;
-	
+         xw.text("SAVED");
+         break;
+        
       default :
-	 xw.close();
-	 throw new NobaseException("Unknown NOBASE command " + cmd);
+         xw.close();
+         throw new NobaseException("Unknown NOBASE command " + cmd);
     }
 
    xw.end("RESULT");
@@ -615,9 +615,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for extracting items from argument message			*/
-/*										*/
+/*                                                                              */
+/*      Methods for extracting items from argument message                      */
+/*                                                                              */
 /********************************************************************************/
 
 private Set<String> getSet(Element xml,String key)
@@ -650,9 +650,9 @@ private List<Element> getElements(Element xml,String key)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling edits						*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling edits                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private List<IEditData> getEditSet(Element xml)
@@ -679,23 +679,23 @@ private static class EditDataImpl implements IEditData {
       end_offset = IvyXml.getAttrInt(e,"END",start_offset);
       edit_text = IvyXml.getText(e);
       if (IvyXml.getAttrBool(e,"ENCODE")) {
-	 edit_text = new String(IvyXml.stringToByteArray(edit_text));
+         edit_text = new String(IvyXml.stringToByteArray(edit_text));
        }
       if (edit_text != null && edit_text.length() == 0) edit_text = null;
     }
 
-   @Override public int getOffset()			{ return start_offset; }
-   @Override public int getLength()			{ return end_offset - start_offset; }
-   @Override public String getText()			{ return edit_text; }
+   @Override public int getOffset()                     { return start_offset; }
+   @Override public int getLength()                     { return end_offset - start_offset; }
+   @Override public String getText()                    { return edit_text; }
 
-}	// end of innerclass EditDataImpl
+}       // end of innerclass EditDataImpl
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Command handler for MINT						*/
-/*										*/
+/*                                                                              */
+/*      Command handler for MINT                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CommandHandler implements MintHandler {
@@ -738,26 +738,26 @@ private final class CommandHandler implements MintHandler {
        }
     }
 
-}	// end of subclass CommandHandler
+}       // end of subclass CommandHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging methods 							*/
-/*										*/
+/*                                                                              */
+/*      Logging methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 public static void logE(String msg,Throwable t) { log(NobaseLogLevel.ERROR,msg,t); }
 
-public static void logE(String msg)		{ log(NobaseLogLevel.ERROR,msg,null); }
+public static void logE(String msg)             { log(NobaseLogLevel.ERROR,msg,null); }
 
-public static void logW(String msg)		{ log(NobaseLogLevel.WARNING,msg,null); }
+public static void logW(String msg)             { log(NobaseLogLevel.WARNING,msg,null); }
 
-public static void logI(String msg)		{ log(NobaseLogLevel.INFO,msg,null); }
+public static void logI(String msg)             { log(NobaseLogLevel.INFO,msg,null); }
 
-public static void logD(String msg)		{ log(NobaseLogLevel.DEBUG,msg,null); }
+public static void logD(String msg)             { log(NobaseLogLevel.DEBUG,msg,null); }
 
 public static void logDX(String msg)
 {
@@ -773,7 +773,7 @@ public static void logX(String msg)
 
 
 
-public static void log(String msg)		{ logI(msg); }
+public static void log(String msg)              { logI(msg); }
 
 
 
@@ -816,9 +816,9 @@ private static void dumpTrace(String pfx,Throwable t) {
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple process		methods 					*/
-/*										*/
+/*                                                                              */
+/*      Simple process          methods                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleGetHost(IvyXmlWriter xw)
@@ -842,9 +842,9 @@ private void handleGetHost(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Message Routines							*/
-/*										*/
+/*                                                                              */
+/*      Message Routines                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public IvyXmlWriter beginMessage(String typ)
@@ -893,7 +893,7 @@ private void sendMessage(String msg)
    synchronized (send_sema) {
       NobaseMain.logD("Sending: " + msg);
       if (mint_control != null && !shutdown_mint)
-	 mint_control.send(msg);
+         mint_control.send(msg);
     }
 }
 
@@ -906,7 +906,7 @@ private String sendMessageWait(String msg,long delay)
    synchronized (send_sema) {
       NobaseMain.logD("Sending/w: " + msg);
       if (mint_control != null && !shutdown_mint) {
-	 mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
+         mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
        }
       else return null;
     }
@@ -917,9 +917,9 @@ private String sendMessageWait(String msg,long delay)
 
 
 /********************************************************************************/
-/*										*/
-/*	Pinging task to determine if front end crashed				*/
-/*										*/
+/*                                                                              */
+/*      Pinging task to determine if front end crashed                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class Pinger extends TimerTask {
@@ -936,15 +936,15 @@ private class Pinger extends TimerTask {
       IvyXmlWriter xw = beginMessage("PING");
       String rslt = finishMessageWait(xw,1000);
       if (rslt == null) {
-	 ++error_count;
-	 if (error_count > 5) {
-	    num_clients = 0;
-	    shutdown_mint = true;
-	    mint_control.shutDown();
-	    synchronized (NobaseMain.this) {
-	       NobaseMain.this.notifyAll();
-	     }
-	  }
+         ++error_count;
+         if (error_count > 5) {
+            num_clients = 0;
+            shutdown_mint = true;
+            mint_control.shutDown();
+            synchronized (NobaseMain.this) {
+               NobaseMain.this.notifyAll();
+             }
+          }
        }
       else error_count = 0;
     }
@@ -954,9 +954,9 @@ private class Pinger extends TimerTask {
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread pool for background tasks					*/
-/*										*/
+/*                                                                              */
+/*      Thread pool for background tasks                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public void startTask(Runnable r)
@@ -987,8 +987,8 @@ private static class NobaseThreadPool extends ThreadPoolExecutor implements Thre
 
    NobaseThreadPool() {
       super(NOBASE_CORE_POOL_SIZE,NOBASE_MAX_POOL_SIZE,
-	    NOBASE_POOL_KEEP_ALIVE_TIME,TimeUnit.MILLISECONDS,
-	    new LinkedBlockingQueue<Runnable>());
+            NOBASE_POOL_KEEP_ALIVE_TIME,TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
       setThreadFactory(this);
     }
@@ -1002,11 +1002,11 @@ private static class NobaseThreadPool extends ThreadPoolExecutor implements Thre
    @Override protected void afterExecute(Runnable r,Throwable t) {
       super.afterExecute(r,t);
       if (t != null) {
-	 logE("Problem with background task " + r.getClass().getName() + " " + r,t);
+         logE("Problem with background task " + r.getClass().getName() + " " + r,t);
        }
     }
 
-}	// end of inner class NobaseThreadPool
+}       // end of inner class NobaseThreadPool
 
 
 private class NobaseDelayExecute extends TimerTask {
@@ -1021,13 +1021,13 @@ private class NobaseDelayExecute extends TimerTask {
       thread_pool.execute(run_task);
     }
 
-}	// end of NobaseDelayExecute
+}       // end of NobaseDelayExecute
 
 
 
 
 
-}	// end of class NobaseMain
+}       // end of class NobaseMain
 
 
 

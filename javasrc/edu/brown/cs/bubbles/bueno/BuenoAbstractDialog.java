@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoAbstractDialog.java					*/
-/*										*/
-/*	BUbbles Environment New Objects creator abstract new dialog		*/
-/*										*/
+/*                                                                              */
+/*              BuenoAbstractDialog.java                                        */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator abstract new dialog             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -67,40 +67,40 @@ abstract class BuenoAbstractDialog implements BuenoConstants, ActionListener, Bu
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected BuenoProperties property_set;
 protected BuenoLocation insertion_point;
 protected BuenoBubbleCreator bubble_creator;
 protected JTextField focus_field;
-protected BuenoType	create_type;
+protected BuenoType     create_type;
 
 protected BuenoValidator the_validator;
 
-protected Font		button_font;
-protected Font		title_font;
+protected Font          button_font;
+protected Font          title_font;
 
-private Component	source_component;
-private Point		start_point;
-private JButton 	accept_button;
-private JLabel		title_label;
-private String		title_text;
+private Component       source_component;
+private Point           start_point;
+private JButton         accept_button;
+private JLabel          title_label;
+private String          title_text;
 
-private ButtonGroup	protection_group;
+private ButtonGroup     protection_group;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BuenoAbstractDialog(Component src,Point p,BuenoProperties known,BuenoLocation insert,
-				 BuenoBubbleCreator newer,BuenoType typ)
+                                 BuenoBubbleCreator newer,BuenoType typ)
 {
    source_component = src;
    start_point = p;
@@ -126,9 +126,9 @@ protected BuenoAbstractDialog(Component src,Point p,BuenoProperties known,BuenoL
 
 
 /********************************************************************************/
-/*										*/
-/*	Dialog management							*/
-/*										*/
+/*                                                                              */
+/*      Dialog management                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public void showDialog()
@@ -160,7 +160,7 @@ public void showDialog()
    if (bba == null) return;
 
    bba.addBubble(bb,source_component,start_point,
-	 PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|PLACEMENT_LOGICAL);
+         PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|PLACEMENT_LOGICAL);
 }
 
 
@@ -170,9 +170,9 @@ abstract void setupPanel(SwingGridPanel pnl);
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void setLabel(String lbl)
@@ -184,14 +184,14 @@ public void setLabel(String lbl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation routines							*/
-/*										*/
+/*                                                                              */
+/*      Creation routines                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 abstract void doCreate(BudaBubbleArea bba,Point p);
 
-protected BuenoType getCreationType()		{ return the_validator.getCreationType(); }
+protected BuenoType getCreationType()           { return the_validator.getCreationType(); }
 
 private void update()
 {
@@ -205,18 +205,18 @@ private final class ValidCallback implements BuenoValidatorCallback {
 
    @Override public void validationDone(BuenoValidator bv,boolean fg) {
       if (accept_button != null) {
-	 accept_button.setEnabled(fg);
+         accept_button.setEnabled(fg);
        }
     }
 
-}	// end of inner class ValidCallback
+}       // end of inner class ValidCallback
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addButtons(SwingGridPanel pnl)
@@ -237,9 +237,9 @@ void addButtons(SwingGridPanel pnl)
 
 
 /********************************************************************************/
-/*										*/
-/*	String-valued property button						*/
-/*										*/
+/*                                                                              */
+/*      String-valued property button                                           */
+/*                                                                              */
 /********************************************************************************/
 
 protected class StringField extends SwingTextField implements ActionListener, CaretListener {
@@ -248,7 +248,7 @@ protected class StringField extends SwingTextField implements ActionListener, Ca
    private static final long serialVersionUID = 1;
 
 
-   StringField(BuenoKey key)			{ this(key,24); }
+   StringField(BuenoKey key)                    { this(key,24); }
 
    StringField(BuenoKey key,int width) {
       super(property_set.getStringProperty(key),24);
@@ -268,7 +268,7 @@ protected class StringField extends SwingTextField implements ActionListener, Ca
       BuenoAbstractDialog.this.update();
     }
 
-}	// end of inner class StringField
+}       // end of inner class StringField
 
 
 
@@ -289,15 +289,15 @@ protected class BooleanField extends JCheckBox implements ActionListener {
       BuenoAbstractDialog.this.update();
     }
 
-}	// end of inner class BooleanField
+}       // end of inner class BooleanField
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Protection modifier property button					*/
-/*										*/
+/*                                                                              */
+/*      Protection modifier property button                                     */
+/*                                                                              */
 /********************************************************************************/
 
 protected class ProtectionButton extends JRadioButton implements ChangeListener {
@@ -318,16 +318,16 @@ protected class ProtectionButton extends JRadioButton implements ChangeListener 
    @Override public void stateChanged(ChangeEvent e) {
       int v0 = property_set.getModifiers();
       if (isSelected()) {
-	 v0 |= modifier_value;
+         v0 |= modifier_value;
        }
       else {
-	 v0 &= ~modifier_value;
+         v0 &= ~modifier_value;
        }
       property_set.put(BuenoKey.KEY_MODIFIERS,v0);
       BuenoAbstractDialog.this.update();
     }
 
-}	// end of inner class ProtectionButton
+}       // end of inner class ProtectionButton
 
 
 
@@ -349,23 +349,23 @@ protected class ModifierButton extends JToggleButton implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       int v0 = property_set.getModifiers();
       if (isSelected()) {
-	 v0 |= modifier_value;
+         v0 |= modifier_value;
        }
       else {
-	 v0 &= ~modifier_value;
+         v0 &= ~modifier_value;
        }
       property_set.put(BuenoKey.KEY_MODIFIERS,v0);
       BuenoAbstractDialog.this.update();
     }
 
-}	// end of inner class ModiferButton
+}       // end of inner class ModiferButton
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble container							*/
-/*										*/
+/*                                                                              */
+/*      Bubble container                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class DialogBubble extends BudaBubble {
@@ -377,14 +377,14 @@ private class DialogBubble extends BudaBubble {
       pnl.addMouseListener(new BudaConstants.FocusOnEntry(focus_field));
     }
 
-}	// end of inner class DialogBubble
+}       // end of inner class DialogBubble
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Accept/cancel option management 					*/
-/*										*/
+/*                                                                              */
+/*      Accept/cancel option management                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent evt)
@@ -400,7 +400,7 @@ private class DialogBubble extends BudaBubble {
    else if (cmd.equals("CANCEL")) {
       bb.setVisible(false);
     }
-   else {				// accept from text box as well
+   else {                               // accept from text box as well
       if (!the_validator.checkParsing()) return;
       bb.setVisible(false);
       BubbleCreator bc = new BubbleCreator(bba,where);
@@ -428,9 +428,9 @@ private class BubbleCreator implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Class Signature parsing methods 					*/
-/*										*/
+/*                                                                              */
+/*      Class Signature parsing methods                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected void parseClassSignature(String txt) throws BuenoException
@@ -472,17 +472,17 @@ protected void parseExtends(StreamTokenizer tok) throws BuenoException
 {
    if (checkNextToken(tok,"extends")) {
       if (create_type == BuenoType.NEW_INTERFACE) {
-	 List<String> rslt = new ArrayList<String>();
-	 for ( ; ; ) {
-	    String typ = parseType(tok);
-	    rslt.add(typ);
-	    if (!checkNextToken(tok,',')) break;
-	  }
-	 property_set.put(BuenoKey.KEY_EXTENDS,rslt);
+         List<String> rslt = new ArrayList<String>();
+         for ( ; ; ) {
+            String typ = parseType(tok);
+            rslt.add(typ);
+            if (!checkNextToken(tok,',')) break;
+          }
+         property_set.put(BuenoKey.KEY_EXTENDS,rslt);
        }
       else {
-	 String typ = parseType(tok);
-	 property_set.put(BuenoKey.KEY_EXTENDS,typ);
+         String typ = parseType(tok);
+         property_set.put(BuenoKey.KEY_EXTENDS,typ);
        }
     }
 }
@@ -493,12 +493,12 @@ protected void parseImplements(StreamTokenizer tok) throws BuenoException
 {
    if (checkNextToken(tok,"implements")) {
       if (create_type == BuenoType.NEW_INTERFACE)
-	 throw new BuenoException("Interfaces don't use implements");
+         throw new BuenoException("Interfaces don't use implements");
       List<String> rslt = new ArrayList<String>();
       for ( ; ; ) {
-	 String typ = parseType(tok);
-	 rslt.add(typ);
-	 if (!checkNextToken(tok,',')) break;
+         String typ = parseType(tok);
+         rslt.add(typ);
+         if (!checkNextToken(tok,',')) break;
        }
       property_set.put(BuenoKey.KEY_IMPLEMENTS,rslt);
     }
@@ -508,9 +508,9 @@ protected void parseImplements(StreamTokenizer tok) throws BuenoException
 
 
 /********************************************************************************/
-/*										*/
-/*	Signature parsing methods						*/
-/*										*/
+/*                                                                              */
+/*      Signature parsing methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 protected void parseModifiers(StreamTokenizer stok)
@@ -519,8 +519,8 @@ protected void parseModifiers(StreamTokenizer stok)
 
    for ( ; ; ) {
       if (nextToken(stok) != StreamTokenizer.TT_WORD) {
-	 stok.pushBack();
-	 break;
+         stok.pushBack();
+         break;
        }
       if (stok.sval.equals("public")) mods |= Modifier.PUBLIC;
       else if (stok.sval.equals("protected")) mods |= Modifier.PROTECTED;
@@ -534,8 +534,8 @@ protected void parseModifiers(StreamTokenizer stok)
       else if (stok.sval.equals("volatile")) mods |= Modifier.VOLATILE;
       else if (stok.sval.equals("strictfp")) mods |= Modifier.STRICT;
       else {
-	 stok.pushBack();
-	 break;
+         stok.pushBack();
+         break;
        }
     }
 
@@ -560,33 +560,33 @@ protected String parseType(StreamTokenizer stok) throws BuenoException
    String rslt = null;
 
    if (checkNextToken(stok,"byte") || checkNextToken(stok,"short") ||
-	  checkNextToken(stok,"int") || checkNextToken(stok,"long") ||
-	  checkNextToken(stok,"char") || checkNextToken(stok,"float") ||
-	  checkNextToken(stok,"double") || checkNextToken(stok,"boolean") ||
-	  checkNextToken(stok,"void")) {
+          checkNextToken(stok,"int") || checkNextToken(stok,"long") ||
+          checkNextToken(stok,"char") || checkNextToken(stok,"float") ||
+          checkNextToken(stok,"double") || checkNextToken(stok,"boolean") ||
+          checkNextToken(stok,"void")) {
       rslt = stok.sval;
     }
    else if (checkNextToken(stok,'?')) {
       rslt = "?";
       if (nextToken(stok) != StreamTokenizer.TT_WORD) {
-	 stok.pushBack();
+         stok.pushBack();
        }
       else if (checkNextToken(stok,"extends") || checkNextToken(stok,"super")) {
-	 String ext = stok.sval;
-	 String ntyp = parseType(stok);
-	 rslt = rslt + " " + ext + " " + ntyp;
+         String ext = stok.sval;
+         String ntyp = parseType(stok);
+         rslt = rslt + " " + ext + " " + ntyp;
        }
       else {
-	 stok.pushBack();
+         stok.pushBack();
        }
     }
    else if (nextToken(stok) == StreamTokenizer.TT_WORD) {
       String tnam = stok.sval;
       for ( ; ; ) {
-	 if (!checkNextToken(stok,'.')) break;
-	 if (nextToken(stok) != StreamTokenizer.TT_WORD)
-	    throw new BuenoException("Illegal qualified name");
-	 tnam += "." + stok.sval;
+         if (!checkNextToken(stok,'.')) break;
+         if (nextToken(stok) != StreamTokenizer.TT_WORD)
+            throw new BuenoException("Illegal qualified name");
+         tnam += "." + stok.sval;
        }
       rslt = tnam;
     }
@@ -595,11 +595,11 @@ protected String parseType(StreamTokenizer stok) throws BuenoException
    if (checkNextToken(stok,'<')) {
       String ptyp = null;
       for ( ; ; ) {
-	 String atyp = parseType(stok);
-	 if (ptyp == null) ptyp = atyp;
-	 else ptyp += "," + atyp;
-	 if (checkNextToken(stok,'>')) break;
-	 else if (!checkNextToken(stok,',')) throw new BuenoException("Bad parameterized argument");
+         String atyp = parseType(stok);
+         if (ptyp == null) ptyp = atyp;
+         else ptyp += "," + atyp;
+         if (checkNextToken(stok,'>')) break;
+         else if (!checkNextToken(stok,',')) throw new BuenoException("Bad parameterized argument");
        }
       if (ptyp == null) throw new BuenoException("Parameterized type list missing");
       rslt += "<" + ptyp + ">";
@@ -672,7 +672,7 @@ protected int nextToken(StreamTokenizer stok)
 
 
 
-}	// end of class BuenoAbstractDialog
+}       // end of class BuenoAbstractDialog
 
 
 

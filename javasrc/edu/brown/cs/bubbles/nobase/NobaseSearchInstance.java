@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseSearchInstance.java					*/
-/*										*/
-/*	Class to handle a search instance					*/
-/*										*/
+/*                                                                              */
+/*              NobaseSearchInstance.java                                       */
+/*                                                                              */
+/*      Class to handle a search instance                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -61,24 +61,24 @@ class NobaseSearchInstance implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseProject	for_project;
+private NobaseProject   for_project;
 private Set<NobaseSymbol> match_symbols;
 private List<SearchResult> result_set;
-private NobaseFile	 current_file;
+private NobaseFile       current_file;
 private String          name_found;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseSearchInstance(NobaseProject proj)
@@ -93,23 +93,23 @@ NobaseSearchInstance(NobaseProject proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-void setFile(NobaseFile jf)			{ current_file = jf; }
+void setFile(NobaseFile jf)                     { current_file = jf; }
 
-List<SearchResult> getMatches() 		{ return result_set; }
-Set<NobaseSymbol> getSymbols()			{ return match_symbols; }
+List<SearchResult> getMatches()                 { return result_set; }
+Set<NobaseSymbol> getSymbols()                  { return match_symbols; }
 String getNameFound()                           { return name_found; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputSearchFor(IvyXmlWriter xw)
@@ -120,18 +120,18 @@ void outputSearchFor(IvyXmlWriter xw)
       String rwhat = "Variable";
       NobaseValue nv = rs.getValue();
       if (nv != null && nv.isFunction()) {
-	 rwhat = "Function";
+         rwhat = "Function";
        }
       else {
-	 String qnm = rs.getBubblesName();
-	 if (qnm == null) rwhat = "Local";
-	 else {
-	    int idx = qnm.indexOf(".");
-	    if (idx >= 0) {
-	       idx = qnm.indexOf(".",idx+1);
-	    }
-	    if (idx >= 0) rwhat = "Local";
-	 }
+         String qnm = rs.getBubblesName();
+         if (qnm == null) rwhat = "Local";
+         else {
+            int idx = qnm.indexOf(".");
+            if (idx >= 0) {
+               idx = qnm.indexOf(".",idx+1);
+            }
+            if (idx >= 0) rwhat = "Local";
+         }
        }
 
       if (nm == null) nm = rs.getName();
@@ -152,9 +152,9 @@ void outputSearchFor(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search for symbols							*/
-/*										*/
+/*                                                                              */
+/*      Search for symbols                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 ASTVisitor getFindSymbolsVisitor(String pat,String kind)
@@ -173,19 +173,19 @@ ASTVisitor getFindSymbolsVisitor(String pat,String kind)
       case "CLASS&INTERFACE" :
       case "METHOD" :
       case "CONSTRUCTOR" :
-	 p1 = p1.replace("(...)","()");
-	 kindset.add(NameType.FUNCTION);
-	 break;
+         p1 = p1.replace("(...)","()");
+         kindset.add(NameType.FUNCTION);
+         break;
       case "FIELD" :
-	 kindset.add(NameType.VARIABLE);
-	 int idx8 = p1.indexOf(" ");
-	 if (idx8 > 0) {
-	    p1 = p1.substring(0,idx8);
-	  }
-	 break;
+         kindset.add(NameType.VARIABLE);
+         int idx8 = p1.indexOf(" ");
+         if (idx8 > 0) {
+            p1 = p1.substring(0,idx8);
+          }
+         break;
       case "PACKAGE" :
-	 kindset.add(NameType.MODULE);
-	 break;
+         kindset.add(NameType.MODULE);
+         break;
     }
 
    return new FindSymbolVisitor(p1,kindset);
@@ -249,12 +249,12 @@ private class FindSymbolVisitor extends ASTVisitor {
 
 
 
-}	// end of inner class FindSymbolVisitor
+}       // end of inner class FindSymbolVisitor
 
 /********************************************************************************/
-/*										*/
-/*	Class to holde results							*/
-/*										*/
+/*                                                                              */
+/*      Class to holde results                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -274,21 +274,21 @@ private static class Match implements SearchResult {
       container_symbol = cntr;
     }
 
-   @Override public int getOffset()			{ return match_start; }
-   @Override public int getLength()			{ return match_length; }
-   @Override public NobaseSymbol getSymbol()		{ return match_symbol; }
-   @Override public NobaseSymbol getContainer() 	{ return container_symbol; }
-   @Override public NobaseFile getFile()		{ return match_file; }
+   @Override public int getOffset()                     { return match_start; }
+   @Override public int getLength()                     { return match_length; }
+   @Override public NobaseSymbol getSymbol()            { return match_symbol; }
+   @Override public NobaseSymbol getContainer()         { return container_symbol; }
+   @Override public NobaseFile getFile()                { return match_file; }
 
-}	// end of inner class Match
+}       // end of inner class Match
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Visitor to find a location						*/
-/*										*/
+/*                                                                              */
+/*      Visitor to find a location                                              */
+/*                                                                              */
 /********************************************************************************/
 
 ASTVisitor getFindLocationVisitor(int soff,int eoff)
@@ -353,15 +353,15 @@ private class FindLocationVisitor extends DefaultASTVisitor {
       return true;
     }
 
-}	// end of inner class FindLocationVisitor
+}       // end of inner class FindLocationVisitor
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hnadle find by key							*/
-/*										*/
+/*                                                                              */
+/*      Hnadle find by key                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 ASTVisitor getFindByKeyVisitor(String key)
@@ -393,9 +393,9 @@ private class FindByKeyVisitor extends ASTVisitor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find nodes associated with a definition			*/
-/*										*/
+/*                                                                              */
+/*      Methods to find nodes associated with a definition                      */
+/*                                                                              */
 /********************************************************************************/
 
 ASTVisitor getLocationsVisitor(boolean defs,boolean refs,boolean impls,
@@ -519,10 +519,10 @@ private class LocationVisitor extends ASTVisitor {
             write = true;
             for (ASTNode p = n; p != null; p = p.getParent()) {
                if (p instanceof Assignment) {
-        	  Assignment op = (Assignment) p;
-        	  if (op.getOperator().equals(Assignment.Operator.ASSIGN)) read = false;
-        	  break;
-        	}
+                  Assignment op = (Assignment) p;
+                  if (op.getOperator().equals(Assignment.Operator.ASSIGN)) read = false;
+                  break;
+                }
                else if (!(p instanceof Expression)) break;
              }
           }
@@ -554,20 +554,20 @@ private class LocationVisitor extends ASTVisitor {
       return false;
     }
    
-}	// end of inner class LocationsVisitor
+}       // end of inner class LocationsVisitor
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find regions 						*/
-/*										*/
+/*                                                                              */
+/*      Methods to find regions                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public void findTextRegions(ISemanticData isd,boolean pfx,boolean statics,boolean compunit,
       boolean imports,boolean pkgfg,boolean topdecls,boolean fields,boolean all,
       IvyXmlWriter xw)
-	throws NobaseException
+        throws NobaseException
 {
    String fnm = isd.getFileData().getFile().getPath();
    ASTNode root = isd.getRootNode();
@@ -614,7 +614,7 @@ public void findTextRegions(ISemanticData isd,boolean pfx,boolean statics,boolea
     }
 
    RegionVisitor rv = new RegionVisitor(xw,initcmmts,requires,exports,
-	 fctdecls,vardecls,computations,isd.getFileData());
+         fctdecls,vardecls,computations,isd.getFileData());
    isd.getRootNode().accept(rv);
 }
 
@@ -646,10 +646,10 @@ private class RegionVisitor extends DefaultASTVisitor {
 
    @Override public boolean visit(Block n) {
       if (current_depth++ == 0) {
-	 if (do_comments) {
-	    n.getStartPosition();
-	  }
-	 return true;
+         if (do_comments) {
+            n.getStartPosition();
+          }
+         return true;
        }
       return false;
     }
@@ -760,9 +760,9 @@ private class RegionVisitor extends DefaultASTVisitor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Find all names matching a pattern					*/
-/*										*/
+/*                                                                              */
+/*      Find all names matching a pattern                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private Collection<NobaseSymbol> findAllSymbols(String pat)
@@ -772,18 +772,18 @@ private Collection<NobaseSymbol> findAllSymbols(String pat)
    for (NobaseFile nf : for_project.getAllFiles()) {
       ISemanticData isd = for_project.getParseData(nf);
       if (isd != null && isd.getRootNode() != null) {
-	 NobaseScope scp = NobaseAst.getScope(isd.getRootNode());
-	 if (scp != null) {
-	    Collection<NobaseSymbol> syms = scp.findAll(pat);
-	    if (syms != null) rslt.addAll(syms);
-	  }
+         NobaseScope scp = NobaseAst.getScope(isd.getRootNode());
+         if (scp != null) {
+            Collection<NobaseSymbol> syms = scp.findAll(pat);
+            if (syms != null) rslt.addAll(syms);
+          }
        }
     }
 
    return rslt;
 }
 
-}	// end of class NobaseSearchInstance
+}       // end of class NobaseSearchInstance
 
 
 

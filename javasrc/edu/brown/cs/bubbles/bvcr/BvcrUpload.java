@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrUpload.java 						*/
-/*										*/
-/*	Bubble Version Collaboration Repository code to upload change sets	*/
-/*										*/
+/*                                                                              */
+/*              BvcrUpload.java                                                 */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository code to upload change sets      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,15 +55,15 @@ final class BvcrUpload implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private URLConnection	url_connection;
-private OutputStream	output_stream;
-private String		boundary_string;
-private int		time_out;
+private URLConnection   url_connection;
+private OutputStream    output_stream;
+private String          boundary_string;
+private int             time_out;
 
 
 private static Random static_random = new Random();
@@ -72,9 +72,9 @@ private static Random static_random = new Random();
 
 
 /********************************************************************************/
-/*										*/
-/*	Static entries								*/
-/*										*/
+/*                                                                              */
+/*      Static entries                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static boolean upload(String data,String user,String rid,SecretKey key)
@@ -115,9 +115,9 @@ static InputStream download(String user,String rid,long dlm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BvcrUpload()
@@ -132,9 +132,9 @@ private BvcrUpload()
 
 
 /********************************************************************************/
-/*										*/
-/*	Upload methods								*/
-/*										*/
+/*                                                                              */
+/*      Upload methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void processUpload(String data,String uid,String rid,SecretKey key) throws IOException
@@ -150,7 +150,7 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       DeflaterOutputStream dos = new DeflaterOutputStream(bos);
       for (byte b : data.getBytes()) {
-	 dos.write(b);
+         dos.write(b);
        }
       dos.close();
       bdata = bos.toByteArray();
@@ -163,15 +163,15 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       is = new ByteArrayInputStream(bdata);
       is1 = is;
       if (key != null) {
-	 try {
-	    Cipher c = Cipher.getInstance(key.getAlgorithm());
-	    AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
-	    c.init(Cipher.ENCRYPT_MODE,key,ps);
-	    is1 = new CipherInputStream(is,c);
-	  }
-	 catch (Exception e) {
-	    IvyLog.logE("BVCR","Unable to create cipher for UploadUPLO",e);
-	  }
+         try {
+            Cipher c = Cipher.getInstance(key.getAlgorithm());
+            AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
+            c.init(Cipher.ENCRYPT_MODE,key,ps);
+            is1 = new CipherInputStream(is,c);
+          }
+         catch (Exception e) {
+            IvyLog.logE("BVCR","Unable to create cipher for UploadUPLO",e);
+          }
        }
 
       setParameter("U",uid);
@@ -187,9 +187,9 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
 
    try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
       for ( ; ; ) {
-	 String ln = in.readLine();
-	 if (ln == null) break;
-	 IvyLog.logD("BVCR","UPLOAD RESULT: " + ln);
+         String ln = in.readLine();
+         if (ln == null) break;
+         IvyLog.logD("BVCR","UPLOAD RESULT: " + ln);
        }
       IvyLog.logD("BVCR","UPLOAD COMPLETE");
     }
@@ -199,9 +199,9 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
 
 
 /********************************************************************************/
-/*										*/
-/*	Download methods							*/
-/*										*/
+/*                                                                              */
+/*      Download methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private InputStream processDownload(String uid,String rid,long dlm) throws IOException
@@ -216,7 +216,7 @@ private InputStream processDownload(String uid,String rid,long dlm) throws IOExc
    setParameter("D",Long.toString(dlm));
 
    IvyLog.logD("BVCR","Download URL = " + url + "?U=" + uid +
-	 "&R=" + rid + "&D=" + Long.toString(dlm));
+         "&R=" + rid + "&D=" + Long.toString(dlm));
 
    InputStream ins = post();
 
@@ -226,9 +226,9 @@ private InputStream processDownload(String uid,String rid,long dlm) throws IOExc
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling URLs						*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling URLs                                               */
+/*                                                                              */
 /********************************************************************************/
 
 static String getRepoUrl()
@@ -248,9 +248,9 @@ static String getRepoUrl()
 
 
 /********************************************************************************/
-/*										*/
-/*	URL management								*/
-/*										*/
+/*                                                                              */
+/*      URL management                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupConnection(String url) throws IOException
@@ -271,7 +271,7 @@ private void setupConnection(String url) throws IOException
    url_connection.setReadTimeout(time_out);
    url_connection.setDoOutput(true);
    url_connection.setRequestProperty("Content-Type",
-	 "multipart/form-data; boundary=" + boundary_string);
+         "multipart/form-data; boundary=" + boundary_string);
 }
 
 
@@ -285,9 +285,9 @@ private static String randomString()
 
 
 /********************************************************************************/
-/*										*/
-/*	Parameter field methods 						*/
-/*										*/
+/*                                                                              */
+/*      Parameter field methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void setParameter(String name,String value) throws IOException
@@ -375,8 +375,8 @@ private static int pipe(InputStream in,OutputStream out) throws IOException
    int total = 0;
    synchronized (in) {
       while ((nread = in.read(buf, 0, buf.length)) >= 0) {
-	 out.write(buf, 0, nread);
-	 total += nread;
+         out.write(buf, 0, nread);
+         total += nread;
        }
     }
    out.flush();
@@ -389,9 +389,9 @@ private static int pipe(InputStream in,OutputStream out) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Sending methods 							*/
-/*										*/
+/*                                                                              */
+/*      Sending methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private InputStream post() throws IOException
@@ -407,7 +407,7 @@ private InputStream post() throws IOException
 
 
 
-}	// end of class BvcrUpload
+}       // end of class BvcrUpload
 
 
 

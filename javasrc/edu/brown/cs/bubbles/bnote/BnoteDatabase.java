@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BnoteDatabase.java						*/
-/*										*/
-/*	Database interface for storing programmers notebook			*/
-/*										*/
+/*                                                                              */
+/*              BnoteDatabase.java                                              */
+/*                                                                              */
+/*      Database interface for storing programmers notebook                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -72,21 +72,21 @@ class BnoteDatabase implements BnoteConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Connection	note_conn;
+private Connection      note_conn;
 private List<TaskImpl>  all_tasks;
 
-private long		id_count;
-private long		next_id;
-private long		id_request;
-private Boolean 	use_begin;
-private boolean 	use_streams;
+private long            id_count;
+private long            next_id;
+private long            id_request;
+private Boolean         use_begin;
+private boolean         use_streams;
 
-private static Set<String>	ignore_fields;
+private static Set<String>      ignore_fields;
 
 static {
    ignore_fields = new HashSet<String>();
@@ -98,15 +98,15 @@ static {
 
 
 // TODO: Add entry to dump the database, add entry to merge a dumped database
-//	needing to track what has been added before
-//	needing to change IDs
+//      needing to track what has been added before
+//      needing to change IDs
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BnoteDatabase()
@@ -148,9 +148,9 @@ BnoteDatabase(boolean local)
 
 
 /********************************************************************************/
-/*										*/
-/*	Add to the database							*/
-/*										*/
+/*                                                                              */
+/*      Add to the database                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized BnoteTask addEntry(String proj,BnoteTask task,BnoteEntryType type,Map<String,Object> values)
@@ -166,14 +166,14 @@ synchronized BnoteTask addEntry(String proj,BnoteTask task,BnoteEntryType type,M
 
    switch (type) {
       case NONE :
-	 return null;
+         return null;
       case NEW_TASK :
-	 String nm = (String) values.remove("NAME");
-	 String ds = (String) values.remove("DESCRIPTION");
-	 task = defineTask(nm,proj,ds);
-	 break;
+         String nm = (String) values.remove("NAME");
+         String ds = (String) values.remove("DESCRIPTION");
+         task = defineTask(nm,proj,ds);
+         break;
       default:
-	 break;
+         break;
     }
 
    if (task != null) {
@@ -206,7 +206,7 @@ private class NodeInserter implements Runnable {
    private BnoteEntryType entry_type;
 
    NodeInserter(long eid,String proj,Map<String,Object> values,BnoteTask task,
-	BnoteEntryType type) {
+        BnoteEntryType type) {
       entry_id = eid;
       project_name = proj;
       value_set = values;
@@ -216,47 +216,47 @@ private class NodeInserter implements Runnable {
 
    @Override public void run() {
       while (note_conn != null) {
-	 Connection c = note_conn;
-	 if (c == null) break;
+         Connection c = note_conn;
+         if (c == null) break;
 
-	 String unm = null;
-	 if (value_set.get("USER") != null) unm = value_set.get("USER").toString();
-	 if (unm == null) unm = System.getProperty("user.name");
+         String unm = null;
+         if (value_set.get("USER") != null) unm = value_set.get("USER").toString();
+         if (unm == null) unm = System.getProperty("user.name");
 
-	 BoardLog.logD("BNOTE","ADD ENTRY WITH " + value_set.size() + " VALUES");
+         BoardLog.logD("BNOTE","ADD ENTRY WITH " + value_set.size() + " VALUES");
 
-	 try {
-	    PreparedStatement s = c.prepareStatement("INSERT INTO Entry VALUES (?,?,?,?,?,DEFAULT)");
-	    s.setLong(1,entry_id);
-	    s.setString(2,project_name);
-	    if (for_task != null) s.setLong(3,for_task.getTaskId());
-	    else s.setLong(3,0);
-	    s.setString(4,entry_type.toString());
-	    s.setString(5,unm);
-	    s.executeUpdate();
-	    s.close();
+         try {
+            PreparedStatement s = c.prepareStatement("INSERT INTO Entry VALUES (?,?,?,?,?,DEFAULT)");
+            s.setLong(1,entry_id);
+            s.setString(2,project_name);
+            if (for_task != null) s.setLong(3,for_task.getTaskId());
+            else s.setLong(3,0);
+            s.setString(4,entry_type.toString());
+            s.setString(5,unm);
+            s.executeUpdate();
+            s.close();
 
-	    for (Map.Entry<String,Object> ent : value_set.entrySet()) {
-	       if (ignore_fields.contains(ent.getKey())) continue;
-	       s = c.prepareStatement("INSERT INTO Prop VALUES (?,?,?)");
-	       s.setLong(1,entry_id);
-	       s.setString(2,ent.getKey());
-	       s.setString(3,ent.getValue().toString());
-	       s.executeUpdate();
-	       s.close();
-	     }
-	    // BoardLog.logD("BNOTE","OPERATION SUCCEEDED");
-	    break;
-	  }
-	 catch (SQLException e) {
-	    BoardLog.logD("BNOTE","OPERATION FAILED: " + e);
-	    resetDatabase();
-	    if (note_conn == null) {
-	       BoardLog.logE("BNOTE","Problem saving notebook entry " + entry_id + " " +
-		     project_name + " " + entry_type + " " + unm + " " + value_set.size(),e);
-	       break;
-	     }
-	  }
+            for (Map.Entry<String,Object> ent : value_set.entrySet()) {
+               if (ignore_fields.contains(ent.getKey())) continue;
+               s = c.prepareStatement("INSERT INTO Prop VALUES (?,?,?)");
+               s.setLong(1,entry_id);
+               s.setString(2,ent.getKey());
+               s.setString(3,ent.getValue().toString());
+               s.executeUpdate();
+               s.close();
+             }
+            // BoardLog.logD("BNOTE","OPERATION SUCCEEDED");
+            break;
+          }
+         catch (SQLException e) {
+            BoardLog.logD("BNOTE","OPERATION FAILED: " + e);
+            resetDatabase();
+            if (note_conn == null) {
+               BoardLog.logE("BNOTE","Problem saving notebook entry " + entry_id + " " +
+                     project_name + " " + entry_type + " " + unm + " " + value_set.size(),e);
+               break;
+             }
+          }
        }
     }
 }
@@ -265,9 +265,9 @@ private class NodeInserter implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Attachment methods							*/
-/*										*/
+/*                                                                              */
+/*      Attachment methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized long saveAttachment(String anm,InputStream ins,int len)
@@ -283,17 +283,17 @@ synchronized long saveAttachment(String anm,InputStream ins,int len)
       s.setLong(1,id);
       s.setString(2,anm);
       if (!use_streams) {
-	 try {
-	    if (len > 0) s.setBlob(3,ins,len);
-	    else s.setBlob(3,ins);
-	  }
-	 catch (SQLException e) {
-	    use_streams = true;
-	  }
+         try {
+            if (len > 0) s.setBlob(3,ins,len);
+            else s.setBlob(3,ins);
+          }
+         catch (SQLException e) {
+            use_streams = true;
+          }
        }
       if (use_streams) {
-	 if (len > 0) s.setBinaryStream(3,ins,len);
-	 else s.setBinaryStream(3,ins);
+         if (len > 0) s.setBinaryStream(3,ins,len);
+         else s.setBinaryStream(3,ins);
        }
       s.executeUpdate();
       s.close();
@@ -329,19 +329,19 @@ synchronized File getAttachment(String aid)
       s.setLong(1,id);
       ResultSet rs = s.executeQuery();
       if (!rs.next()) {
-	 BoardLog.logE("BNOTE","Attachment " + aid + " not found");
-	 return null;
+         BoardLog.logE("BNOTE","Attachment " + aid + " not found");
+         return null;
        }
       String snm = rs.getString(1);
       InputStream ins = null;
       if (!use_streams) {
-	 try {
-	    Blob data = rs.getBlob(2);
-	    ins = data.getBinaryStream();
-	  }
-	 catch (SQLException e) {
-	    use_streams = true;
-	  }
+         try {
+            Blob data = rs.getBlob(2);
+            ins = data.getBinaryStream();
+          }
+         catch (SQLException e) {
+            use_streams = true;
+          }
        }
       if (use_streams || ins == null) ins = rs.getBinaryStream(2);
       int idx = snm.lastIndexOf(".");
@@ -406,9 +406,9 @@ synchronized String getAttachmentAsString(String aid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Task methods								*/
-/*										*/
+/*                                                                              */
+/*      Task methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized TaskImpl defineTask(String name,String proj,String desc)
@@ -445,20 +445,20 @@ private class TaskInserter implements Runnable {
       String q = "INSERT INTO Task VALUES (?,?,?,?)";
 
       while (note_conn != null) {
-	 try {
-	    PreparedStatement s = note_conn.prepareStatement(q);
-	    s.setLong(1,for_task.getTaskId());
-	    s.setString(2,for_task.getName());
-	    s.setString(3,for_task.getDescription());
-	    s.setString(4,for_task.getProject());
-	    s.executeUpdate();
-	    s.close();
-	    break;
-	  }
-	 catch (SQLException e) {
-	    BoardLog.logE("BNOTE","Problem defining new task",e);
-	    resetDatabase();
-	  }
+         try {
+            PreparedStatement s = note_conn.prepareStatement(q);
+            s.setLong(1,for_task.getTaskId());
+            s.setString(2,for_task.getName());
+            s.setString(3,for_task.getDescription());
+            s.setString(4,for_task.getProject());
+            s.executeUpdate();
+            s.close();
+            break;
+          }
+         catch (SQLException e) {
+            BoardLog.logE("BNOTE","Problem defining new task",e);
+            resetDatabase();
+          }
        }
     }
 }
@@ -475,23 +475,23 @@ private void loadTasks()
 
    while (note_conn != null) {
       try {
-	 PreparedStatement s = note_conn.prepareStatement(q);
-	 ResultSet rs = s.executeQuery();
-	 while (rs.next()) {
-	    int id = rs.getInt(1);
-	    String nm = rs.getString(2);
-	    String pr = rs.getString(3);
-	    String d = rs.getString(4);
-	    TaskImpl ti = new TaskImpl(id,nm,pr,d);
-	    // if server, need to send new task message
-	    all_tasks.add(ti);
-	  }
-	 s.close();
-	 break;
+         PreparedStatement s = note_conn.prepareStatement(q);
+         ResultSet rs = s.executeQuery();
+         while (rs.next()) {
+            int id = rs.getInt(1);
+            String nm = rs.getString(2);
+            String pr = rs.getString(3);
+            String d = rs.getString(4);
+            TaskImpl ti = new TaskImpl(id,nm,pr,d);
+            // if server, need to send new task message
+            all_tasks.add(ti);
+          }
+         s.close();
+         break;
        }
       catch (SQLException e) {
-	 BoardLog.logE("BNOTE","Problem loading tasks",e);
-	 resetDatabase();
+         BoardLog.logE("BNOTE","Problem loading tasks",e);
+         resetDatabase();
        }
     }
 }
@@ -505,7 +505,7 @@ List<BnoteTask> getTasksForProject(String proj)
 
    for (TaskImpl ti : all_tasks) {
       if (proj == null || proj.equals(ti.getProject())) {
-	 rslt.add(ti);
+         rslt.add(ti);
        }
     }
 
@@ -525,8 +525,8 @@ synchronized List<String> getUsersForTask(String proj,BnoteTask task)
       q += " WHERE ";
       if (proj != null) q += "E.project = ?";
       if (task != null) {
-	 if (proj != null) q += " AND ";
-	 q += "E.taskid = ?";
+         if (proj != null) q += " AND ";
+         q += "E.taskid = ?";
        }
     }
    q += " ORDER BY E.username";
@@ -534,16 +534,16 @@ synchronized List<String> getUsersForTask(String proj,BnoteTask task)
    try {
       PreparedStatement s = note_conn.prepareStatement(q);
       if (proj != null) {
-	 s.setString(1,proj);
-	 if (task != null) s.setLong(2,task.getTaskId());
+         s.setString(1,proj);
+         if (task != null) s.setLong(2,task.getTaskId());
        }
       else if (task != null) {
-	 s.setLong(1,task.getTaskId());
+         s.setLong(1,task.getTaskId());
        }
       ResultSet rs = s.executeQuery();
       while (rs.next()) {
-	 String unm = rs.getString(1);
-	 rslt.add(unm);
+         String unm = rs.getString(1);
+         rslt.add(unm);
        }
       s.close();
     }
@@ -569,8 +569,8 @@ synchronized List<Date> getDatesForTask(String proj,BnoteTask task)
       q += " WHERE ";
       if (proj != null) q += "E.project = ?";
       if (task != null) {
-	 if (proj != null) q += " AND ";
-	 q += "E.taskid = ?";
+         if (proj != null) q += " AND ";
+         q += "E.taskid = ?";
        }
     }
    q += " ORDER BY E.time";
@@ -578,16 +578,16 @@ synchronized List<Date> getDatesForTask(String proj,BnoteTask task)
    try {
       PreparedStatement s = note_conn.prepareStatement(q);
       if (proj != null) {
-	 s.setString(1,proj);
-	 if (task != null) s.setLong(2,task.getTaskId());
+         s.setString(1,proj);
+         if (task != null) s.setLong(2,task.getTaskId());
        }
       else if (task != null) {
-	 s.setLong(1,task.getTaskId());
+         s.setLong(1,task.getTaskId());
        }
       ResultSet rs = s.executeQuery();
       while (rs.next()) {
-	 Date unm = rs.getTimestamp(1);
-	 rslt.add(unm);
+         Date unm = rs.getTimestamp(1);
+         rslt.add(unm);
        }
       s.close();
     }
@@ -613,23 +613,23 @@ synchronized List<String> getNamesForTask(String proj,BnoteTask task)
       q += " AND E.id = P.entry";
       if (proj != null) q += " AND E.project = ?";
       if (task != null) {
-	 q += " AND E.taskid = ?";
+         q += " AND E.taskid = ?";
        }
     }
 
    try {
       PreparedStatement s = note_conn.prepareStatement(q);
       if (proj != null) {
-	 s.setString(1,proj);
-	 if (task != null) s.setLong(2,task.getTaskId());
+         s.setString(1,proj);
+         if (task != null) s.setLong(2,task.getTaskId());
        }
       else if (task != null) {
-	 s.setLong(1,task.getTaskId());
+         s.setLong(1,task.getTaskId());
        }
       ResultSet rs = s.executeQuery();
       while (rs.next()) {
-	 String unm = rs.getString(1);
-	 rslt.add(unm);
+         String unm = rs.getString(1);
+         rslt.add(unm);
        }
       s.close();
     }
@@ -653,8 +653,8 @@ synchronized List<BnoteEntry> getEntriesForTask(String proj,BnoteTask task)
       q += " WHERE ";
       if (proj != null) q += "E.project = ?";
       if (task != null) {
-	 if (proj != null) q += " AND ";
-	 q += "E.taskid = ?";
+         if (proj != null) q += " AND ";
+         q += "E.taskid = ?";
        }
     }
    q += " ORDER BY time";
@@ -662,16 +662,16 @@ synchronized List<BnoteEntry> getEntriesForTask(String proj,BnoteTask task)
    try {
       PreparedStatement s = note_conn.prepareStatement(q);
       if (proj != null) {
-	 s.setString(1,proj);
-	 if (task != null) s.setLong(2,task.getTaskId());
+         s.setString(1,proj);
+         if (task != null) s.setLong(2,task.getTaskId());
        }
       else if (task != null) {
-	 s.setLong(1,task.getTaskId());
+         s.setLong(1,task.getTaskId());
        }
       ResultSet rs = s.executeQuery();
       while (rs.next()) {
-	 EntryImpl ei = new EntryImpl(rs);
-	 rslt.add(ei);
+         EntryImpl ei = new EntryImpl(rs);
+         rslt.add(ei);
        }
       s.close();
     }
@@ -718,9 +718,9 @@ BnoteEntry createEntry(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Id methods								*/
-/*										*/
+/*                                                                              */
+/*      Id methods                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized long getNextId()
@@ -730,40 +730,40 @@ private synchronized long getNextId()
    while (id_count <= 0 && note_conn != null) {
       BoardLog.logD("BNOTE","GET NEXT ID");
       if (use_begin == null) {
-	 try {
-	    Statement st = note_conn.createStatement();
-	    st.execute("BEGIN");
-	    st.execute("COMMIT");
-	    st.close();
-	    use_begin = true;
-	  }
-	 catch (SQLException e) {
-	    // BoardLog.logD("BNOTE","Attempt to do BEGIN/COMMIT failed: " + e);
-	    use_begin = false;
-	  }
+         try {
+            Statement st = note_conn.createStatement();
+            st.execute("BEGIN");
+            st.execute("COMMIT");
+            st.close();
+            use_begin = true;
+          }
+         catch (SQLException e) {
+            // BoardLog.logD("BNOTE","Attempt to do BEGIN/COMMIT failed: " + e);
+            use_begin = false;
+          }
        }
       try {
-	 Statement st = note_conn.createStatement();
-	 if (use_begin) {
-	    st.executeUpdate("BEGIN");
-	  }
-	 ResultSet rs = st.executeQuery("SELECT nextid FROM IdNumber");
-	 if (rs.next()) next_id = rs.getLong(1);
-	 else next_id = 0;
-	 id_count = id_request;
-	 long next = next_id + id_request;
-	 String upd = "UPDATE IdNumber SET nextid = " + next;
-	 st.executeUpdate(upd);
-	 if (use_begin) {
-	    st.executeUpdate("COMMIT");
-	  }
-	 st.close();
-	 break;
+         Statement st = note_conn.createStatement();
+         if (use_begin) {
+            st.executeUpdate("BEGIN");
+          }
+         ResultSet rs = st.executeQuery("SELECT nextid FROM IdNumber");
+         if (rs.next()) next_id = rs.getLong(1);
+         else next_id = 0;
+         id_count = id_request;
+         long next = next_id + id_request;
+         String upd = "UPDATE IdNumber SET nextid = " + next;
+         st.executeUpdate(upd);
+         if (use_begin) {
+            st.executeUpdate("COMMIT");
+          }
+         st.close();
+         break;
        }
       catch (SQLException e) {
-	 BoardLog.logE("BNOTE","Problem getting more ids: " + e);
-	 resetDatabase();
-	 if (note_conn == null) break;
+         BoardLog.logE("BNOTE","Problem getting more ids: " + e);
+         resetDatabase();
+         if (note_conn == null) break;
        }
     }
 
@@ -776,9 +776,9 @@ private synchronized long getNextId()
 
 
 /********************************************************************************/
-/*										*/
-/*	Task implementation							*/
-/*										*/
+/*                                                                              */
+/*      Task implementation                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class TaskImpl implements BnoteTask, BnoteValue {
@@ -808,12 +808,12 @@ private class TaskImpl implements BnoteTask, BnoteValue {
       end_date = IvyXml.getAttrDate(xml,"END");
     }
 
-   @Override public long getTaskId()			{ return task_id; }
-   @Override public String getName()			{ return task_name; }
-   @Override public String getProject() 		{ return task_project; }
-   @Override public String getDescription()		{ return task_description; }
+   @Override public long getTaskId()                    { return task_id; }
+   @Override public String getName()                    { return task_name; }
+   @Override public String getProject()                 { return task_project; }
+   @Override public String getDescription()             { return task_description; }
 
-   @Override public String toString()			{ return task_name; }
+   @Override public String toString()                   { return task_name; }
 
    @Override public String getDatabaseValue() {
       return Long.toString(task_id);
@@ -840,7 +840,7 @@ private class TaskImpl implements BnoteTask, BnoteValue {
       xw.end("TASK");
     }
 
-   void noteUse()					{ end_date = new Date(); }
+   void noteUse()                                       { end_date = new Date(); }
 
    private void loadDates() {
       List<Date> dts = getDatesForTask(task_project,this);
@@ -849,24 +849,24 @@ private class TaskImpl implements BnoteTask, BnoteValue {
          end_date = start_date;
        }
       else {
-	 start_date = dts.get(0);
-	 end_date = dts.get(dts.size()-1);
+         start_date = dts.get(0);
+         end_date = dts.get(dts.size()-1);
        }
     }
 
-}	// end of inner class TaskImpl
+}       // end of inner class TaskImpl
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Entry implementation							*/
-/*										*/
+/*                                                                              */
+/*      Entry implementation                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class EntryImpl implements BnoteEntry {
 
-   private int	entry_id;
+   private int  entry_id;
    private String entry_project;
    private BnoteTask entry_task;
    private BnoteEntryType entry_type;
@@ -884,10 +884,10 @@ private class EntryImpl implements BnoteEntry {
       String typ = rs.getString("type");
       entry_type = BnoteEntryType.NONE;
       if (typ != null) {
-	 try {
-	    entry_type = Enum.valueOf(BnoteEntryType.class,typ);
-	  }
-	 catch (IllegalArgumentException e) { }
+         try {
+            entry_type = Enum.valueOf(BnoteEntryType.class,typ);
+          }
+         catch (IllegalArgumentException e) { }
        }
     }
 
@@ -901,18 +901,18 @@ private class EntryImpl implements BnoteEntry {
       entry_type = IvyXml.getAttrEnum(xml,"TYPE",BnoteEntryType.NONE);
       prop_set = new HashMap<String,String>();
       for (Element pel : IvyXml.children(xml,"PROP")) {
-	 String k = IvyXml.getAttrString(pel,"KEY");
-	 String v = IvyXml.getAttrString(pel,"VALUE");
-	 prop_set.put(k,v);
+         String k = IvyXml.getAttrString(pel,"KEY");
+         String v = IvyXml.getAttrString(pel,"VALUE");
+         prop_set.put(k,v);
        }
     }
 
 
-   @Override public String getProject() 		{ return entry_project; }
-   @Override public BnoteTask getTask() 		{ return entry_task; }
-   @Override public BnoteEntryType getType()		{ return entry_type; }
-   @Override public String getUser()			{ return entry_user; }
-   @Override public Date getTime()			{ return entry_time; }
+   @Override public String getProject()                 { return entry_project; }
+   @Override public BnoteTask getTask()                 { return entry_task; }
+   @Override public BnoteEntryType getType()            { return entry_type; }
+   @Override public String getUser()                    { return entry_user; }
+   @Override public Date getTime()                      { return entry_time; }
 
    @Override public String getProperty(String id) {
       loadProperties();
@@ -926,23 +926,23 @@ private class EntryImpl implements BnoteEntry {
 
    private void loadProperties() {
       synchronized (BnoteDatabase.this) {
-	 if (prop_set != null) return;
-	 prop_set = new HashMap<String,String>();
-	 try {
-	    String q = "SELECT P.id, P.value FROM Prop P WHERE P.entry = ?";
-	    PreparedStatement s = note_conn.prepareStatement(q);
-	    s.setInt(1,entry_id);
-	    ResultSet rs = s.executeQuery();
-	    while (rs.next()) {
-	       String k = rs.getString(1);
-	       String v = rs.getString(2);
-	       prop_set.put(k,v);
-	    }
-	    s.close();
-	 }
-	 catch (SQLException e) {
-	    BoardLog.logE("BNOTE","Problem getting properties",e);
-	 }
+         if (prop_set != null) return;
+         prop_set = new HashMap<String,String>();
+         try {
+            String q = "SELECT P.id, P.value FROM Prop P WHERE P.entry = ?";
+            PreparedStatement s = note_conn.prepareStatement(q);
+            s.setInt(1,entry_id);
+            ResultSet rs = s.executeQuery();
+            while (rs.next()) {
+               String k = rs.getString(1);
+               String v = rs.getString(2);
+               prop_set.put(k,v);
+            }
+            s.close();
+         }
+         catch (SQLException e) {
+            BoardLog.logE("BNOTE","Problem getting properties",e);
+         }
       }
     }
 
@@ -955,20 +955,20 @@ private class EntryImpl implements BnoteEntry {
       xw.field("TYPE",entry_type);
       if (entry_task != null) entry_task.outputXml(xw);
       if (prop_set != null) {
-	 for (Map.Entry<String,String> ent : prop_set.entrySet()) {
-	    xw.begin("PROP");
-	    xw.field("KEY",ent.getKey());
-	    xw.field("VALUE",ent.getValue());
-	  }
+         for (Map.Entry<String,String> ent : prop_set.entrySet()) {
+            xw.begin("PROP");
+            xw.field("KEY",ent.getKey());
+            xw.field("VALUE",ent.getValue());
+          }
        }
     }
 
 
-}	// end of inner class EntryImpl
+}       // end of inner class EntryImpl
 
 
 
-}	// end of class BnoteDatabase
+}       // end of class BnoteDatabase
 
 
 

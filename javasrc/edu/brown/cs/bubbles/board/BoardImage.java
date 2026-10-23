@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardImage.java 						*/
-/*										*/
-/*	Bubbles attribute and property management image and icon retriever	*/
-/*										*/
+/*                                                                              */
+/*              BoardImage.java                                                 */
+/*                                                                              */
+/*      Bubbles attribute and property management image and icon retriever      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 /**
- *	This class is used to access images and icons associated with bubbles.
+ *      This class is used to access images and icons associated with bubbles.
  **/
 
 public class BoardImage implements BoardConstants {
@@ -49,25 +49,25 @@ public class BoardImage implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static Map<String,ImageIcon>	icon_map = new HashMap<String,ImageIcon>();
+private static Map<String,ImageIcon>    icon_map = new HashMap<String,ImageIcon>();
 private static Boolean use_jar = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Image retrieval methods 						*/
-/*										*/
+/*                                                                              */
+/*      Image retrieval methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the bubbles icon with the given name.  Names correspond to filenames
- *	in the bubbles images directory.
+ *      Return the bubbles icon with the given name.  Names correspond to filenames
+ *      in the bubbles images directory.
  **/
 
 public static Icon getIcon(String id)
@@ -103,9 +103,9 @@ public static Icon getIcon(String id,Class<?> base)
 
 
 /**
- *	Return the bubbles image with the given name.  Names correspond to filenames
- *	in the bubbles images directory.  Note that images can be returned either as
- *	actual Images or as Icons.
+ *      Return the bubbles image with the given name.  Names correspond to filenames
+ *      in the bubbles images directory.  Note that images can be returned either as
+ *      actual Images or as Icons.
  **/
 
 public static Image getImage(String id)
@@ -136,9 +136,9 @@ public static BufferedImage getBufferedImage(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Image manipulation methods						*/
-/*										*/
+/*                                                                              */
+/*      Image manipulation methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -163,9 +163,9 @@ public static Icon resizeIcon(Image input, int newWidth, int newHeight)
 
 
 /********************************************************************************/
-/*										*/
-/*	ImageIcon loading methods						*/
-/*										*/
+/*                                                                              */
+/*      ImageIcon loading methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static synchronized ImageIcon findIcon(String id,Class<?> base)
@@ -181,13 +181,13 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
    if (dir0.exists()) {
       File dir1 = new File(dir0,"images");
       if (dir1.exists()) {
-// 	 BoardLog.logD("BOARD", "Look for image " + id + " in " + dir1);
-	 File f3 = new File(dir1,id + ".png");
-	 if (f3.exists() && f3.canRead()) {
-	    ii = new ImageIcon(f3.getAbsolutePath());
-	    int sts = ii.getImageLoadStatus();
-	    if (sts == MediaTracker.COMPLETE) return ii;
-	  }
+//       BoardLog.logD("BOARD", "Look for image " + id + " in " + dir1);
+         File f3 = new File(dir1,id + ".png");
+         if (f3.exists() && f3.canRead()) {
+            ii = new ImageIcon(f3.getAbsolutePath());
+            int sts = ii.getImageLoadStatus();
+            if (sts == MediaTracker.COMPLETE) return ii;
+          }
        }
     }
 
@@ -211,10 +211,10 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
       File f3 = new File(f2,id + ".png");
 //    BoardLog.logD("BOARD", "Look for image " + id + " as " + f3);
       if (f3.exists()) {
-	 ii = new ImageIcon(f3.getAbsolutePath());
+         ii = new ImageIcon(f3.getAbsolutePath());
        }
       else {
-	 ii = getJarIcon(id,base);
+         ii = getJarIcon(id,base);
        }
     }
 
@@ -247,7 +247,7 @@ private static ImageIcon getJarIcon(String id,Class<?> base)
 
 
 
-}	// end of class BoardImage
+}       // end of class BoardImage
 
 
 

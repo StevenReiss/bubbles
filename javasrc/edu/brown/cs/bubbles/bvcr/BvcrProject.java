@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrProject .java						     */
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BvcrProject .java                                                    */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -35,20 +35,20 @@ class BvcrProject implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		project_name;
-private String		source_directory;
+private String          project_name;
+private String          source_directory;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrProject(Element xml)
@@ -82,17 +82,17 @@ BvcrProject(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()		{ return project_name; }
+String getName()                { return project_name; }
 
-String getSourceDirectory()	{ return source_directory; }
+String getSourceDirectory()     { return source_directory; }
 
 
-}	// end of class BvcrProject
+}       // end of class BvcrProject
 
 
 

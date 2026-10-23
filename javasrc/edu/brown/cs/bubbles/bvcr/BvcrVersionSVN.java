@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrVersionSVN.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository interface to SVN		*/
-/*										*/
+/*                                                                              */
+/*              BvcrVersionSVN.java                                             */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository interface to SVN                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -46,14 +46,14 @@ class BvcrVersionSVN extends BvcrVersionManager implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File		svn_root;
-private String		svn_command;
-private String		svn_name;
+private File            svn_root;
+private String          svn_command;
+private String          svn_name;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
@@ -62,9 +62,9 @@ private static final SimpleDateFormat SVN_DATE = new SimpleDateFormat("yyyy-MM-d
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrVersionSVN(BvcrProject bp)
@@ -78,9 +78,9 @@ BvcrVersionSVN(BvcrProject bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
@@ -98,12 +98,12 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override File getRootDirectory() 		{ return svn_root; }
+@Override File getRootDirectory()               { return svn_root; }
 
 @Override String getRepositoryName()
 {
@@ -136,7 +136,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    else if (diffs.size() == 0) return;
    else {
       for (File f : diffs) {
-	 cmd += " " + f.getPath();
+         cmd += " " + f.getPath();
        }
     }
 
@@ -147,9 +147,9 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Find the top of the SVN repository					*/
-/*										*/
+/*                                                                              */
+/*      Find the top of the SVN repository                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void findSvnRoot()
@@ -177,9 +177,9 @@ private void findSvnRoot()
 
 
 /********************************************************************************/
-/*										*/
-/*	History gathering for a file						*/
-/*										*/
+/*                                                                              */
+/*      History gathering for a file                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void findHistory(File f,IvyXmlWriter xw)
@@ -195,10 +195,10 @@ private void findSvnRoot()
       String msg = IvyXml.getTextElement(le,"message");
       Date d = null;
       try {
-	 d = SVN_DATE.parse(IvyXml.getTextElement(le,"date"));
+         d = SVN_DATE.parse(IvyXml.getTextElement(le,"date"));
        }
       catch (ParseException e) {
-	 IvyLog.logE("BVCR","Problem parsing date",e);
+         IvyLog.logE("BVCR","Problem parsing date",e);
        }
       BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
       if (prior != null) prior.addPriorVersion(fv);
@@ -261,7 +261,7 @@ private void findSvnRoot()
 
 
 
-}	// end of class BvcrVersionSVN
+}       // end of class BvcrVersionSVN
 
 
 

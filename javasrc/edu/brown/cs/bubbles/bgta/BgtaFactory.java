@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaFactory.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaFactory.java                                                */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 package edu.brown.cs.bubbles.bgta;
@@ -57,18 +57,18 @@ public final class BgtaFactory implements BgtaConstants
 {
 
 /********************************************************************************/
-/*										*/
+/*                                                                              */
 /* Private storage */
-/*										*/
+/*                                                                              */
 /********************************************************************************/
 
-private static BgtaFactory		the_factory = null;
-private static Vector<BgtaManager>	chat_managers;
-private static BgtaRepository		buddy_list;
-private static BoardProperties		login_properties;
-private static BudaRoot 		my_buda_root;
-private static boolean			rec_dif_back;
-private static JMenu			metadata_menu;
+private static BgtaFactory              the_factory = null;
+private static Vector<BgtaManager>      chat_managers;
+private static BgtaRepository           buddy_list;
+private static BoardProperties          login_properties;
+private static BudaRoot                 my_buda_root;
+private static boolean                  rec_dif_back;
+private static JMenu                    metadata_menu;
 
 static {
    chat_managers = new Vector<BgtaManager>();
@@ -77,9 +77,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -95,13 +95,13 @@ public static void setup()
    ChatServer server = null;
    try {
       for (int i = 1; i <= login_properties.getInt(BGTA_NUM_ACCOUNTS); ++i) {
-	 username = login_properties.getProperty(BGTA_USERNAME_PREFIX + i);
-	 String password = login_properties.getProperty(BGTA_PASSWORD_PREFIX + i);
-	 server = ChatServer.fromServer(login_properties.getProperty(BGTA_SERVER_PREFIX + i));
-	 BgtaManager man = BgtaManager.getManager(username,password,server,buddy_list);
-	 man.setBeingSaved(true);
-	 man.login();
-	 chat_managers.add(man);
+         username = login_properties.getProperty(BGTA_USERNAME_PREFIX + i);
+         String password = login_properties.getProperty(BGTA_PASSWORD_PREFIX + i);
+         server = ChatServer.fromServer(login_properties.getProperty(BGTA_SERVER_PREFIX + i));
+         BgtaManager man = BgtaManager.getManager(username,password,server,buddy_list);
+         man.setBeingSaved(true);
+         man.login();
+         chat_managers.add(man);
        }
     }
    catch (XMPPException e) {
@@ -142,9 +142,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BgtaFactory()
@@ -154,9 +154,9 @@ private BgtaFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Property adding methods 						*/
-/*										*/
+/*                                                                              */
+/*      Property adding methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static void addManagerProperties(String username,String password,ChatServer server)
@@ -227,9 +227,9 @@ static BoardProperties getBgtaProperties()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble createChatBubble(String friendname,String myname,String password,
@@ -273,8 +273,8 @@ private static BudaBubble createMetadataChatBubble(String friendname,String url)
    BgtaManager man = buddy_list.getBuddyInfo(friendname).getManager();
    for (BgtaManager m : chat_managers) {
       if (man == m) {
-	 isknownmanager = true;
-	 break;
+         isknownmanager = true;
+         break;
        }
     }
    if (!isknownmanager) return null;
@@ -311,9 +311,9 @@ public static BgtaBubble createReceivedChatBubble(String username,BgtaManager ma
 }
 
 /********************************************************************************/
-/*										*/
-/*	Metadata adding methods 						*/
-/*										*/
+/*                                                                              */
+/*      Metadata adding methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static void addTaskToRoot(Element xml)
@@ -346,9 +346,9 @@ private static void addChatButton(JMenu menu,String id,String tt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Listeners for chat							*/
-/*										*/
+/*                                                                              */
+/*      Listeners for chat                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class SendMetadataChatListener implements MenuListener
@@ -359,7 +359,7 @@ private static final class SendMetadataChatListener implements MenuListener
       Collections.sort(chatters);
       metadata_menu.removeAll();
       for (String name : chatters) {
-	 addChatButton(metadata_menu,name,null);
+         addChatButton(metadata_menu,name,null);
        }
     }
    
@@ -368,7 +368,7 @@ private static final class SendMetadataChatListener implements MenuListener
    @Override public void menuDeselected(MenuEvent e) { }
    
    
-}	// end of inner class SendMetadataChatListener
+}       // end of inner class SendMetadataChatListener
 
 
 
@@ -380,19 +380,19 @@ private static final class ChatterListener implements ActionListener
       String cmd = e.getActionCommand();
       String url = "";
       try {
-	 File f = my_buda_root.findCurrentWorkingSet().getDescription();
-	 BoardUpload bup = new BoardUpload(f);
-	 url = bup.getFileURL();
+         File f = my_buda_root.findCurrentWorkingSet().getDescription();
+         BoardUpload bup = new BoardUpload(f);
+         url = bup.getFileURL();
        }
       catch (IOException e1) { }
       createMetadataChatBubble(cmd,url);
     }
    
-}	// End of inner class ChatterListener
+}       // End of inner class ChatterListener
 
 
 
-}	// end of class BgtaFactory
+}       // end of class BgtaFactory
 
 
 

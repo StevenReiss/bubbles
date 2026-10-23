@@ -63,7 +63,7 @@ BfixAdapterNoReturn()
       Element xml = BumpClient.getBump().getLanguageData();
       Element fxml = IvyXml.getChild(xml, "FIXES");
       for (Element cxml : IvyXml.children(fxml, "RETURN")) {
-	 return_patterns.add(new BfixErrorPattern(cxml));
+         return_patterns.add(new BfixErrorPattern(cxml));
       }
    }
 }
@@ -122,9 +122,9 @@ private String getReturnType(BfixCorrector corr,BumpProblem bp)
 
 private static class ReturnFixer extends BfixFixer {
 
-private String		   for_type;
+private String             for_type;
 private BaleWindowDocument for_document;
-private long		   initial_time;
+private long               initial_time;
 
 ReturnFixer(BfixCorrector corr,BumpProblem bp,String typ)
 {
@@ -162,27 +162,27 @@ protected BfixRunnableFix findFix()
    String value = "null";
    switch (for_type) {
       default:
-	 break;
+         break;
       case "int":
       case "short":
       case "byte":
       case "char":
-	 value = "0";
-	 break;
+         value = "0";
+         break;
       case "long":
-	 value = "0L";
-	 break;
+         value = "0L";
+         break;
       case "float":
-	 value = "0f";
-	 break;
+         value = "0f";
+         break;
       case "double":
-	 value = "0.0";
-	 break;
+         value = "0.0";
+         break;
       case "boolean":
-	 value = "false";
-	 break;
+         value = "false";
+         break;
       case "void":
-	 return null;
+         return null;
    }
    BoardMetrics.noteCommand("BFIX", "ReturnCheck");
    String stmt = "return " + value + ";\n";
@@ -215,7 +215,7 @@ protected BfixRunnableFix findFix()
 private static class ReturnDoer extends BfixFixDoer {
    
    private BaleWindowDocument  for_document;
-   private String	        insert_stmt;
+   private String               insert_stmt;
    
    ReturnDoer(BfixCorrector corr,BaleWindowDocument doc,BumpProblem bp,String text,long time) {
       super(corr,bp,time);

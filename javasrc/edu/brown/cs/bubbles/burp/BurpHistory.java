@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BurpHistory.java						*/
-/*										*/
-/*	Bubble Undo/Redo Processor history maintainer				*/
-/*										*/
+/*                                                                              */
+/*              BurpHistory.java                                                */
+/*                                                                              */
+/*      Bubble Undo/Redo Processor history maintainer                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,19 +50,19 @@ import java.util.Map;
 
 
 /**
- *	This class implements command history and undo/redo in the bubbles
- *	framework.
+ *      This class implements command history and undo/redo in the bubbles
+ *      framework.
  *
- *	It actually supports intelligent undo/redo on a bubble-by-bubble
- *	basis.	Where commands affect multiple bubbles (which can happen
- *	for various reasons, e.g. a global name change or a simple edit
- *	where multiple bubbles share the same buffer), it ensures that all
- *	bubbles are kept consistent by undoing/redoing any dependent
- *	commands at the same time.
+ *      It actually supports intelligent undo/redo on a bubble-by-bubble
+ *      basis.  Where commands affect multiple bubbles (which can happen
+ *      for various reasons, e.g. a global name change or a simple edit
+ *      where multiple bubbles share the same buffer), it ensures that all
+ *      bubbles are kept consistent by undoing/redoing any dependent
+ *      commands at the same time.
  *
- *	For example if I edit A, then do a global name change, then edit B,
- *	then do an undo in A, the global name change will be undone as will
- *	the edit to B.	A second undo in A will undo the initial edit to A.
+ *      For example if I edit A, then do a global name change, then edit B,
+ *      then do an undo in A, the global name change will be undone as will
+ *      the edit to B.  A second undo in A will undo the initial edit to A.
  *
  **/
 
@@ -71,32 +71,32 @@ public final class BurpHistory implements BurpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BurpChangeData			current_change;
-private BurpChangeData			first_change;
+private BurpChangeData                  current_change;
+private BurpChangeData                  first_change;
 private Map<JTextComponent,BurpEditorData>  editor_map;
 private Map<UndoableEdit,BurpChangeData>    change_map;
-private Map<Document,BurpChangeData>	    undo_command;
+private Map<Document,BurpChangeData>        undo_command;
 
-private static BurpHistory		the_history = null;
-private static UndoRedoAction		undo_action = new UndoRedoAction(-1,false);
-private static UndoRedoAction		redo_action = new UndoRedoAction(1,false);
-private static UndoRedoAction		undo_selection_action = new UndoRedoAction(-1,true);
-private static UndoRedoAction		redo_selection_action = new UndoRedoAction(1,true);
+private static BurpHistory              the_history = null;
+private static UndoRedoAction           undo_action = new UndoRedoAction(-1,false);
+private static UndoRedoAction           redo_action = new UndoRedoAction(1,false);
+private static UndoRedoAction           undo_selection_action = new UndoRedoAction(-1,true);
+private static UndoRedoAction           redo_selection_action = new UndoRedoAction(1,true);
 
 
 /********************************************************************************/
-/*										*/
-/*	Static access methods							*/
-/*										*/
+/*                                                                              */
+/*      Static access methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the singular instance of the history module for all bubbles.
+ *      Return the singular instance of the history module for all bubbles.
  **/
 
 public static synchronized BurpHistory getHistory()
@@ -111,18 +111,18 @@ public static synchronized BurpHistory getHistory()
 
 
 /**
- *	Return the singluar instance of an UNDO editor action that can be
- *	associated with key strokes or invoked on mouse action.
+ *      Return the singluar instance of an UNDO editor action that can be
+ *      associated with key strokes or invoked on mouse action.
  **/
 
-public static Action getUndoAction()		{ return undo_action; }
+public static Action getUndoAction()            { return undo_action; }
 
 
 /**
- *	Return the singular instance of a REDO editor action.
+ *      Return the singular instance of a REDO editor action.
  **/
 
-public static Action getRedoAction()		{ return redo_action; }
+public static Action getRedoAction()            { return redo_action; }
 
 
 
@@ -144,9 +144,9 @@ public static Action getRedoSelectionAction()  { return redo_selection_action; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BurpHistory()
@@ -162,14 +162,14 @@ private BurpHistory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor management methods						*/
-/*										*/
+/*                                                                              */
+/*      Editor management methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Register an editor with the history mechanism.	This should be done when the
- *	editor is created.  UNDO/REDO is only supported in registered editors.
+ *      Register an editor with the history mechanism.  This should be done when the
+ *      editor is created.  UNDO/REDO is only supported in registered editors.
  **/
 
 public void addEditor(JTextComponent be)
@@ -182,12 +182,12 @@ public void addEditor(JTextComponent be)
 
 
 /**
- *	Unregister an editor with the history mechanism.  This should be done when
- *	the editor is removed.
+ *      Unregister an editor with the history mechanism.  This should be done when
+ *      the editor is removed.
  *
- *	This should actually be done automatically when the editor is freed, but this
- *	can be problematic given all the links that might exist here and elsewhere to
- *	the editor.
+ *      This should actually be done automatically when the editor is freed, but this
+ *      can be problematic given all the links that might exist here and elsewhere to
+ *      the editor.
  **/
 
 public void removeEditor(JTextComponent be)
@@ -203,8 +203,8 @@ public void removeEditor(JTextComponent be)
 
 
 /**
- *	Determine if the given registered editor is dirty, i.e. the underlying text
- *	has been edited, since the last save.
+ *      Determine if the given registered editor is dirty, i.e. the underlying text
+ *      has been edited, since the last save.
  **/
 
 public boolean isDirty(JTextComponent be)
@@ -219,7 +219,7 @@ public boolean isDirty(JTextComponent be)
 
 
 /**
- *	Determine if undo is possible for a component
+ *      Determine if undo is possible for a component
  **/
 
 public boolean canUndo(JTextComponent be)
@@ -238,7 +238,7 @@ public boolean canUndo(JTextComponent be)
 
 
 /**
- *	Determine if redo is possible for a component
+ *      Determine if redo is possible for a component
  **/
 
 public boolean canRedo(JTextComponent be)
@@ -275,13 +275,13 @@ public void endEditAction(JTextComponent be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Undo/Redo request methods						*/
-/*										*/
+/*                                                                              */
+/*      Undo/Redo request methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Undo the last edit in the registered editor.
+ *      Undo the last edit in the registered editor.
  **/
 
 public void undo(JTextComponent be)
@@ -300,14 +300,14 @@ public void undo(JTextComponent be)
    if (c0 != null) d0 = c0.getBaseEditDocument();
    if (d0 != null) {
       for (BurpChangeData cd = current_change; cd != null && cd != c0; cd = cd.getPriorChange()) {
-	 Document d1 = cd.getBaseEditDocument();
-	 if (d1 != null && d1 == d0) {
-	    if (deps == null) deps = new ArrayList<BurpChangeData>();
-	    deps.add(cd);
-	  }
+         Document d1 = cd.getBaseEditDocument();
+         if (d1 != null && d1 == d0) {
+            if (deps == null) deps = new ArrayList<BurpChangeData>();
+            deps.add(cd);
+          }
        }
     }
-   deps = null; 	// remove effect of above code to try new undo mechanism
+   deps = null;         // remove effect of above code to try new undo mechanism
    // null this out to force undo at the file level
 
    boolean havesig = false;
@@ -333,13 +333,13 @@ void playUndo(JTextComponent be,boolean sel)
       int soff = be.getSelectionStart();
       int eoff = be.getSelectionEnd();
       if (soff != eoff) {
-	 Document d = be.getDocument();
-	 try {
-	    rng = new UndoRedoRange(d,soff,eoff);
-	  }
-	 catch (BadLocationException ex) {
-	    System.err.println("BAD RANGE: " + ex);
-	  }
+         Document d = be.getDocument();
+         try {
+            rng = new UndoRedoRange(d,soff,eoff);
+          }
+         catch (BadLocationException ex) {
+            System.err.println("BAD RANGE: " + ex);
+          }
        }
       else return;              // do nothing if there is no region
     }
@@ -364,22 +364,22 @@ void playUndo(JTextComponent be,boolean sel)
       if (cd == null) break;
       if (!cd.canUndo()) break;
       switch (cd.getChangeType()) {
-	 case EDIT :
-	    BurpChangeData pvd = undo_command.put(cd.getBaseEditDocument(),cd);
-	    cd.playUndo(rng);
-	    if (pvd == null) undo_command.remove(cd.getBaseEditDocument());
-	    else undo_command.put(cd.getBaseEditDocument(),pvd);
-	    break;
-	 case END_UNDO :
-	 case END_REDO :
-	    ++lvl;
-	    break;
-	 case START_UNDO :
-	 case START_REDO :
-	    --lvl;
-	    break;
-	 default :
-	    break;
+         case EDIT :
+            BurpChangeData pvd = undo_command.put(cd.getBaseEditDocument(),cd);
+            cd.playUndo(rng);
+            if (pvd == null) undo_command.remove(cd.getBaseEditDocument());
+            else undo_command.put(cd.getBaseEditDocument(),pvd);
+            break;
+         case END_UNDO :
+         case END_REDO :
+            ++lvl;
+            break;
+         case START_UNDO :
+         case START_REDO :
+            --lvl;
+            break;
+         default :
+            break;
        }
       if (lvl == 0 && cd.isSignificant()) break;
       cd = cd.getPrior(ed);
@@ -400,13 +400,13 @@ public void playRedo(JTextComponent be,boolean sel)
       int soff = be.getSelectionStart();
       int eoff = be.getSelectionEnd();
       if (soff != eoff) {
-	 Document d = be.getDocument();
-	 try {
-	    rng = new UndoRedoRange(d,soff,eoff);
-	  }
-	 catch (BadLocationException ex) {
-	    System.err.println("BAD RANGE: " + ex);
-	  }
+         Document d = be.getDocument();
+         try {
+            rng = new UndoRedoRange(d,soff,eoff);
+          }
+         catch (BadLocationException ex) {
+            System.err.println("BAD RANGE: " + ex);
+          }
        }
       else return;              // do nothing if there is no region
     }
@@ -431,22 +431,22 @@ public void playRedo(JTextComponent be,boolean sel)
       if (cd == null) break;
       if (!cd.canUndo()) break;
       switch (cd.getChangeType()) {
-	 case EDIT :
-	    BurpChangeData pvd = undo_command.put(cd.getBaseEditDocument(),cd);
-	    cd.playUndo(rng);
-	    if (pvd == null) undo_command.remove(cd.getBaseEditDocument());
-	    else undo_command.put(cd.getBaseEditDocument(),pvd);
-	    break;
-	 case START_UNDO :
-	 case START_REDO :
-	    --lvl;
-	    break;
-	 case END_UNDO :
-	 case END_REDO :
-	    ++lvl;
-	    break;
-	 default :
-	    break;
+         case EDIT :
+            BurpChangeData pvd = undo_command.put(cd.getBaseEditDocument(),cd);
+            cd.playUndo(rng);
+            if (pvd == null) undo_command.remove(cd.getBaseEditDocument());
+            else undo_command.put(cd.getBaseEditDocument(),pvd);
+            break;
+         case START_UNDO :
+         case START_REDO :
+            --lvl;
+            break;
+         case END_UNDO :
+         case END_REDO :
+            ++lvl;
+            break;
+         default :
+            break;
        }
       if (lvl == 0 && cd.isSignificant()) break;
       cd = cd.getPrior(ed);
@@ -459,8 +459,8 @@ public void playRedo(JTextComponent be,boolean sel)
 
 
 /**
- *	Redo the last undone edit in the registered editor if that is possible.  If an
- *	intervening command was executed, the undo can not be redone.
+ *      Redo the last undone edit in the registered editor if that is possible.  If an
+ *      intervening command was executed, the undo can not be redone.
  **/
 
 public void redo(JTextComponent be)
@@ -476,8 +476,8 @@ public void redo(JTextComponent be)
    for (int ct = 0; ; ++ct) {
       BurpChangeData cd = (ed == null ? current_change : ed.getCurrentChange());
       if (cd == null) {
-	 if (ed == null) cd = first_change;
-	 else cd = ed.getFirstChange();
+         if (ed == null) cd = first_change;
+         else cd = ed.getFirstChange();
        }
       else cd = cd.getNext(ed);
       if (cd == null) break;
@@ -491,9 +491,9 @@ public void redo(JTextComponent be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for maintaining the current_change				*/
-/*										*/
+/*                                                                              */
+/*      Methods for maintaining the current_change                              */
+/*                                                                              */
 /********************************************************************************/
 
 void resetCurrentChange(BurpChangeData when,BurpChangeData to,boolean fwd)
@@ -506,9 +506,9 @@ void resetCurrentChange(BurpChangeData when,BurpChangeData to,boolean fwd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Internal list management methods					*/
-/*										*/
+/*                                                                              */
+/*      Internal list management methods                                        */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void handleNewEdit(BurpEditorData ed,UndoableEdit ue,boolean evt,boolean sig)
@@ -559,12 +559,12 @@ void applyDeltas(Object edit,Document d,List<BurpEditDelta> ed)
 
    for (BurpChangeData cd = first_change; cd != null; cd = cd.getNext(null)) {
       if (cd.getBaseEditDocument() == d) {
-	 BurpPlayableEdit bse = cd.getPlayableEdit();
-	 if (bse != null) {
-	    for (BurpEditDelta del : ed) {
-	       bse.updatePosition(edit,del.getOffset(),del.getDelta());
-	    }
-	 }
+         BurpPlayableEdit bse = cd.getPlayableEdit();
+         if (bse != null) {
+            for (BurpEditDelta del : ed) {
+               bse.updatePosition(edit,del.getOffset(),del.getDelta());
+            }
+         }
        }
     }
 }
@@ -665,9 +665,9 @@ private String getEditCommandName(BurpEditorData be,UndoableEdit ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Undo/redo action for text editors					*/
-/*										*/
+/*                                                                              */
+/*      Undo/redo action for text editors                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class UndoRedoAction extends AbstractAction {
@@ -692,7 +692,7 @@ private static class UndoRedoAction extends AbstractAction {
        }
     }
 
-}	// end of inner class UndoRedoAction
+}       // end of inner class UndoRedoAction
 
 
 
@@ -703,13 +703,13 @@ private static class UndoRedoRange implements BurpRange {
 
    UndoRedoRange(Document d,int spos,int epos) throws BadLocationException {
       if (d instanceof BurpEditorDocument) {
-	 BurpEditorDocument bed = (BurpEditorDocument) d;
-	 start_position = bed.createHistoryPosition(spos);
-	 end_position = bed.createHistoryPosition(epos);
+         BurpEditorDocument bed = (BurpEditorDocument) d;
+         start_position = bed.createHistoryPosition(spos);
+         end_position = bed.createHistoryPosition(epos);
        }
       else {
-	 start_position = d.createPosition(spos);
-	 end_position = d.createPosition(epos);
+         start_position = d.createPosition(spos);
+         end_position = d.createPosition(epos);
        }
     }
 
@@ -721,27 +721,27 @@ private static class UndoRedoRange implements BurpRange {
       return end_position.getOffset();
     }
 
-}	// end of inner class UndoRedoRange
+}       // end of inner class UndoRedoRange
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Change handler for detecting saves					*/
-/*										*/
+/*                                                                              */
+/*      Change handler for detecting saves                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void noteSave(File file)
 {
    synchronized (editor_map) {
       for (Map.Entry<JTextComponent,BurpEditorData> ent : editor_map.entrySet()) {
-	 JTextComponent tc = ent.getKey();
-	 BudaBubble bb = BudaRoot.findBudaBubble(tc);
-	 if (bb != null) {
-	    File bf = bb.getContentFile();
-	    if (bf != null && bf.equals(file)) ent.getValue().noteSave();
-	  }
+         JTextComponent tc = ent.getKey();
+         BudaBubble bb = BudaRoot.findBudaBubble(tc);
+         if (bb != null) {
+            File bf = bb.getContentFile();
+            if (bf != null && bf.equals(file)) ent.getValue().noteSave();
+          }
        }
     }
 }
@@ -759,11 +759,11 @@ private final class ChangeHandler implements BumpConstants.BumpChangeHandler {
       noteSave(new File(file));
     }
 
-}	// end of inner class ChangeHandler
+}       // end of inner class ChangeHandler
 
 
 
-}	// end of class BurpHistory
+}       // end of class BurpHistory
 
 
 

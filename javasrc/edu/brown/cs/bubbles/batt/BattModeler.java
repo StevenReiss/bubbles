@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattModeler.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool class for maintaining test model in bbls	*/
-/*										*/
+/*                                                                              */
+/*              BattModeler.java                                                */
+/*                                                                              */
+/*      Bubble Automated Testing Tool class for maintaining test model in bbls  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -54,14 +54,14 @@ class BattModeler implements BattConstants, MintHandler
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,BattTestCase> test_cases;
-private DefaultTableModel	table_model;
-private EnumSet<DisplayMode>	display_mode;
+private DefaultTableModel       table_model;
+private EnumSet<DisplayMode>    display_mode;
 private ArrayList<BattTestCase> table_cases;
 private SwingEventListenerList<BattModelListener> model_listeners;
 
@@ -72,9 +72,9 @@ private String [] column_names = new String [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattModeler()
@@ -90,12 +90,12 @@ BattModeler()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-TableModel getTableModel()		{ return table_model; }
+TableModel getTableModel()              { return table_model; }
 
 synchronized List<BattTestCase> getAllTests()
 {
@@ -136,9 +136,9 @@ private void modelUpdated()
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void setDisplayMode(Set<DisplayMode> newmd)
@@ -157,24 +157,24 @@ void updateTestModel(Element sts,boolean full)
    
    synchronized (this) {
       for (Element t : IvyXml.children(sts,"TEST")) {
-	 String nm = IvyXml.getAttrString(t,"NAME");
-	 boolean newfg = false;
-	 BattTestCase btc = test_cases.get(nm);
-	 if (btc == null) {
-	    btc = new BattTestCase(nm);
-	    test_cases.put(nm,btc);
-	    newfg = true;
-	  }
+         String nm = IvyXml.getAttrString(t,"NAME");
+         boolean newfg = false;
+         BattTestCase btc = test_cases.get(nm);
+         if (btc == null) {
+            btc = new BattTestCase(nm);
+            test_cases.put(nm,btc);
+            newfg = true;
+          }
          del.remove(btc);
-	 boolean fg = btc.handleTestState(t);
-	 if (newfg) {
-	    modelNewTestCase(btc);
-	    modelUpdated();
-	  }
-	 else if (fg) {
-	    modelChangeTestCase(btc);
-	    modelUpdated();
-	  }
+         boolean fg = btc.handleTestState(t);
+         if (newfg) {
+            modelNewTestCase(btc);
+            modelUpdated();
+          }
+         else if (fg) {
+            modelChangeTestCase(btc);
+            modelUpdated();
+          }
        }
       
       for (BattTestCase btc : del) {
@@ -189,9 +189,9 @@ void updateTestModel(Element sts,boolean full)
 
 
 /********************************************************************************/
-/*										*/
-/*	Message handling							*/
-/*										*/
+/*                                                                              */
+/*      Message handling                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void receive(MintMessage msg,MintArguments args)
@@ -229,9 +229,9 @@ private class Updater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to maintain table model 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to maintain table model                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void modelNewTestCase(BattTestCase btc)
@@ -262,7 +262,7 @@ private synchronized void modelChangeTestCase(BattTestCase btc)
    Vector<Object> v = getRowData(btc);
    for (int i = 0; i < v.size(); ++i) {
       if (!v.get(i).equals(table_model.getValueAt(idx,i)))
-	 table_model.setValueAt(v.get(i),idx,i);
+         table_model.setValueAt(v.get(i),idx,i);
     }
 }
 
@@ -282,13 +282,13 @@ private synchronized void modelUpdateDisplay()
    for (BattTestCase btc : test_cases.values()) {
       int idx = table_cases.indexOf(btc);
       if (checkDisplay(btc)) {
-	 if (idx < 0) modelNewTestCase(btc);
+         if (idx < 0) modelNewTestCase(btc);
        }
       else {
-	 if (idx >= 0) {
-	    table_cases.remove(idx);
-	    table_model.removeRow(idx);
-	  }
+         if (idx >= 0) {
+            table_cases.remove(idx);
+            table_model.removeRow(idx);
+          }
        }
     }
 }
@@ -304,25 +304,25 @@ private boolean checkDisplay(BattTestCase btc)
 
    if (display_mode.contains(DisplayMode.NEEDED)) {
       switch (btc.getState()) {
-	 case NEEDS_CHECK :
-	 case EDITED :
-	 case CANT_RUN :
-	 case STOPPED :
-	    return true;
-	 default:
-	    break;
+         case NEEDS_CHECK :
+         case EDITED :
+         case CANT_RUN :
+         case STOPPED :
+            return true;
+         default:
+            break;
        }
     }
 
    if (display_mode.contains(DisplayMode.PENDING)) {
       switch (btc.getState()) {
-	 case PENDING :
-	 case RUNNING :
+         case PENDING :
+         case RUNNING :
          case TO_BE_RUN :
-	 case STOPPED :
-	    return true;
-	 default:
-	    break;
+         case STOPPED :
+            return true;
+         default:
+            break;
        }
     }
 
@@ -354,7 +354,7 @@ private Vector<Object> getRowData(BattTestCase btc)
 
 
 
-}	// end of class BattModeler
+}       // end of class BattModeler
 
 
 

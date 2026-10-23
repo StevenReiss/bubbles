@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynFactory.java						*/
-/*										*/
-/*	Factory for Bubbles DYNamic views					*/
-/*										*/
+/*                                                                              */
+/*              BdynFactory.java                                                */
+/*                                                                              */
+/*      Factory for Bubbles DYNamic views                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -49,25 +49,25 @@ public final class BdynFactory implements BdynConstants, BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<BumpProcess,BdynProcess>	process_map;
-private BdynCallbacks			callback_set;
-private static OptionSet		bdyn_options = new OptionSet();
+private Map<BumpProcess,BdynProcess>    process_map;
+private BdynCallbacks                   callback_set;
+private static OptionSet                bdyn_options = new OptionSet();
 
 
-private static BdynFactory	the_factory = new BdynFactory();
+private static BdynFactory      the_factory = new BdynFactory();
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup Methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup Methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -88,7 +88,7 @@ public static void initialize(BudaRoot br)
 }
 
 /**
- *	Return the singleton instance of the factory
+ *      Return the singleton instance of the factory
  **/
 
 public static BdynFactory getFactory()
@@ -99,9 +99,9 @@ public static BdynFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BdynFactory()
@@ -115,9 +115,9 @@ private BdynFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle new processes							*/
-/*										*/
+/*                                                                              */
+/*      Handle new processes                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupProcess(BumpRunEvent evt)
@@ -135,12 +135,12 @@ BdynProcess getBdynProcess(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Option methods								*/
-/*										*/
+/*                                                                              */
+/*      Option methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-static BdynOptions getOptions() 		{ return bdyn_options; }
+static BdynOptions getOptions()                 { return bdyn_options; }
 
 
 private final class ProcessHandler implements BumpRunEventHandler {
@@ -173,15 +173,15 @@ private final class ProcessHandler implements BumpRunEventHandler {
        }
     }
 
-}	// end of inner class ProcessHandler
+}       // end of inner class ProcessHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Button actions								*/
-/*										*/
+/*                                                                              */
+/*      Button actions                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class TaskAction implements BudaConstants.ButtonListener {
@@ -193,21 +193,21 @@ private static final class TaskAction implements BudaConstants.ButtonListener {
 
       Object proc = bba.getProperty("Bddt.process");
       if (proc != null) {
-	 BumpProcess bp = (BumpProcess) proc;
-	 if (bp.isRunning()) tw.setProcess(bp);
+         BumpProcess bp = (BumpProcess) proc;
+         if (bp.isRunning()) tw.setProcess(bp);
        }
     }
 
-}	// end of inner class TaskAction
+}       // end of inner class TaskAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle callback information					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle callback information                                  */
+/*                                                                              */
 /********************************************************************************/
 
 BdynCallback getCallback(int id)
@@ -236,9 +236,9 @@ void saveCallbacks()
 
 
 /********************************************************************************/
-/*										*/
-/*	Option implementation							*/
-/*										*/
+/*                                                                              */
+/*      Option implementation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionSet implements BdynOptions {
@@ -253,13 +253,13 @@ private static class OptionSet implements BdynOptions {
       use_main_task = false;
     }
 
-   @Override public boolean useKeyCallback()		{ return use_key_callback; }
-   @Override public boolean useMainCallback()		{ return use_main_callback; }
-   @Override public boolean useMainTask()		{ return use_main_task; }
+   @Override public boolean useKeyCallback()            { return use_key_callback; }
+   @Override public boolean useMainCallback()           { return use_main_callback; }
+   @Override public boolean useMainTask()               { return use_main_task; }
 
-   @Override public void setUseKeyCallback(boolean fg)	{ use_key_callback = fg; }
+   @Override public void setUseKeyCallback(boolean fg)  { use_key_callback = fg; }
    @Override public void setUseMainCallback(boolean fg) { use_main_callback = fg; }
-   @Override public void setUseMainTask(boolean fg)	{ use_main_task = fg; }
+   @Override public void setUseMainTask(boolean fg)     { use_main_task = fg; }
 
    @Override public void save(IvyXmlWriter xw) {
       xw.field("KEYCB",use_key_callback);
@@ -273,10 +273,10 @@ private static class OptionSet implements BdynOptions {
       use_main_task = IvyXml.getAttrBool(xml,"MAINTK",use_main_task);
     }
 
-}	// end of inner class OptionSet
+}       // end of inner class OptionSet
 
 
-}	// end of class BdynFactory
+}       // end of class BdynFactory
 
 
 

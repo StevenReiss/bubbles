@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconFactory.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer factory and setup class		*/
-/*										*/
+/*                                                                              */
+/*              BconFactory.java                                                */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer factory and setup class              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,8 +47,8 @@ import java.util.Map;
 
 
 /**
- *	This class provides the entries for setting up and providing access to
- *	the various context view bubbles.
+ *      This class provides the entries for setting up and providing access to
+ *      the various context view bubbles.
  **/
 
 public final class BconFactory implements BconConstants, BudaConstants.ButtonListener
@@ -56,27 +56,27 @@ public final class BconFactory implements BconConstants, BudaConstants.ButtonLis
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<BudaBubbleArea,BconOverviewPanel> current_panel;
 
 
-private static BconFactory	the_factory = null;
+private static BconFactory      the_factory = null;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This routine is called automatically at startup to initialize the module.
+ *      This routine is called automatically at startup to initialize the module.
  **/
 
 public static void setup()
@@ -96,7 +96,7 @@ public static void initialize(BudaRoot br)
 }
 
 /**
- *	Return the singleton instance of the context viewer factory.
+ *      Return the singleton instance of the context viewer factory.
  **/
 
 public static synchronized BconFactory getFactory()
@@ -110,9 +110,9 @@ public static synchronized BconFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BconFactory()
@@ -124,14 +124,14 @@ private BconFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods 							*/
-/*										*/
+/*                                                                              */
+/*      Factory methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create an overview bubble to show the files that are currently active
- *	and their regions and bubbles.
+ *      Create an overview bubble to show the files that are currently active
+ *      and their regions and bubbles.
  **/
 
 public BudaBubble createOverviewBubble(Component source,Point pt)
@@ -148,7 +148,7 @@ public BudaBubble createOverviewBubble(Component source,Point pt)
 
 
 /**
- *	Create a class panel bubble showing all class information
+ *      Create a class panel bubble showing all class information
  **/
 
 public BudaBubble createClassBubble(Component source,String proj,File f,String cls,boolean inner)
@@ -172,7 +172,7 @@ public BudaBubble createClassBubble(Component source,String proj,File f,String c
 
 
 /**
- *	Create a package panel bubble showing package relationships
+ *      Create a package panel bubble showing package relationships
  **/
 
 public BudaBubble createPackageBubble(Component source,String proj,String pkg)
@@ -191,9 +191,9 @@ public BudaBubble createPackageBubble(Component source,String proj,String pkg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu button handling							*/
-/*										*/
+/*                                                                              */
+/*      Menu button handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -206,16 +206,16 @@ public BudaBubble createPackageBubble(Component source,String proj,String pkg)
 
    if (bb != null && bba != null) {
       bba.addBubble(bb,null,pt,BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
-		       BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
+                       BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
     }
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle right-click menu options 					*/
-/*										*/
+/*                                                                              */
+/*      Handle right-click menu options                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ContextHandler implements BaleContextListener {
@@ -235,7 +235,7 @@ private static class ContextHandler implements BaleContextListener {
    
    
 
-}	// end of inner class ContextHandler
+}       // end of inner class ContextHandler
 
 
 
@@ -279,17 +279,17 @@ private static class ContextAction extends AbstractAction {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bbl);
       if (bba != null && nbbl != null) {
          bba.addBubble(nbbl,bbl,null,
-        	  BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_GROUPED|BudaConstants.PLACEMENT_NEW);
+                  BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_GROUPED|BudaConstants.PLACEMENT_NEW);
        }
     }
 
-}	// end of inner class ContextAction
+}       // end of inner class ContextAction
 
 
 
 
 
-}	// end of class BconFactory
+}       // end of class BconFactory
 
 
 

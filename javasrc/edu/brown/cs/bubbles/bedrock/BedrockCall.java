@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockCall.java						*/
-/*										*/
-/*	Handle callgraph-related commands for Bubbles				*/
-/*										*/
+/*                                                                              */
+/*              BedrockCall.java                                                */
+/*                                                                              */
+/*      Handle callgraph-related commands for Bubbles                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -62,20 +62,20 @@ class BedrockCall implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockPlugin our_plugin;
 
-private static final int	MAX_LEVELS = 5;
+private static final int        MAX_LEVELS = 5;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockCall(BedrockPlugin bp)
@@ -86,13 +86,13 @@ BedrockCall(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search for call path between methods					*/
-/*										*/
+/*                                                                              */
+/*      Search for call path between methods                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void getCallPath(String proj,String src,String tgt,boolean shortest,int lvls,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    IProject ip = our_plugin.getProjectManager().findProject(proj);
    IJavaProject ijp = JavaCore.create(ip);
@@ -107,19 +107,19 @@ void getCallPath(String proj,String src,String tgt,boolean shortest,int lvls,Ivy
    SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
 
    SearchPattern p1 = SearchPattern.createPattern(src,IJavaSearchConstants.METHOD,
-						     IJavaSearchConstants.DECLARATIONS,
-						     SearchPattern.R_PATTERN_MATCH);
+                                                     IJavaSearchConstants.DECLARATIONS,
+                                                     SearchPattern.R_PATTERN_MATCH);
    SearchPattern p1a = SearchPattern.createPattern(fixConstructor(src),IJavaSearchConstants.CONSTRUCTOR,
-						      IJavaSearchConstants.DECLARATIONS,
-						      SearchPattern.R_PATTERN_MATCH);
+                                                      IJavaSearchConstants.DECLARATIONS,
+                                                      SearchPattern.R_PATTERN_MATCH);
    if (p1 == null || p1a == null) throw new BedrockException("Illegal source pattern " + src);
 
    SearchPattern p2 = SearchPattern.createPattern(tgt,IJavaSearchConstants.METHOD,
-						     IJavaSearchConstants.DECLARATIONS,
-						     SearchPattern.R_PATTERN_MATCH);
+                                                     IJavaSearchConstants.DECLARATIONS,
+                                                     SearchPattern.R_PATTERN_MATCH);
    SearchPattern p2a = SearchPattern.createPattern(fixConstructor(tgt),IJavaSearchConstants.CONSTRUCTOR,
-						     IJavaSearchConstants.DECLARATIONS,
-						     SearchPattern.R_PATTERN_MATCH);
+                                                     IJavaSearchConstants.DECLARATIONS,
+                                                     SearchPattern.R_PATTERN_MATCH);
    if (p2 == null || p2a == null) throw new BedrockException("Illegal target pattern " + tgt);
 
    SetHandler sh = new SetHandler();
@@ -172,33 +172,33 @@ void getCallPath(String proj,String src,String tgt,boolean shortest,int lvls,Ivy
       nm += "(";
       String [] ptyps = je.getParameterTypes();
       for (int i = 0; i < ptyps.length; ++i) {
-	 if (i > 0) nm += ",";
-	 nm += IvyFormat.formatTypeName(ptyps[i]);
+         if (i > 0) nm += ",";
+         nm += IvyFormat.formatTypeName(ptyps[i]);
        }
       nm += ")";
 
 
       SearchPattern p3;
       try {
-	 BedrockPlugin.logD("CALL: Search for: " + nm + " " + je.isConstructor());
-	 if (je.isConstructor()) {
-	    String nm1 = fixConstructor(nm);
-	    p3 = SearchPattern.createPattern(nm1,IJavaSearchConstants.CONSTRUCTOR,
-						IJavaSearchConstants.REFERENCES,
-						SearchPattern.R_EXACT_MATCH);
-	  }
-	 else {
-	    p3 = SearchPattern.createPattern(nm,IJavaSearchConstants.METHOD,
-						IJavaSearchConstants.REFERENCES,
-						SearchPattern.R_EXACT_MATCH);
-	  }
+         BedrockPlugin.logD("CALL: Search for: " + nm + " " + je.isConstructor());
+         if (je.isConstructor()) {
+            String nm1 = fixConstructor(nm);
+            p3 = SearchPattern.createPattern(nm1,IJavaSearchConstants.CONSTRUCTOR,
+                                                IJavaSearchConstants.REFERENCES,
+                                                SearchPattern.R_EXACT_MATCH);
+          }
+         else {
+            p3 = SearchPattern.createPattern(nm,IJavaSearchConstants.METHOD,
+                                                IJavaSearchConstants.REFERENCES,
+                                                SearchPattern.R_EXACT_MATCH);
+          }
 
-	 CallHandler ch = new CallHandler(je,workqueue,nodes,lvl);
+         CallHandler ch = new CallHandler(je,workqueue,nodes,lvl);
 
-	 se.search(p3,parts,scp,ch,null);
+         se.search(p3,parts,scp,ch,null);
        }
       catch (CoreException e) {
-	 throw new BedrockException("Problem doing call search e: " + e,e);
+         throw new BedrockException("Problem doing call search e: " + e,e);
        }
     }
 
@@ -245,9 +245,9 @@ private String fixConstructor(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search handler to accumulate resultant elements 			*/
-/*										*/
+/*                                                                              */
+/*      Search handler to accumulate resultant elements                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SetHandler extends SearchRequestor {
@@ -261,23 +261,23 @@ private static class SetHandler extends SearchRequestor {
    @Override public void acceptSearchMatch(SearchMatch mat) {
       Object o = mat.getElement();
       if (o != null && o instanceof IMethod) {
-	 found_elements.add((IMethod) o);
+         found_elements.add((IMethod) o);
        }
     }
 
-   int getSize()				{ return found_elements.size(); }
-   boolean isEmpty()				{ return found_elements.isEmpty(); }
-   Iterable<IMethod> getElements()		{ return found_elements; }
-   boolean contains(IMethod im) 		{ return found_elements.contains(im); }
+   int getSize()                                { return found_elements.size(); }
+   boolean isEmpty()                            { return found_elements.isEmpty(); }
+   Iterable<IMethod> getElements()              { return found_elements; }
+   boolean contains(IMethod im)                 { return found_elements.contains(im); }
 
-}	// end of inner class SetHandler
+}       // end of inner class SetHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to represent a call path						*/
-/*										*/
+/*                                                                              */
+/*      Class to represent a call path                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CallHandler extends SearchRequestor {
@@ -298,26 +298,26 @@ private static class CallHandler extends SearchRequestor {
       BedrockPlugin.logD("CALL: found match " + mat.getElement());
       Object o = mat.getElement();
       if (o != null && o instanceof IMethod) {
-	 IMethod je = (IMethod) o;
-	 CallNode cn = call_nodes.get(je);
-	 if (cn == null) {
-	    cn = new CallNode(je,level_count);
-	    call_nodes.put(je,cn);
-	  }
-	 cn.addCall(mat,target_element);
-	 work_queue.add(je);
+         IMethod je = (IMethod) o;
+         CallNode cn = call_nodes.get(je);
+         if (cn == null) {
+            cn = new CallNode(je,level_count);
+            call_nodes.put(je,cn);
+          }
+         cn.addCall(mat,target_element);
+         work_queue.add(je);
        }
     }
 
-}	// end of innerclass CallNode
+}       // end of innerclass CallNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class representing call node						*/
-/*										*/
+/*                                                                              */
+/*      Class representing call node                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CallNode {
@@ -326,7 +326,7 @@ private static class CallNode {
    private List<CallData> to_elements;
    private boolean is_done;
    private boolean is_target;
-   private int	level_count;
+   private int  level_count;
 
    CallNode(IMethod frm,int lvl) {
       from_element = frm;
@@ -336,11 +336,11 @@ private static class CallNode {
       level_count = lvl;
     }
 
-   private boolean isDone()			{ return is_done; }
-   private void markDone()			{ is_done = true; }
-   private void setTarget()			{ is_target = true; }
-   private boolean isTarget()			{ return is_target; }
-   private int getLevel()			{ return level_count; }
+   private boolean isDone()                     { return is_done; }
+   private void markDone()                      { is_done = true; }
+   private void setTarget()                     { is_target = true; }
+   private boolean isTarget()                   { return is_target; }
+   private int getLevel()                       { return level_count; }
 
    void addCall(SearchMatch sm,IMethod tgt) {
       CallData cd = new CallData(sm,tgt);
@@ -352,16 +352,16 @@ private static class CallNode {
       if (done.contains(from_element)) return;
       done.add(from_element);
       for (CallData cd : to_elements) {
-	 xw.begin("CALL");
-	 CallNode ncd = nodes.get(cd.getTarget());
-	 if (ncd != null && ncd.isTarget()) xw.field("TARGET",true);
-	 BedrockUtil.outputSearchMatch(cd.getMatch(),xw);
-	 if (ncd != null) ncd.output(xw,done,nodes);
-	 xw.end("CALL");
+         xw.begin("CALL");
+         CallNode ncd = nodes.get(cd.getTarget());
+         if (ncd != null && ncd.isTarget()) xw.field("TARGET",true);
+         BedrockUtil.outputSearchMatch(cd.getMatch(),xw);
+         if (ncd != null) ncd.output(xw,done,nodes);
+         xw.end("CALL");
        }
     }
 
-}	// end of innerclass CallNode
+}       // end of innerclass CallNode
 
 
 
@@ -375,15 +375,15 @@ private static class CallData {
       target_element = tgt;
     }
 
-   private SearchMatch getMatch()		{ return using_match; }
-   private IMethod getTarget()			{ return target_element; }
+   private SearchMatch getMatch()               { return using_match; }
+   private IMethod getTarget()                  { return target_element; }
 
-}	// end of inner class CallData
-
-
+}       // end of inner class CallData
 
 
-}	// end of class BedrockCall
+
+
+}       // end of class BedrockCall
 
 
 

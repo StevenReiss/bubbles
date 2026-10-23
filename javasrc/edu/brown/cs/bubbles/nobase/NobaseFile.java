@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseFile.java 						*/
-/*										*/
-/*	Implementation of a file						*/
-/*										*/
+/*                                                                              */
+/*              NobaseFile.java                                                 */
+/*                                                                              */
+/*      Implementation of a file                                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,9 +39,9 @@ class NobaseFile implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String module_name;
@@ -56,9 +56,9 @@ private boolean is_library;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseFile(File f,String nm,NobaseProject pp)
@@ -75,29 +75,29 @@ NobaseFile(File f,String nm,NobaseProject pp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-File getFile()				{ return for_file; }
-NobaseProject getProject()		{ return for_project; }
-IDocument getDocument() 		{ return use_document; }
-String getModuleName()			{ return module_name; }
-boolean hasChanged()			{ return has_changed; }
-void markChanged()			{ has_changed = true; }
-long getLastDateLastModified()		{ return last_modified; }
-String getFileName()			{ return for_file.getPath(); }
-boolean isLibrary()			{ return is_library; }
-void setIsLibrary(boolean fg)		{ is_library = fg; }
-String getContents()			{ return use_document.get(); }
+File getFile()                          { return for_file; }
+NobaseProject getProject()              { return for_project; }
+IDocument getDocument()                 { return use_document; }
+String getModuleName()                  { return module_name; }
+boolean hasChanged()                    { return has_changed; }
+void markChanged()                      { has_changed = true; }
+long getLastDateLastModified()          { return last_modified; }
+String getFileName()                    { return for_file.getPath(); }
+boolean isLibrary()                     { return is_library; }
+void setIsLibrary(boolean fg)           { is_library = fg; }
+String getContents()                    { return use_document.get(); }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle positions							*/
-/*										*/
+/*                                                                              */
+/*      Handle positions                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 int getLineNumber(int offset)
@@ -128,9 +128,9 @@ int getCharPosition(int offset)
 
 
 /********************************************************************************/
-/*										*/
-/*	Load and save methods							*/
-/*										*/
+/*                                                                              */
+/*      Load and save methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 boolean reload()
@@ -151,9 +151,9 @@ private void loadFile()
       StringBuffer fbuf = new StringBuffer();
       char [] buf = new char[4096];
       for ( ; ; ) {
-	 int sts = fr.read(buf);
-	 if (sts < 0) break;
-	 fbuf.append(buf,0,sts);
+         int sts = fr.read(buf);
+         if (sts < 0) break;
+         fbuf.append(buf,0,sts);
        }
       use_document.set(fbuf.toString());
     }
@@ -170,20 +170,20 @@ boolean commit(boolean refresh,boolean save)
    if (refresh) {
       long lm = for_file.lastModified();
       if (lm > last_modified) {
-	 loadFile();
-	 upd = true;
+         loadFile();
+         upd = true;
        }
     }
    else if (save && has_changed) {
       try {
-	 FileWriter fw = new FileWriter(for_file);
-	 fw.write(use_document.get());
-	 fw.close();
-	 last_modified = for_file.lastModified();
-	 upd = true;
+         FileWriter fw = new FileWriter(for_file);
+         fw.write(use_document.get());
+         fw.close();
+         last_modified = for_file.lastModified();
+         upd = true;
        }
       catch (IOException e) {
-	 NobaseMain.logE("Problem saving file",e);
+         NobaseMain.logE("Problem saving file",e);
        }
     }
    has_changed = false;
@@ -194,9 +194,9 @@ boolean commit(boolean refresh,boolean save)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -205,7 +205,7 @@ boolean commit(boolean refresh,boolean save)
 }
 
 
-}	// end of class NobaseFile
+}       // end of class NobaseFile
 
 
 

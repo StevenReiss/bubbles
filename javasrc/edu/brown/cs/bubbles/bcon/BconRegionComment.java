@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconRegionComment.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer internal region for a block comment	*/
-/*										*/
+/*                                                                              */
+/*              BconRegionComment.java                                          */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer internal region for a block comment  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -34,20 +34,20 @@ class BconRegionComment extends BconRegion implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	is_copyright;
-private String		region_name;
+private boolean         is_copyright;
+private String          region_name;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconRegionComment(BaleConstants.BaleFileOverview fov,int start,int end,String nm,boolean cpy)
@@ -65,9 +65,9 @@ BconRegionComment(BaleConstants.BaleFileOverview fov,int start,int end,String nm
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override RegionType getRegionType()
@@ -86,13 +86,13 @@ BconRegionComment(BaleConstants.BaleFileOverview fov,int start,int end,String nm
 }
 
 
-@Override boolean isComment()				{ return true; }
+@Override boolean isComment()                           { return true; }
 
 
 
 
 
-}	// end of class BconRegionComment
+}       // end of class BconRegionComment
 
 
 

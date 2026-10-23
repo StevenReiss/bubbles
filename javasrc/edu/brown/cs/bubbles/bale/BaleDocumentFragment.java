@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleDocumentFragment.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment document			*/
-/*										*/
+/*                                                                              */
+/*              BaleDocumentFragment.java                                       */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment document                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -53,24 +53,24 @@ import java.util.List;
 
 
 class BaleDocumentFragment extends BaleDocument implements StyledDocument,
-	BaleConstants.BaleFileOverview,
-	BaleConstants.BaleFragment, BaleConstants, DocumentListener
+        BaleConstants.BaleFileOverview,
+        BaleConstants.BaleFragment, BaleConstants, DocumentListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleDocumentIde 	base_document;
-private BaleFragmentType	fragment_type;
-private StyleContext		style_context;
-private String			fragment_name;
-private transient BaleRegion	cursor_region;
-private boolean 		is_orphan;
-private double			scale_factor;
+private BaleDocumentIde         base_document;
+private BaleFragmentType        fragment_type;
+private StyleContext            style_context;
+private String                  fragment_name;
+private transient BaleRegion    cursor_region;
+private boolean                 is_orphan;
+private double                  scale_factor;
 private boolean                 is_editable;
 
 private static final long serialVersionUID = 1;
@@ -78,9 +78,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> rgns)
@@ -104,7 +104,7 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
 
    base_document.createFragment(this,cnt.getRegions());
    base_document.redoElision();
-   base_document.addDocumentListener(this);	// handles UndoableEdit and Document events
+   base_document.addDocumentListener(this);     // handles UndoableEdit and Document events
 
    Element e = getDefaultRootElement();
    if (e != null && e instanceof BaleElement) {
@@ -127,23 +127,23 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProjectName()	{ return base_document.getProjectName(); }
+@Override public String getProjectName()        { return base_document.getProjectName(); }
 
-@Override public File getFile() 	        { return base_document.getFile(); }
-@Override public BoardLanguage getLanguage()	{ return base_document.getLanguage(); }
+@Override public File getFile()                 { return base_document.getFile(); }
+@Override public BoardLanguage getLanguage()    { return base_document.getLanguage(); }
 
-@Override String getFragmentName()		{ return fragment_name; }
+@Override String getFragmentName()              { return fragment_name; }
 
-@Override int getEditCounter()			{ return base_document.getEditCounter(); }
+@Override int getEditCounter()                  { return base_document.getEditCounter(); }
 
-@Override BaleFragmentType getFragmentType()	{ return fragment_type; }
+@Override BaleFragmentType getFragmentType()    { return fragment_type; }
 
-@Override boolean isEditable()			{ return is_editable; }
+@Override boolean isEditable()                  { return is_editable; }
 
 boolean canSetEditable()
 {
@@ -170,9 +170,9 @@ void setScaleFactor(double sf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Save and reload methods 						*/
-/*										*/
+/*                                                                              */
+/*      Save and reload methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BaleReloadData startReload()
@@ -197,7 +197,7 @@ private class Reloader implements BaleReloadData {
       fixElisions();
     }
 
-}	// end of inner class Reloader
+}       // end of inner class Reloader
 
 
 
@@ -235,23 +235,23 @@ private void recomputeOffsets()
 
 
 /********************************************************************************/
-/*										*/
-/*	Command methods 							*/
-/*										*/
+/*                                                                              */
+/*      Command methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-@Override void save()				{ base_document.save(); }
-@Override void revert() 			{ base_document.revert(); }
-@Override void checkpoint()			{ base_document.checkpoint(); }
+@Override void save()                           { base_document.save(); }
+@Override void revert()                         { base_document.revert(); }
+@Override void checkpoint()                     { base_document.checkpoint(); }
 
-@Override boolean canSave()			{ return base_document.canSave(); }
+@Override boolean canSave()                     { return base_document.canSave(); }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Locking methods 							*/
-/*										*/
+/*                                                                              */
+/*      Locking methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void baleWriteLock()
@@ -294,9 +294,9 @@ private void recomputeOffsets()
 
 
 /********************************************************************************/
-/*										*/
-/*	Content methods 							*/
-/*										*/
+/*                                                                              */
+/*      Content methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void insertString(int off,String st,AttributeSet a) throws BadLocationException
@@ -389,7 +389,7 @@ private void recomputeOffsets()
 
 
 @Override BaleRegion createDocumentRegion(Position start,Position end,boolean inceol)
-		throws BadLocationException
+                throws BadLocationException
 {
    BalePosition sp = (BalePosition) start;
    BalePosition ep = (BalePosition) end;
@@ -403,7 +403,7 @@ private void recomputeOffsets()
 
 
 @Override BaleRegion createDocumentRegion(int spos,int epos,boolean inceol)
-		throws BadLocationException
+                throws BadLocationException
 {
    int soff = getDocumentOffset(spos);
    Position sp = BaleStartPosition.createStartPosition(base_document,soff);
@@ -417,9 +417,9 @@ private void recomputeOffsets()
 
 
 /********************************************************************************/
-/*										*/
-/*	Budding methods 							*/
-/*										*/
+/*                                                                              */
+/*      Budding methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void removeRegions(List<BaleRegion> rgns)
@@ -427,7 +427,7 @@ private void recomputeOffsets()
    BaleFragmentContent cnt = (BaleFragmentContent) getContent();
    if (cnt.removeRegions(rgns)) {
       resetElements();
-      resetRegions();		// this does a fixup elision
+      resetRegions();           // this does a fixup elision
       base_document.redoElision();
      }
    checkOrphan();
@@ -447,16 +447,16 @@ private void resetRegions()
 
 
 /********************************************************************************/
-/*										*/
-/*	Style methods								*/
-/*										*/
+/*                                                                              */
+/*      Style methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public Style addStyle(String nm,Style par)	{ return style_context.addStyle(nm,par); }
+@Override public Style addStyle(String nm,Style par)    { return style_context.addStyle(nm,par); }
 
-@Override public Style getStyle(String nm)		{ return style_context.getStyle(nm); }
+@Override public Style getStyle(String nm)              { return style_context.getStyle(nm); }
 
-@Override public void removeStyle(String nm)		{ style_context.removeStyle(nm); }
+@Override public void removeStyle(String nm)            { style_context.removeStyle(nm); }
 
 @Override public Font getFont(AttributeSet attr)
 {
@@ -468,9 +468,9 @@ private void resetRegions()
    return ft;
 }
 
-@Override public Color getForeground(AttributeSet a)	{ return style_context.getForeground(a); }
+@Override public Color getForeground(AttributeSet a)    { return style_context.getForeground(a); }
 
-@Override public Color getBackground(AttributeSet a)	{ return style_context.getBackground(a); }
+@Override public Color getBackground(AttributeSet a)    { return style_context.getBackground(a); }
 
 
 
@@ -488,7 +488,7 @@ private void resetRegions()
 }
 
 
-@Override public void setLogicalStyle(int off,Style s)	{ }
+@Override public void setLogicalStyle(int off,Style s)  { }
 
 @Override public void setCharacterAttributes(int off,int len,AttributeSet s,boolean rep) { }
 
@@ -498,9 +498,9 @@ private void resetRegions()
 
 
 /********************************************************************************/
-/*										*/
-/*	Element methods 							*/
-/*										*/
+/*                                                                              */
+/*      Element methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupElements()
@@ -509,31 +509,31 @@ private void setupElements()
 
    switch (fragment_type) {
       case METHOD :
-	 // root = new BaleElement.MethodNode(this,null);
-	 root = new BaleElement.DeclSet(this,null);
-	 break;
+         // root = new BaleElement.MethodNode(this,null);
+         root = new BaleElement.DeclSet(this,null);
+         break;
       case CLASS :
-	 // root = new BaleElement.ClassNode(this,null);
-	 root = new BaleElement.DeclSet(this,null);
-	 break;
+         // root = new BaleElement.ClassNode(this,null);
+         root = new BaleElement.DeclSet(this,null);
+         break;
       case FILE :
       case ROFILE :
-	 root = new BaleElement.CompilationUnitNode(this,null);
-	 break;
+         root = new BaleElement.CompilationUnitNode(this,null);
+         break;
       case FIELDS :
-	 root = new BaleElement.DeclSet(this,null);
-	 break;
+         root = new BaleElement.DeclSet(this,null);
+         break;
       case STATICS :
       case MAIN :
       case IMPORTS :
       case EXPORTS :
       case CODE :
       case HEADER :
-	 root = new BaleElement.DeclSet(this,null);
-	 break;
+         root = new BaleElement.DeclSet(this,null);
+         break;
       default :
-	 BoardLog.logE("BALE","Unknown fragment type: " + fragment_type);
-	 break;
+         BoardLog.logE("BALE","Unknown fragment type: " + fragment_type);
+         break;
     }
 
    if (root == null) return;
@@ -544,9 +544,9 @@ private void setupElements()
 
 
 /********************************************************************************/
-/*										*/
-/*	Cursor methods								*/
-/*										*/
+/*                                                                              */
+/*      Cursor methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void setCursorRegion(int soff,int len)
@@ -554,13 +554,13 @@ void setCursorRegion(int soff,int len)
    try {
       Position pos = base_document.createPosition(getDocumentOffset(soff));
       if (cursor_region == null) {
-	 cursor_region = new BaleRegion(pos,len);
+         cursor_region = new BaleRegion(pos,len);
        }
       else {
-	 cursor_region.reset(pos,len);
+         cursor_region.reset(pos,len);
        }
       if (getElideMode() == BaleElideMode.ELIDE_CHECK_ALWAYS) {
-	 handleElisionChange();
+         handleElisionChange();
        }
     }
    catch (BadLocationException e) {
@@ -570,9 +570,9 @@ void setCursorRegion(int soff,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem methods 							*/
-/*										*/
+/*                                                                              */
+/*      Problem methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override Iterable<BumpProblem> getProblems()
@@ -583,9 +583,9 @@ void setCursorRegion(int soff,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mapping methods 							*/
-/*										*/
+/*                                                                              */
+/*      Mapping methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override BaleRegion getRegionFromEclipse(int soff,int eoff)
@@ -611,9 +611,9 @@ void setCursorRegion(int soff,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Naming methods: track fragment name changes				*/
-/*										*/
+/*                                                                              */
+/*      Naming methods: track fragment name changes                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void noteOpen()
@@ -630,13 +630,13 @@ private boolean checkForNameChange(BaleElement be)
    if (be instanceof BaleElement.MethodDeclId && fragment_type == BaleFragmentType.METHOD) {
       // check for methods inside nested class
       for (BaleElement.Branch par = be.getBaleParent(); par != null; par = par.getBaleParent()) {
-	 if (par.getName().equals("Class")) {
-	    for (BaleElement.Branch xpar = par.getBaleParent();
-		 xpar != null;
-		 xpar = xpar.getBaleParent()) {
-	       if (xpar.getName().equals("Method")) return false;
-	     }
-	  }
+         if (par.getName().equals("Class")) {
+            for (BaleElement.Branch xpar = par.getBaleParent();
+                 xpar != null;
+                 xpar = xpar.getBaleParent()) {
+               if (xpar.getName().equals("Method")) return false;
+             }
+          }
        }
       String id = be.getFullName();
       if (id == null) return false;
@@ -646,45 +646,45 @@ private boolean checkForNameChange(BaleElement be)
     }
    else if (be instanceof BaleElement.ClassDeclId || be instanceof BaleElement.ClassDeclMemberId) {
       if (fragment_type == BaleFragmentType.CLASS) {
-	 String id = be.getFullName();
-	 if (id == null) return false;
-	 fragment_name = id;
-	 return true;
+         String id = be.getFullName();
+         if (id == null) return false;
+         fragment_name = id;
+         return true;
        }
       else if (fragment_type == BaleFragmentType.HEADER) {
-	 if (be.getFullName() == null) return false;
-	 String id = be.getFullName() + ".<PREFIX>";
-	 fragment_name = id;
-	 return true;
+         if (be.getFullName() == null) return false;
+         String id = be.getFullName() + ".<PREFIX>";
+         fragment_name = id;
+         return true;
        }
       else if (fragment_type == BaleFragmentType.FILE) {
-	 if (be.getFullName() == null) return false;
-	 String id = be.getFullName() + ".<FILE>";
-	 fragment_name = id;
-	 return true;
+         if (be.getFullName() == null) return false;
+         String id = be.getFullName() + ".<FILE>";
+         fragment_name = id;
+         return true;
        }
       else if (fragment_type == BaleFragmentType.METHOD) {
-	 // check for methods inside nested class
-	 int ct = 0;
-	 for (BaleElement.Branch par = be.getBaleParent(); par != null; par = par.getBaleParent()) {
-	    if (par.getName().equals("Class")) ++ct;
-	  }
-	 if (ct > 1) return false;
-	 String id = be.getFullName();
-	 if (id == null) return false;
-	 fragment_name = id;
-	 return true;
+         // check for methods inside nested class
+         int ct = 0;
+         for (BaleElement.Branch par = be.getBaleParent(); par != null; par = par.getBaleParent()) {
+            if (par.getName().equals("Class")) ++ct;
+          }
+         if (ct > 1) return false;
+         String id = be.getFullName();
+         if (id == null) return false;
+         fragment_name = id;
+         return true;
        }
-    }		
+    }           
    else if (be instanceof BaleElement.FieldDeclId && fragment_type == BaleFragmentType.FIELDS) {
       String id = be.getFullName();
       if (id != null) {
-	 int idx = id.lastIndexOf(".");
-	 String pfx = "";
-	 if (idx >= 0) pfx = id.substring(0,idx) + ". ";
-	 pfx += "< " + BaleFactory.getFieldsName() + " >";
-	 fragment_name = pfx;
-	 return true;
+         int idx = id.lastIndexOf(".");
+         String pfx = "";
+         if (idx >= 0) pfx = id.substring(0,idx) + ". ";
+         pfx += "< " + BaleFactory.getFieldsName() + " >";
+         fragment_name = pfx;
+         return true;
        }
     }
    else if (be instanceof BaleElement.CompilationUnitNode && fragment_type == BaleFragmentType.FILE) {
@@ -718,7 +718,7 @@ private boolean checkForNameChange(BaleElement be)
    // need to find name for an initializer here without having a declaration element
    else if (be != null && !be.isLeaf()) {
       for (int i = 0; i < be.getElementCount(); ++i) {
-	 if (checkForNameChange(be.getBaleElement(i))) return true;
+         if (checkForNameChange(be.getBaleElement(i))) return true;
        }
     }
 
@@ -729,9 +729,9 @@ private boolean checkForNameChange(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Document event management						*/
-/*										*/
+/*                                                                              */
+/*      Document event management                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void changedUpdate(DocumentEvent e)
@@ -762,7 +762,7 @@ private boolean checkForNameChange(BaleElement be)
       ee = elementInsertString(e.getOffset(),e.getLength());
     }
 
-   if (ee != null) handleEvent(e,ee);	// propagate events
+   if (ee != null) handleEvent(e,ee);   // propagate events
 }
 
 
@@ -784,7 +784,7 @@ private boolean checkForNameChange(BaleElement be)
       ee = elementRemove(e.getOffset(),e.getLength());
     }
 
-   if (ee != null) handleEvent(e,ee);	// propagate events
+   if (ee != null) handleEvent(e,ee);   // propagate events
 }
 
 
@@ -815,14 +815,14 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
    if (foff >= 0) {
       // TODO: Might need to split this event into subevents
       if (e instanceof BaleDocumentEvent) {
-	 BaleDocumentEvent be = (BaleDocumentEvent) e;
-	 reportEvent(this,foff,flen,be.getType(),be.getEdit(),ee);
+         BaleDocumentEvent be = (BaleDocumentEvent) e;
+         reportEvent(this,foff,flen,be.getType(),be.getEdit(),ee);
        }
       else if (e instanceof UndoableEdit) {
-	 reportEvent(this,foff,flen,e.getType(),(UndoableEdit) e,ee);
+         reportEvent(this,foff,flen,e.getType(),(UndoableEdit) e,ee);
        }
       else {
-	 reportEvent(this,foff,flen,e.getType(),null,ee);
+         reportEvent(this,foff,flen,e.getType(),null,ee);
        }
     }
    else if (doff == 0 && e.getLength() > getDocumentOffset(0) && getLength() >= 0) {
@@ -843,7 +843,7 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
    baleReadLock();
    try {
       if (getDefaultRootElement() instanceof BaleElement)
-	 checkForNameChange((BaleElement) getDefaultRootElement());
+         checkForNameChange((BaleElement) getDefaultRootElement());
     }
    finally { baleReadUnlock(); }
 }
@@ -851,9 +851,9 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 
 
 /********************************************************************************/
-/*										*/
-/*	Orphan management methods						*/
-/*										*/
+/*                                                                              */
+/*      Orphan management methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleFileRemoved()
@@ -876,7 +876,7 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 }
 
 
-@Override boolean isOrphan()			  { return is_orphan; }
+@Override boolean isOrphan()                      { return is_orphan; }
 
 
 
@@ -913,16 +913,16 @@ private static class OrphanPosition implements Position
 {
    private int base_position;
 
-   OrphanPosition(int pos)			{ base_position = pos; }
+   OrphanPosition(int pos)                      { base_position = pos; }
 
-   @Override public int getOffset()		{ return base_position; }
+   @Override public int getOffset()             { return base_position; }
 
-}	// end of inner class OrphanPosition
-
-
+}       // end of inner class OrphanPosition
 
 
-}	// end of class BaleDocumentFragment
+
+
+}       // end of class BaleDocumentFragment
 
 
 

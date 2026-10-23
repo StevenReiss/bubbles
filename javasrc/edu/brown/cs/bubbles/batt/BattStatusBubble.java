@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattStatusBubble.java						*/
-/*										*/
-/*	Bubbles Automated Testing Tool status display bubble			*/
-/*										*/
+/*                                                                              */
+/*              BattStatusBubble.java                                           */
+/*                                                                              */
+/*      Bubbles Automated Testing Tool status display bubble                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -87,22 +87,22 @@ import java.util.regex.Pattern;
 
 
 class BattStatusBubble extends BudaBubble implements BattConstants, ActionListener,
-	BattConstants.BattModelListener, BudaConstants.BudaBubbleOutputer, BumpConstants
+        BattConstants.BattModelListener, BudaConstants.BudaBubbleOutputer, BumpConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BattModeler	batt_model;
-private SwingGridPanel	display_panel;
-private DisplayTable	display_table;
-private JPanel		display_bar;
-private TestMode	current_mode;
-private RunType 	current_runtype;
+private BattModeler     batt_model;
+private SwingGridPanel  display_panel;
+private DisplayTable    display_table;
+private JPanel          display_bar;
+private TestMode        current_mode;
+private RunType         current_runtype;
 private JButton         run_selected;
 
 private static final Set<DisplayMode> ALL_MODE = EnumSet.of(DisplayMode.ALL);
@@ -113,9 +113,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattStatusBubble(BattModeler bm)
@@ -141,9 +141,9 @@ BattStatusBubble(BattModeler bm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Display setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Display setup methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -171,9 +171,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handlers 							*/
-/*										*/
+/*                                                                              */
+/*      Action handlers                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -232,9 +232,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -269,8 +269,8 @@ private void setupPanel()
       menu.add(new DebugAction(btc));
       menu.add(new RunTestAction(btc));
       if (btc.getStatus() == TestStatus.FAILURE && btc.getFailTrace() != null) {
-	 menu.add(new ShowStackAction(btc));
-	 menu.add(new GotoFailureAction(btc));
+         menu.add(new ShowStackAction(btc));
+         menu.add(new GotoFailureAction(btc));
        }
     }
 
@@ -337,18 +337,18 @@ private class DebugAction extends AbstractAction {
       BddtFactory.getFactory().newDebugger(blc);
     }
 
-}	// end of inner class DebugAction
+}       // end of inner class DebugAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Outputer methods							*/
-/*										*/
+/*                                                                              */
+/*      Outputer methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()		{ return "BATT"; }
+@Override public String getConfigurator()               { return "BATT"; }
 
 @Override public void outputXml(BudaXmlWriter xw)
 {
@@ -358,9 +358,9 @@ private class DebugAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Display bar class							*/
-/*										*/
+/*                                                                              */
+/*      Display bar class                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 enum BarType {
@@ -396,36 +396,36 @@ private BarType getTestType(BattTestCase btc)
 {
    switch (btc.getState()) {
       case STOPPED :
-	 return BarType.STOPPED;
+         return BarType.STOPPED;
       case CANT_RUN :
-	 return BarType.CANT_RUN;
+         return BarType.CANT_RUN;
       case EDITED :
       case NEEDS_CHECK :
-	 switch (btc.getStatus()) {
-	    case SUCCESS :
-	       return BarType.NEED_SUCCESS;
-	    case FAILURE :
-	       return BarType.NEED_FAILURE;
-	    default :
-	       return BarType.PENDING;
-	  }
+         switch (btc.getStatus()) {
+            case SUCCESS :
+               return BarType.NEED_SUCCESS;
+            case FAILURE :
+               return BarType.NEED_FAILURE;
+            default :
+               return BarType.PENDING;
+          }
       default :
       case PENDING :
-	 return BarType.PENDING;
+         return BarType.PENDING;
       case TO_BE_RUN :
       case RUNNING :
-	 return BarType.RUNNING;
+         return BarType.RUNNING;
       case UP_TO_DATE :
-	 switch (btc.getStatus()) {
-	    case SUCCESS :
-	       return BarType.SUCCESS;
-	    case FAILURE :
-	       return BarType.FAILURE;
-	    default :
-	       return BarType.PENDING;
-	  }
+         switch (btc.getStatus()) {
+            case SUCCESS :
+               return BarType.SUCCESS;
+            case FAILURE :
+               return BarType.FAILURE;
+            default :
+               return BarType.PENDING;
+          }
       case IGNORED :
-	 return BarType.IGNORED;
+         return BarType.IGNORED;
     }
 }
 
@@ -473,16 +473,16 @@ private class DisplayBar extends JPanel {
        }
     }
 
-}	// end of inner class DisplayBar
+}       // end of inner class DisplayBar
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table for displaying tests						*/
-/*										*/
+/*                                                                              */
+/*      Table for displaying tests                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class DisplayTable extends JTable implements MouseListener {
@@ -513,7 +513,7 @@ private class DisplayTable extends JTable implements MouseListener {
       addMouseListener(this);
     }
 
-   @Override public boolean getScrollableTracksViewportWidth()		{ return true; }
+   @Override public boolean getScrollableTracksViewportWidth()          { return true; }
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() < 2) return;
@@ -524,12 +524,12 @@ private class DisplayTable extends JTable implements MouseListener {
       sa.actionPerformed(null);
     }
 
-   @Override public void mouseEntered(MouseEvent e)			{ }
-   @Override public void mouseExited(MouseEvent e)			{ }
-   @Override public void mouseReleased(MouseEvent e)			{ }
-   @Override public void mousePressed(MouseEvent e)			{ }
+   @Override public void mouseEntered(MouseEvent e)                     { }
+   @Override public void mouseExited(MouseEvent e)                      { }
+   @Override public void mouseReleased(MouseEvent e)                    { }
+   @Override public void mousePressed(MouseEvent e)                     { }
 
-   @Override public boolean isCellEditable(int r,int c) 		{ return false; }
+   @Override public boolean isCellEditable(int r,int c)                 { return false; }
 
    @Override public String getToolTipText(MouseEvent e) {
       BattTestCase btc = findTestCase(e.getPoint());
@@ -565,14 +565,14 @@ private class DisplayTable extends JTable implements MouseListener {
       return getActualTestCase(row);
     }
 
-}	// end of inner class DisplayTable
+}       // end of inner class DisplayTable
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Runner to set up batt							*/
-/*										*/
+/*                                                                              */
+/*      Runner to set up batt                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class SetupBatt implements Runnable {
@@ -582,14 +582,14 @@ private static final class SetupBatt implements Runnable {
       BattFactory.getFactory().updateTests();
     }
 
-}	// end of inner class SetupBatt
+}       // end of inner class SetupBatt
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions 								*/
-/*										*/
+/*                                                                              */
+/*      Actions                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class SourceAction extends AbstractAction {
@@ -609,11 +609,11 @@ private class SourceAction extends AbstractAction {
       if (bb == null) return;
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BattStatusBubble.this);
       if (bba != null) {
-	 bba.addBubble(bb,BattStatusBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BattStatusBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class SourceAction
+}       // end of inner class SourceAction
 
 
 private class RunTestAction extends AbstractAction {
@@ -630,7 +630,7 @@ private class RunTestAction extends AbstractAction {
       BattFactory.getFactory().runTest(test_case);
     }
 
-}	// end of inner class RunTestAction
+}       // end of inner class RunTestAction
 
 
 
@@ -677,7 +677,7 @@ private class ShowStackAction extends AbstractAction {
        }
     }
 
-}	// end of inner class ShowStackAction
+}       // end of inner class ShowStackAction
 
 
 
@@ -729,9 +729,9 @@ private class GotoFailureAction extends AbstractAction {
                if (bfo == null) continue;
                int loff = bfo.findLineOffset(lno);
                for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
-        	  BumpLocation bl1 = it.next();
-        	  if (bl1.getOffset() > loff || bl1.getEndOffset() < loff) it.remove();
-        	}
+                  BumpLocation bl1 = it.next();
+                  if (bl1.getOffset() > loff || bl1.getEndOffset() < loff) it.remove();
+                }
                if (locs.size() == 0) continue;
              }
             bf.createBubbleStack(BattStatusBubble.this,null,null,false,locs,null);
@@ -740,7 +740,7 @@ private class GotoFailureAction extends AbstractAction {
        }
     }
 
-}	// end of inner class GotoFailureAction
+}       // end of inner class GotoFailureAction
 
 
 
@@ -760,7 +760,7 @@ private class ModeAction extends JRadioButtonMenuItem implements ActionListener 
       current_mode = test_mode;
     }
 
-}	// end of inner class ModeAction
+}       // end of inner class ModeAction
 
 
 
@@ -777,7 +777,7 @@ private class UpdateAction extends AbstractAction {
       BattFactory.getFactory().findNewTests();
     }
 
-}	// end of inner class ModeAction
+}       // end of inner class ModeAction
 
 
 
@@ -796,7 +796,7 @@ private class RunAction extends JRadioButtonMenuItem implements ActionListener {
       current_runtype = run_type;
     }
 
-}	// end of inner class RunAction
+}       // end of inner class RunAction
 
 
 
@@ -813,13 +813,13 @@ private static class StopAction extends AbstractAction {
       BattFactory.getFactory().stopTest();
     }
 
-}	// end of inner class RunAction
+}       // end of inner class RunAction
 
 
 
 
 
-}	// end of class BattStatusBubble
+}       // end of class BattStatusBubble
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconTokenizer.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer file scanning methods		*/
-/*										*/
+/*                                                                              */
+/*              BconTokenizer.java                                              */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer file scanning methods                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -35,14 +35,14 @@ class BconTokenizer implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Segment 	file_text;
-private int		cur_offset;
-private State		cur_state;
+private Segment         file_text;
+private int             cur_offset;
+private State           cur_state;
 
 
 
@@ -59,9 +59,9 @@ enum State {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconTokenizer(Segment s)
@@ -74,9 +74,9 @@ BconTokenizer(Segment s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Next token method							*/
-/*										*/
+/*                                                                              */
+/*      Next token method                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 BconToken getNextToken()
@@ -86,132 +86,132 @@ BconToken getNextToken()
    while (cur_offset < file_text.length()) {
       char c = file_text.charAt(cur_offset++);
       switch (cur_state) {
-	 case NORMAL :
-	    switch (c) {
-	       case '\n' :
-		  return newToken(BconTokenType.EOL,start);
-	       case '/' :
-		  char c1 = file_text.charAt(cur_offset);
-		  switch (c1) {
-		     case '/' :
-			cur_state = State.IN_LINE_CMMT;
-			++cur_offset;
-			break;
-		     case '*' :
-			if (file_text.charAt(cur_offset+1) == '*' &&
-			       file_text.charAt(cur_offset+2) != '/')
-			   cur_state = State.IN_DOC_CMMT;
-			else cur_state = State.IN_BLOCK_CMMT;
-			++cur_offset;
-			break;
-		     default :
-			cur_state = State.IN_OTHER;
-			break;
-		   }
-		  break;
-	       case '"' :
-		  cur_state = State.IN_STRING;
-		  break;
-	       case '\'' :
-		  cur_state = State.IN_CHAR;
-		  break;
-	       case ' ' :
-	       case '\t' :
-	       case '\f' :
-		  start = cur_offset;
-		  break;
-	       default :
-		  cur_state = State.IN_OTHER;
-		  break;
-	     }
-	    break;
-	  case IN_OTHER :
-	     switch (c) {
-		case '\n' :
-		   --cur_offset;
-		   cur_state = State.NORMAL;
-		   return newToken(BconTokenType.OTHER,start);
-		case '"' :
-		   cur_state = State.IN_STRING;
-		   break;
-		case '\'' :
-		   cur_state = State.IN_CHAR;
-		   break;
-		case '/' :
-		   char c1 = file_text.charAt(cur_offset);
-		   if (c1 == '*' || c1 == '/') {
-		      --cur_offset;
-		      cur_state = State.NORMAL;
-		      return newToken(BconTokenType.OTHER,start);
-		    }
-	      }
-	     break;
-	  case IN_STRING :
-	     switch (c) {
-		case '\\' :
-		   if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
-		   break;
-		case '"' :
-		   cur_state = State.IN_OTHER;
-		   break;
-		case '\n' :
-		   --cur_offset;
-		   cur_state = State.IN_OTHER;
-		   break;
-	      }
-	     break;
-	  case IN_CHAR :
-	     switch (c) {
-		case '\\' :
-		   if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
-		   break;
-		case '\'' :
-		   cur_state = State.IN_OTHER;
-		   break;
-		case '\n' :
-		   --cur_offset;
-		   cur_state = State.IN_OTHER;
-		   break;
-	      }
-	     break;
-	  case IN_LINE_CMMT :
-	     switch (c) {
-		case '\n' :
-		   --cur_offset;
-		   cur_state = State.NORMAL;
-		   return newToken(BconTokenType.LINE_CMMT,start);
-	      }
-	     break;
-	  case IN_BLOCK_CMMT :
-	     switch (c) {
-		case '\n' :
-		   if (cur_offset - start == 1) return newToken(BconTokenType.EOL,start);
-		   --cur_offset;
-		   return newToken(BconTokenType.BLOCK_CMMT,start);
-		case '*' :
-		   if (file_text.charAt(cur_offset) == '/') {
-		      ++cur_offset;
-		      cur_state = State.NORMAL;
-		      return newToken(BconTokenType.BLOCK_CMMT,start);
-		    }
-		   break;
-	      }
-	     break;
-	  case IN_DOC_CMMT :
-	     switch (c) {
-		case '\n' :
-		   if (cur_offset - start == 1) return newToken(BconTokenType.EOL,start);
-		   --cur_offset;
-		   return newToken(BconTokenType.DOC_CMMT,start);
-		case '*' :
-		   if (file_text.charAt(cur_offset) == '/') {
-		      ++cur_offset;
-		      cur_state = State.NORMAL;
-		      return newToken(BconTokenType.DOC_CMMT,start);
-		    }
-		   break;
-	      }
-	     break;
+         case NORMAL :
+            switch (c) {
+               case '\n' :
+                  return newToken(BconTokenType.EOL,start);
+               case '/' :
+                  char c1 = file_text.charAt(cur_offset);
+                  switch (c1) {
+                     case '/' :
+                        cur_state = State.IN_LINE_CMMT;
+                        ++cur_offset;
+                        break;
+                     case '*' :
+                        if (file_text.charAt(cur_offset+1) == '*' &&
+                               file_text.charAt(cur_offset+2) != '/')
+                           cur_state = State.IN_DOC_CMMT;
+                        else cur_state = State.IN_BLOCK_CMMT;
+                        ++cur_offset;
+                        break;
+                     default :
+                        cur_state = State.IN_OTHER;
+                        break;
+                   }
+                  break;
+               case '"' :
+                  cur_state = State.IN_STRING;
+                  break;
+               case '\'' :
+                  cur_state = State.IN_CHAR;
+                  break;
+               case ' ' :
+               case '\t' :
+               case '\f' :
+                  start = cur_offset;
+                  break;
+               default :
+                  cur_state = State.IN_OTHER;
+                  break;
+             }
+            break;
+          case IN_OTHER :
+             switch (c) {
+                case '\n' :
+                   --cur_offset;
+                   cur_state = State.NORMAL;
+                   return newToken(BconTokenType.OTHER,start);
+                case '"' :
+                   cur_state = State.IN_STRING;
+                   break;
+                case '\'' :
+                   cur_state = State.IN_CHAR;
+                   break;
+                case '/' :
+                   char c1 = file_text.charAt(cur_offset);
+                   if (c1 == '*' || c1 == '/') {
+                      --cur_offset;
+                      cur_state = State.NORMAL;
+                      return newToken(BconTokenType.OTHER,start);
+                    }
+              }
+             break;
+          case IN_STRING :
+             switch (c) {
+                case '\\' :
+                   if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
+                   break;
+                case '"' :
+                   cur_state = State.IN_OTHER;
+                   break;
+                case '\n' :
+                   --cur_offset;
+                   cur_state = State.IN_OTHER;
+                   break;
+              }
+             break;
+          case IN_CHAR :
+             switch (c) {
+                case '\\' :
+                   if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
+                   break;
+                case '\'' :
+                   cur_state = State.IN_OTHER;
+                   break;
+                case '\n' :
+                   --cur_offset;
+                   cur_state = State.IN_OTHER;
+                   break;
+              }
+             break;
+          case IN_LINE_CMMT :
+             switch (c) {
+                case '\n' :
+                   --cur_offset;
+                   cur_state = State.NORMAL;
+                   return newToken(BconTokenType.LINE_CMMT,start);
+              }
+             break;
+          case IN_BLOCK_CMMT :
+             switch (c) {
+                case '\n' :
+                   if (cur_offset - start == 1) return newToken(BconTokenType.EOL,start);
+                   --cur_offset;
+                   return newToken(BconTokenType.BLOCK_CMMT,start);
+                case '*' :
+                   if (file_text.charAt(cur_offset) == '/') {
+                      ++cur_offset;
+                      cur_state = State.NORMAL;
+                      return newToken(BconTokenType.BLOCK_CMMT,start);
+                    }
+                   break;
+              }
+             break;
+          case IN_DOC_CMMT :
+             switch (c) {
+                case '\n' :
+                   if (cur_offset - start == 1) return newToken(BconTokenType.EOL,start);
+                   --cur_offset;
+                   return newToken(BconTokenType.DOC_CMMT,start);
+                case '*' :
+                   if (file_text.charAt(cur_offset) == '/') {
+                      ++cur_offset;
+                      cur_state = State.NORMAL;
+                      return newToken(BconTokenType.DOC_CMMT,start);
+                    }
+                   break;
+              }
+             break;
        }
     }
 
@@ -222,9 +222,9 @@ BconToken getNextToken()
 
 
 /********************************************************************************/
-/*										*/
-/*	Token creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Token creation methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private TokenImpl newToken(BconTokenType typ,int start)
@@ -247,15 +247,15 @@ private static class TokenImpl implements BconToken {
       token_length = len;
     }
 
-   @Override public int getStart()			{ return start_offset; }
-   @Override public int getLength()			{ return token_length; }
-   @Override public BconTokenType getTokenType()	{ return token_type; }
+   @Override public int getStart()                      { return start_offset; }
+   @Override public int getLength()                     { return token_length; }
+   @Override public BconTokenType getTokenType()        { return token_type; }
 
-}	// end of inner class TokenImpl
+}       // end of inner class TokenImpl
 
 
 
-}	// end of class BconTokenizer
+}       // end of class BconTokenizer
 
 
 

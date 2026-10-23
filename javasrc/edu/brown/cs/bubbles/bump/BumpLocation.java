@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpLocation.java						*/
-/*										*/
-/*	BUblles Mint Partnership location holder				*/
-/*										*/
+/*                                                                              */
+/*              BumpLocation.java                                               */
+/*                                                                              */
+/*      BUblles Mint Partnership location holder                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,10 +47,10 @@ import java.util.Map;
 
 
 /**
- *	Representation of a location returned from Eclipse.  A location is used to
- *	indicate the result of a search (in which case it returns both the symbol
- *	that the search was for and the method/etc. containing it).  It is also used
- *	whenever a request calls for a source pointer or region.
+ *      Representation of a location returned from Eclipse.  A location is used to
+ *      indicate the result of a search (in which case it returns both the symbol
+ *      that the search was for and the method/etc. containing it).  It is also used
+ *      whenever a request calls for a source pointer or region.
  **/
 
 public class BumpLocation implements BumpConstants {
@@ -58,29 +58,29 @@ public class BumpLocation implements BumpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		project_name;
-private File		file_location;
-private int		file_offset;
-private int		file_length;
-private BumpSymbolType	symbol_type;
-private String		symbol_name;
-private int		symbol_offset;
-private int		symbol_length;
-private String		symbol_key;
-private String		symbol_handle;
-private int		symbol_flags;
-private String		symbol_project;
-private String		symbol_prefix;
-private BumpSymbolType	source_type;
-private String		symbol_return;
-private String		symbol_parameters;
+private String          project_name;
+private File            file_location;
+private int             file_offset;
+private int             file_length;
+private BumpSymbolType  symbol_type;
+private String          symbol_name;
+private int             symbol_offset;
+private int             symbol_length;
+private String          symbol_key;
+private String          symbol_handle;
+private int             symbol_flags;
+private String          symbol_project;
+private String          symbol_prefix;
+private BumpSymbolType  source_type;
+private String          symbol_return;
+private String          symbol_parameters;
 private String          symbol_detail;
-private String		s6_source;
+private String          s6_source;
 
 private static FileSystemView file_system = null;
 
@@ -115,9 +115,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static BumpLocation getLocationFromXml(Element xml)
@@ -197,8 +197,8 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       if (symbol_name == null) symbol_name = IvyXml.getAttrString(itm,"NAME");
       String typ = IvyXml.getAttrString(itm,"TYPE");
       if (typ != null) {
-	 symbol_type = symbol_map.get(typ);
-	 if (symbol_type == null) symbol_type = BumpSymbolType.UNKNOWN;
+         symbol_type = symbol_map.get(typ);
+         if (symbol_type == null) symbol_type = BumpSymbolType.UNKNOWN;
        }
       if (source_type == BumpSymbolType.UNKNOWN) source_type = symbol_type;
       symbol_offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
@@ -217,10 +217,10 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_detail = IvyXml.getAttrString(itm,"DETAIL");
       
       if (file_location == null) {
-	 String fnm = IvyXml.getAttrString(itm,"PATH");
-	 if (fnm != null) file_location = file_system.createFileObject(fnm);
-	 if (file_offset == 0) file_offset = symbol_offset;
-	 if (file_length == 0) file_length = symbol_length;
+         String fnm = IvyXml.getAttrString(itm,"PATH");
+         if (fnm != null) file_location = file_system.createFileObject(fnm);
+         if (file_offset == 0) file_offset = symbol_offset;
+         if (file_length == 0) file_length = symbol_length;
        }
       s6_source = IvyXml.getAttrString(itm,"S6");
     }
@@ -234,116 +234,116 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methoeds 							*/
-/*										*/
+/*                                                                              */
+/*      Access methoeds                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the project name associated with the search/location.
+ *      Return the project name associated with the search/location.
  **/
 
-public String getProject()			{ return project_name; }
+public String getProject()                      { return project_name; }
 
 
 
 /**
- *	Return the file associated with the search/location/region.
+ *      Return the file associated with the search/location/region.
  **/
 
-public File getFile()				{ return file_location; }
+public File getFile()                           { return file_location; }
 
 
 
 /**
- *	Return the starting offset of the matched item
+ *      Return the starting offset of the matched item
  **/
 
-public int getOffset()				{ return file_offset; }
+public int getOffset()                          { return file_offset; }
 
 
 
 /**
- *	Return the ending offset of the matched item.
+ *      Return the ending offset of the matched item.
  **/
 
-public int getEndOffset()			{ return file_offset + file_length; }
+public int getEndOffset()                       { return file_offset + file_length; }
 
 
 
 /**
- *	Return the full name of the symbol the match is defined in.
+ *      Return the full name of the symbol the match is defined in.
  **/
 
-public String getSymbolName()			{ return symbol_name; }
+public String getSymbolName()                   { return symbol_name; }
 
 
 
 /**
- *	Return the symbol type of the symbol the match is defined in.
+ *      Return the symbol type of the symbol the match is defined in.
  **/
 
-public BumpSymbolType getSymbolType()		{ return symbol_type; }
+public BumpSymbolType getSymbolType()           { return symbol_type; }
 
 
 
 /**
- *	Return the project associated with the location of the match.
+ *      Return the project associated with the location of the match.
  **/
 
-public String getSymbolProject()		{ return symbol_project; }
+public String getSymbolProject()                { return symbol_project; }
 
 
 
 /**
- *	Return the offset of the enclosing definition.
+ *      Return the offset of the enclosing definition.
  **/
 
-public int getDefinitionOffset()		{ return symbol_offset; }
+public int getDefinitionOffset()                { return symbol_offset; }
 
 
 
-/**												   PB
- *	Return the end offset of the enclosing definition.
+/**                                                                                                PB
+ *      Return the end offset of the enclosing definition.
  **/
 
-public int getDefinitionEndOffset()		{ return symbol_offset + symbol_length; }
+public int getDefinitionEndOffset()             { return symbol_offset + symbol_length; }
 
 
 
 /**
- *	Return the symbol key (unique id) for the enclosing definition.
+ *      Return the symbol key (unique id) for the enclosing definition.
  **/
 
-public String getKey()				{ return symbol_key; }
+public String getKey()                          { return symbol_key; }
 
 
 /**
- *	Return prefix associated with symbol (language dependent)
+ *      Return prefix associated with symbol (language dependent)
  **/
 
-public String getPrefix()			{ return symbol_prefix; }
-
-
-
-/**
- *	Return the Java modifiers for the enclosing definition.
- **/
-
-public int getModifiers()			{ return symbol_flags; }
+public String getPrefix()                       { return symbol_prefix; }
 
 
 
 /**
- *	Return the symbol type of the enclosing definition
+ *      Return the Java modifiers for the enclosing definition.
  **/
 
-public BumpSymbolType getSourceType()		{ return source_type; }
+public int getModifiers()                       { return symbol_flags; }
 
 
 
 /**
- *	Return the parameter list of the enclosing definition if it has one.
+ *      Return the symbol type of the enclosing definition
+ **/
+
+public BumpSymbolType getSourceType()           { return source_type; }
+
+
+
+/**
+ *      Return the parameter list of the enclosing definition if it has one.
  **/
 
 public String getParameters()                   { return symbol_parameters; }
@@ -357,7 +357,7 @@ public String getDetail()
 
 
 /**
- *	return the return type of a function or constructor
+ *      return the return type of a function or constructor
  **/
 
 public String getReturnType()
@@ -367,22 +367,22 @@ public String getReturnType()
 
 
 /********************************************************************************/
-/*										*/
-/*	Name matching methods							*/
-/*										*/
+/*                                                                              */
+/*      Name matching methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This routine matches two names that mich include both the method name
- *	and the set of parameters.  It is complicated and takes into account the
- *	fact that eclipse will often not provide the full resolved class name
- *	for parameters.
+ *      This routine matches two names that mich include both the method name
+ *      and the set of parameters.  It is complicated and takes into account the
+ *      fact that eclipse will often not provide the full resolved class name
+ *      for parameters.
  **/
 
 public boolean nameMatch(String nm)
 {
    int idx = nm.indexOf("(");
-   if (idx < 0) {				// no parameters case -- exact match
+   if (idx < 0) {                               // no parameters case -- exact match
       return nm.equals(symbol_name);
     }
 
@@ -400,9 +400,9 @@ public boolean nameMatch(String nm)
 
 
 /**
- *	This routine matches two parameter lists for equality.	It takes into
- *	account the fact that eclipse sometimes returns unqualified type names
- *	for parameter types.
+ *      This routine matches two parameter lists for equality.  It takes into
+ *      account the fact that eclipse sometimes returns unqualified type names
+ *      for parameter types.
  **/
 
 public static boolean compareParameters(String s0,String s1)
@@ -417,19 +417,19 @@ public static boolean compareParameters(String s0,String s1)
       if (p0.equals(p1)) continue;
       int idx = p0.indexOf("<");
       if (idx > 0) {
-	 p0 = p0.substring(0, idx);
+         p0 = p0.substring(0, idx);
       }
       idx = p1.indexOf("<");
       if (idx > 0) {
-	 p1 = p1.substring(0,idx);
+         p1 = p1.substring(0,idx);
       }
       if (p1.equals("java.lang.Object") && p0.length() <= 2) continue;  // handle generics
       if (!p0.endsWith(p1)) return false;
 //    int p0len = p0.length();
 //    int p1len = p1.length();
 //    if (p1len <= p0len) {
-//	 BoardLog.logD("BUMP","Problem comparing signatures " + s0 + " " + s1 + " " + p0 + " " + p1);
-//	 return false;
+//       BoardLog.logD("BUMP","Problem comparing signatures " + s0 + " " + s1 + " " + p0 + " " + p1);
+//       return false;
 //     }
 //    if (p1.charAt(p1len-p0len-1) != '.') return false;
     }
@@ -451,11 +451,11 @@ public static List<String> getParameterList(String arr)
       char c = arr.charAt(i);
       if (c == '(') continue;
       if (lvl == 0) {
-	 if (c == ')' || c == ',') {
-	    if (start >= 0) rslt.add(arr.substring(start,i).trim());
-	    start = -1;
-	  }
-	 else if (start < 0) start = i;
+         if (c == ')' || c == ',') {
+            if (start >= 0) rslt.add(arr.substring(start,i).trim());
+            start = -1;
+          }
+         else if (start < 0) start = i;
        }
       if (c == '<') ++lvl;
       else if (c == '>') --lvl;
@@ -468,38 +468,38 @@ public static List<String> getParameterList(String arr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void update()
 {
    // TODO: the result is not accurate if there has been editing sometimes
-   //	 We need to determine when this works and when it fails
+   //    We need to determine when this works and when it fails
    if (symbol_handle != null) {
       List<BumpLocation> rslt = BumpClient.getBump().findByKey(project_name,symbol_handle,
-								  file_location);
+                                                                  file_location);
       if (rslt == null || rslt.size() == 0) return;
 
       BumpLocation newl = rslt.get(0);
-//	BoardLog.logD("BUMP","UPDATE CHECK " + this + " :: " + newl + " :: " +
-//	       symbol_offset + "/" + symbol_length + " " +
-//	       newl.symbol_offset + "/" + newl.symbol_length);
+//      BoardLog.logD("BUMP","UPDATE CHECK " + this + " :: " + newl + " :: " +
+//             symbol_offset + "/" + symbol_length + " " +
+//             newl.symbol_offset + "/" + newl.symbol_length);
       symbol_offset = newl.symbol_offset;
       symbol_length = newl.symbol_length;
     }
 }
 
 
-public String getS6Source()			{ return s6_source; }
+public String getS6Source()                     { return s6_source; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -509,7 +509,7 @@ public String getS6Source()			{ return s6_source; }
 
 
 
-}	// end of class BumpLocation
+}       // end of class BumpLocation
 
 
 

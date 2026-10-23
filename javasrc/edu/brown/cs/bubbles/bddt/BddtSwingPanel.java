@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtSwingPanel.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool performance bubble		*/
-/*										*/
+/*                                                                              */
+/*              BddtSwingPanel.java                                             */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool performance bubble            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,30 +70,30 @@ import java.util.List;
 
 
 class BddtSwingPanel extends BudaBubble implements BddtConstants, BumpConstants, BudaConstants,
-	BumpConstants.BumpRunEventHandler {
+        BumpConstants.BumpRunEventHandler {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BddtLaunchControl	launch_control;
-private boolean 		expecting_input;
-private HierarchyTree		hierarchy_tree;
-private DrawingTree		drawing_tree;
-private HierarchyModel		hierarchy_model;
-private DrawingModel		drawing_model;
+private BddtLaunchControl       launch_control;
+private boolean                 expecting_input;
+private HierarchyTree           hierarchy_tree;
+private DrawingTree             drawing_tree;
+private HierarchyModel          hierarchy_model;
+private DrawingModel            drawing_model;
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtSwingPanel(BddtLaunchControl ctrl)
@@ -122,9 +122,9 @@ BddtSwingPanel(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup the display						*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup the display                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -163,25 +163,25 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle swing events reported by application				*/
-/*										*/
+/*                                                                              */
+/*      Handle swing events reported by application                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleProcessEvent(BumpRunEvent evt)
 {
    switch (evt.getEventType()) {
       case PROCESS_SWING :
-	 if (!expecting_input) return;
-	 BumpProcess bp = evt.getProcess();
-	 if (launch_control.getProcess() != bp) return;
-	 expecting_input = false;
-	 Element xml = (Element) evt.getEventData();
-	 if (xml == null) return;
-	 handleSwingMessage(xml);
-	 break;
+         if (!expecting_input) return;
+         BumpProcess bp = evt.getProcess();
+         if (launch_control.getProcess() != bp) return;
+         expecting_input = false;
+         Element xml = (Element) evt.getEventData();
+         if (xml == null) return;
+         handleSwingMessage(xml);
+         break;
       default :
-	 break;
+         break;
     }
 }
 
@@ -221,9 +221,9 @@ private void addToDrawing(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle right click requests						*/
-/*										*/
+/*                                                                              */
+/*      Handle right click requests                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -244,9 +244,9 @@ private void addToDrawing(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse listener for info buttons 					*/
-/*										*/
+/*                                                                              */
+/*      Mouse listener for info buttons                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class InfoListener extends MouseAdapter {
@@ -266,21 +266,21 @@ private class InfoListener extends MouseAdapter {
 
    @Override public void mouseReleased(MouseEvent e) {
       if (is_tracking && launch_control.getProcess() != null) {
-	 expecting_input = true;
-	 launch_control.getProcess().requestSwingData(e.getXOnScreen(),e.getYOnScreen());
+         expecting_input = true;
+         launch_control.getProcess().requestSwingData(e.getXOnScreen(),e.getYOnScreen());
        }
       is_tracking = false;
       BudaCursorManager.resetDefaults(for_button);
     }
 
-}	// end of inner class InfoListener
+}       // end of inner class InfoListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trees for swing panels							*/
-/*										*/
+/*                                                                              */
+/*      Trees for swing panels                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class CommonTree extends JTree {
@@ -301,8 +301,8 @@ private abstract class CommonTree extends JTree {
       Object o = tp.getLastPathComponent();
       if (o == null) return null;
       if (o instanceof CommonNode) {
-	 CommonNode cn = (CommonNode) o;
-	 return cn.getToolTipText();
+         CommonNode cn = (CommonNode) o;
+         return cn.getToolTipText();
        }
       return o.toString();
     }
@@ -313,8 +313,8 @@ private abstract class CommonTree extends JTree {
       Object o = tp.getLastPathComponent();
       if (o == null) return;
       if (o instanceof StackNode) {
-	 StackNode sn = (StackNode) o;
-	 sn.handlePopupMenu(m);
+         StackNode sn = (StackNode) o;
+         sn.handlePopupMenu(m);
        }
    }
 
@@ -324,14 +324,14 @@ private abstract class CommonTree extends JTree {
       Object o = tp.getLastPathComponent();
       if (o == null) return;
       if (o instanceof StackNode) {
-	 StackNode sn = (StackNode) o;
-	 sn.handleGoto();
+         StackNode sn = (StackNode) o;
+         sn.handleGoto();
        }
    }
 
 
 
-}	// end of inner class CommonTree
+}       // end of inner class CommonTree
 
 
 private class HierarchyTree extends CommonTree {
@@ -342,7 +342,7 @@ private class HierarchyTree extends CommonTree {
       super(md);
     }
 
-}	// end of inner class HierarchyTree
+}       // end of inner class HierarchyTree
 
 
 private class DrawingTree extends CommonTree {
@@ -353,15 +353,15 @@ private class DrawingTree extends CommonTree {
       super(md);
     }
 
-}	// end of inner class DrawingTree
+}       // end of inner class DrawingTree
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree Models								*/
-/*										*/
+/*                                                                              */
+/*      Tree Models                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class CommonModel extends DefaultTreeModel {
@@ -386,7 +386,7 @@ private abstract class CommonModel extends DefaultTreeModel {
       reload();
     }
 
-}	// end of inner class CommonModel
+}       // end of inner class CommonModel
 
 
 
@@ -396,7 +396,7 @@ private class HierarchyModel extends CommonModel {
    
    HierarchyModel() { }
 
-}	// end of inner class HierarchyModel
+}       // end of inner class HierarchyModel
 
 
 
@@ -407,23 +407,23 @@ private class DrawingModel extends CommonModel {
    DrawingModel() {
     }
 
-}	// end of inner class DrawingModel
+}       // end of inner class DrawingModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree node implementations						*/
-/*										*/
+/*                                                                              */
+/*      Tree node implementations                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class CommonNode extends DefaultMutableTreeNode {
    
    private static final long serialVersionUID = 1;
    
-   String getToolTipText()		{ return toString(); }
+   String getToolTipText()              { return toString(); }
 
-}	// end of inner class CommonNode
+}       // end of inner class CommonNode
 
 
 private class ComponentNode extends CommonNode {
@@ -444,17 +444,17 @@ private class ComponentNode extends CommonNode {
       class_name = IvyXml.getAttrString(xml,"CLASS");
       comp_name = IvyXml.getAttrString(xml,"NAME");
       if (comp_name == null) {
-	 int idx = class_name.lastIndexOf(".");
-	 if (idx < 0) comp_name = class_name;
-	 else comp_name = class_name.substring(idx+1);
+         int idx = class_name.lastIndexOf(".");
+         if (idx < 0) comp_name = class_name;
+         else comp_name = class_name.substring(idx+1);
        }
 
       Element stk = IvyXml.getChild(xml,"CREATE");
       if (stk != null) {
-	 for (Element selt : IvyXml.children(stk,"FRAME")) {
-	    StackNode sn = new StackNode(selt);
-	    add(sn);
-	  }
+         for (Element selt : IvyXml.children(stk,"FRAME")) {
+            StackNode sn = new StackNode(selt);
+            add(sn);
+          }
        }
     }
 
@@ -462,7 +462,7 @@ private class ComponentNode extends CommonNode {
       return comp_name + " @ [" + x_pos + "," + y_pos + ":" + c_width + "x" + c_height + "]";
     }
 
-}	// end of inner class ComponentNode
+}       // end of inner class ComponentNode
 
 
 
@@ -486,7 +486,7 @@ private class DrawNode extends CommonNode {
       return nm;
     }
 
-}	// end of inner class DrawNode
+}       // end of inner class DrawNode
 
 
 
@@ -518,7 +518,7 @@ private class StackNode extends CommonNode {
    void handlePopupMenu(JPopupMenu m) {
       checkFile();
       if (launch_control.fileExists(file_name) && line_number > 0) {
-	 m.add(new SourceAction(this));
+         m.add(new SourceAction(this));
        }
     }
 
@@ -565,14 +565,14 @@ private class StackNode extends CommonNode {
     }
 
 
-}	// end of inner class StackNode
+}       // end of inner class StackNode
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions 								*/
-/*										*/
+/*                                                                              */
+/*      Actions                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClickHandler extends MouseAdapter {
@@ -584,7 +584,7 @@ private final class ClickHandler extends MouseAdapter {
        }
     }
 
-}	// end of inner class ClickHandler
+}       // end of inner class ClickHandler
 
 
 
@@ -603,11 +603,11 @@ private class SourceAction extends AbstractAction {
       for_node.handleGoto();
     }
 
-}	// end of inner class SourceAction
+}       // end of inner class SourceAction
 
 
 
-}	// end of class BddtSwingPanel
+}       // end of class BddtSwingPanel
 
 
 

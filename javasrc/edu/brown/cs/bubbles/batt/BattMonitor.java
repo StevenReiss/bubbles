@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattMonitor.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool monitor for talking to other tools	*/
-/*										*/
+/*                                                                              */
+/*              BattMonitor.java                                                */
+/*                                                                              */
+/*      Bubble Automated Testing Tool monitor for talking to other tools        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,26 +55,26 @@ class BattMonitor implements BattConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BattMain		for_batt;
-private MintControl		mint_control;
+private BattMain                for_batt;
+private MintControl             mint_control;
 private Map<String,BattProject> project_set;
-private List<BattLaunchConfig>	junit_launches;
-private boolean 		is_done;
-private Map<String,FileState>	file_states;
-private Map<String,FileState>	changed_classes;
+private List<BattLaunchConfig>  junit_launches;
+private boolean                 is_done;
+private Map<String,FileState>   file_states;
+private Map<String,FileState>   changed_classes;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattMonitor(BattMain bm,String mint)
@@ -95,20 +95,20 @@ BattMonitor(BattMain bm,String mint)
 
 
 /********************************************************************************/
-/*										*/
-/*	Server implementation							*/
-/*										*/
+/*                                                                              */
+/*      Server implementation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void server()
 {
    synchronized (this) {
       while (!is_done) {
-	 checkEclipse();
-	 try {
-	    wait(60000L);
-	  }
-	 catch (InterruptedException e) { }
+         checkEclipse();
+         try {
+            wait(60000L);
+          }
+         catch (InterruptedException e) { }
        }
     }
 
@@ -138,9 +138,9 @@ private void checkEclipse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Manage file state							*/
-/*										*/
+/*                                                                              */
+/*      Manage file state                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void setFileState(String file,FileState state)
@@ -158,25 +158,25 @@ private synchronized void setFileState(String file,FileState state)
 
    if (rslt != null) {
       if (state == FileState.CHANGED) {
-	 for (String s : rslt)  {
+         for (String s : rslt)  {
             changed_classes.put(s,state);
           }
        }
       else if (state == FileState.ERRORS) {
-	 for_batt.addErrors(rslt);
+         for_batt.addErrors(rslt);
        }
       else if (state == FileState.STABLE) {
-	 if (fs == FileState.CHANGED || fs == FileState.EDITED) {
-	    for (String s : rslt) {
-	       IvyLog.logD("BATTM","Changed class: " + s);
-	       changed_classes.put(s,state);
-	     }
-	  }
-	 for_batt.removeErrors(rslt);
+         if (fs == FileState.CHANGED || fs == FileState.EDITED) {
+            for (String s : rslt) {
+               IvyLog.logD("BATTM","Changed class: " + s);
+               changed_classes.put(s,state);
+             }
+          }
+         for_batt.removeErrors(rslt);
        }
       else if (state == FileState.EDITED) {
- 	 for_batt.addErrors(rslt);		// mark the classes as invalid until compile
-	 for (String s : rslt) changed_classes.put(s,state);
+         for_batt.addErrors(rslt);              // mark the classes as invalid until compile
+         for (String s : rslt) changed_classes.put(s,state);
        }
     }
 
@@ -194,7 +194,7 @@ private synchronized void setErrorFiles(Collection<String> files)
       FileState fs = ent.getValue();
       if (files.contains(f)) setFileState(f,FileState.ERRORS);
       else if (fs == FileState.ERRORS) {
-	 setFileState(f,FileState.STABLE);
+         setFileState(f,FileState.STABLE);
        }
       else if (fs == FileState.EDITED) {
          for (BattProject bp : project_set.values()) {
@@ -230,9 +230,9 @@ private void updateTestState()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to load project information					*/
-/*										*/
+/*                                                                              */
+/*      Methods to load project information                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void loadProjects()
@@ -246,7 +246,7 @@ void loadProjects()
 
    if (!IvyXml.isElement(r,"RESULT")) {
       IvyLog.logD("BATTM","Problem getting project information: " +
-			    IvyXml.convertXmlToString(r));
+                            IvyXml.convertXmlToString(r));
       System.exit(2);
     }
 
@@ -254,13 +254,13 @@ void loadProjects()
       String pnm = IvyXml.getAttrString(pe,"NAME");
       MintDefaultReply prply = new MintDefaultReply();
       String pmsg = "<BUBBLES DO='OPENPROJECT' PROJECT='" + pnm +
-	 "' CLASSES='true' FILES='true' PATHS='true' OPTIONS='false' />";
+         "' CLASSES='true' FILES='true' PATHS='true' OPTIONS='false' />";
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
-			       IvyXml.convertXmlToString(pr));
-	 continue;
+         IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
+                               IvyXml.convertXmlToString(pr));
+         continue;
        }
       Element ppr = IvyXml.getChild(pr,"PROJECT");
       BattProject bp = new BattProject(ppr);
@@ -276,13 +276,13 @@ void reloadProjects()
       BattProject bp = ent.getValue();
       MintDefaultReply prply = new MintDefaultReply();
       String pmsg = "<BUBBLES DO='OPENPROJECT' PROJECT='" + pnm +
-	 "' CLASSES='true' FILES='false' PATHS='true' OPTIONS='false' />";
+         "' CLASSES='true' FILES='false' PATHS='true' OPTIONS='false' />";
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
-			       IvyXml.convertXmlToString(pr));
-	 continue;							
+         IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
+                               IvyXml.convertXmlToString(pr));
+         continue;                                                      
        }
       Element ppr = IvyXml.getChild(pr,"PROJECT");
       bp.loadProject(ppr);
@@ -293,9 +293,9 @@ void reloadProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to load configuration information				*/
-/*										*/
+/*                                                                              */
+/*      Methods to load configuration information                               */
+/*                                                                              */
 /********************************************************************************/
 
 void loadConfigurations()
@@ -308,7 +308,7 @@ void loadConfigurations()
    Element r = rply.waitForXml();
    if (!IvyXml.isElement(r,"RESULT")) {
       IvyLog.logD("BATTM","Problem getting launch information: " +
-	    IvyXml.convertXmlToString(r));
+            IvyXml.convertXmlToString(r));
       System.exit(2);
     }
 
@@ -324,9 +324,9 @@ void loadConfigurations()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 List<BattProject> getProjects()
@@ -337,9 +337,9 @@ List<BattProject> getProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Send messages								*/
-/*										*/
+/*                                                                              */
+/*      Send messages                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void sendMessage(String typ,String cnts)
@@ -377,9 +377,9 @@ void sendMessageAndWait(String typ,String cnts)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle messages from eclipse						*/
-/*										*/
+/*                                                                              */
+/*      Handle messages from eclipse                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class EclipseHandler implements MintHandler {
@@ -478,7 +478,7 @@ private final class EclipseHandler implements MintHandler {
        }
    }
 
-}	// end of inner class EclipseHandler
+}       // end of inner class EclipseHandler
 
 
 
@@ -488,14 +488,14 @@ private final class ExitHandler implements MintHandler {
       serverDone();
     }
 
-}	// end of inner class ExitHandler
+}       // end of inner class ExitHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle command requests from bubbles or elsewhere			*/
-/*										*/
+/*                                                                              */
+/*      Handle command requests from bubbles or elsewhere                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CommandHandler implements MintHandler {
@@ -543,12 +543,12 @@ private final class CommandHandler implements MintHandler {
              }
             else {
                for (Element telt : IvyXml.children(e,"TEST")) {
-        	  String t1 = IvyXml.getAttrString(telt,"NAME");
-        	  if (t1 != null) {
-        	     BattTestCase btc1 = for_batt.findTestCase(t1);
-        	     if (btc1 != null) lst.add(btc1);
-        	   }
-        	}
+                  String t1 = IvyXml.getAttrString(telt,"NAME");
+                  if (t1 != null) {
+                     BattTestCase btc1 = for_batt.findTestCase(t1);
+                     if (btc1 != null) lst.add(btc1);
+                   }
+                }
              }
             if (!lst.isEmpty()) {
                for_batt.runSelectedTests(lst);
@@ -602,12 +602,12 @@ private final class CommandHandler implements MintHandler {
       msg.replyTo(rply);
     }
 
-}	// end of inner class CommandHandler
+}       // end of inner class CommandHandler
 
 
 
 
-}	// end of class BattMonitor
+}       // end of class BattMonitor
 
 
 

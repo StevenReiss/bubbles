@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BwizNewInterfaceWizard.java					*/
-/*										*/
-/*	Wizard to create a new interface					*/
-/*										*/
+/*                                                                              */
+/*              BwizNewInterfaceWizard.java                                     */
+/*                                                                              */
+/*      Wizard to create a new interface                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,9 +39,9 @@ class BwizNewInterfaceWizard extends BwizNewWizard
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -49,9 +49,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizNewInterfaceWizard(BuenoLocation loc)
@@ -63,24 +63,24 @@ BwizNewInterfaceWizard(BuenoLocation loc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override protected Creator getCreator()	{ return new InterfaceCreator(); }
+@Override protected Creator getCreator()        { return new InterfaceCreator(); }
 
-@Override protected String getNameText()	{ return "Interface Name"; }
+@Override protected String getNameText()        { return "Interface Name"; }
 @Override protected String getNameHoverText()
 {
    return "<html>Enter the new interface name." +
    " Such names usually start with an uppercase letter";
 }
 
-@Override protected String getSecondText()	{ return null; }
+@Override protected String getSecondText()      { return null; }
 @Override protected String getSecondHoverText() { return null; }
 
-@Override protected String getListText()	{ return "Extends: "; }
+@Override protected String getListText()        { return "Extends: "; }
 @Override protected String getListHoverText()
 {
    return "Any interfaces extened by this interface. Press ENTER" +
@@ -90,9 +90,9 @@ BwizNewInterfaceWizard(BuenoLocation loc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface Creator							*/
-/*										*/
+/*                                                                              */
+/*      Interface Creator                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class InterfaceCreator extends Creator {
@@ -114,10 +114,10 @@ private final class InterfaceCreator extends Creator {
       return nbbl;
     }
 
-}	// end of inner class EnumCreator
+}       // end of inner class EnumCreator
 
 
-}	// end of class BwizNewInterfaceWizard
+}       // end of class BwizNewInterfaceWizard
 
 
 

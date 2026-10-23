@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamProblemBubble.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items problem bubble		*/
-/*										*/
+/*                                                                              */
+/*              BeamProblemBubble.java                                          */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items problem bubble            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -75,30 +75,30 @@ import java.util.StringTokenizer;
 
 
 class BeamProblemBubble extends BudaBubble implements BeamConstants, BumpConstants,
-	BumpConstants.BumpProblemHandler
+        BumpConstants.BumpProblemHandler
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private transient BumpClient	bump_client;
+private transient BumpClient    bump_client;
 private transient List<BumpProblem> active_problems;
 private transient List<BumpProblem> display_problems;
-private ProblemTable		problem_table;
+private ProblemTable            problem_table;
 private transient Set<BumpErrorType> allow_types;
-private boolean 		for_tasks;
-private Color		 	top_color;
-private Color			bottom_color;
-private Color			overview_color;
-private Font			base_font;
-private int			base_height;
+private boolean                 for_tasks;
+private Color                   top_color;
+private Color                   bottom_color;
+private Color                   overview_color;
+private Font                    base_font;
+private int                     base_height;
 
-private static BoardProperties	beam_properties = BoardProperties.getProperties("Beam");
+private static BoardProperties  beam_properties = BoardProperties.getProperties("Beam");
 
 
 private static String [] col_names = new String[] {
@@ -130,9 +130,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamProblemBubble(String typs,boolean task)
@@ -151,12 +151,12 @@ BeamProblemBubble(String typs,boolean task)
       allow_types = EnumSet.noneOf(BumpErrorType.class);
       StringTokenizer tok = new StringTokenizer(typs);
       while (tok.hasMoreTokens()) {
-	 String s = tok.nextToken();
-	 try {
-	    BumpErrorType bet = BumpErrorType.valueOf(s);
-	    allow_types.add(bet);
-	  }
-	 catch (IllegalArgumentException e) { }
+         String s = tok.nextToken();
+         try {
+            BumpErrorType bet = BumpErrorType.valueOf(s);
+            allow_types.add(bet);
+          }
+         catch (IllegalArgumentException e) { }
        }
     }
 
@@ -196,9 +196,9 @@ BeamProblemBubble(String typs,boolean task)
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem update methods							*/
-/*										*/
+/*                                                                              */
+/*      Problem update methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleProblemAdded(BumpProblem bp)
@@ -240,9 +240,9 @@ BeamProblemBubble(String typs,boolean task)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -258,9 +258,9 @@ BeamProblemBubble(String typs,boolean task)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -274,9 +274,9 @@ BeamProblemBubble(String typs,boolean task)
 
 
 /********************************************************************************/
-/*										*/
-/*	BumpProblem decoding methods						*/
-/*										*/
+/*                                                                              */
+/*      BumpProblem decoding methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 boolean matchTypes(String typs,boolean task)
@@ -288,8 +288,8 @@ boolean matchTypes(String typs,boolean task)
    while (tok.hasMoreTokens()) {
       String s = tok.nextToken();
       try {
-	 BumpErrorType bet = BumpErrorType.valueOf(s);
-	 es.add(bet);
+         BumpErrorType bet = BumpErrorType.valueOf(s);
+         es.add(bet);
        }
       catch (IllegalArgumentException e) { }
     }
@@ -303,13 +303,13 @@ private String getErrorType(BumpProblem bp)
 {
    switch (bp.getErrorType()) {
       case FATAL :
-	 return "F";
+         return "F";
       case ERROR :
-	 return "E";
+         return "E";
       case WARNING :
-	 return "W";
+         return "W";
       case NOTICE :
-	 return "N";
+         return "N";
       case TODO :
          return "T";
       case HINT :
@@ -369,15 +369,15 @@ private String getToolTip(BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	New bubble methods							*/
-/*										*/
+/*                                                                              */
+/*      New bubble methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubbleShower implements Runnable {
 
    private File for_file;
-   private int	at_line;
+   private int  at_line;
    private BassName bass_name;
    private List<BumpLocation> show_locations;
 
@@ -407,7 +407,7 @@ private class BubbleShower implements Runnable {
           }
          SwingUtilities.invokeLater(this);
        }
-      else {		// in Swing thread
+      else {            // in Swing thread
          if (show_locations != null) {
             BaleFactory bale = BaleFactory.getFactory();
             bale.createBubbleStack(BeamProblemBubble.this,null,null,false,
@@ -425,19 +425,19 @@ private class BubbleShower implements Runnable {
        }
     }
 
-}	// end of inner class BubbleShower
+}       // end of inner class BubbleShower
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table for problems							*/
-/*										*/
+/*                                                                              */
+/*      Table for problems                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProblemTable extends JTable implements MouseListener,
-		BudaConstants.BudaBubbleOutputer
+                BudaConstants.BudaBubbleOutputer
 {
    private transient ErrorRenderer [] error_renderer;
    private transient WarningRenderer [] warning_renderer;
@@ -454,8 +454,8 @@ private class ProblemTable extends JTable implements MouseListener,
       addMouseListener(this);
       setOpaque(false);
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderRenderer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderRenderer(getTableHeader().getDefaultRenderer()));
        }
       error_renderer = new ErrorRenderer[col_names.length];
       warning_renderer = new WarningRenderer[col_names.length];
@@ -506,10 +506,10 @@ private class ProblemTable extends JTable implements MouseListener,
    private void fixColumnSizes() {
       TableColumnModel tcm = getColumnModel();
       for (int i = 0; i < col_sizes.length; ++i) {
-	 TableColumn tc = tcm.getColumn(i);
-	 tc.setPreferredWidth(col_sizes[i]);
-	 if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
-	 if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
+         TableColumn tc = tcm.getColumn(i);
+         tc.setPreferredWidth(col_sizes[i]);
+         if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
+         if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
        }
     }
 
@@ -525,10 +525,10 @@ private class ProblemTable extends JTable implements MouseListener,
       // showBubble(f,ln);
     }
 
-   @Override public void mouseEntered(MouseEvent e)			{ }
-   @Override public void mouseExited(MouseEvent e)			{ }
-   @Override public void mouseReleased(MouseEvent e)			{ }
-   @Override public void mousePressed(MouseEvent e)			{ }
+   @Override public void mouseEntered(MouseEvent e)                     { }
+   @Override public void mouseExited(MouseEvent e)                      { }
+   @Override public void mouseReleased(MouseEvent e)                    { }
+   @Override public void mousePressed(MouseEvent e)                     { }
 
    @Override public String getToolTipText(MouseEvent e) {
       int r = rowAtPoint(e.getPoint());
@@ -562,7 +562,7 @@ private class ProblemTable extends JTable implements MouseListener,
        }
     }
 
-   @Override public String getConfigurator()			{ return "BEAM"; }
+   @Override public String getConfigurator()                    { return "BEAM"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","PROBLEMS");
       StringBuffer buf = new StringBuffer();
@@ -571,15 +571,15 @@ private class ProblemTable extends JTable implements MouseListener,
       xw.field("FORTASKS",for_tasks);
     }
 
-}	// end of inner class ProblemTable
+}       // end of inner class ProblemTable
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table model for problem table						*/
-/*										*/
+/*                                                                              */
+/*      Table model for problem table                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProblemModel extends AbstractTableModel {
@@ -588,16 +588,16 @@ private class ProblemModel extends AbstractTableModel {
 
    ProblemModel() { }
 
-   @Override public int getColumnCount()		{ return col_names.length; }
-   @Override public String getColumnName(int idx)	{ return col_names[idx]; }
-   @Override public Class<?> getColumnClass(int idx)	{ return col_types[idx]; }
+   @Override public int getColumnCount()                { return col_names.length; }
+   @Override public String getColumnName(int idx)       { return col_names[idx]; }
+   @Override public Class<?> getColumnClass(int idx)    { return col_types[idx]; }
    @Override public boolean isCellEditable(int r,int c) { return false; }
-   @Override public int getRowCount()			{ return display_problems.size(); }
+   @Override public int getRowCount()                   { return display_problems.size(); }
 
    @Override public Object getValueAt(int r,int c) {
       BumpProblem bp;
       synchronized (display_problems) {
-	 if (r < 0 || r >= display_problems.size()) {
+         if (r < 0 || r >= display_problems.size()) {
             switch (c) {
                case 0 :
                   return "?";
@@ -610,29 +610,29 @@ private class ProblemModel extends AbstractTableModel {
              }
             return null;
           }
-	 bp = display_problems.get(r);
+         bp = display_problems.get(r);
        }
       switch (c) {
-	 case 0 :
-	    return getErrorType(bp);
-	 case 1 :
-	    return getDescription(bp);
-	 case 2 :
-	    return getResource(bp);
-	 case 3 :
-	    return getLine(bp);
+         case 0 :
+            return getErrorType(bp);
+         case 1 :
+            return getDescription(bp);
+         case 2 :
+            return getResource(bp);
+         case 3 :
+            return getLine(bp);
        }
       return null;
     }
 
-}	// end of inner class ProblemModel
+}       // end of inner class ProblemModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Sorting methods 							*/
-/*										*/
+/*                                                                              */
+/*      Sorting methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpProblem getActualProblem(int idx)
@@ -641,13 +641,13 @@ private BumpProblem getActualProblem(int idx)
 
    synchronized (display_problems) {
       if (problem_table != null) {
-	 RowSorter<?> rs = problem_table.getRowSorter();
-	 try {
-	    if (rs != null) idx = rs.convertRowIndexToModel(idx);
-	  }
-	 catch (ArrayIndexOutOfBoundsException e) {
-	    return null;
-	  }
+         RowSorter<?> rs = problem_table.getRowSorter();
+         try {
+            if (rs != null) idx = rs.convertRowIndexToModel(idx);
+          }
+         catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+          }
        }
 
       if (idx >= display_problems.size()) return null;
@@ -658,9 +658,9 @@ private BumpProblem getActualProblem(int idx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Renderers								*/
-/*										*/
+/*                                                                              */
+/*      Renderers                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderRenderer implements TableCellRenderer {
@@ -676,21 +676,21 @@ private static class HeaderRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
 
       if (component_font != null && t.getFont() != component_font) bold_font = null;
 
       if (bold_font == null) {
-	 component_font = t.getFont();
-	 bold_font = component_font.deriveFont(Font.BOLD);
+         component_font = t.getFont();
+         bold_font = component_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of subclass HeaderRenderer
+}       // end of subclass HeaderRenderer
 
 
 
@@ -704,14 +704,14 @@ private static class ErrorRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setForeground(BoardColors.getColor(PROBLEM_ERROR_COLOR_PROP));
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of subclass ErrorRenderer
+}       // end of subclass ErrorRenderer
 
 
 
@@ -725,14 +725,14 @@ private static class WarningRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setForeground(BoardColors.getColor(PROBLEM_WARNING_COLOR_PROP));
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of subclass HeaderRenderer
+}       // end of subclass HeaderRenderer
 
 
 
@@ -747,19 +747,19 @@ private static class NoticeRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setForeground(BoardColors.getColor(PROBLEM_NOTICE_COLOR_PROP));
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of subclass NoticeRenderer
+}       // end of subclass NoticeRenderer
 
 
 
 
-}	// end of class BeamProblemBubble
+}       // end of class BeamProblemBubble
 
 
 

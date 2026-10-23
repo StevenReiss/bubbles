@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixFactory.java						*/
-/*										*/
-/*	Factory interface for automatic bubbles fixer				*/
-/*										*/
+/*                                                                              */
+/*              BfixFactory.java                                                */
+/*                                                                              */
+/*      Factory interface for automatic bubbles fixer                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -58,21 +58,21 @@ import java.util.concurrent.TimeUnit;
 
 
 public final class BfixFactory implements BfixConstants, BaleConstants,
-	BudaConstants.ButtonListener
+        BudaConstants.ButtonListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /**************************************************ao******************************/
 
-private Map<BfixCorrector,Boolean>	all_correctors;
-private Contexter			context_handler;
-private List<BfixAdapter>		all_adapters;
-private BfixOrderBase			base_order;
-private BfixChoreManager		chore_manager;
+private Map<BfixCorrector,Boolean>      all_correctors;
+private Contexter                       context_handler;
+private List<BfixAdapter>               all_adapters;
+private BfixOrderBase                   base_order;
+private BfixChoreManager                chore_manager;
 private ThreadPoolExecutor              fix_thread_pool;
 
 private static BoardProperties bfix_props = BoardProperties.getProperties("Bfix");
@@ -92,9 +92,9 @@ public static synchronized BfixFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -119,9 +119,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BfixFactory()
@@ -135,39 +135,39 @@ private BfixFactory()
    if (bfix_props != null && runmode != BoardSetup.RunMode.SERVER) {
       SortedMap<Integer,String> adapts = new TreeMap<>();
       for (String s : bfix_props.stringPropertyNames()) {
-	 if (s.startsWith("Bfix.adapter.") && s.lastIndexOf(".") == 12) {
-	    int idx = s.lastIndexOf(".");
-	    try {
-	       int v = Integer.parseInt(s.substring(idx+1));
-	       adapts.put(v,s);
-	     }
-	    catch (NumberFormatException e) { }
-	  }
+         if (s.startsWith("Bfix.adapter.") && s.lastIndexOf(".") == 12) {
+            int idx = s.lastIndexOf(".");
+            try {
+               int v = Integer.parseInt(s.substring(idx+1));
+               adapts.put(v,s);
+             }
+            catch (NumberFormatException e) { }
+          }
        }
       Set<Class<?>> done = new HashSet<>();
       for (String s : adapts.values()) {
-	 String val = bfix_props.getProperty(s);
-	 Class<?> c = null;
-	 try {
-	    c = Class.forName(val);
-	  }
-	 catch (ClassNotFoundException e) {
-	    try {
-	       c = Class.forName("edu.brown.cs.bubbles.bifx.BfixAdapter" + val);
-	     }
-	    catch (ClassNotFoundException e1) {
-	       BoardLog.logE("BFIX","Adapter " + val + " not found");
-	    }
-	  }
-	 if (c != null && done.add(c)) {
-	    try {
-	       BfixAdapter adpt = (BfixAdapter) c.getDeclaredConstructor().newInstance();
-	       all_adapters.add(adpt);
-	     }
-	    catch (Throwable e) {
+         String val = bfix_props.getProperty(s);
+         Class<?> c = null;
+         try {
+            c = Class.forName(val);
+          }
+         catch (ClassNotFoundException e) {
+            try {
+               c = Class.forName("edu.brown.cs.bubbles.bifx.BfixAdapter" + val);
+             }
+            catch (ClassNotFoundException e1) {
+               BoardLog.logE("BFIX","Adapter " + val + " not found");
+            }
+          }
+         if (c != null && done.add(c)) {
+            try {
+               BfixAdapter adpt = (BfixAdapter) c.getDeclaredConstructor().newInstance();
+               all_adapters.add(adpt);
+             }
+            catch (Throwable e) {
                BoardLog.logE("BFIX","Adapter " + val + " lacks valid constructor",e);
              }
-	  }
+          }
        }
     }
 
@@ -181,9 +181,9 @@ private BfixFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public BfixCorrector findCorrector(BaleWindow bw)
@@ -192,14 +192,14 @@ public BfixCorrector findCorrector(BaleWindow bw)
 
    synchronized (all_correctors) {
       for (BfixCorrector bc : all_correctors.keySet()) {
-	 if (bc.getEditor() == bw) {
-	    rslt = bc;
-	    break;
-	  }
+         if (bc.getEditor() == bw) {
+            rslt = bc;
+            break;
+          }
        }
       if (rslt == null) {
-	 rslt = new BfixCorrector(bw,true);
-	 all_correctors.put(rslt,true);
+         rslt = new BfixCorrector(bw,true);
+         all_correctors.put(rslt,true);
        }
     }
 
@@ -221,12 +221,12 @@ void removeCorrector(BaleWindow bw)
 {
    synchronized (all_correctors) {
       for (Iterator<BfixCorrector> it = all_correctors.keySet().iterator();
-	 it.hasNext(); ) {
-	 BfixCorrector bc = it.next();
-	 if (bc.getEditor() == bw) {
-	    bc.removeEditor();
-	    it.remove();
-	  }
+         it.hasNext(); ) {
+         BfixCorrector bc = it.next();
+         if (bc.getEditor() == bw) {
+            bc.removeEditor();
+            it.remove();
+          }
        }
     }
 }
@@ -234,9 +234,9 @@ void removeCorrector(BaleWindow bw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 List<BfixAdapter> getAdapters()
@@ -258,7 +258,7 @@ List<BfixAdapter> getAdapters()
 
 
 
-BfixChoreManager getChoreManager()		{ return chore_manager; }
+BfixChoreManager getChoreManager()              { return chore_manager; }
 
 
 BfixOrderBase getBaseOrder()
@@ -282,9 +282,9 @@ void startTask(Runnable r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Fix up methods -- called from BaleEditorKit using reflection            */
-/*										*/
+/*                                                                              */
+/*      Fix up methods -- called from BaleEditorKit using reflection            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void fixErrorsInRegion(BaleWindowDocument doc,int soff,int eoff)
@@ -300,9 +300,9 @@ public static void fixErrorsInRegion(BaleWindowDocument doc,int soff,int eoff)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle context menus							*/
-/*										*/
+/*                                                                              */
+/*      Handle context menus                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Contexter implements BaleContextListener {
@@ -338,9 +338,9 @@ private final class Contexter implements BaleContextListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Button action methods							*/
-/*										*/
+/*                                                                              */
+/*      Button action methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -349,8 +349,8 @@ private final class Contexter implements BaleContextListener {
       if (bba == null) return;
       BfixChoreBubble bbl = new BfixChoreBubble(getChoreManager());
       bba.addBubble(bbl,null,pt,
-	    BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
-	    BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
+            BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
+            BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
     }
    else if (id.equals(BFIX_MODEL_UPDATE_BUTTON)) {
       BfixAdapterImports.updateImports();
@@ -410,7 +410,7 @@ private static class BfixThreadPool extends ThreadPoolExecutor implements Thread
 
 
 
-}	// end of class BfixFactory
+}       // end of class BfixFactory
 
 
 

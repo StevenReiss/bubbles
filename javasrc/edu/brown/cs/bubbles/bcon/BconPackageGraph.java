@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconPackageGraph.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer package graph holder 		*/
-/*										*/
+/*                                                                              */
+/*              BconPackageGraph.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer package graph holder                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -45,28 +45,28 @@ class BconPackageGraph implements BconConstants, BanalConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		for_project;
-private String		for_package;
-private Set<ClassType>	class_options;
-private Set<ArcType>	arc_options;
-private boolean 	include_children;
+private String          for_project;
+private String          for_package;
+private Set<ClassType>  class_options;
+private Set<ArcType>    arc_options;
+private boolean         include_children;
 
-private Set<String>	start_nodes;
-private Set<String>	exclude_set;
-private Set<String>	include_set;
+private Set<String>     start_nodes;
+private Set<String>     exclude_set;
+private Set<String>     include_set;
 
 private Collection<BanalPackageNode> all_nodes;
 private Map<String,GraphNode> active_nodes;
 
 private Collection<BconGraphNode> cur_nodes;
-private boolean 	need_recompute;
-private boolean 	dont_reuse;
-private boolean 	auto_collapse;
+private boolean         need_recompute;
+private boolean         dont_reuse;
+private boolean         auto_collapse;
 
 private Map<String,Set<ArcType>> collapse_nodes;
 
@@ -113,9 +113,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconPackageGraph(String proj,String pkg)
@@ -134,7 +134,7 @@ BconPackageGraph(String proj,String pkg)
 
    all_nodes = new HashSet<>();
    // TODO: register for file changes to know when to update all_nodes
-   //	need to clear all_nodes in that case
+   //   need to clear all_nodes in that case
    need_recompute = true;
    dont_reuse = false;
    auto_collapse = true;
@@ -149,12 +149,12 @@ BconPackageGraph(String proj,String pkg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getProject()				{ return for_project; }
+String getProject()                             { return for_project; }
 
 
 boolean getClassOption(ClassType cty)
@@ -186,8 +186,8 @@ void setArcOption(ArcType prt,boolean fg)
 }
 
 
-boolean getIncludeChildren()			{ return include_children; }
-void setIncludeChildren(boolean fg)		{ include_children = fg; }
+boolean getIncludeChildren()                    { return include_children; }
+void setIncludeChildren(boolean fg)             { include_children = fg; }
 
 
 
@@ -235,8 +235,8 @@ ArcType getCollapsedType(BconGraphNode nd)
    for (ArcType t : pst) {
       int p1 = collapse_priority.get(t);
       if (p1 < pr) {
-	 dflt = t;
-	 pr = p1;
+         dflt = t;
+         pr = p1;
        }
     }
 
@@ -307,30 +307,30 @@ private BanalPackageNode getParentNode(BanalPackageNode nd)
    for (BanalPackageLink lnk : nd.getOutLinks()) {
       BanalPackageNode par = lnk.getToNode();
       if (lnk.getTypes().containsKey(PackageRelationType.SUPERCLASS) &&
-	    testCollapse(par.getName(),ArcType.SUBCLASS)) {
-	 return par;
+            testCollapse(par.getName(),ArcType.SUBCLASS)) {
+         return par;
        }
     }
    for (BanalPackageLink lnk : nd.getOutLinks()) {
       BanalPackageNode par = lnk.getToNode();
       if (lnk.getTypes().containsKey(PackageRelationType.IMPLEMENTS) &&
-		  testCollapse(par.getName(),ArcType.IMPLEMENTED_BY)) {
-	 return par;
+                  testCollapse(par.getName(),ArcType.IMPLEMENTED_BY)) {
+         return par;
        }
     }
    for (BanalPackageLink lnk : nd.getOutLinks()) {
       BanalPackageNode par = lnk.getToNode();
       if (lnk.getTypes().containsKey(PackageRelationType.EXTENDS) &&
-			testCollapse(par.getName(),ArcType.EXTENDED_BY)) {
-	 return par;
+                        testCollapse(par.getName(),ArcType.EXTENDED_BY)) {
+         return par;
        }
     }
 
    for (BanalPackageLink lnk : nd.getOutLinks()) {
       BanalPackageNode par = lnk.getToNode();
       if (lnk.getTypes().containsKey(PackageRelationType.CLASSMETHOD) &&
-	       testCollapse(par.getName(),ArcType.MEMBER_OF)) {
-	 return par;
+               testCollapse(par.getName(),ArcType.MEMBER_OF)) {
+         return par;
        }
     }
 
@@ -340,9 +340,9 @@ private BanalPackageNode getParentNode(BanalPackageNode nd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Induced graph methods							*/
-/*										*/
+/*                                                                              */
+/*      Induced graph methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void showAllNodes()
@@ -375,7 +375,7 @@ synchronized void addStartNode(String nm)
 }
 
 
-Set<String> getStartNode()		{ return start_nodes; }
+Set<String> getStartNode()              { return start_nodes; }
 
 
 
@@ -389,9 +389,9 @@ void addExclusion(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get access to the induced graph				*/
-/*										*/
+/*                                                                              */
+/*      Methods to get access to the induced graph                              */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<BconGraphNode> getNodes()
@@ -401,11 +401,11 @@ Collection<BconGraphNode> getNodes()
    synchronized (this) {
       if (!need_recompute) return cur_nodes;
       if (all_nodes == null || all_nodes.isEmpty()) {
-	 all_nodes = BanalFactory.getFactory().computePackageGraph(for_project,
-								      for_package,
-								      use_methods,
-								      same_class);
-	 include_set = null;
+         all_nodes = BanalFactory.getFactory().computePackageGraph(for_project,
+                                                                      for_package,
+                                                                      use_methods,
+                                                                      same_class);
+         include_set = null;
        }
 
       if (start_nodes == null) include_set = null;
@@ -421,23 +421,23 @@ Collection<BconGraphNode> getNodes()
          String nm = bpc.getName();
          int idx = nm.lastIndexOf(".");
          if (idx > 0) nm = nm.substring(0,idx);
-	 if (include_set != null && !include_set.contains(bpc.getName()) &&
-	          !include_set.contains(nm)) continue;
-	 if (exclude_set.contains(bpc.getName())) continue;
-	 if (useClass(bpc)) {
-	    if (bpc.getTypes().contains(ClassType.METHOD)) {
-	       BanalPackageMethod bpm = (BanalPackageMethod) bpc;
-	       if (auto_collapse)
-		  addCollapse(bpm.getClassName(),ArcType.MEMBER_OF);
-	     }
-	   createNode(bpc,priors);
-	  }
+         if (include_set != null && !include_set.contains(bpc.getName()) &&
+                  !include_set.contains(nm)) continue;
+         if (exclude_set.contains(bpc.getName())) continue;
+         if (useClass(bpc)) {
+            if (bpc.getTypes().contains(ClassType.METHOD)) {
+               BanalPackageMethod bpm = (BanalPackageMethod) bpc;
+               if (auto_collapse)
+                  addCollapse(bpm.getClassName(),ArcType.MEMBER_OF);
+             }
+           createNode(bpc,priors);
+          }
        }
 
       if (auto_collapse) {
-	 collapseNodes();
-	 auto_collapse = false;
-	 return getNodes();
+         collapseNodes();
+         auto_collapse = false;
+         return getNodes();
       }
     }
 
@@ -469,16 +469,16 @@ private synchronized GraphNode createNode(BanalPackageNode bpc,Map<String,GraphN
       if (idx1 > idx) idx = idx1;
       pnm = cnm.substring(0,idx);
       if (testCollapse(pnm,ArcType.INNERCLASS)) {
-	 pgn = active_nodes.get(pnm);
-	 if (pgn == null) {
-	    BanalPackageNode pcn = findNodeByName(pnm);
-	    if (pcn != null) pgn = createNode(pcn,priors);
-	  }
-	 if (pgn != null && !pgn.getIncludeChildren()) {
-	    active_nodes.put(nm,pgn);
-	    pgn.addNode(bpc);
-	  }
-	 return pgn;
+         pgn = active_nodes.get(pnm);
+         if (pgn == null) {
+            BanalPackageNode pcn = findNodeByName(pnm);
+            if (pcn != null) pgn = createNode(pcn,priors);
+          }
+         if (pgn != null && !pgn.getIncludeChildren()) {
+            active_nodes.put(nm,pgn);
+            pgn.addNode(bpc);
+          }
+         return pgn;
        }
     }
 
@@ -487,29 +487,29 @@ private synchronized GraphNode createNode(BanalPackageNode bpc,Map<String,GraphN
    if (nnd != null) {
       pgn = active_nodes.get(nnd);
       if (pgn == null) {
-	 pgn = createPackageNode(nnd,priors);
+         pgn = createPackageNode(nnd,priors);
        }
       if (pgn != null && !pgn.getIncludeChildren()) {
-	 active_nodes.put(nm,pgn);
-	 pgn.addNode(bpc);
+         active_nodes.put(nm,pgn);
+         pgn.addNode(bpc);
        }
       return pgn;
     }
 
    if (bpc.getTypes().contains(ClassType.METHOD)) {
       if (testCollapse(cnm,ArcType.MEMBER_OF)) {
-	 pgn = active_nodes.get(cnm);
-	 if (pgn == null) {
-	    BanalPackageNode pcn = findNodeByName(cnm);
-	    if (pcn != null) {
-	       pgn = createNode(pcn,priors);
-	     }
-	  }
-	 if (pgn != null && !pgn.getIncludeChildren()) {
-	    active_nodes.put(nm,pgn);
-	    pgn.addNode(bpc);
-	  }
-	 return pgn;
+         pgn = active_nodes.get(cnm);
+         if (pgn == null) {
+            BanalPackageNode pcn = findNodeByName(cnm);
+            if (pcn != null) {
+               pgn = createNode(pcn,priors);
+             }
+          }
+         if (pgn != null && !pgn.getIncludeChildren()) {
+            active_nodes.put(nm,pgn);
+            pgn.addNode(bpc);
+          }
+         return pgn;
        }
     }
 
@@ -543,8 +543,8 @@ PackageNode createPackageNode(String nm,Map<String,GraphNode> priors)
    if (idx > 0) {
       String pnm = nm.substring(0,idx);
       if (testCollapse(pnm,ArcType.PACKAGE)) {
-	 pnd = active_nodes.get(pnm);
-	 if (pnd != null && !pnd.getIncludeChildren()) return null;
+         pnd = active_nodes.get(pnm);
+         if (pnd != null && !pnd.getIncludeChildren()) return null;
       }
    }
 
@@ -570,9 +570,9 @@ PackageNode createPackageNode(String nm,Map<String,GraphNode> priors)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle automatic collapsing at the start				*/
-/*										*/
+/*                                                                              */
+/*      Handle automatic collapsing at the start                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void collapseNodes()
@@ -584,9 +584,9 @@ private void collapseNodes()
    int ict = 0;
    for (BconGraphNode gn : cur_nodes) {
       if (gn.isInnerClass()) {
-	 ++ict;
-	 collapseNode(gn,EnumSet.of(ArcType.INNERCLASS));
-	 need_recompute = true;
+         ++ict;
+         collapseNode(gn,EnumSet.of(ArcType.INNERCLASS));
+         need_recompute = true;
       }
    }
    ct -= ict;
@@ -612,22 +612,22 @@ private void collapseNodes()
       int bct = 0;
       int bdep = 0;
       for (Map.Entry<String,Integer> ent : pmap.entrySet()) {
-	 String pnm = ent.getKey();
-	 int dep = getDepth(pnm);
-	 boolean use = false;
-	 if (pkg == null) use = true;
-	 if (!use && dep > bdep) use = true;
-	 if (!use && dep == bdep && ent.getValue() < bct) use = true;
-	 if (use) {
-	    pkg = pnm;
-	    bct = ent.getValue();
-	    bdep = dep;
-	 }
+         String pnm = ent.getKey();
+         int dep = getDepth(pnm);
+         boolean use = false;
+         if (pkg == null) use = true;
+         if (!use && dep > bdep) use = true;
+         if (!use && dep == bdep && ent.getValue() < bct) use = true;
+         if (use) {
+            pkg = pnm;
+            bct = ent.getValue();
+            bdep = dep;
+         }
       }
      if (ct - bct >= 5) {
-	addCollapse(pkg,ArcType.PACKAGE);
-	ct -= (bct -1);
-	need_recompute = true;
+        addCollapse(pkg,ArcType.PACKAGE);
+        ct -= (bct -1);
+        need_recompute = true;
      }
      pmap.remove(pkg);
    }
@@ -652,9 +652,9 @@ private int getDepth(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Node/arc use checking methods						*/
-/*										*/
+/*                                                                              */
+/*      Node/arc use checking methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean inPackage(String nm)
@@ -662,7 +662,7 @@ private boolean inPackage(String nm)
    if (for_package == null) return true;
    if (for_package.length() == 0) {
       if (nm.startsWith("java.") || nm.startsWith("com.") || nm.startsWith("sun.") ||
-	       nm.startsWith("edu.") || nm.startsWith("org.")) return false;
+               nm.startsWith("edu.") || nm.startsWith("org.")) return false;
     }
    else {
       if (!nm.startsWith(for_package)) return false;
@@ -698,9 +698,9 @@ private boolean useEdge(BanalPackageLink lnk)
      ArcType at = relation_map.get(prt);
 
      if (arc_options.contains(at) && ent.getValue() > 0) {
-	if (!useClass(lnk.getFromNode())) return false;
-	if (!useClass(lnk.getToNode())) return false;
-	return true;
+        if (!useClass(lnk.getFromNode())) return false;
+        if (!useClass(lnk.getToNode())) return false;
+        return true;
       }
    }
 
@@ -710,9 +710,9 @@ private boolean useEdge(BanalPackageLink lnk)
 
 
 /********************************************************************************/
-/*										*/
-/*	Naming methods								*/
-/*										*/
+/*                                                                              */
+/*      Naming methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private String getHtmlText(BanalPackageLink lnk,boolean flip)
@@ -727,8 +727,8 @@ private String getHtmlText(BanalPackageLink lnk,boolean flip)
    int ctr = 0;
    for (Map.Entry<PackageRelationType,Integer> ent : lnk.getTypes().entrySet()) {
       if (isArcRelevant(ent.getKey()) && ent.getValue() > 0) {
-	 if (ctr++ > 0) buf.append(",");
-	 buf.append(ent.getKey());
+         if (ctr++ > 0) buf.append(",");
+         buf.append(ent.getKey());
        }
     }
    buf.append(")&mdash;&rarr;");
@@ -741,9 +741,9 @@ private String getHtmlText(BanalPackageLink lnk,boolean flip)
 
 
 /********************************************************************************/
-/*										*/
-/*	Node representation							*/
-/*										*/
+/*                                                                              */
+/*      Node representation                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class GraphNode implements BconGraphNode {
@@ -766,16 +766,16 @@ private abstract class GraphNode implements BconGraphNode {
       node_set = null;
     }
 
-   @Override public String getLabelName()		{ return getFullName(); }
+   @Override public String getLabelName()               { return getFullName(); }
 
-   @Override public boolean getIncludeChildren()	{ return node_children; }
+   @Override public boolean getIncludeChildren()        { return node_children; }
    @Override public void setIncludeChildren(boolean fg) { node_children = fg; }
 
    @Override public boolean hasChildren() {
       return child_nodes != null && child_nodes.size() > 0;
     }
-   @Override public Set<BconGraphNode> getChildren()	{ return new HashSet<BconGraphNode>(child_nodes); }
-   @Override public BconGraphNode getParent()		{ return parent_node; }
+   @Override public Set<BconGraphNode> getChildren()    { return new HashSet<BconGraphNode>(child_nodes); }
+   @Override public BconGraphNode getParent()           { return parent_node; }
 
    void invalidate() {
       check_arcs = true;
@@ -795,25 +795,25 @@ private abstract class GraphNode implements BconGraphNode {
 
    @Override public Collection<BconGraphArc> getOutArcs() {
       if (check_arcs) {
-	 if (prior_arcs == null) {
-	    prior_arcs = out_arcs;
-	    out_arcs = new HashMap<GraphNode,BconGraphArc>();
-	  }
-	 addOutArcs();
-	 check_arcs = false;
-	 prior_arcs = null;
+         if (prior_arcs == null) {
+            prior_arcs = out_arcs;
+            out_arcs = new HashMap<GraphNode,BconGraphArc>();
+          }
+         addOutArcs();
+         check_arcs = false;
+         prior_arcs = null;
        }
       return out_arcs.values();
    }
 
    protected void addOutArcs() {
       synchronized (BconPackageGraph.this) {
-	 addLocalArcs();
+         addLocalArcs();
        }
       if (hasChildren()) {
-	 for (GraphNode cn : child_nodes) {
-	    cn.addOutArcs();
-	 }
+         for (GraphNode cn : child_nodes) {
+            cn.addOutArcs();
+         }
       }
    }
 
@@ -825,21 +825,21 @@ private abstract class GraphNode implements BconGraphNode {
    protected void addLocalArcs() {
       if (node_set == null) return;
       for (BanalPackageNode cls : node_set) {
-	 addLocalLinks(cls);
+         addLocalLinks(cls);
        }
    }
 
 
    protected void addLocalLinks(BanalPackageNode cls) {
       for (BanalPackageLink bpl : cls.getOutLinks()) {
-	 if (useEdge(bpl)) {
-	    String nm = bpl.getToNode().getName();
-	    GraphNode tgn = active_nodes.get(nm);
-	    if (tgn != null) {
-	       if (tgn.linkExists(this)) tgn.addLinkData(bpl,this,false);
-	       else addLinkData(bpl,tgn,true);
-	     }
-	  }
+         if (useEdge(bpl)) {
+            String nm = bpl.getToNode().getName();
+            GraphNode tgn = active_nodes.get(nm);
+            if (tgn != null) {
+               if (tgn.linkExists(this)) tgn.addLinkData(bpl,this,false);
+               else addLinkData(bpl,tgn,true);
+             }
+          }
        }
     }
 
@@ -864,21 +864,21 @@ private abstract class GraphNode implements BconGraphNode {
        }
     }
 
-   @Override public boolean isInnerClass()	{ return false; }
+   @Override public boolean isInnerClass()      { return false; }
 
    @Override public boolean isSubclass() {
       for (BanalPackageNode cls : node_set) {
-	 for (BanalPackageLink lnk : cls.getOutLinks()) {
-	    if (lnk.getTypes().containsKey(PackageRelationType.SUPERCLASS) ||
-		  lnk.getTypes().containsKey(PackageRelationType.IMPLEMENTS) ||
-		  lnk.getTypes().containsKey(PackageRelationType.EXTENDS)) return true;
-	  }
+         for (BanalPackageLink lnk : cls.getOutLinks()) {
+            if (lnk.getTypes().containsKey(PackageRelationType.SUPERCLASS) ||
+                  lnk.getTypes().containsKey(PackageRelationType.IMPLEMENTS) ||
+                  lnk.getTypes().containsKey(PackageRelationType.EXTENDS)) return true;
+          }
        }
       return false;
     }
 
 
-}	// end of inner abstract class GraphNode
+}       // end of inner abstract class GraphNode
 
 
 
@@ -891,7 +891,7 @@ private class ClassNode extends GraphNode {
       for_class = cls;
     }
 
-   @Override public String getFullName()		{ return for_class.getName(); }
+   @Override public String getFullName()                { return for_class.getName(); }
    @Override public String getLabelName() {
       String cnm = for_class.getClassName();
       int idx = cnm.lastIndexOf(".");
@@ -901,7 +901,7 @@ private class ClassNode extends GraphNode {
       return cnm;
     }
 
-   @Override public Set<ClassType> getClassType()	{ return for_class.getTypes(); }
+   @Override public Set<ClassType> getClassType()       { return for_class.getTypes(); }
    @Override public NodeType getNodeType() {
       Set<ClassType> ct = getClassType();
       if (ct.contains(ClassType.THROWABLE)) return NodeType.THROWABLE;
@@ -916,7 +916,7 @@ private class ClassNode extends GraphNode {
       return for_class.getTypes().contains(ClassType.INNER);
    }
 
-}	// end of inner class ClassNode
+}       // end of inner class ClassNode
 
 
 
@@ -929,7 +929,7 @@ private class MethodNode extends GraphNode {
       for_method = mthd;
     }
 
-   @Override public String getFullName()		{ return for_method.getName(); }
+   @Override public String getFullName()                { return for_method.getName(); }
    @Override public String getLabelName() {
       String nm = for_method.getMethodName();
       int idx = nm.indexOf("(");
@@ -938,10 +938,10 @@ private class MethodNode extends GraphNode {
       if (idx > 0) nm = nm.substring(idx+1);
       return nm;
     }
-   @Override public Set<ClassType> getClassType()	{ return for_method.getTypes(); }
-   @Override public NodeType getNodeType()		{ return NodeType.METHOD; }
+   @Override public Set<ClassType> getClassType()       { return for_method.getTypes(); }
+   @Override public NodeType getNodeType()              { return NodeType.METHOD; }
 
-}	// end of inner class ClassNode
+}       // end of inner class ClassNode
 
 
 
@@ -953,7 +953,7 @@ private class PackageNode extends GraphNode {
       package_name = nm;
     }
 
-   @Override public String getFullName()		{ return package_name; }
+   @Override public String getFullName()                { return package_name; }
    @Override public String getLabelName() {
       String nm = package_name;
       int idx = nm.lastIndexOf(".");
@@ -961,18 +961,18 @@ private class PackageNode extends GraphNode {
       return nm;
     }
 
-   @Override public NodeType getNodeType()		{ return NodeType.PACKAGE; }
-   @Override public boolean isInnerClass()		{ return false; }
-   @Override public Set<ClassType> getClassType()	{ return EnumSet.noneOf(ClassType.class); }
+   @Override public NodeType getNodeType()              { return NodeType.PACKAGE; }
+   @Override public boolean isInnerClass()              { return false; }
+   @Override public Set<ClassType> getClassType()       { return EnumSet.noneOf(ClassType.class); }
 
-}	// end of inner class PackageNode
+}       // end of inner class PackageNode
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Arc representation							*/
-/*										*/
+/*                                                                              */
+/*      Arc representation                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class GraphArc implements BconGraphArc {
@@ -994,7 +994,7 @@ private class GraphArc implements BconGraphArc {
       flip_flop = false;
     }
 
-   @Override public void update()		{ relation_data = null; }
+   @Override public void update()               { relation_data = null; }
 
    void invalidate(BanalPackageLink lnk) {
       forward_links.clear();
@@ -1014,22 +1014,22 @@ private class GraphArc implements BconGraphArc {
 
       RelationData rslt = new RelationData();
       for (BanalPackageLink bpl : forward_links) {
-	 for (Map.Entry<PackageRelationType,Integer> ent : bpl.getTypes().entrySet()) {
-	    PackageRelationType k = ent.getKey();
-	    ArcType at = relation_map.get(k);
-	    if (at != null && arc_options.contains(at)) {
-	       rslt.addLink(at,ent.getValue(),false);
-	     }
-	  }
+         for (Map.Entry<PackageRelationType,Integer> ent : bpl.getTypes().entrySet()) {
+            PackageRelationType k = ent.getKey();
+            ArcType at = relation_map.get(k);
+            if (at != null && arc_options.contains(at)) {
+               rslt.addLink(at,ent.getValue(),false);
+             }
+          }
        }
       for (BanalPackageLink bpl : backward_links) {
-	 for (Map.Entry<PackageRelationType,Integer> ent : bpl.getTypes().entrySet()) {
-	    PackageRelationType k = ent.getKey();
-	    ArcType at = relation_map.get(k);
-	    if (at != null && arc_options.contains(at)) {
-	       rslt.addLink(at,ent.getValue(),true);
-	     }
-	  }
+         for (Map.Entry<PackageRelationType,Integer> ent : bpl.getTypes().entrySet()) {
+            PackageRelationType k = ent.getKey();
+            ArcType at = relation_map.get(k);
+            if (at != null && arc_options.contains(at)) {
+               rslt.addLink(at,ent.getValue(),true);
+             }
+          }
        }
       relation_data = rslt;
       flip_flop = relation_data.shouldFlip();
@@ -1038,8 +1038,8 @@ private class GraphArc implements BconGraphArc {
 
    @Override public boolean isInnerArc() {
       if (forward_links.size() != 0) {
-	 BanalPackageLink lnk = forward_links.get(0);
-	 if (!lnk.getFromNode().getName().equals(from_node.getFullName())) return true;
+         BanalPackageLink lnk = forward_links.get(0);
+         if (!lnk.getFromNode().getName().equals(from_node.getFullName())) return true;
        }
       return false;
     }
@@ -1067,24 +1067,24 @@ private class GraphArc implements BconGraphArc {
       String rslt = "<html>";
       int ct = 0;
       for (BanalPackageLink lnk : forward_links) {
-	 if (ct++ > 0) rslt += "<br>";
-	 rslt += getHtmlText(lnk,flip_flop);
+         if (ct++ > 0) rslt += "<br>";
+         rslt += getHtmlText(lnk,flip_flop);
        }
       for (BanalPackageLink lnk : backward_links) {
-	 if (ct++ > 0) rslt += "<br>";
-	 rslt += getHtmlText(lnk,!flip_flop);
+         if (ct++ > 0) rslt += "<br>";
+         rslt += getHtmlText(lnk,!flip_flop);
        }
       return rslt;
     }
 
-}	// end of inner class GraphArc
+}       // end of inner class GraphArc
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hold information about a relationship					*/
-/*										*/
+/*                                                                              */
+/*      Hold information about a relationship                                   */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -1109,20 +1109,20 @@ private static class RelationData implements BconRelationData {
       int mxn = 0;
       ArcType prt = ArcType.NONE;
       for (Map.Entry<ArcType,Integer> ent : forward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer rv = backward_counts.get(ent.getKey());
-	 if (rv != null) vl += rv;
-	 if (vl > mxn) {
-	    mxn = ent.getValue();
-	    prt = ent.getKey();
-	  }
+         int vl = ent.getValue();
+         Integer rv = backward_counts.get(ent.getKey());
+         if (rv != null) vl += rv;
+         if (vl > mxn) {
+            mxn = ent.getValue();
+            prt = ent.getKey();
+          }
        }
       for (Map.Entry<ArcType,Integer> ent : backward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 if (vl > mxn) {
-	    mxn = ent.getValue();
-	    prt = ent.getKey();
-	  }
+         int vl = ent.getValue();
+         if (vl > mxn) {
+            mxn = ent.getValue();
+            prt = ent.getKey();
+          }
        }
       return prt;
     }
@@ -1137,16 +1137,16 @@ private static class RelationData implements BconRelationData {
    boolean shouldFlip() {
       int ct = 0;
       for (Map.Entry<ArcType,Integer> ent : forward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 ct += vl;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         ct += vl;
        }
       for (Map.Entry<ArcType,Integer> ent : backward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 ct -= vl;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         ct -= vl;
        }
       if (ct < 0) return true;
       return false;
@@ -1154,44 +1154,44 @@ private static class RelationData implements BconRelationData {
 
    boolean useTargetArrow() {
       for (Map.Entry<ArcType,Integer> ent : forward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 if (vl > 0) return true;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         if (vl > 0) return true;
        }
       for (Map.Entry<ArcType,Integer> ent : backward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 if (vl > 0) return true;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         if (vl > 0) return true;
        }
       return false;
     }
 
    boolean useSourceArrow() {
       for (Map.Entry<ArcType,Integer> ent : forward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 if (vl < 0) return true;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         if (vl < 0) return true;
        }
       for (Map.Entry<ArcType,Integer> ent : backward_counts.entrySet()) {
-	 int vl = ent.getValue();
-	 Integer pr = node_priority.get(ent.getKey());
-	 if (pr != null) vl *= pr;
-	 if (vl < 0) return true;
+         int vl = ent.getValue();
+         Integer pr = node_priority.get(ent.getKey());
+         if (pr != null) vl *= pr;
+         if (vl < 0) return true;
        }
       return false;
    }
 
-}	// end of inner class RelationData
+}       // end of inner class RelationData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle induced graphs							*/
-/*										*/
+/*                                                                              */
+/*      Handle induced graphs                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void computeIncludes()
@@ -1252,14 +1252,14 @@ private boolean useSubEdge(BanalPackageLink lnk)
 {
    for (Map.Entry<PackageRelationType,Integer> ent : lnk.getTypes().entrySet()) {
       switch (ent.getKey()) {
-	 case CLASSMETHOD :
-	 case INNERCLASS :
-	 case SUPERCLASS :
-	 case IMPLEMENTS :
-	    if (ent.getValue() > 0) return true;
-	    break;
-	 default :
-	    break;
+         case CLASSMETHOD :
+         case INNERCLASS :
+         case SUPERCLASS :
+         case IMPLEMENTS :
+            if (ent.getValue() > 0) return true;
+            break;
+         default :
+            break;
       }
    }
 
@@ -1293,7 +1293,7 @@ private BanalPackageNode findNodeByName(String nm)
 
 
 
-}	// end of class BconPackageGraph
+}       // end of class BconPackageGraph
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleRenameContext.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor context for renaming			*/
-/*										*/
+/*                                                                              */
+/*              BaleRenameContext.java                                          */
+/*                                                                              */
+/*      Bubble Annotated Language Editor context for renaming                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -80,33 +80,33 @@ class BaleRenameContext implements BaleConstants, CaretListener, BuenoConstants,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleEditorPane	for_editor;
-private BaleDocument	for_document;
-private BaleElement	for_id;
-private String		start_name;
+private BaleEditorPane  for_editor;
+private BaleDocument    for_document;
+private BaleElement     for_id;
+private String          start_name;
 
-private JDialog 	cur_menu;
-private JTextField	rename_field;
-private JButton 	accept_button;
-private EditMouser	edit_mouser;
-private EditKeyer	edit_keyer;
-private RenamePanel	the_panel;
+private JDialog         cur_menu;
+private JTextField      rename_field;
+private JButton         accept_button;
+private EditMouser      edit_mouser;
+private EditKeyer       edit_keyer;
+private RenamePanel     the_panel;
 
-private static final int	X_DELTA = 0;
-private static final int	Y_DELTA = 0;
-private static final Pattern	ID_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z_0-9]*");
+private static final int        X_DELTA = 0;
+private static final int        Y_DELTA = 0;
+private static final Pattern    ID_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z_0-9]*");
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleRenameContext(BaleEditorPane edt,int soff)
@@ -142,9 +142,9 @@ BaleRenameContext(BaleEditorPane edt,int soff)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle editing						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle editing                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void removeContext()
@@ -180,7 +180,7 @@ private final class EditMouser extends MouseAdapter {
       removeContext();
     }
 
-}	// end of inner class EditMouser
+}       // end of inner class EditMouser
 
 
 
@@ -191,22 +191,22 @@ private final class EditKeyer extends KeyAdapter {
       removeContext();
     }
 
-}	// end of inner class EditKeyer
+}       // end of inner class EditKeyer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Classes to handle dialog box						*/
-/*										*/
+/*                                                                              */
+/*      Classes to handle dialog box                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void handleShow()
 {
    BaleEditorPane be = for_editor;
 
-   if (be == null) return;	// no longer relevant
+   if (be == null) return;      // no longer relevant
 
    the_panel = new RenamePanel();
 
@@ -217,24 +217,24 @@ private synchronized void handleShow()
       Rectangle r = SwingText.modelToView2D(be,soff);
       Window w = null;
       for (Component c = be; c != null; c = c.getParent()) {
-	 if (w == null && c instanceof Window) {
-	    w = (Window) c;
-	    break;
-	  }
+         if (w == null && c instanceof Window) {
+            w = (Window) c;
+            break;
+          }
        }
       cur_menu = new JDialog(w);
       cur_menu.setUndecorated(true);
       cur_menu.setContentPane(the_panel);
       try {
-	 Point p0 = be.getLocationOnScreen();
-	 cur_menu.setLocation(p0.x + r.x + X_DELTA,p0.y + r.y + r.height + Y_DELTA);
-	 cur_menu.pack();
-	 cur_menu.setVisible(true);
-	 rename_field.grabFocus();
-	 BoardLog.logD("BALE","Show rename");
+         Point p0 = be.getLocationOnScreen();
+         cur_menu.setLocation(p0.x + r.x + X_DELTA,p0.y + r.y + r.height + Y_DELTA);
+         cur_menu.pack();
+         cur_menu.setVisible(true);
+         rename_field.grabFocus();
+         BoardLog.logD("BALE","Show rename");
        }
       catch (IllegalComponentStateException e) {
-	 // Editor no longer on the screen -- ignore
+         // Editor no longer on the screen -- ignore
        }
     }
    catch (BadLocationException e) {
@@ -245,9 +245,9 @@ private synchronized void handleShow()
 
 
 /********************************************************************************/
-/*										*/
-/*	Validity checking methods						*/
-/*										*/
+/*                                                                              */
+/*      Validity checking methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean isRenameValid()
@@ -273,9 +273,9 @@ private static boolean isValidId(String text)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold the renaming dialog					*/
-/*										*/
+/*                                                                              */
+/*      Class to hold the renaming dialog                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class RenamePanel extends JPanel {
@@ -301,15 +301,15 @@ private class RenamePanel extends JPanel {
       setBorder(new MatteBorder(5,5,5,5,BoardColors.getColor("Bale.RenameBorderColor")));
     }
 
-}	// end of inner class CompletionPanel
+}       // end of inner class CompletionPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle the renaming							*/
-/*										*/
+/*                                                                              */
+/*      Handle the renaming                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class RenameDoer implements Runnable {
@@ -323,7 +323,7 @@ private class RenameDoer implements Runnable {
       rename_edits = null;
       rename_phase = 0;
     }
-	
+        
    @Override public void run() {
       BudaRoot br = BudaRoot.findBudaRoot(for_editor);
       BumpClient bc = BumpClient.getBump();
@@ -381,14 +381,14 @@ private class RenameDoer implements Runnable {
       }
    }
 
-}	// end of inner class RanameDoer
+}       // end of inner class RanameDoer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions 								*/
-/*										*/
+/*                                                                              */
+/*      Actions                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private final class RenameListener implements ActionListener, CaretListener {
@@ -402,7 +402,7 @@ private final class RenameListener implements ActionListener, CaretListener {
       accept_button.setEnabled(isRenameValid());
     }
 
-}	// end of inner class RenameListener
+}       // end of inner class RenameListener
 
 
 
@@ -420,7 +420,7 @@ private class AcceptAction extends AbstractAction {
       // rename();
     }
 
-}	// end of inner class AcceptAction
+}       // end of inner class AcceptAction
 
 
 
@@ -438,12 +438,12 @@ private class CancelAction extends AbstractAction {
       removeContext();
     }
 
-}	// end of inner class CancelAction
+}       // end of inner class CancelAction
 
 
 
 
-}	// end of class BaleRenameContext
+}       // end of class BaleRenameContext
 
 
 

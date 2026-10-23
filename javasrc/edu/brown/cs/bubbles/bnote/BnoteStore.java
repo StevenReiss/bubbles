@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BnoteStore.java 						*/
-/*										*/
-/*	Main access to notebook store						*/
-/*										*/
+/*                                                                              */
+/*              BnoteStore.java                                                 */
+/*                                                                              */
+/*      Main access to notebook store                                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -74,18 +74,18 @@ public final class BnoteStore implements BnoteConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BnoteDatabase	note_db;
-private RemoteClient	db_client;
+private BnoteDatabase   note_db;
+private RemoteClient    db_client;
 private ExecutorService task_queue;
 
-private static BnoteStore	the_store = null;
+private static BnoteStore       the_store = null;
 
-private static Set<String>	field_strings;
+private static Set<String>      field_strings;
 
 
 static {
@@ -100,9 +100,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BnoteStore()
@@ -110,20 +110,20 @@ private BnoteStore()
    BoardSetup bs = BoardSetup.getSetup();
    switch (bs.getRunMode()) {
       case NORMAL :
-	 note_db = new BnoteDatabase();
+         note_db = new BnoteDatabase();
          task_queue = Executors.newSingleThreadExecutor();
-	 break;
+         break;
       case CLIENT :
-	 db_client = new RemoteClient(bs.getMintControl());
-	 note_db = new BnoteDatabase(true);
+         db_client = new RemoteClient(bs.getMintControl());
+         note_db = new BnoteDatabase(true);
          task_queue = null;
-	 break;
+         break;
       case SERVER :
-	 note_db = new BnoteDatabase();
+         note_db = new BnoteDatabase();
          task_queue = null;
-	 MintControl mc2 = bs.getMintControl();
-	 mc2.register("<BNOTE CMD='_VAR_0'></BNOTE>",new NoteServer());
-	 break;
+         MintControl mc2 = bs.getMintControl();
+         mc2.register("<BNOTE CMD='_VAR_0'></BNOTE>",new NoteServer());
+         break;
     }
 }
 
@@ -141,9 +141,9 @@ static BnoteStore createStore()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean isEnabled()
@@ -224,9 +224,9 @@ BnoteTask findTaskById(int id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Static logging entries							*/
-/*										*/
+/*                                                                              */
+/*      Static logging entries                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static BnoteTask defineTask(String name,String proj,String desc)
@@ -276,9 +276,9 @@ public static boolean attach(BnoteTask task,File file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Internal logging entries						*/
-/*										*/
+/*                                                                              */
+/*      Internal logging entries                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private BnoteTask enter(String project,BnoteTask task,BnoteEntryType type,Map<String,Object> values)
@@ -303,7 +303,7 @@ private BnoteTask enter(String project,BnoteTask task,BnoteEntryType type,Map<St
          catch (InterruptedException e) { }
          break;
       default :
-	 break;
+         break;
     }
    
    return null;
@@ -312,9 +312,9 @@ private BnoteTask enter(String project,BnoteTask task,BnoteEntryType type,Map<St
 
 
 /********************************************************************************/
-/*										*/
-/*	Attachment methods							*/
-/*										*/
+/*                                                                              */
+/*      Attachment methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private long saveAttachment(File f)
@@ -368,9 +368,9 @@ private class TaskEntry implements Callable<BnoteTask> {
 
 
 /********************************************************************************/
-/*										*/
-/*	Server for handling remote requests					*/
-/*										*/
+/*                                                                              */
+/*      Server for handling remote requests                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class NoteServer implements MintHandler {
@@ -466,7 +466,7 @@ private final class NoteServer implements MintHandler {
       msg.replyTo(xw.toString());
     }
 
-}	// end of inner class NoteServer
+}       // end of inner class NoteServer
 
 
 
@@ -474,7 +474,7 @@ private final class NoteServer implements MintHandler {
 
 private class RemoteClient {
 
-   private MintControl	mint_control;
+   private MintControl  mint_control;
 
    RemoteClient(MintControl mc) {
       mint_control = mc;
@@ -489,12 +489,12 @@ private class RemoteClient {
    List<BnoteTask> getTasksForProject(String proj) {
       Element xml = sendMessage("TASKS",proj,null,null);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 List<BnoteTask> rslt = new ArrayList<BnoteTask>();
-	 for (Element txml : IvyXml.children(xml,"TASK")) {
-	    BnoteTask bt = note_db.findTaskById(txml);
-	    rslt.add(bt);
-	  }
-	 return rslt;
+         List<BnoteTask> rslt = new ArrayList<BnoteTask>();
+         for (Element txml : IvyXml.children(xml,"TASK")) {
+            BnoteTask bt = note_db.findTaskById(txml);
+            rslt.add(bt);
+          }
+         return rslt;
        }
       return null;
     }
@@ -502,12 +502,12 @@ private class RemoteClient {
    List<String> getUsersForTask(String proj,BnoteTask task) {
       Element xml = sendMessage("TASKUSER",proj,task,null);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 List<String> rslt = new ArrayList<String>();
-	 for (Element sxml : IvyXml.children(xml,"USER")) {
-	    String s = IvyXml.getText(sxml);
-	    rslt.add(s);
-	  }
-	 return rslt;
+         List<String> rslt = new ArrayList<String>();
+         for (Element sxml : IvyXml.children(xml,"USER")) {
+            String s = IvyXml.getText(sxml);
+            rslt.add(s);
+          }
+         return rslt;
        }
       return null;
     }
@@ -515,12 +515,12 @@ private class RemoteClient {
    List<Date> getDatesForTask(String proj,BnoteTask task) {
       Element xml = sendMessage("TASKDATE",proj,task,null);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 List<Date> rslt = new ArrayList<Date>();
-	 for (Element sxml : IvyXml.children(xml,"DATE")) {
-	    Date d = IvyXml.getAttrDate(sxml,"VALUE");
-	    if (d != null) rslt.add(d);
-	  }
-	 return rslt;
+         List<Date> rslt = new ArrayList<Date>();
+         for (Element sxml : IvyXml.children(xml,"DATE")) {
+            Date d = IvyXml.getAttrDate(sxml,"VALUE");
+            if (d != null) rslt.add(d);
+          }
+         return rslt;
        }
       return null;
     }
@@ -528,12 +528,12 @@ private class RemoteClient {
    List<String> getNamesForTask(String proj,BnoteTask task) {
       Element xml = sendMessage("TASKNAME",proj,task,null);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 List<String> rslt = new ArrayList<String>();
-	 for (Element sxml : IvyXml.children(xml,"NAME")) {
-	    String s = IvyXml.getText(sxml);
-	    rslt.add(s);
-	  }
-	 return rslt;
+         List<String> rslt = new ArrayList<String>();
+         for (Element sxml : IvyXml.children(xml,"NAME")) {
+            String s = IvyXml.getText(sxml);
+            rslt.add(s);
+          }
+         return rslt;
        }
       return null;
     }
@@ -541,12 +541,12 @@ private class RemoteClient {
    List<BnoteEntry> getEntriesForTask(String proj,BnoteTask task) {
       Element xml = sendMessage("TASKENTRY",proj,task,null);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 List<BnoteEntry> rslt = new ArrayList<BnoteEntry>();
-	 for (Element sxml : IvyXml.children(xml,"ENTRY")) {
-	    BnoteEntry be = note_db.createEntry(sxml);
-	    rslt.add(be);
-	  }
-	 return rslt;
+         List<BnoteEntry> rslt = new ArrayList<BnoteEntry>();
+         for (Element sxml : IvyXml.children(xml,"ENTRY")) {
+            BnoteEntry be = note_db.createEntry(sxml);
+            rslt.add(be);
+          }
+         return rslt;
        }
       return null;
     }
@@ -554,7 +554,7 @@ private class RemoteClient {
    File getAttachment(String aid) {
       Element xml = sendMessage("ATTACHFILE",null,null,aid);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 return new File(IvyXml.getAttrString(xml,"FILE"));
+         return new File(IvyXml.getAttrString(xml,"FILE"));
        }
       return null;
     }
@@ -562,7 +562,7 @@ private class RemoteClient {
    String getAttachmentAsString(String aid) {
       Element xml = sendMessage("ATTACHSTR",null,null,aid);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 return IvyXml.getTextElement(xml,"CONTENTS");
+         return IvyXml.getTextElement(xml,"CONTENTS");
        }
       return null;
     }
@@ -570,7 +570,7 @@ private class RemoteClient {
    BnoteTask findTaskById(long id) {
       Element xml = sendMessage("FINDTASK",null,null,Long.toString(id));
       if (IvyXml.isElement(xml,"RESULT")) {
-	 return note_db.findTaskById(IvyXml.getChild(xml,"TASK"));
+         return note_db.findTaskById(IvyXml.getChild(xml,"TASK"));
        }
       return null;
     }
@@ -588,7 +588,7 @@ private class RemoteClient {
 
       Element xml = mdr.waitForXml();
       if (IvyXml.isElement(xml,"RESULT")) {
-	 return IvyXml.getAttrLong(xml,"VALUE");
+         return IvyXml.getAttrLong(xml,"VALUE");
        }
       return 0;
     }
@@ -650,12 +650,12 @@ private class RemoteClient {
       return rslt;
     }
 
-}	// end of inner class RemoteClient
+}       // end of inner class RemoteClient
 
 
 
 
-}	// end of class BnoteStore
+}       // end of class BnoteStore
 
 
 

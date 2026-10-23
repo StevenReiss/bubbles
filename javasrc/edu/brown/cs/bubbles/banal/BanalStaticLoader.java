@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalStaticLoader.java						*/
-/*										*/
-/*	Bubbles ANALysis package class data loader using ASM			*/
-/*										*/
+/*                                                                              */
+/*              BanalStaticLoader.java                                          */
+/*                                                                              */
+/*      Bubbles ANALysis package class data loader using ASM                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,23 +50,23 @@ class BanalStaticLoader implements BanalConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BanalProjectManager	project_manager;
-private BanalVisitor		user_visitor;
-private Map<String,AsmClass>	class_map;
-private Map<String,AsmField>	field_map;
-private Map<String,AsmMethod>	method_map;
+private BanalProjectManager     project_manager;
+private BanalVisitor            user_visitor;
+private Map<String,AsmClass>    class_map;
+private Map<String,AsmField>    field_map;
+private Map<String,AsmMethod>   method_map;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BanalStaticLoader(BanalProjectManager bpm,BanalVisitor vis)
@@ -82,9 +82,9 @@ BanalStaticLoader(BanalProjectManager bpm,BanalVisitor vis)
 
 
 /********************************************************************************/
-/*										*/
-/*	Asm Processing								*/
-/*										*/
+/*                                                                              */
+/*      Asm Processing                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void process()
@@ -97,7 +97,7 @@ void process()
       if (!user_visitor.checkUseClass(bcd.getName())) continue;
       processClass(bcd);
     }
-					
+                                        
    user_visitor.finish();
 }
 
@@ -122,7 +122,7 @@ private void processClass(BanalClassData cd)
     }
    finally {
       try {
-	 ins.close();
+         ins.close();
        }
       catch (IOException e) { }
     }
@@ -131,9 +131,9 @@ private void processClass(BanalClassData cd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class Access methods							*/
-/*										*/
+/*                                                                              */
+/*      Class Access methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private AsmClass findClass(String id,boolean descript)
@@ -190,9 +190,9 @@ private AsmMethod findMethod(AsmClass cls,String nm,AsmClass mcls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Asm processing								*/
-/*										*/
+/*                                                                              */
+/*      Asm processing                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class AsmClassVisitor extends ClassVisitor {
@@ -205,14 +205,14 @@ private class AsmClassVisitor extends ClassVisitor {
     }
 
    @Override public void visit(int version,int access,String name,String sign,String sup,
-				  String [] ifcs) {
+                                  String [] ifcs) {
       asm_data = findInternalClass(name,false);
       user_visitor.visitClass(asm_data,sign,access);
       if (sup != null) user_visitor.visitSuper(asm_data,findInternalClass(sup,false),false);
       if (ifcs != null) {
-	 for (String xf : ifcs) {
-	    user_visitor.visitSuper(asm_data,findInternalClass(xf,false),true);
-	  }
+         for (String xf : ifcs) {
+            user_visitor.visitSuper(asm_data,findInternalClass(xf,false),true);
+          }
        }
     }
 
@@ -226,39 +226,39 @@ private class AsmClassVisitor extends ClassVisitor {
       String nm = asm_data.getJavaName();
       if (o != null) o = o.replace('/','.');
       if (o == null || nm.equals(o)) {
-	 user_visitor.visitInnerClass(asm_data,findInternalClass(n,false),acc);
+         user_visitor.visitInnerClass(asm_data,findInternalClass(n,false),acc);
        }
     }
 
-   @Override public void visitOuterClass(String n,String o,String i)	{ }
-   @Override public void visitAttribute(Attribute a)			{ }
-   @Override public void visitEnd()					{ }
-   @Override public void visitSource(String src,String dbg)		{ }
+   @Override public void visitOuterClass(String n,String o,String i)    { }
+   @Override public void visitAttribute(Attribute a)                    { }
+   @Override public void visitEnd()                                     { }
+   @Override public void visitSource(String src,String dbg)             { }
 
    @Override public FieldVisitor visitField(int access,String name,String desc,String sign,
-					       Object val) {
+                                               Object val) {
       AsmField af = new AsmField(asm_data,name);
       user_visitor.visitClassField(af,findClass(desc,true),sign,access,val);
       return new AsmFieldVisitor(af);
     }
 
    @Override public MethodVisitor visitMethod(int access,String name,String desc,String sign,
-						 String [] excs) {
+                                                 String [] excs) {
       AsmClass mcls = findClass(desc,true);
       AsmMethod mthd = findMethod(asm_data,name,mcls);
       AsmClass [] ecls;
       if (excs == null) ecls = new AsmClass[0];
       else {
-	 ecls = new AsmClass[excs.length];
-	 for (int i = 0; i < excs.length; ++i) {
-	    ecls[i] = findInternalClass(excs[i],false);
-	  }
+         ecls = new AsmClass[excs.length];
+         for (int i = 0; i < excs.length; ++i) {
+            ecls[i] = findInternalClass(excs[i],false);
+          }
        }
       user_visitor.visitClassMethod(mthd,sign,access,ecls);
       return new AsmMethodVisitor(mthd);
     }
 
-}	// end of AsmClassVisitor
+}       // end of AsmClassVisitor
 
 
 
@@ -280,22 +280,22 @@ private class AsmAnnotationVisitor extends AnnotationVisitor {
 
    @Override public void visit(String name,Object value) {
       if (base_class != null)
-	 user_visitor.visitAnnotationValue(base_class,annot_class,name,value);
+         user_visitor.visitAnnotationValue(base_class,annot_class,name,value);
       else if (base_field != null)
-	 user_visitor.visitAnnotationValue(base_field,annot_class,name,value);
+         user_visitor.visitAnnotationValue(base_field,annot_class,name,value);
       else if (base_method != null)
-	 user_visitor.visitAnnotationValue(base_method,annot_class,name,value);
+         user_visitor.visitAnnotationValue(base_method,annot_class,name,value);
     }
 
-   @Override public AnnotationVisitor visitAnnotation(String name,String desc)	{ return null; }
-   @Override public AnnotationVisitor visitArray(String name)			{ return null; }
+   @Override public AnnotationVisitor visitAnnotation(String name,String desc)  { return null; }
+   @Override public AnnotationVisitor visitArray(String name)                   { return null; }
 
-   @Override public void visitEnd()	{ }
+   @Override public void visitEnd()     { }
    @Override public void visitEnum(String name,String desc,String value) {
       visit(name,value);
     }
 
-}	// end of inner class AsmAnnotationVisitor
+}       // end of inner class AsmAnnotationVisitor
 
 
 
@@ -315,10 +315,10 @@ private class AsmFieldVisitor extends FieldVisitor {
       return new AsmAnnotationVisitor(acls,null,for_field,null);
     }
 
-   @Override public void visitAttribute(Attribute a)			{ }
-   @Override public void visitEnd()					{ }
+   @Override public void visitAttribute(Attribute a)                    { }
+   @Override public void visitEnd()                                     { }
 
-}	// end of inner class AsmFieldVisitor
+}       // end of inner class AsmFieldVisitor
 
 
 
@@ -342,16 +342,16 @@ private class AsmMethodVisitor extends MethodVisitor {
    @Override public void visitFieldInsn(int op,String owner,String name,String desc) {
       AsmClass fcls = findInternalClass(owner,false);
       if (fcls != for_method.getOwnerClass()) {
-	 BanalField fld = findField(fcls,name);
-	 user_visitor.visitRemoteFieldAccess(for_method,fld);
+         BanalField fld = findField(fcls,name);
+         user_visitor.visitRemoteFieldAccess(for_method,fld);
        }
     }
 
    @Override public void visitLocalVariable(String name,String desc,String sgn,Label st,
-					       Label en,int idx) {
+                                               Label en,int idx) {
       AsmClass fcls = findClass(desc,true);
       if (!fcls.isPrimitive() && fcls != for_method.getOwnerClass()) {
-	 user_visitor.visitRemoteTypeAccess(for_method,fcls);
+         user_visitor.visitRemoteTypeAccess(for_method,fcls);
        }
     }
 
@@ -365,8 +365,8 @@ private class AsmMethodVisitor extends MethodVisitor {
 
    @Override public void visitTypeInsn(int op,String typ) {
       if (op == Opcodes.NEW) {
-	 AsmClass acls = findInternalClass(typ,false);
-	 user_visitor.visitAlloc(for_method,acls);
+         AsmClass acls = findInternalClass(typ,false);
+         user_visitor.visitAlloc(for_method,acls);
        }
     }
 
@@ -380,25 +380,25 @@ private class AsmMethodVisitor extends MethodVisitor {
    @Override public AnnotationVisitor visitParameterAnnotation(int p,String d,boolean v) {
       return null;
     }
-   @Override public void visitEnd()					{ }
-   @Override public void visitAttribute(Attribute a)			{ }
-   @Override public void visitMultiANewArrayInsn(String desc,int dims)	{ }
-   @Override public void visitLineNumber(int l,Label s) 		{ }
-   @Override public AnnotationVisitor visitAnnotationDefault()		{ return null; }
-   @Override public void visitCode()					{ }
+   @Override public void visitEnd()                                     { }
+   @Override public void visitAttribute(Attribute a)                    { }
+   @Override public void visitMultiANewArrayInsn(String desc,int dims)  { }
+   @Override public void visitLineNumber(int l,Label s)                 { }
+   @Override public AnnotationVisitor visitAnnotationDefault()          { return null; }
+   @Override public void visitCode()                                    { }
    @Override public void visitFrame(int t,int n,Object [] l,int ns,Object [] s) { }
-   @Override public void visitIincInsn(int v,int i)			{ }
-   @Override public void visitInsn(int o)				{ }
-   @Override public void visitIntInsn(int o,int v)			{ }
-   @Override public void visitJumpInsn(int o,Label l)			{ }
-   @Override public void visitLabel(Label l)				{ }
-   @Override public void visitLdcInsn(Object v) 			{ }
-   @Override public void visitLookupSwitchInsn(Label d,int [] k,Label [] l)	{ }
-   @Override public void visitMaxs(int m,int ml)			{ }
+   @Override public void visitIincInsn(int v,int i)                     { }
+   @Override public void visitInsn(int o)                               { }
+   @Override public void visitIntInsn(int o,int v)                      { }
+   @Override public void visitJumpInsn(int o,Label l)                   { }
+   @Override public void visitLabel(Label l)                            { }
+   @Override public void visitLdcInsn(Object v)                         { }
+   @Override public void visitLookupSwitchInsn(Label d,int [] k,Label [] l)     { }
+   @Override public void visitMaxs(int m,int ml)                        { }
    @Override public void visitTableSwitchInsn(int mn,int mx,Label d,Label... l) { }
-   @Override public void visitVarInsn(int o,int v)			{ }
+   @Override public void visitVarInsn(int o,int v)                      { }
 
-}	// end of AsmMethodVisitor
+}       // end of AsmMethodVisitor
 
 
 
@@ -407,9 +407,9 @@ private class AsmMethodVisitor extends MethodVisitor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of a class						*/
-/*										*/
+/*                                                                              */
+/*      Representation of a class                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AsmClass implements BanalClass {
@@ -419,38 +419,38 @@ private static class AsmClass implements BanalClass {
 
    AsmClass(String nm,boolean descript) {
       if (descript) {
-	 class_name = nm;
-	 java_name = IvyFormat.formatTypeName(nm,true);
+         class_name = nm;
+         java_name = IvyFormat.formatTypeName(nm,true);
        }
       else {
-	 java_name = nm.replace('/','.');
-	 class_name = "L" + nm.replace('.','/') + ";";
+         java_name = nm.replace('/','.');
+         class_name = "L" + nm.replace('.','/') + ";";
        }
     }
 
-   @Override public String getInternalName()		{ return class_name; }
-   @Override public String getJavaName()		{ return java_name; }
+   @Override public String getInternalName()            { return class_name; }
+   @Override public String getJavaName()                { return java_name; }
 
    boolean isPrimitive() {
       if (class_name.length() == 1) return true;
       for (int i = 0; i < class_name.length(); ++i) {
-	 if (class_name.charAt(i) != '[') {
-	    if (i+1 == class_name.length()) return true;
-	  }
+         if (class_name.charAt(i) != '[') {
+            if (i+1 == class_name.length()) return true;
+          }
        }
       return false;
     }
 
-}	// end of innerclass AsmClass
+}       // end of innerclass AsmClass
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of a field						*/
-/*										*/
+/*                                                                              */
+/*      Representation of a field                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AsmField implements BanalField {
@@ -463,18 +463,18 @@ private static class AsmField implements BanalField {
       field_name = nm;
     }
 
-   @Override public BanalClass getOwnerClass()		{ return for_class; }
-   @Override public String getName()			{ return field_name; }
+   @Override public BanalClass getOwnerClass()          { return for_class; }
+   @Override public String getName()                    { return field_name; }
 
-}	// end of inner class AsmField
+}       // end of inner class AsmField
 
 
 
 
 /********************************************************************************/
-/*										graph*/
-/*	Representation of a method						*/
-/*										*/
+/*                                                                              graph*/
+/*      Representation of a method                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class AsmMethod implements BanalMethod {
@@ -492,7 +492,7 @@ private class AsmMethod implements BanalMethod {
       Type [] args = Type.getArgumentTypes(mdesc);
       arg_types = new AsmClass[args.length];
       for (int i = 0; i < args.length; ++i) {
-	 arg_types[i] = findClass(args[i].getDescriptor(),true);
+         arg_types[i] = findClass(args[i].getDescriptor(),true);
        }
       return_type = findClass(Type.getReturnType(mdesc).getDescriptor(),true);
       String astr = mcls.getJavaName();
@@ -500,22 +500,22 @@ private class AsmMethod implements BanalMethod {
       full_name = for_class.getJavaName() + "." + nm + astr.substring(idx1);
     }
 
-   @Override public BanalClass getOwnerClass()		{ return for_class; }
-   @Override public String getName()			{ return method_name; }
-   @Override public BanalClass [] getArgumentTypes()	{ return arg_types; }
-   @Override public BanalClass getReturnType()		{ return return_type; }
-   @Override public String getFullName()		{ return full_name; }
+   @Override public BanalClass getOwnerClass()          { return for_class; }
+   @Override public String getName()                    { return method_name; }
+   @Override public BanalClass [] getArgumentTypes()    { return arg_types; }
+   @Override public BanalClass getReturnType()          { return return_type; }
+   @Override public String getFullName()                { return full_name; }
 
 
 
-}	// end of inner class AsmMethod
+}       // end of inner class AsmMethod
 
 
 
 
 
 
-}	// end of class BanalStaticLoader
+}       // end of class BanalStaticLoader
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BtedFindBar.java						*/
-/*										*/
-/*	Bubble Environment text editor find bar 				*/
-/*										*/
+/*                                                                              */
+/*              BtedFindBar.java                                                */
+/*                                                                              */
+/*      Bubble Environment text editor find bar                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss        */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,34 +47,34 @@ import java.awt.event.ActionListener;
 
 
 public class BtedFindBar extends JPanel implements ActionListener, DocumentListener,
-	 BtedConstants {
+         BtedConstants {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextField		   search_field;
+private JTextField                 search_field;
 private transient Highlighter      search_highlighter;
 private transient Highlighter.HighlightPainter highlight_paint;
-private JEditorPane		  for_editor;
-private JButton 		  exit_button;
-private JButton 		  prev_button;
-private JButton 		  next_button;
-private int			  current_index;
+private JEditorPane               for_editor;
+private JButton                   exit_button;
+private JButton                   prev_button;
+private JButton                   next_button;
+private int                       current_index;
 
-private static final long	    serialVersionUID = 1;
+private static final long           serialVersionUID = 1;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructores								*/
-/*										*/
+/*                                                                              */
+/*      Constructores                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 BtedFindBar(JEditorPane editor)
@@ -116,9 +116,9 @@ BtedFindBar(JEditorPane editor)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search action methods							*/
-/*										*/
+/*                                                                              */
+/*      Search action methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -144,12 +144,12 @@ void search(SearchMode mode)
    if (current_index >= 0) {
       search_field.setBackground(BoardColors.getColor("Bted.FindBackground"));
       try {
-	 int end = current_index + searchtext.length();
-	 search_highlighter.addHighlight(current_index, end, highlight_paint);
-	 for_editor.setCaretPosition(end);
+         int end = current_index + searchtext.length();
+         search_highlighter.addHighlight(current_index, end, highlight_paint);
+         for_editor.setCaretPosition(end);
        }
       catch (BadLocationException e) {
-	 e.printStackTrace();
+         e.printStackTrace();
        }
     }
    else {
@@ -176,9 +176,9 @@ void search(SearchMode mode)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search methods								*/
-/*										*/
+/*                                                                              */
+/*      Search methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void doSearch(SearchMode mode,String txt)
@@ -193,20 +193,20 @@ private void doSearch(SearchMode mode,String txt)
 
    try {
       switch (mode) {
-	 case NEXT :
-	    offset = current_index+1;
-	    d.getText(offset,len-offset,s);
-	    d2 = s.length();
-	    break;
-	 case PREVIOUS :
-	    d.getText(0,current_index,s);
-	    d0 = s.length()-1;
-	    d1 = -1;
-	    d2 = -1;
-	    break;
-	 case FIRST :
-	    d.getText(0,len,s);
-	    break;
+         case NEXT :
+            offset = current_index+1;
+            d.getText(offset,len-offset,s);
+            d2 = s.length();
+            break;
+         case PREVIOUS :
+            d.getText(0,current_index,s);
+            d0 = s.length()-1;
+            d1 = -1;
+            d2 = -1;
+            break;
+         case FIRST :
+            d.getText(0,len,s);
+            break;
        }
     }
    catch (BadLocationException e) {
@@ -223,11 +223,11 @@ private void doSearch(SearchMode mode,String txt)
    for (int i = d0; i != d2; i += d1) {
       boolean fnd = true;
       for (int j = 0; fnd && j < txt.length(); ++j) {
-	 if (s.charAt(i+j) != txt.charAt(j)) fnd = false;
+         if (s.charAt(i+j) != txt.charAt(j)) fnd = false;
        }
       if (fnd) {
-	 current_index = i + offset;
-	 return;
+         current_index = i + offset;
+         return;
        }
     }
 
@@ -237,9 +237,9 @@ private void doSearch(SearchMode mode,String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks on document events for search bar				*/
-/*										*/
+/*                                                                              */
+/*      Callbacks on document events for search bar                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void changedUpdate(DocumentEvent e)
@@ -266,7 +266,7 @@ private void doSearch(SearchMode mode,String txt)
 
 
 
-}	// end of class BtedFindBar
+}       // end of class BtedFindBar
 
 
 

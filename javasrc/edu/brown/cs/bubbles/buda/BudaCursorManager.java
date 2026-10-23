@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaCursorManager.java						*/
-/*										*/
-/*	BUblles Display Area cursor management routines 			*/
-/*										*/
+/*                                                                              */
+/*              BudaCursorManager.java                                          */
+/*                                                                              */
+/*      BUblles Display Area cursor management routines                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Ian Strickman		      */
+/*      Copyright 2010 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -43,9 +43,9 @@ public final class BudaCursorManager {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<Component, Cursor> default_cursors;
@@ -59,9 +59,9 @@ private static BudaCursorManager the_manager = new BudaCursorManager();
 
 
 /********************************************************************************/
-/*										*/
-/*	Top level static methods						*/
-/*										*/
+/*                                                                              */
+/*      Top level static methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -138,9 +138,9 @@ public static void resetDefaults(Component comp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaCursorManager()
@@ -152,9 +152,9 @@ private BudaCursorManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupCursorsForComponent(Component comp) 
@@ -162,8 +162,8 @@ private void setupCursorsForComponent(Component comp)
    if (comp.isCursorSet()) {
       default_cursors.put(comp, comp.getCursor());
       if (comp.getParent() != null && global_cursor_set.contains(comp.getParent())) {
-	 comp.setCursor(comp.getParent().getCursor());
-	 global_cursor_set.add(comp);
+         comp.setCursor(comp.getParent().getCursor());
+         global_cursor_set.add(comp);
        }
     }
    if (!(comp instanceof Container)) return;
@@ -210,7 +210,7 @@ private void localSetGlobalCursorForComponent(Component comp, Cursor curs)
 
 
 
-}	// end of class BudaCursorManager
+}       // end of class BudaCursorManager
 
 
 

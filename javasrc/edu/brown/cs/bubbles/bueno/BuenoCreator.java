@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoCreator.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator abstract creation methods	*/
-/*										*/
+/*                                                                              */
+/*              BuenoCreator.java                                               */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator abstract creation methods       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -48,14 +48,14 @@ abstract class BuenoCreator implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static int     tab_size;
 
-private static final int	HIDDEN_ABSTRACT = 16384;
+private static final int        HIDDEN_ABSTRACT = 16384;
 
 static {
    BoardProperties bp = BoardProperties.getProperties("Bueno");
@@ -65,9 +65,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BuenoCreator()
@@ -77,9 +77,9 @@ protected BuenoCreator()
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for packages						*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for packages                                           */
+/*                                                                              */
 /********************************************************************************/
 
 protected void createPackage(BuenoLocation where,BuenoProperties props)
@@ -103,9 +103,9 @@ protected void setupPackage(File packagedir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for classes, interfaces, enums 			*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for classes, interfaces, enums                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected void createType(BuenoType typ,BuenoLocation where,BuenoProperties props)
@@ -115,19 +115,19 @@ protected void createType(BuenoType typ,BuenoLocation where,BuenoProperties prop
    switch (typ) {
       case NEW_TYPE :
       case NEW_CLASS :
-	 setupClass(buf,props);
-	 break;
+         setupClass(buf,props);
+         break;
       case NEW_INTERFACE :
-	 setupInterface(buf,props);
-	 break;
+         setupInterface(buf,props);
+         break;
       case NEW_ENUM :
-	 setupEnum(buf,props);
-	 break;
+         setupEnum(buf,props);
+         break;
       case NEW_ANNOTATION :
-	 setupAnnotation(buf,props);
-	 break;
+         setupAnnotation(buf,props);
+         break;
       default:
-	 break;
+         break;
     }
 
    String nm = props.getStringProperty(BuenoKey.KEY_PACKAGE);
@@ -183,9 +183,9 @@ protected void setupAnnotation(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for modules						*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for modules                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected void createModule(BuenoLocation where,BuenoProperties props)
@@ -276,9 +276,9 @@ protected void setupModule(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for inner classes, etc.				*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for inner classes, etc.                                */
+/*                                                                              */
 /********************************************************************************/
 
 protected CharSequence createInnerType(BuenoType typ,BuenoProperties props)
@@ -288,16 +288,16 @@ protected CharSequence createInnerType(BuenoType typ,BuenoProperties props)
    switch (typ) {
       case NEW_INNER_TYPE :
       case NEW_INNER_CLASS :
-	 setupInnerClass(buf,props);
-	 break;
+         setupInnerClass(buf,props);
+         break;
       case NEW_INNER_INTERFACE :
-	 setupInnerInterface(buf,props);
-	 break;
+         setupInnerInterface(buf,props);
+         break;
       case NEW_INNER_ENUM :
-	 setupInnerEnum(buf,props);
-	 break;
+         setupInnerEnum(buf,props);
+         break;
       default:
-	 break;
+         break;
     }
 
    return buf;
@@ -336,9 +336,9 @@ protected void setupInnerEnum(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for methods						*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected CharSequence createMethod(BuenoType typ,BuenoProperties props)
@@ -346,33 +346,33 @@ protected CharSequence createMethod(BuenoType typ,BuenoProperties props)
    StringBuffer buf = new StringBuffer();
    switch (typ) {
       case NEW_CONSTRUCTOR :
-	 setupConstructor(buf,props);
-	 break;
+         setupConstructor(buf,props);
+         break;
       case NEW_METHOD :
-	 String c1 = props.getClassName();
-	 String prj = props.getProjectName();
-	 List<BumpLocation> bls = BumpClient.getBump().findClassDefinition(prj,c1);
-	 if (bls != null && bls.size() == 1) {
-	    BumpLocation bl = bls.get(0);
-	    if (bl.getSymbolType() == BumpConstants.BumpSymbolType.INTERFACE) {
-	       int mod = props.getModifiers();
-	       mod |= HIDDEN_ABSTRACT;
-	       props.put(BuenoKey.KEY_MODIFIERS,mod);
-	    }
-	 }
-	 setupMethod(buf,props);
-	 break;
+         String c1 = props.getClassName();
+         String prj = props.getProjectName();
+         List<BumpLocation> bls = BumpClient.getBump().findClassDefinition(prj,c1);
+         if (bls != null && bls.size() == 1) {
+            BumpLocation bl = bls.get(0);
+            if (bl.getSymbolType() == BumpConstants.BumpSymbolType.INTERFACE) {
+               int mod = props.getModifiers();
+               mod |= HIDDEN_ABSTRACT;
+               props.put(BuenoKey.KEY_MODIFIERS,mod);
+            }
+         }
+         setupMethod(buf,props);
+         break;
       case NEW_GETTER :
-	 setupGetter(buf,props);
-	 break;
+         setupGetter(buf,props);
+         break;
       case NEW_SETTER :
-	 setupSetter(buf,props);
-	 break;
+         setupSetter(buf,props);
+         break;
       case NEW_GETTER_SETTER :
-	 setupGetterSetter(buf,props);
-	 break;
+         setupGetterSetter(buf,props);
+         break;
       default:
-	 break;
+         break;
     }
 
    return buf;
@@ -412,9 +412,9 @@ protected void setupMethod(StringBuffer buf,BuenoProperties props)
       String rstmt = null;
       if (returns.equals("boolean")) rstmt = "return false;";
       else if (returns.equals("int") || returns.equals("float") ||
-		  returns.equals("double") || returns.equals("short") ||
-		  returns.equals("byte") || returns.equals("char"))
-	 rstmt = "return 0;";
+                  returns.equals("double") || returns.equals("short") ||
+                  returns.equals("byte") || returns.equals("char"))
+         rstmt = "return 0;";
       else rstmt = "return null;";
       props.put(BuenoKey.KEY_RETURN_STMT,rstmt);
     }
@@ -428,11 +428,11 @@ protected void setupGetter(StringBuffer buf,BuenoProperties props)
    if (props.getStringProperty(BuenoKey.KEY_RETURN_STMT) == null) {
       String fnm = props.getFieldName();
       if (fnm != null) {
-	 String rtrn = "return " + fnm + ";";
-	 props.put(BuenoKey.KEY_RETURN_STMT,rtrn);
-	 if (props.getStringProperty(BuenoKey.KEY_CONTENTS) == null) {
-	    props.put(BuenoKey.KEY_CONTENTS,"");
-	  }
+         String rtrn = "return " + fnm + ";";
+         props.put(BuenoKey.KEY_RETURN_STMT,rtrn);
+         if (props.getStringProperty(BuenoKey.KEY_CONTENTS) == null) {
+            props.put(BuenoKey.KEY_CONTENTS,"");
+          }
        }
     }
    setupMethod(buf,props);
@@ -475,9 +475,9 @@ protected void setupGetterSetter(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for fields						*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for fields                                             */
+/*                                                                              */
 /********************************************************************************/
 
 protected CharSequence createField(BuenoProperties props)
@@ -499,9 +499,9 @@ protected void setupField(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods for comments						*/
-/*										*/
+/*                                                                              */
+/*      Creation methods for comments                                           */
+/*                                                                              */
 /********************************************************************************/
 
 protected CharSequence createComment(BuenoType typ,BuenoProperties props)
@@ -515,16 +515,16 @@ protected CharSequence createComment(BuenoType typ,BuenoProperties props)
 
    switch (typ) {
       case NEW_MARQUIS_COMMENT :
-	 setupMarquisComment(buf,props);
-	 break;
+         setupMarquisComment(buf,props);
+         break;
       case NEW_BLOCK_COMMENT :
-	 setupBlockComment(buf,props);
-	 break;
+         setupBlockComment(buf,props);
+         break;
       case NEW_JAVADOC_COMMENT :
-	 setupJavadocComment(buf,props);
-	 break;
+         setupJavadocComment(buf,props);
+         break;
       default:
-	 break;
+         break;
     }
 
    return buf;
@@ -609,9 +609,9 @@ private void setupJavadocComment(StringBuffer buf,BuenoProperties props,String t
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple method creation							*/
-/*										*/
+/*                                                                              */
+/*      Simple method creation                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 protected void methodText(StringBuffer buf,BuenoProperties props)
@@ -638,7 +638,7 @@ protected void methodText(StringBuffer buf,BuenoProperties props)
 
    int mods = props.getModifiers();
    if (Modifier.isAbstract(mods) || Modifier.isNative(mods) ||
-	    (mods & HIDDEN_ABSTRACT) != 0) {
+            (mods & HIDDEN_ABSTRACT) != 0) {
       pbuf.append(";\n");
     }
    else {
@@ -648,7 +648,7 @@ protected void methodText(StringBuffer buf,BuenoProperties props)
       String rstmt = props.getStringProperty(BuenoKey.KEY_RETURN_STMT);
       if (rstmt != null) {
          if (cnts != null && cnts.length() > 0) pbuf.append("\n");
-	 pbuf.append("$(TAB)$(RETURN_STMT)\n");
+         pbuf.append("$(TAB)$(RETURN_STMT)\n");
        }
       pbuf.append("$(ITAB)}\n");
     }
@@ -666,9 +666,9 @@ protected void methodText(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple Class creation							*/
-/*										*/
+/*                                                                              */
+/*      Simple Class creation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected void classText(StringBuffer buf,BuenoProperties props)
@@ -690,7 +690,7 @@ protected void classText(StringBuffer buf,BuenoProperties props)
    String [] imps = props.getImports();
    if (imps != null && imps.length > 0) {
       for (String s : imps) {
-	 buf.append(s + "\n");
+         buf.append(s + "\n");
        }
     }
    buf.append("\n");
@@ -740,9 +740,9 @@ protected void classText(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple Class creation							*/
-/*										*/
+/*                                                                              */
+/*      Simple Class creation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected void moduleText(StringBuffer buf,BuenoProperties props)
@@ -755,7 +755,7 @@ protected void moduleText(StringBuffer buf,BuenoProperties props)
    String [] imps = props.getImports();
    if (imps != null && imps.length > 0) {
       for (String s : imps) {
-	 buf.append(s + "\n");
+         buf.append(s + "\n");
        }
     }
    buf.append("\n");
@@ -767,9 +767,9 @@ protected void moduleText(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple inner class creation						*/
-/*										*/
+/*                                                                              */
+/*      Simple inner class creation                                             */
+/*                                                                              */
 /********************************************************************************/
 
 protected void innerClassText(StringBuffer buf,BuenoProperties props)
@@ -828,9 +828,9 @@ protected void innerClassText(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Simple field creation							*/
-/*										*/
+/*                                                                              */
+/*      Simple field creation                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected void fieldText(StringBuffer buf,BuenoProperties props)
@@ -887,9 +887,9 @@ protected void fieldText(StringBuffer buf,BuenoProperties props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility routines							*/
-/*										*/
+/*                                                                              */
+/*      Utility routines                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static int addModifier(StringBuffer buf,String txt,boolean add,int ct)
@@ -904,9 +904,9 @@ private static int addModifier(StringBuffer buf,String txt,boolean add,int ct)
 
 
 /********************************************************************************/
-/*										*/
-/*	Template finding methods						*/
-/*										*/
+/*                                                                              */
+/*      Template finding methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 static Reader findTemplate(String id,BuenoProperties props)
@@ -971,9 +971,9 @@ private static InputStreamReader checkTemplateForLanguage(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Template expansion routines						*/
-/*										*/
+/*                                                                              */
+/*      Template expansion routines                                             */
+/*                                                                              */
 /********************************************************************************/
 
 static void expand(Reader from,BuenoProperties props,StringBuffer buf) throws IOException
@@ -986,30 +986,30 @@ static void expand(Reader from,BuenoProperties props,StringBuffer buf) throws IO
       if (ln == null) break;
       ln = expandTabs(ln,tab_size);
       for (int i = 0; i < ln.length(); ++i) {
-	 char c = ln.charAt(i);
-	 if (c == '$' && ln.length() > i+1 && ln.charAt(i+1) == '(') {
-	    StringBuffer tok = new StringBuffer();
-	    for (i = i+2; i < ln.length() && ln.charAt(i) != ')'; ++i) {
-	       tok.append(ln.charAt(i));
-	     }
-	    if (i >= ln.length()) throw new IOException("Unterminated token");
-	    String rslt = getValue(tok.toString(),props,eol);
-	    if (rslt != null) buf.append(rslt);
-	  }
-	 else if (c == '$' && ln.length() > i+1 && ln.charAt(i+1) == '{') {
-	    StringBuffer tok = new StringBuffer();
-	    for (i = i+2; i < ln.length() && ln.charAt(i) != '}'; ++i) {
-	       tok.append(ln.charAt(i));
-	     }
-	    if (i >= ln.length()) throw new IOException("Unterminated token");
-	    String sfx = ln.substring(i+1);
-	    int lst = buf.length()-1;
-	    while (lst > 0 && buf.charAt(lst-1) != '\n') --lst;
-	    String pfx = buf.substring(lst);
-	    getFormattedValue(tok.toString(),props,pfx,sfx,eol,buf);
-	    break;
-	  }
-	 else buf.append(c);
+         char c = ln.charAt(i);
+         if (c == '$' && ln.length() > i+1 && ln.charAt(i+1) == '(') {
+            StringBuffer tok = new StringBuffer();
+            for (i = i+2; i < ln.length() && ln.charAt(i) != ')'; ++i) {
+               tok.append(ln.charAt(i));
+             }
+            if (i >= ln.length()) throw new IOException("Unterminated token");
+            String rslt = getValue(tok.toString(),props,eol);
+            if (rslt != null) buf.append(rslt);
+          }
+         else if (c == '$' && ln.length() > i+1 && ln.charAt(i+1) == '{') {
+            StringBuffer tok = new StringBuffer();
+            for (i = i+2; i < ln.length() && ln.charAt(i) != '}'; ++i) {
+               tok.append(ln.charAt(i));
+             }
+            if (i >= ln.length()) throw new IOException("Unterminated token");
+            String sfx = ln.substring(i+1);
+            int lst = buf.length()-1;
+            while (lst > 0 && buf.charAt(lst-1) != '\n') --lst;
+            String pfx = buf.substring(lst);
+            getFormattedValue(tok.toString(),props,pfx,sfx,eol,buf);
+            break;
+          }
+         else buf.append(c);
        }
       buf.append(eol);
     }
@@ -1082,13 +1082,13 @@ private static String getValue(String key,BuenoProperties props,String eol)
       String v = bp.getProperty(pnm);
       if (v != null) buf.append(v);
       else {
-	 String nm = "KEY_" + key;
-	 try {
-	    BuenoKey k = BuenoKey.valueOf(nm);
-	    v = props.getStringProperty(k);
-	    if (v != null) buf.append(v);
-	  }
-	 catch (IllegalArgumentException e) { }
+         String nm = "KEY_" + key;
+         try {
+            BuenoKey k = BuenoKey.valueOf(nm);
+            v = props.getStringProperty(k);
+            if (v != null) buf.append(v);
+          }
+         catch (IllegalArgumentException e) { }
        }
    }
 
@@ -1120,7 +1120,7 @@ private static void getFormattedValue(String key,BuenoProperties props,String pf
    while (p1 < sfx.length() && Character.isWhitespace(sfx.charAt(p1))) ++p1;
    if (p1 >= sfx.length()) sfx = null;
    else sfx = sfx.substring(p1);
-   p0 += p1;					// this is where sfx starts
+   p0 += p1;                                    // this is where sfx starts
 
    String value = getValue(key,props,eol);
    if (value == null) value = "";
@@ -1135,15 +1135,15 @@ private static void getFormattedValue(String key,BuenoProperties props,String pf
       buf.append(v0);
       int v1 = v0.length() + pfx.length();
       if (sfx != null) {
-	 if (v1 >= p0) {
+         if (v1 >= p0) {
             buf.append(" ");
           }
-	 else {
+         else {
             for (int i = v1; i < p0; ++i) {
                buf.append(" ");
              }
           }
-	 buf.append(sfx);
+         buf.append(sfx);
       }
       buf.append(eol);
       buf.append(pfx);
@@ -1178,7 +1178,7 @@ private static String expandTabs(String self,int tabstop)
       int count = tabstop - index % tabstop;
       builder.deleteCharAt(index);
       for (int i = 0; i < count; i++) {
-	 builder.insert(index," ");
+         builder.insert(index," ");
        }
       self = builder.toString();
     }
@@ -1189,7 +1189,7 @@ private static String expandTabs(String self,int tabstop)
 
 
 
-}	// end of class BuenoCreator
+}       // end of class BuenoCreator
 
 
 

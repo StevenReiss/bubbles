@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstMultiChoices.java						*/
-/*										*/
-/*	Bubbles questions and forms multiple choice box implementation		*/
-/*										*/
+/*                                                                              */
+/*              BqstMultiChoices.java                                           */
+/*                                                                              */
+/*      Bubbles questions and forms multiple choice box implementation          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -41,31 +41,31 @@ class BqstMultiChoices extends BqstQuestion implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String[]		q_options;
-private Icon[]			q_icons;
-private Icon[]			q_sicons;
+private String[]                q_options;
+private Icon[]                  q_icons;
+private Icon[]                  q_sicons;
 private ArrayList<JRadioButton> q_buttons;
-private boolean 		q_others;
-private JTextField		q_field;
+private boolean                 q_others;
+private JTextField              q_field;
 
-private static final long	serialVersionUID = 1L;
+private static final long       serialVersionUID = 1L;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
-			      Icon[] sicons,boolean required,boolean others)
+                              Icon[] sicons,boolean required,boolean others)
 {
    super(qst,QuestionType.MULTICHOICE,help);
    setRequired(required);
@@ -74,8 +74,8 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
    q_others = others;
    if (icons != null && icons.length == q_options.length) {
       if (sicons != null && icons.length == sicons.length) {
-	 q_icons = icons;
-	 q_sicons = sicons;
+         q_icons = icons;
+         q_sicons = sicons;
 
        }
     }
@@ -85,9 +85,9 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void setup()
@@ -97,8 +97,8 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
    for (int i = 0; i < q_options.length; i++) {
       JRadioButton button = new JRadioButton(q_options[i]);
       if (q_icons != null) {
-	 button.setIcon(q_icons[i]);
-	 button.setSelectedIcon(q_sicons[i]);
+         button.setIcon(q_icons[i]);
+         button.setSelectedIcon(q_sicons[i]);
        }
 
       button.setOpaque(false);
@@ -131,9 +131,9 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Answer methods							*/
-/*										*/
+/*                                                                              */
+/*      Get Answer methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override String getAnswer()
@@ -144,9 +144,9 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
       answer = "Others: " + q_field.getText();
    else {
       for (int i = 0; i < q_buttons.size(); i++) {
-	 if (q_buttons.get(i).isSelected()) {
-	    answer = q_buttons.get(i).getText();
-	  }
+         if (q_buttons.get(i).isSelected()) {
+            answer = q_buttons.get(i).getText();
+          }
        }
     }
 
@@ -157,9 +157,9 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
 
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void reset()
@@ -172,7 +172,7 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
 
 
 
-}	// end of class BqstMultiChoices
+}       // end of class BqstMultiChoices
 
 
 

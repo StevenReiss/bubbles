@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BstyleFixer.java						*/
-/*										*/
-/*	Fix a particular set of checkstyle problems				*/
-/*										*/
+/*                                                                              */
+/*              BstyleFixer.java                                                */
+/*                                                                              */
+/*      Fix a particular set of checkstyle problems                             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,9 +51,9 @@ abstract class BstyleFixer implements BstyleConstants, BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final String TYPE_PATTERN = "[A-Za-z0-9_<>]+";
@@ -61,8 +61,8 @@ private static final String EXPR_PATTERN = "\\p{Print}+";
 private static final String NAME_PATTERN = "[A-Za-z0-9_\\.]+";
 private static final String LHS_PATTERN = "[^ \\t\\n=]+";
 private static final String MODIFIER_PATTERN =
-	"public|private|protected|static|final|abstract|transient|volatile|" +
-	"native|strict|synchronized";
+        "public|private|protected|static|final|abstract|transient|volatile|" +
+        "native|strict|synchronized";
 private static final String WHITE_PATTERN = "\\s+";
 private static final String OPT_WHITE_PATTERN = "\\s*";
 private static final String BOOLEAN_PATTERN = "true|false";
@@ -149,9 +149,9 @@ private static void addFixer(String when,BstyleFixer... fixers)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BstyleFixer() { }
@@ -159,9 +159,9 @@ BstyleFixer() { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Return the set of fixers to try 					*/
-/*										*/
+/*                                                                              */
+/*      Return the set of fixers to try                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static List<BstyleFixer> getStyleFixers()
@@ -182,9 +182,9 @@ static Set<String> getIgnoreErrors()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to fix pattern if possible					*/
-/*										*/
+/*                                                                              */
+/*      Methods to fix pattern if possible                                      */
+/*                                                                              */
 /********************************************************************************/
 
 abstract BfixRunnableFix findFix(BfixCorrector bc,BumpProblem bp,boolean explicit,long start);
@@ -192,9 +192,9 @@ abstract BfixRunnableFix findFix(BfixCorrector bc,BumpProblem bp,boolean explici
 
 
 /********************************************************************************/
-/*										*/
-/*	Fix simplified code patterns						*/
-/*										*/
+/*                                                                              */
+/*      Fix simplified code patterns                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected static Pattern generatePattern(String pat)
@@ -220,12 +220,12 @@ protected static Pattern generatePattern(String pat,Matcher m)
    if (m != null) {
       Matcher m0 = ARG_PATTERN.matcher(pat0);
       while (m0.find()) {
-	 String pfx = pat0.substring(0,m0.start());
-	 String sfx = pat0.substring(m0.end());
-	 String itm = pat0.substring(m0.start(1),m0.end(1));
-	 int idx = Integer.parseInt(itm);
-	 pat0 = pfx + "\\Q" + m.group(idx) + "\\E" + sfx;
-	 m0.reset(pat0);
+         String pfx = pat0.substring(0,m0.start());
+         String sfx = pat0.substring(m0.end());
+         String itm = pat0.substring(m0.start(1),m0.end(1));
+         int idx = Integer.parseInt(itm);
+         pat0 = pfx + "\\Q" + m.group(idx) + "\\E" + sfx;
+         m0.reset(pat0);
        }
     }
 
@@ -247,9 +247,9 @@ protected static Pattern generatePattern(String pat,Matcher m)
 
 
 /********************************************************************************/
-/*										*/
-/*     GenericPatternFixer -- generic pattern based fixer			*/
-/*										*/
+/*                                                                              */
+/*     GenericPatternFixer -- generic pattern based fixer                       */
+/*                                                                              */
 /********************************************************************************/
 
 abstract static class GenericPatternFixer extends BstyleFixer {
@@ -345,7 +345,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    protected boolean doIndent()                         { return false; }
    protected boolean doFormat()                         { return false; }
    
-}	// end of inner class GenericPatternFixer
+}       // end of inner class GenericPatternFixer
 
 
 
@@ -353,9 +353,9 @@ abstract static class GenericPatternFixer extends BstyleFixer {
 
 
 /********************************************************************************/
-/*										*/
-/*	Various fix classes                                                     */
-/*										*/
+/*                                                                              */
+/*      Various fix classes                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class PrecededByWhitespace extends GenericPatternFixer {
@@ -366,7 +366,7 @@ private static class PrecededByWhitespace extends GenericPatternFixer {
 
    @Override protected int getEditEnd(Matcher m1)       { return m1.end(1); }
    
-}	// end of inner class PrecededByWhitespace
+}       // end of inner class PrecededByWhitespace
 
 
 private static class ArrayBracketPosition extends GenericPatternFixer {
@@ -380,7 +380,7 @@ private static class ArrayBracketPosition extends GenericPatternFixer {
       return " [] " + m1.group(2);
     }
 
-}	// end of inner class ArrayBracketPosition
+}       // end of inner class ArrayBracketPosition
 
 
 private static class ClassFinal extends GenericPatternFixer {
@@ -396,7 +396,7 @@ private static class ClassFinal extends GenericPatternFixer {
       return true;
     }
 
-}	// end of inner class ClassFinal
+}       // end of inner class ClassFinal
 
 
 private static class EmptyXBlock extends GenericPatternFixer {
@@ -409,7 +409,7 @@ private static class EmptyXBlock extends GenericPatternFixer {
    @Override protected int getEditEnd(Matcher m)        { return m.end(2); }
    @Override protected String getEditReplace(Matcher m) { return ";"; }
 
-}	// end of innter class EmptyXBlock
+}       // end of innter class EmptyXBlock
 
 
 private static class FileNewline extends GenericPatternFixer {
@@ -555,7 +555,7 @@ private static class UppercaseL extends GenericPatternFixer {
    @Override protected int getEditStart(Matcher m)      { return m.start(1); }
    @Override protected String getEditReplace(Matcher m) { return "L"; }
 
-}	// end of innter class UppercaseL
+}       // end of innter class UppercaseL
 
 
 
@@ -772,9 +772,9 @@ private static class VarDeclarations extends GenericPatternFixer {
 
 
 /********************************************************************************/
-/*										*/
-/*	Runnable Fix for style problems 					*/
-/*										*/
+/*                                                                              */
+/*      Runnable Fix for style problems                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected static class StyleDoer extends BfixFixDoer {
@@ -815,14 +815,14 @@ protected static class StyleDoer extends BfixFixDoer {
       return testEdit(edit,areas,"StyleCorrection",do_format|do_indent);
     }
    
-   @Override public double getRegionOrder()			{ return 0; }
+   @Override public double getRegionOrder()                     { return 0; }
    
-}	// end of inner class StyleDoer
+}       // end of inner class StyleDoer
 
 
 
 
-}	// end of class BstyleFixer
+}       // end of class BstyleFixer
 
 
 

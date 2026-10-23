@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdocPanel.java							*/
-/*										*/
-/*	Bubbles Environment Documentation display panel 			*/
-/*										*/
+/*                                                                              */
+/*              BdocPanel.java                                                  */
+/*                                                                              */
+/*      Bubbles Environment Documentation display panel                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -91,28 +91,28 @@ class BdocPanel implements BdocConstants, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JScrollPane	doc_region;
-private DocPanel	the_panel;
-private BdocReference	ref_item;
-private BdocDocItem	doc_item;
+private JScrollPane     doc_region;
+private DocPanel        the_panel;
+private BdocReference   ref_item;
+private BdocDocItem     doc_item;
 private DescriptionView desc_view;
-private JTree		item_tree;
+private JTree           item_tree;
 private BdocCellRenderer cell_renderer;
 
-private static int	scroll_width = 0;
+private static int      scroll_width = 0;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocPanel(BdocReference r) throws BdocException
@@ -123,26 +123,26 @@ BdocPanel(BdocReference r) throws BdocException
 
    try {
       switch (r.getNameType()) {
-	 case PACKAGE :
-	    doc_item = new BdocDocPackage(r.getReferenceUrl());
-	    break;
-	 case METHOD :
-	 case CONSTRUCTOR :
-	    doc_item = new BdocDocMethod(r.getReferenceUrl());
-	    break;
-	 case FIELDS :
+         case PACKAGE :
+            doc_item = new BdocDocPackage(r.getReferenceUrl());
+            break;
+         case METHOD :
+         case CONSTRUCTOR :
+            doc_item = new BdocDocMethod(r.getReferenceUrl());
+            break;
+         case FIELDS :
          case VARIABLES :
-	    doc_item = new BdocDocField(r.getReferenceUrl());
-	    break;
-	 case CLASS :
-	 case ENUM :
-	 case INTERFACE :
-	 case THROWABLE :
+            doc_item = new BdocDocField(r.getReferenceUrl());
+            break;
+         case CLASS :
+         case ENUM :
+         case INTERFACE :
+         case THROWABLE :
          case ANNOTATION :
-	    doc_item = new BdocDocClass(r.getReferenceUrl());
-	    break;
-	 default :
-	    throw new BdocException("No java doc available for " + r.getNameType() + " " + r);
+            doc_item = new BdocDocClass(r.getReferenceUrl());
+            break;
+         default :
+            throw new BdocException("No java doc available for " + r.getNameType() + " " + r);
        }
     }
    catch (IOException e) {
@@ -155,9 +155,9 @@ BdocPanel(BdocReference r) throws BdocException
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 JComponent getPanel()
@@ -168,9 +168,9 @@ JComponent getPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Panel setup methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -196,13 +196,13 @@ private void setupPanel()
    for (ItemRelation ir : ItemRelation.values()) {
       List<SubItem> itms = doc_item.getItems(ir);
       if (itms != null) {// get nicer name
-	 DefaultMutableTreeNode relnode = new DefaultMutableTreeNode(ir,true);
-	 root.add(relnode);
-	 for (SubItem itm : itms) {
-	    // really want a tree node that displays the item
-	    MutableTreeNode itmnode = new DefaultMutableTreeNode(itm,false);
-	    relnode.add(itmnode);
-	 }
+         DefaultMutableTreeNode relnode = new DefaultMutableTreeNode(ir,true);
+         root.add(relnode);
+         for (SubItem itm : itms) {
+            // really want a tree node that displays the item
+            MutableTreeNode itmnode = new DefaultMutableTreeNode(itm,false);
+            relnode.add(itmnode);
+         }
       }
     }
 
@@ -239,14 +239,14 @@ private void createNewBubble(BdocReference br)
       // This can take a while and should be done outside the UI thread, the rest should be done in UI thread
       BdocBubble nbb = new BdocBubble(br);
       bba.addBubble(nbb,the_panel,null,
-	    PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+            PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
       if (bb != null) {
-	 BudaBubbleLink lnk = new BudaBubbleLink(
-	    bb,
-	    new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
-	    nbb,
-	    new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true));
-	 bba.addLink(lnk);
+         BudaBubbleLink lnk = new BudaBubbleLink(
+            bb,
+            new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
+            nbb,
+            new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true));
+         bba.addLink(lnk);
        }
     }
    catch (BdocException e) {
@@ -261,8 +261,8 @@ void createLinkBubble(String lbl,URI u)
    if (lbl != null) {
       BdocReference br = ref_item.findRelatedReference(lbl);
       if (br != null) {
-	 createNewBubble(br);
-	 return;
+         createNewBubble(br);
+         return;
        }
     }
 
@@ -276,8 +276,8 @@ void createLinkBubble(String lbl,URI u)
    else {
       BdocReference br = ref_item.findRelatedReference(u);
       if (br != null) {
-	 createNewBubble(br);
-	 return;
+         createNewBubble(br);
+         return;
        }
 
       // create html bubble here
@@ -288,9 +288,9 @@ void createLinkBubble(String lbl,URI u)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle computing editor size						*/
-/*										*/
+/*                                                                              */
+/*      Handle computing editor size                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static Dimension computeEditorSize(JEditorPane ep,int w0)
@@ -326,9 +326,9 @@ static synchronized int getScrollWidth()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle formatting text that is read in					*/
-/*										*/
+/*                                                                              */
+/*      Handle formatting text that is read in                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private String noPre(String d)
@@ -340,9 +340,9 @@ private String noPre(String d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel implementation							*/
-/*										*/
+/*                                                                              */
+/*      Panel implementation                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class DocPanel extends SwingGridPanel implements Scrollable, BudaConstants.BudaBubbleOutputer {
@@ -354,13 +354,13 @@ private class DocPanel extends SwingGridPanel implements Scrollable, BudaConstan
     }
 
    // scrollable interface
-   @Override public Dimension getPreferredScrollableViewportSize()		{ return getPreferredSize(); }
-   @Override public int getScrollableBlockIncrement(Rectangle r,int o,int dir)	{ return 12; }
-   @Override public boolean getScrollableTracksViewportHeight() 		{ return false; }
-   @Override public boolean getScrollableTracksViewportWidth()			{ return true; }
-   @Override public int getScrollableUnitIncrement(Rectangle r,int o,int d)	{ return 1; }
+   @Override public Dimension getPreferredScrollableViewportSize()              { return getPreferredSize(); }
+   @Override public int getScrollableBlockIncrement(Rectangle r,int o,int dir)  { return 12; }
+   @Override public boolean getScrollableTracksViewportHeight()                 { return false; }
+   @Override public boolean getScrollableTracksViewportWidth()                  { return true; }
+   @Override public int getScrollableUnitIncrement(Rectangle r,int o,int d)     { return 1; }
 
-   @Override public String getConfigurator()					{ return "BDOC"; }
+   @Override public String getConfigurator()                                    { return "BDOC"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","JAVADOC");
       xw.field("NAME",ref_item.getKey());
@@ -389,13 +389,13 @@ private class DocPanel extends SwingGridPanel implements Scrollable, BudaConstan
       Color bc = BoardColors.getColor(BDOC_BOTTOM_COLOR_PROP);
 
       if (tc.getRGB() != bc.getRGB()) {
-	 Dimension sz = getSize();
-	 Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 g2.setColor(BoardColors.getColor("Bdoc.BackgroundColor"));     // solid fill first
-	 g2.fill(r);
-	 g2.setPaint(p);
-	 g2.fill(r);
+         Dimension sz = getSize();
+         Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         g2.setColor(BoardColors.getColor("Bdoc.BackgroundColor"));     // solid fill first
+         g2.fill(r);
+         g2.setPaint(p);
+         g2.fill(r);
        }
 
       super.paintComponent(g0);
@@ -403,7 +403,7 @@ private class DocPanel extends SwingGridPanel implements Scrollable, BudaConstan
 
     @Override public void scrollRectToVisible(Rectangle r) {}
 
-}	// end of inner class DocPanel
+}       // end of inner class DocPanel
 
 
 
@@ -418,19 +418,19 @@ private final class PanelWidthManager extends ComponentAdapter {
       Dimension d1 = the_panel.getPreferredSize();
       Dimension d2 = the_panel.getSize();
       if (d1.height > d2.height) {
-	 d2.height = d1.height + 4;
-	 the_panel.setSize(d2);
+         d2.height = d1.height + 4;
+         the_panel.setSize(d2);
        }
     }
 
-}	// end of inner class TreeWidthManager
+}       // end of inner class TreeWidthManager
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold the description						*/
-/*										*/
+/*                                                                              */
+/*      Class to hold the description                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class DescriptionView extends SwingEditorPane {
@@ -454,7 +454,7 @@ private class DescriptionView extends SwingEditorPane {
       return computeEditorSize(this,getWidth());
    }
 
-}	// end of inner class DescriptionView
+}       // end of inner class DescriptionView
 
 
 
@@ -480,15 +480,15 @@ private final class DocLinker implements HyperlinkListener {
       }
     }
 
-}	// end of inner class DocLinker
+}       // end of inner class DocLinker
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for tree								*/
-/*										*/
+/*                                                                              */
+/*      Class for tree                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ItemTree extends JTree {
@@ -501,14 +501,14 @@ private static class ItemTree extends JTree {
       setToggleClickCount(1);
     }
 
-}	// end of inner class ItemTree
+}       // end of inner class ItemTree
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree expansion handling 						*/
-/*										*/
+/*                                                                              */
+/*      Tree expansion handling                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkExpandPanel()
@@ -528,20 +528,20 @@ private void checkExpandPanel()
 
 private final class TreeListener implements TreeExpansionListener {
 
-   @Override public void treeCollapsed(TreeExpansionEvent e)	{ }
+   @Override public void treeCollapsed(TreeExpansionEvent e)    { }
 
    @Override public void treeExpanded(TreeExpansionEvent e) {
       checkExpandPanel();
     }
 
-}	// end of inner class TreeListener
+}       // end of inner class TreeListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class TitleMouser extends MouseAdapter {
@@ -558,7 +558,7 @@ private final class TitleMouser extends MouseAdapter {
        }
     }
 
-}	// end of inner class TitleMouser
+}       // end of inner class TitleMouser
 
 
 private final class ItemMouser extends MouseAdapter {
@@ -576,7 +576,7 @@ private final class ItemMouser extends MouseAdapter {
        }
     }
 
-}	// end of inner class ItemMouser
+}       // end of inner class ItemMouser
 
 
 
@@ -591,7 +591,7 @@ private final class LinkListener implements HyperlinkListener {
 }
 
 
-}	// end of class BdocPanel
+}       // end of class BdocPanel
 
 
 /* end of BdocPanel.java */

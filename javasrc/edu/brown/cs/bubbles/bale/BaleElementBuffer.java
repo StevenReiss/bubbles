@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleElementBuffer.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor text buffer maintaining elements	*/
-/*										*/
+/*                                                                              */
+/*              BaleElementBuffer.java                                          */
+/*                                                                              */
+/*      Bubble Annotated Language Editor text buffer maintaining elements       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,22 +50,22 @@ class BaleElementBuffer implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleElement.Branch		root_element;
-private Map<BumpProblem,ProblemData>	problem_map;
-private BaleDocument			base_document;
-private Map<BaleRegion,BaleElement>	elide_regions;
+private BaleElement.Branch              root_element;
+private Map<BumpProblem,ProblemData>    problem_map;
+private BaleDocument                    base_document;
+private Map<BaleRegion,BaleElement>     elide_regions;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleElementBuffer(BaleElement.Branch root,BaleDocument doc)
@@ -79,20 +79,20 @@ BaleElementBuffer(BaleElement.Branch root,BaleDocument doc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BaleElement getRootElement()			{ return root_element; }
+BaleElement getRootElement()                    { return root_element; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized BaleElementEvent setup()
@@ -109,9 +109,9 @@ synchronized BaleElementEvent setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Editing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized BaleElementEvent insertString(int off,int len)
@@ -128,7 +128,7 @@ synchronized BaleElementEvent insertString(int off,int len)
    if (par == null) return null;
 
    while (off < par.getStartOffset() || off+len >= par.getEndOffset() ||
-	     par.isInsideLine() || isInElided(par)) {
+             par.isInsideLine() || isInElided(par)) {
       if (par == root_element) break;
       par = (BaleElement.Branch) par.getParentElement();
     }
@@ -155,14 +155,14 @@ synchronized BaleElementEvent remove(int off,int len)
    if (lf1 != null) {
       BaleElement lf2 = lf1.getPreviousCharacterElement();
       if (lf2 != null) {
-	 if (lf2.getEndOffset() < lf2.getStartOffset()) {
-	    if (par != root_element) par = (BaleElement.Branch) par.getParentElement();
-	 }
+         if (lf2.getEndOffset() < lf2.getStartOffset()) {
+            if (par != root_element) par = (BaleElement.Branch) par.getParentElement();
+         }
       }
    }
 
    while (par.getStartOffset() == roff || eoff >= par.getEndOffset() || par.isInsideLine() ||
-	    par.getEndOffset() - par.getStartOffset() <= 0 || eoff < 0 || isInElided(par)) {
+            par.getEndOffset() - par.getStartOffset() <= 0 || eoff < 0 || isInElided(par)) {
       if (par == root_element) break;
       par = (BaleElement.Branch) par.getParentElement();
       if (par == null) return null;
@@ -184,9 +184,9 @@ private boolean isInElided(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Fixup methods								*/
-/*										*/
+/*                                                                              */
+/*      Fixup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized BaleElementEvent updateAst(List<BaleAstNode> nodes)
@@ -244,16 +244,16 @@ private BaleAstNode findSubnode(BaleAstNode bn)
    while (cn != null) {
       BaleAstNode pn = null;
       switch (cn.getNodeType()) {
-	 case CLASS :
-	 case METHOD :
-	 case INITIALIZER :
-	    break;
-	 case FILE :
-	 case SET :
-	    return bn;
-	 default :
-	    pn = cn.getParent();
-	    break;
+         case CLASS :
+         case METHOD :
+         case INITIALIZER :
+            break;
+         case FILE :
+         case SET :
+            return bn;
+         default :
+            pn = cn.getParent();
+            break;
       }
       if (pn == null) break;
       cn = pn;
@@ -268,9 +268,9 @@ private BaleAstNode findSubnode(BaleAstNode bn)
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem methods 							*/
-/*										*/
+/*                                                                              */
+/*      Problem methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void updateProblems()
@@ -284,32 +284,32 @@ void updateProblems()
    
    synchronized (problem_map) {
       for (BumpProblem bp : doc.getProblems()) {
-	 found.add(bp);
-	 if (isError(bp)) ++numerr;
-	 ProblemData pd = problem_map.get(bp);
-	 if (pd == null) {
-	    if (isError(bp)) ++numadd;
-	    pd = new ProblemData(bp,doc);
-	    problem_map.put(bp,pd);
-	  }
+         found.add(bp);
+         if (isError(bp)) ++numerr;
+         ProblemData pd = problem_map.get(bp);
+         if (pd == null) {
+            if (isError(bp)) ++numadd;
+            pd = new ProblemData(bp,doc);
+            problem_map.put(bp,pd);
+          }
        }
       
       BoardLog.logD("BALE","Update element problems " + numerr + " " +
             found.size() + " " + problem_map.size());
       
       for (Iterator<Map.Entry<BumpProblem,ProblemData>> it = problem_map.entrySet().iterator(); it.hasNext(); ) {
-	 Map.Entry<BumpProblem,ProblemData> ent = it.next();
-	 BumpProblem bp = ent.getKey();
-	 if (!found.contains(bp)) {
-	    if (isError(bp)) ++numrem;
-	    ent.getValue().clear(false);
-	    it.remove();
+         Map.Entry<BumpProblem,ProblemData> ent = it.next();
+         BumpProblem bp = ent.getKey();
+         if (!found.contains(bp)) {
+            if (isError(bp)) ++numrem;
+            ent.getValue().clear(false);
+            it.remove();
             BoardLog.logD("BALE","Update element remove problem " + bp);
-	  }
+          }
        }
 
       for (ProblemData pd : problem_map.values()) {
-	 pd.setup(root_element,base_document,false);
+         pd.setup(root_element,base_document,false);
        }
     }
    
@@ -339,11 +339,11 @@ List<BumpProblem> getProblemsAtLocation(int pos)
 
    synchronized (problem_map) {
       for (Map.Entry<BumpProblem,ProblemData> ent : problem_map.entrySet()) {
-	 ProblemData pd = ent.getValue();
-	 if (pd.containsPosition(pos)) {
-	    if (rslt == null) rslt = new ArrayList<BumpProblem>();
-	    rslt.add(ent.getKey());
-	  }
+         ProblemData pd = ent.getValue();
+         if (pd.containsPosition(pos)) {
+            if (rslt == null) rslt = new ArrayList<BumpProblem>();
+            rslt.add(ent.getKey());
+          }
        }
     }
 
@@ -357,16 +357,16 @@ private void clearProblems()
 {
    synchronized (problem_map) {
       for (ProblemData pd : problem_map.values()) {
-	 pd.clear(false);
+         pd.clear(false);
        }
     }
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Elision methods 							*/
-/*										*/
+/*                                                                              */
+/*      Elision methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void saveElisions()
@@ -440,9 +440,9 @@ BaleElement shouldBeElided(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Scanning methods							*/
-/*										*/
+/*                                                                              */
+/*      Scanning methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized BaleElementEvent replaceParent(BaleElement.Branch par,boolean elide)
@@ -513,9 +513,9 @@ private synchronized BaleElementEvent replaceParent(BaleElement.Branch par,boole
 
 // CHECKSTYLE:OFF
 private List<BaleElement> scanText(String text,int baseoffset,
-				      BaleTokenState sstate,BaleTokenState estate,
-				      IdentifierMap idmap,
-				      boolean top)
+                                      BaleTokenState sstate,BaleTokenState estate,
+                                      IdentifierMap idmap,
+                                      boolean top)
 // CHECKSTYLE:ON                                      
 {
    BaleTokenizer toks = BaleTokenizer.create(text,sstate,base_document.getLanguage());
@@ -535,130 +535,130 @@ private List<BaleElement> scanText(String text,int baseoffset,
       BaleElement nelt = null;
       nstate = BaleTokenState.NORMAL;
       switch (bt.getType()) {
-	 case EOL :
-	    nelt = new BaleElement.Eol(doc,cur,soff,eoff);
-	    break;
-	 case SPACE :
-	    if (xelt == null || xelt.isEndOfLine())
-	       nelt = new BaleElement.Indent(doc,cur,soff,eoff);
-	    else
-	       nelt = new BaleElement.Space(doc,cur,soff,eoff);
-	    break;
-	 case LINECOMMENT :
-	    nelt = new BaleElement.LineComment(doc,cur,soff,eoff);
-	    break;
-	 case EOLFORMALCOMMENT :
-	    nelt = new BaleElement.JavaDocComment(doc,cur,soff,eoff,true,bt.getType());
-	    nstate = BaleTokenState.IN_FORMAL_COMMENT;
-	    break;
-	 case ENDFORMALCOMMENT :
-	    nelt = new BaleElement.JavaDocComment(doc,cur,soff,eoff,false,bt.getType());
-	    break;
-	 case EOLCOMMENT :
-	    nelt = new BaleElement.Comment(doc,cur,soff,eoff,true,bt.getType());
-	    nstate = BaleTokenState.IN_COMMENT;
-	    break;
-	 case ENDCOMMENT :
-	    nelt = new BaleElement.Comment(doc,cur,soff,eoff,false,bt.getType());
-	    break;
+         case EOL :
+            nelt = new BaleElement.Eol(doc,cur,soff,eoff);
+            break;
+         case SPACE :
+            if (xelt == null || xelt.isEndOfLine())
+               nelt = new BaleElement.Indent(doc,cur,soff,eoff);
+            else
+               nelt = new BaleElement.Space(doc,cur,soff,eoff);
+            break;
+         case LINECOMMENT :
+            nelt = new BaleElement.LineComment(doc,cur,soff,eoff);
+            break;
+         case EOLFORMALCOMMENT :
+            nelt = new BaleElement.JavaDocComment(doc,cur,soff,eoff,true,bt.getType());
+            nstate = BaleTokenState.IN_FORMAL_COMMENT;
+            break;
+         case ENDFORMALCOMMENT :
+            nelt = new BaleElement.JavaDocComment(doc,cur,soff,eoff,false,bt.getType());
+            break;
+         case EOLCOMMENT :
+            nelt = new BaleElement.Comment(doc,cur,soff,eoff,true,bt.getType());
+            nstate = BaleTokenState.IN_COMMENT;
+            break;
+         case ENDCOMMENT :
+            nelt = new BaleElement.Comment(doc,cur,soff,eoff,false,bt.getType());
+            break;
          case EOLSTRING :
             nelt = new BaleElement.Literal(doc,cur,soff,eoff,true,bt.getType());
             nstate = BaleTokenState.IN_MULTILINE_STRING;
             break;
-	 case KEYWORD :
-	 case IF :
-	 case DO :
-	 case FOR :
-	 case TRY :
-	 case NEW :
-	 case CASE :
-	 case ELSE :
-	 case ENUM :
-	 case GOTO :
-	 case BREAK :
-	 case CATCH :
-	 case CLASS :
-	 case WHILE :
-	 case STATIC :
-	 case SWITCH :
-	 case DEFAULT :
-	 case FINALLY :
-	 case INTERFACE :
-	 case SYNCHRONIZED :
-	 case TYPEKEY :
-	 case CONTINUE :
-	 case PASS :
-	 case RAISE :
-	 case IMPORT :
-	 case PACKAGE :
+         case KEYWORD :
+         case IF :
+         case DO :
+         case FOR :
+         case TRY :
+         case NEW :
+         case CASE :
+         case ELSE :
+         case ENUM :
+         case GOTO :
+         case BREAK :
+         case CATCH :
+         case CLASS :
+         case WHILE :
+         case STATIC :
+         case SWITCH :
+         case DEFAULT :
+         case FINALLY :
+         case INTERFACE :
+         case SYNCHRONIZED :
+         case TYPEKEY :
+         case CONTINUE :
+         case PASS :
+         case RAISE :
+         case IMPORT :
+         case PACKAGE :
          case FUNCTION :
          case THROWS :
-	    nelt = new BaleElement.Keyword(doc,cur,soff,eoff,bt.getType());
-	    break;
-	 case RETURN :
-	    nelt = new BaleElement.Return(doc,cur,soff,eoff);
-	    break;
-	 case BADNUMBER :
-	 case NUMBER :
-	    nelt = new BaleElement.Number(doc,cur,soff,eoff);
-	    break;
-	 case BADSTRING :
-	 case BADCHARLIT :
-	 case CHARLITERAL :
-	 case STRING :
-	 case LONGSTRING :
-	    nelt = new BaleElement.Literal(doc,cur,soff,eoff,false,bt.getType());
-	    break;
-	 case IDENTIFIER :
-	    nelt = idmap.getElement(soff);
-	    if (nelt == null) nelt = new BaleElement.Identifier(doc,cur,soff,eoff);
-	    else {
-	       BaleElement.Leaf lelt = (BaleElement.Leaf) nelt;
-	       lelt.setPosition(soff,eoff);
-	     }
-	    break;
-	 case LPAREN :
-	 case RPAREN :
-	 case LBRACKET :
-	 case RBRACKET :
-	 case SEMICOLON :
-	 case COMMA :
-	 case COLON :
-	 case EQUAL :
-	 case DOT :
-	 case AT :
-	 case OP :
-	 case QUESTIONMARK :
-	 case LANGLE :
-	 case RANGLE :
-	 case OTHER :
-	 case BACKSLASH :
-	    nelt = new BaleElement.Token(doc,cur,soff,eoff,bt.getType());
-	    break;
-	 case LBRACE :
-	 case RBRACE :
-	    nelt = new BaleElement.Brace(doc,cur,soff,eoff,bt.getType());
-	    break;
-	 default :
-	    BoardLog.logW("BALE","Unknown token returned: " + bt.getType() + " " + soff + " " +
-			     eoff + " " + text.substring(soff-baseoffset,eoff-baseoffset));
+            nelt = new BaleElement.Keyword(doc,cur,soff,eoff,bt.getType());
+            break;
+         case RETURN :
+            nelt = new BaleElement.Return(doc,cur,soff,eoff);
+            break;
+         case BADNUMBER :
+         case NUMBER :
+            nelt = new BaleElement.Number(doc,cur,soff,eoff);
+            break;
+         case BADSTRING :
+         case BADCHARLIT :
+         case CHARLITERAL :
+         case STRING :
+         case LONGSTRING :
+            nelt = new BaleElement.Literal(doc,cur,soff,eoff,false,bt.getType());
+            break;
+         case IDENTIFIER :
+            nelt = idmap.getElement(soff);
+            if (nelt == null) nelt = new BaleElement.Identifier(doc,cur,soff,eoff);
+            else {
+               BaleElement.Leaf lelt = (BaleElement.Leaf) nelt;
+               lelt.setPosition(soff,eoff);
+             }
+            break;
+         case LPAREN :
+         case RPAREN :
+         case LBRACKET :
+         case RBRACKET :
+         case SEMICOLON :
+         case COMMA :
+         case COLON :
+         case EQUAL :
+         case DOT :
+         case AT :
+         case OP :
+         case QUESTIONMARK :
+         case LANGLE :
+         case RANGLE :
+         case OTHER :
+         case BACKSLASH :
+            nelt = new BaleElement.Token(doc,cur,soff,eoff,bt.getType());
+            break;
+         case LBRACE :
+         case RBRACE :
+            nelt = new BaleElement.Brace(doc,cur,soff,eoff,bt.getType());
+            break;
+         default :
+            BoardLog.logW("BALE","Unknown token returned: " + bt.getType() + " " + soff + " " +
+                             eoff + " " + text.substring(soff-baseoffset,eoff-baseoffset));
        }
 
       if (nelt != null) {
-	 if (nelt.isEndOfLine()) {
-	    cur.setEndOfLine();
-	    cur.add(nelt);
-	    cur.setEndTokenState(nstate);
-	    cur = new BaleElement.UnknownNode(doc,root_element);
-	    cur.setStartTokenState(nstate);
-	    rslt.add(cur);
-	    ctr = 0;
-	  }
-	 else {
-	    cur.add(nelt);
-	    ++ctr;
-	  }
-	 xelt = nelt;
+         if (nelt.isEndOfLine()) {
+            cur.setEndOfLine();
+            cur.add(nelt);
+            cur.setEndTokenState(nstate);
+            cur = new BaleElement.UnknownNode(doc,root_element);
+            cur.setStartTokenState(nstate);
+            rslt.add(cur);
+            ctr = 0;
+          }
+         else {
+            cur.add(nelt);
+            ++ctr;
+          }
+         xelt = nelt;
        }
     }
 
@@ -679,34 +679,34 @@ private void fixupElisions(List<BaleElement> lelts)
       BaleElement lelt = lelts.get(i);
       BaleElement eelt = shouldBeElided(lelt);
       if (eelt != null && lelt.isEndOfLine()) {
-	 int epos = eelt.getEndOffset();
-	 int spos = eelt.getStartOffset();
-	 int slpos = lelt.getStartOffset();
-	 if (spos < slpos) continue;
+         int epos = eelt.getEndOffset();
+         int spos = eelt.getStartOffset();
+         int slpos = lelt.getStartOffset();
+         if (spos < slpos) continue;
 
-	 if (!fixPositions(lelts,i,eelt)) {
-	    // BoardLog.logE("BALE","Unable to fix line positions for " + lelt + " and " + eelt);
-	  }
-	 epos = eelt.getEndOffset();
+         if (!fixPositions(lelts,i,eelt)) {
+            // BoardLog.logE("BALE","Unable to fix line positions for " + lelt + " and " + eelt);
+          }
+         epos = eelt.getEndOffset();
 
-	 lelts.set(i,eelt);
-	 boolean issimple = true;
-	 while (i+1 < lelts.size()) {
-	    lelt = lelts.get(i+1);
-	    if (lelt.getEndOffset() > epos) break;
-	    for (int j = 0; j < lelt.getChildCount(); ++j) {
-	       BaleElement celt = lelt.getBaleElement(j);
-	       if (!celt.isComment() && !celt.isEndOfLine() && !celt.isEmpty()) issimple = false;
-	    }
-	    // TODO: This code is a bit mysterious
-	    // BoardLog.logD("BALE","Elision extra line " + lelt.getStartOffset() + " " + lelt.getEndOffset());
-	    BaleElement xelt = lelts.remove(i+1);
-	    BaleElement.Branch beb = (BaleElement.Branch) eelt;
-	    issimple = false;
-	    if (issimple) beb.add(xelt);
-	  }
+         lelts.set(i,eelt);
+         boolean issimple = true;
+         while (i+1 < lelts.size()) {
+            lelt = lelts.get(i+1);
+            if (lelt.getEndOffset() > epos) break;
+            for (int j = 0; j < lelt.getChildCount(); ++j) {
+               BaleElement celt = lelt.getBaleElement(j);
+               if (!celt.isComment() && !celt.isEndOfLine() && !celt.isEmpty()) issimple = false;
+            }
+            // TODO: This code is a bit mysterious
+            // BoardLog.logD("BALE","Elision extra line " + lelt.getStartOffset() + " " + lelt.getEndOffset());
+            BaleElement xelt = lelts.remove(i+1);
+            BaleElement.Branch beb = (BaleElement.Branch) eelt;
+            issimple = false;
+            if (issimple) beb.add(xelt);
+          }
 
-	 eelt.fixParents();	// identifiers inside old elided region might have new parents -- restore
+         eelt.fixParents();     // identifiers inside old elided region might have new parents -- restore
        }
     }
 }
@@ -777,13 +777,13 @@ private boolean fixElementPosition(NewLeafIter nli,BaleElement oelt)
       if (!nli.hasNext()) return false;
       BaleElement nelt = nli.next();
       if (!nelt.getName().equals(oelt.getName())) {
-	 if (!nelt.isIdentifier() && !oelt.isIdentifier()) {
-	    return false;
-	  }
+         if (!nelt.isIdentifier() && !oelt.isIdentifier()) {
+            return false;
+          }
        }
       if (oelt != nelt) {
-	 BaleElement.Leaf le = (BaleElement.Leaf) oelt;
-	 le.setPosition(nelt.getStartOffset(),nelt.getEndOffset());
+         BaleElement.Leaf le = (BaleElement.Leaf) oelt;
+         le.setPosition(nelt.getStartOffset(),nelt.getEndOffset());
        }
       return true;
     }
@@ -815,30 +815,30 @@ private static class NewLeafIter implements Iterator<BaleElement> {
 
    @Override public boolean hasNext() {
       if (!is_checked) {
-	 is_checked = true;
-	 BaleElement par = null;
-	 BaleElement chld = cur_element;
-	 int idx = -1;
-	 for ( ; ; ) {
-	    par = chld.getBaleParent();
-	    idx = par.getChildIndex(chld);
-	    if (idx+1 < par.getElementCount()) {
-	       cur_element = par.getBaleElement(idx+1);
-	       break;
-	     }
-	    if (par == element_list.get(cur_index)) {
-	       ++cur_index;
-	       if (cur_index >= element_list.size()) {
-		  cur_element = null;
-		  break;
-		}
-	       par = element_list.get(cur_index);
-	       int spos = par.getStartOffset();
-	       cur_element = par.getBaleChildAtPosition(spos);
-	       break;
-	     }
-	    chld = par;
-	  }
+         is_checked = true;
+         BaleElement par = null;
+         BaleElement chld = cur_element;
+         int idx = -1;
+         for ( ; ; ) {
+            par = chld.getBaleParent();
+            idx = par.getChildIndex(chld);
+            if (idx+1 < par.getElementCount()) {
+               cur_element = par.getBaleElement(idx+1);
+               break;
+             }
+            if (par == element_list.get(cur_index)) {
+               ++cur_index;
+               if (cur_index >= element_list.size()) {
+                  cur_element = null;
+                  break;
+                }
+               par = element_list.get(cur_index);
+               int spos = par.getStartOffset();
+               cur_element = par.getBaleChildAtPosition(spos);
+               break;
+             }
+            chld = par;
+          }
        }
       return cur_element != null;
     }
@@ -853,23 +853,23 @@ private static class NewLeafIter implements Iterator<BaleElement> {
       throw new UnsupportedOperationException();
     }
 
-}	// end of inner classs NewLeafIter
+}       // end of inner classs NewLeafIter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Holder for problem information						*/
-/*										*/
+/*                                                                              */
+/*      Holder for problem information                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProblemData {
 
-   private List<BaleElement>	use_elements;
-   private BoardHighlightStyle	hilite_style;
-   private Color		hilite_color;
-   private BaleRegion		problem_region;
+   private List<BaleElement>    use_elements;
+   private BoardHighlightStyle  hilite_style;
+   private Color                hilite_color;
+   private BaleRegion           problem_region;
 
    ProblemData(BumpProblem bp,BaleDocument doc) {
       use_elements = null;
@@ -880,12 +880,12 @@ private static class ProblemData {
 
    void clear(boolean chng) {
       if (use_elements != null) {
-	 for (BaleElement be : use_elements) {
-	    be.removeAttribute(BOARD_ATTR_HIGHLIGHT_STYLE);
-	    be.removeAttribute(BOARD_ATTR_HIGHLIGHT_COLOR);
-	    if (chng) generateChange(be);
-	  }
-	 use_elements = null;
+         for (BaleElement be : use_elements) {
+            be.removeAttribute(BOARD_ATTR_HIGHLIGHT_STYLE);
+            be.removeAttribute(BOARD_ATTR_HIGHLIGHT_COLOR);
+            if (chng) generateChange(be);
+          }
+         use_elements = null;
        }
     }
 
@@ -898,7 +898,7 @@ private static class ProblemData {
     }
 
    void setup(BaleElement.Branch root,BaleDocument doc,boolean chng) {
-      if (use_elements != null) return; 	// already setup
+      if (use_elements != null) return;         // already setup
       if (hilite_style == null || hilite_style == BoardHighlightStyle.NONE) return;
       if (problem_region == null) return;
 
@@ -909,29 +909,29 @@ private static class ProblemData {
       use_elements = new ArrayList<BaleElement>();
       BaleElement base = root.getBaleChildAtPosition(pstart);
       if (base != null) {
-	 for (BaleElement pe = base.getBaleParent(); pe != null; pe = pe.getBaleParent()) {
-	    if (pe.getStartOffset() < pstart || pe.getEndOffset() > pend+1) break;
-	    base = pe;
-	  }
-	 BaleElement par = base.getBaleParent();
-	 if (par == null) return;
-	 for (int i = 0; i < par.getElementCount(); ++i) {
-	    BaleElement ce = par.getBaleElement(i);
-	    if (ce.getStartOffset() >= pstart && ce.getEndOffset() <= pend+1) {
-	       use_elements.add(ce);
-	     }
-	  }
+         for (BaleElement pe = base.getBaleParent(); pe != null; pe = pe.getBaleParent()) {
+            if (pe.getStartOffset() < pstart || pe.getEndOffset() > pend+1) break;
+            base = pe;
+          }
+         BaleElement par = base.getBaleParent();
+         if (par == null) return;
+         for (int i = 0; i < par.getElementCount(); ++i) {
+            BaleElement ce = par.getBaleElement(i);
+            if (ce.getStartOffset() >= pstart && ce.getEndOffset() <= pend+1) {
+               use_elements.add(ce);
+             }
+          }
        }
 
       if (use_elements.isEmpty()) {
-	 use_elements = null;
-	 return;
+         use_elements = null;
+         return;
        }
 
       for (BaleElement be : use_elements) {
-	 be.addAttribute(BOARD_ATTR_HIGHLIGHT_STYLE,hilite_style);
-	 be.addAttribute(BOARD_ATTR_HIGHLIGHT_COLOR,hilite_color);
-	 if (chng) generateChange(be);
+         be.addAttribute(BOARD_ATTR_HIGHLIGHT_STYLE,hilite_style);
+         be.addAttribute(BOARD_ATTR_HIGHLIGHT_COLOR,hilite_color);
+         if (chng) generateChange(be);
        }
     }
 
@@ -943,7 +943,7 @@ private static class ProblemData {
       doc.reportEvent(doc,off,len,DocumentEvent.EventType.CHANGE,null,null);
     }
 
-}	// end of inner class ProblemData
+}       // end of inner class ProblemData
 
 
 
@@ -967,9 +967,9 @@ private static Color getHighlightColor(BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for preserving identifier types 				*/
-/*										*/
+/*                                                                              */
+/*      Methods for preserving identifier types                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static class IdentifierMap {
@@ -983,14 +983,14 @@ private static class IdentifierMap {
 
    private void setupMap(BaleElement be) {
       if (be.isIdentifier()) {
-	 id_map.put(be.getStartOffset(),be);
+         id_map.put(be.getStartOffset(),be);
        }
       else {
-	 int n = be.getChildCount();
-	 for (int i = 0; i < n; ++i) {
-	    BaleElement sbe = be.getBaleElement(i);
-	    setupMap(sbe);
-	  }
+         int n = be.getChildCount();
+         for (int i = 0; i < n; ++i) {
+            BaleElement sbe = be.getBaleElement(i);
+            setupMap(sbe);
+          }
        }
     }
 
@@ -1006,9 +1006,9 @@ private static class IdentifierMap {
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -1019,7 +1019,7 @@ private static class IdentifierMap {
 
 
 
-}	// end of class BaleElementBuffer
+}       // end of class BaleElementBuffer
 
 
 

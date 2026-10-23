@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynCallbacks.java						*/
-/*										*/
-/*	Maintain the set of callbacks for Bdyn analysis 			*/
-/*										*/
+/*                                                                              */
+/*              BdynCallbacks.java                                              */
+/*                                                                              */
+/*      Maintain the set of callbacks for Bdyn analysis                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -59,9 +59,9 @@ class BdynCallbacks implements BdynConstants, BanalConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,CallbackMethod> callback_methods;
@@ -94,9 +94,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdynCallbacks()
@@ -115,9 +115,9 @@ BdynCallbacks()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 List<BdynCallback> getCallbacks()
@@ -131,11 +131,11 @@ BdynCallback getCallback(int id)
    CallbackMethod cm = callback_index.get(id);
    if (cm == null) {
       for (CallbackMethod xm : callback_methods.values()) {
-	 if (xm.getRawId() == id) {
-	    callback_index.put(id,xm);
-	    cm = xm;
-	    break;
-	  }
+         if (xm.getRawId() == id) {
+            callback_index.put(id,xm);
+            cm = xm;
+            break;
+          }
        }
     }
    return cm;
@@ -154,9 +154,9 @@ Set<Color> getKnownColors()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void clear()
@@ -183,14 +183,14 @@ private final class CallbackLoader implements Runnable {
       saveCallbacks();
     }
 
-}	// end of inner class CallbackLoader
+}       // end of inner class CallbackLoader
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks are defined -- now update set of related items		*/
-/*										*/
+/*                                                                              */
+/*      Callbacks are defined -- now update set of related items                */
+/*                                                                              */
 /********************************************************************************/
 
 private void setCallbacks()
@@ -206,84 +206,84 @@ private void setCallbacks()
 
    synchronized (callback_methods) {
       for (Iterator<CallbackMethod> it = callback_methods.values().iterator(); it.hasNext(); ) {
-	 CallbackMethod cm = it.next();
-	 switch (cm.getCallbackType()) {
-	    default :
-	    case CONSTRUCTOR :
-	    case UNKNOWN :
-	       continue;
-	    case EVENT :
-	    case KEY :
-	    case MAIN :
-	       break;
-	  }
+         CallbackMethod cm = it.next();
+         switch (cm.getCallbackType()) {
+            default :
+            case CONSTRUCTOR :
+            case UNKNOWN :
+               continue;
+            case EVENT :
+            case KEY :
+            case MAIN :
+               break;
+          }
 
-	 String rargs = "";
-	 int act = 0;
-	 if (!Modifier.isStatic(cm.getModifiers())) {
-	    String cnm = cm.getClassName();
-	    if (isUserClass(cnm)) {
-	       classes.add(cnm);
-	       rargs += Integer.toString(act);
-	     }
-	    ++act;
-	  }
-	 if (cm.getCallbackArgs() == null) {
-	    String args = cm.getArgs();
-	    if (args != null) {
-	       List<String> prms = BumpLocation.getParameterList(args);
-	       for (String s : prms) {
-		  if (isUserClass(s)) {
-		     Element hxml = BumpClient.getBump().getTypeHierarchy(cm.getProject(), null, s, false);
-		     addClasses(cm.getProject(),hxml,s,classes);
-		     rargs += Integer.toString(act);
-		     if (rargs.length() >= 2) break;
-		   }
-		  else if (s.equals("double") || s.equals("long")) ++act;
-		  ++act;
-		  if (act > 9) break;
-		}
-	     }
-	    // if (rags.length() == 0) remove the callback
-	    cm.setCallbackArgs(rargs);
-	  }
+         String rargs = "";
+         int act = 0;
+         if (!Modifier.isStatic(cm.getModifiers())) {
+            String cnm = cm.getClassName();
+            if (isUserClass(cnm)) {
+               classes.add(cnm);
+               rargs += Integer.toString(act);
+             }
+            ++act;
+          }
+         if (cm.getCallbackArgs() == null) {
+            String args = cm.getArgs();
+            if (args != null) {
+               List<String> prms = BumpLocation.getParameterList(args);
+               for (String s : prms) {
+                  if (isUserClass(s)) {
+                     Element hxml = BumpClient.getBump().getTypeHierarchy(cm.getProject(), null, s, false);
+                     addClasses(cm.getProject(),hxml,s,classes);
+                     rargs += Integer.toString(act);
+                     if (rargs.length() >= 2) break;
+                   }
+                  else if (s.equals("double") || s.equals("long")) ++act;
+                  ++act;
+                  if (act > 9) break;
+                }
+             }
+            // if (rags.length() == 0) remove the callback
+            cm.setCallbackArgs(rargs);
+          }
        }
 
       for (String s : classes) {
-	 List<BumpLocation> cnsts = BumpClient.getBump().findMethods(null,s,false,true,true,false);
-	 if (cnsts != null) {
-	    if (cnsts.size() > 0) {
-	       for (BumpLocation bl : cnsts) {
-		  if (!Modifier.isProtected(bl.getModifiers())) {
-		     String nm = bl.getSymbolName();
-		     int idx = nm.lastIndexOf(".");
-		     if (idx < 0) continue;
-		     String cnm = nm.substring(0,idx);
-		     String mnm = nm.substring(idx+1);
-		     String key = cnm + "@" + mnm;
-		     if (!callback_methods.containsKey(key)) {
-			CallbackMethod cm = new CallbackMethod(cnm,mnm,CallbackType.CONSTRUCTOR,bl);
-			cm.setCallbackArgs("0");
-			callback_methods.put(key,cm);
-		     }
-		  }
-	       }
-	    }
-	    else {
-	       // no user constructor -- assume there is a generated one
-	       String mnm = s;
-	       int idx = s.lastIndexOf("$");
-	       int idx1 = s.lastIndexOf(".");
-	       if (idx >= 0) mnm = s.substring(idx+1);
-	       else if (idx1 >= 0) mnm = s.substring(idx1+1);
-	       String key = s + "@" + mnm;
-	       if (!callback_methods.containsKey(key)) {
-		  CallbackMethod cm = new CallbackMethod(s,mnm,CallbackType.CONSTRUCTOR,null);
-		  cm.setCallbackArgs("0");
-		  callback_methods.put(key,cm);
-		}
-	     }
-	  }
+         List<BumpLocation> cnsts = BumpClient.getBump().findMethods(null,s,false,true,true,false);
+         if (cnsts != null) {
+            if (cnsts.size() > 0) {
+               for (BumpLocation bl : cnsts) {
+                  if (!Modifier.isProtected(bl.getModifiers())) {
+                     String nm = bl.getSymbolName();
+                     int idx = nm.lastIndexOf(".");
+                     if (idx < 0) continue;
+                     String cnm = nm.substring(0,idx);
+                     String mnm = nm.substring(idx+1);
+                     String key = cnm + "@" + mnm;
+                     if (!callback_methods.containsKey(key)) {
+                        CallbackMethod cm = new CallbackMethod(cnm,mnm,CallbackType.CONSTRUCTOR,bl);
+                        cm.setCallbackArgs("0");
+                        callback_methods.put(key,cm);
+                     }
+                  }
+               }
+            }
+            else {
+               // no user constructor -- assume there is a generated one
+               String mnm = s;
+               int idx = s.lastIndexOf("$");
+               int idx1 = s.lastIndexOf(".");
+               if (idx >= 0) mnm = s.substring(idx+1);
+               else if (idx1 >= 0) mnm = s.substring(idx1+1);
+               String key = s + "@" + mnm;
+               if (!callback_methods.containsKey(key)) {
+                  CallbackMethod cm = new CallbackMethod(s,mnm,CallbackType.CONSTRUCTOR,null);
+                  cm.setCallbackArgs("0");
+                  callback_methods.put(key,cm);
+                }
+             }
+          }
        }
       writeCallbackFile();
     }
@@ -304,22 +304,22 @@ private void addClasses(String proj,Element hxml,String cls,Set<String> classes)
       if (nm == null) continue;
       if (pnm == null) pnm = nm;
       if (nm.equals(cls) || pnm.equals(cls)) {
-	 if (IvyXml.getAttrString(cxml,"KIND").equals("CLASS")) {
-	    if (!classes.contains(nm)) {
-	       List<BumpLocation> locs = BumpClient.getBump().findTypes(proj,nm.replace("$","."));
-	       if (locs != null && locs.size() > 0) {
-		  for (BumpLocation bl : locs) {
-		     if (!Modifier.isAbstract(bl.getModifiers())) {
-			classes.add(nm);
-		     }
-		  }
-	       }
-	    }
-	  }
-	 for (Element sxml : IvyXml.children(cxml,"SUBTYPE")) {
-	    addClasses(proj,hxml,IvyXml.getAttrString(sxml,"NAME"),classes);
-	  }
-	 break;
+         if (IvyXml.getAttrString(cxml,"KIND").equals("CLASS")) {
+            if (!classes.contains(nm)) {
+               List<BumpLocation> locs = BumpClient.getBump().findTypes(proj,nm.replace("$","."));
+               if (locs != null && locs.size() > 0) {
+                  for (BumpLocation bl : locs) {
+                     if (!Modifier.isAbstract(bl.getModifiers())) {
+                        classes.add(nm);
+                     }
+                  }
+               }
+            }
+          }
+         for (Element sxml : IvyXml.children(cxml,"SUBTYPE")) {
+            addClasses(proj,hxml,IvyXml.getAttrString(sxml,"NAME"),classes);
+          }
+         break;
        }
     }
 }
@@ -342,9 +342,9 @@ private boolean isUserClass(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update callbacks based on call trie					*/
-/*										*/
+/*                                                                              */
+/*      Update callbacks based on call trie                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void updateCallbacks(BumpTrieNode tn)
@@ -392,7 +392,7 @@ private class CallbackUpdater implements Runnable {
          if (ppkg != null && npkg != null && ppkg != npkg) {
             if (ppkg.getLevel() > npkg.getLevel()) cb = true;
             else if (ppkg.getLevel() == npkg.getLevel() &&
-        	  ppkg.getCycle() != npkg.getCycle()) cb = true;
+                  ppkg.getCycle() != npkg.getCycle()) cb = true;
           }
          if (par.getParent() == null && ppkg == null && npkg != null &&
                tn.getMethodName().equals("main")) {
@@ -407,21 +407,21 @@ private class CallbackUpdater implements Runnable {
             CallbackMethod ocm = callback_methods.get(cm.getFullName());
             if (ocm == null) {
                if (validate(cm)) {
-        	  ocm = cm;
-        	  callback_methods.put(cm.getFullName(),cm);
-        	  chld = false;
-        	}
+                  ocm = cm;
+                  callback_methods.put(cm.getFullName(),cm);
+                  chld = false;
+                }
              }
             else chld = false;
             if (ocm != null) {
                double rtot = getCount(root_node.getTotals());
                if (rtot > 5000) {
-        	  double thr = rtot * 0.05;
-        	  Set<BumpTrieNode> keys = getKeyNodes(tn,0,thr);
-        	  if (keys != null) {
-        	     if (key_nodes == null) key_nodes = keys;
-        	     else key_nodes.addAll(keys);
-        	  }
+                  double thr = rtot * 0.05;
+                  Set<BumpTrieNode> keys = getKeyNodes(tn,0,thr);
+                  if (keys != null) {
+                     if (key_nodes == null) key_nodes = keys;
+                     else key_nodes.addAll(keys);
+                  }
                }
             }
          }
@@ -454,9 +454,9 @@ private class CallbackUpdater implements Runnable {
    private BanalHierarchyNode getPackage(BumpTrieNode tn) {
    
       String cn = tn.getClassName();
-      if (cn == null) return null;	// root node
+      if (cn == null) return null;      // root node
       int idx = cn.lastIndexOf(".");
-      if (idx < 0) return null; 	// this might be wrong
+      if (idx < 0) return null;         // this might be wrong
       if (package_hierarchy == null) return null;
       return package_hierarchy.get(cn.substring(0,idx));
     }
@@ -466,20 +466,20 @@ private class CallbackUpdater implements Runnable {
       if (stot < threshold) return null;
       Set<BumpTrieNode> rslt = new HashSet<>();
       for (BumpTrieNode cn : tn.getChildren()) {
-	 Set<BumpTrieNode> cr = getKeyNodes(cn,lvl+1,threshold);
-	 if (cr != null) {
-	    rslt.addAll(cr);
-	  }
+         Set<BumpTrieNode> cr = getKeyNodes(cn,lvl+1,threshold);
+         if (cr != null) {
+            rslt.addAll(cr);
+          }
        }
       if (lvl > 0) {
-	 double tot = 0;
-	 for (BumpTrieNode cn : rslt) {
-	    tot += getCount(cn.getTotals());
-	  }
-	 double lcl = stot - tot;
-	 if (lcl >= threshold / 100 || lcl > 5) {
-	    rslt.add(tn);
-	  }
+         double tot = 0;
+         for (BumpTrieNode cn : rslt) {
+            tot += getCount(cn.getTotals());
+          }
+         double lcl = stot - tot;
+         if (lcl >= threshold / 100 || lcl > 5) {
+            rslt.add(tn);
+          }
        }
       if (rslt.size() > 0) return rslt;
       return null;
@@ -488,17 +488,17 @@ private class CallbackUpdater implements Runnable {
    private void addKeyNodes() {
       if (key_nodes == null) return;
       for (BumpTrieNode tn : key_nodes) {
-	 CallbackMethod cm = new CallbackMethod(null,tn.getFileName(),tn.getClassName(),
-		  tn.getMethodName(),null,null,tn.getLineNumber(),CallbackType.KEY);
-	 synchronized (callback_methods) {
-	    CallbackMethod ocm = callback_methods.get(cm.getFullName());
-	    if (ocm == null) {
-	       if (validate(cm)) {
-		  ocm = cm;
-		  callback_methods.put(cm.getFullName(),cm);
-	       }
-	    }
-	 }
+         CallbackMethod cm = new CallbackMethod(null,tn.getFileName(),tn.getClassName(),
+                  tn.getMethodName(),null,null,tn.getLineNumber(),CallbackType.KEY);
+         synchronized (callback_methods) {
+            CallbackMethod ocm = callback_methods.get(cm.getFullName());
+            if (ocm == null) {
+               if (validate(cm)) {
+                  ocm = cm;
+                  callback_methods.put(cm.getFullName(),cm);
+               }
+            }
+         }
       }
    }
 
@@ -508,32 +508,32 @@ private class CallbackUpdater implements Runnable {
    }
 
 
-}	// end of inner class CallbackUpdater
+}       // end of inner class CallbackUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Load and store callback data						*/
-/*										*/
+/*                                                                              */
+/*      Load and store callback data                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void saveCallbacks()
 {
    synchronized (callback_methods) {
       try {
-	 IvyXmlWriter xw = new IvyXmlWriter(callback_file);
-	 xw.begin("CALLBACKS");
-	 BdynFactory.getOptions().save(xw);
-	 for (CallbackMethod cm : callback_methods.values()) {
-	    cm.outputXml(xw);
-	  }
-	 xw.end("CALLBACKS");
-	 xw.close();
+         IvyXmlWriter xw = new IvyXmlWriter(callback_file);
+         xw.begin("CALLBACKS");
+         BdynFactory.getOptions().save(xw);
+         for (CallbackMethod cm : callback_methods.values()) {
+            cm.outputXml(xw);
+          }
+         xw.end("CALLBACKS");
+         xw.close();
        }
       catch (IOException e) {
-	 BoardLog.logE("BDYN","Problem writing callback file",e);
+         BoardLog.logE("BDYN","Problem writing callback file",e);
        }
     }
 }
@@ -548,16 +548,16 @@ void loadCallbacks()
 
    synchronized (callback_methods) {
       for (Element ce : IvyXml.children(xml,"CALLBACK")) {
-	 CallbackMethod cm = new CallbackMethod(ce);
-	 if (validate(cm)) {
-	    callback_methods.put(cm.getFullName(),cm);
-	    int id = cm.getId();
-	    for ( ; ; ) {
-	       int oct = callback_counter.get();
-	       if (oct >= id) break;
-	       if (callback_counter.compareAndSet(oct,id)) break;
-	     }
-	  }
+         CallbackMethod cm = new CallbackMethod(ce);
+         if (validate(cm)) {
+            callback_methods.put(cm.getFullName(),cm);
+            int id = cm.getId();
+            for ( ; ; ) {
+               int oct = callback_counter.get();
+               if (oct >= id) break;
+               if (callback_counter.compareAndSet(oct,id)) break;
+             }
+          }
        }
     }
 }
@@ -595,9 +595,9 @@ private boolean validate(CallbackMethod cm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output callback file for bandaid					*/
-/*										*/
+/*                                                                              */
+/*      Output callback file for bandaid                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void writeCallbackFile()
@@ -608,17 +608,17 @@ private void writeCallbackFile()
       FileWriter fw = new FileWriter(cbf);
       PrintWriter pw = new PrintWriter(fw);
       for (CallbackMethod cm : callback_methods.values()) {
-	 switch (cm.getCallbackType()) {
-	    case MAIN :
-	       if (!BdynFactory.getOptions().useMainCallback()) continue;
-	       break;
-	    case KEY :
-	       if (!BdynFactory.getOptions().useKeyCallback()) continue;
-	       break;
-	    default :
-	       break;
-	  }
-	 writeBandaidEntry(pw,cm);
+         switch (cm.getCallbackType()) {
+            case MAIN :
+               if (!BdynFactory.getOptions().useMainCallback()) continue;
+               break;
+            case KEY :
+               if (!BdynFactory.getOptions().useKeyCallback()) continue;
+               break;
+            default :
+               break;
+          }
+         writeBandaidEntry(pw,cm);
        }
       pw.close();
     }
@@ -636,18 +636,18 @@ private void writeBandaidEntry(PrintWriter pw,CallbackMethod cm)
    int fgs = 0;
    switch (cm.getCallbackType()) {
       case CONSTRUCTOR :
-	 fgs = 4;		// CONSTRUCTOR ENTRY
-	 mthd = "<init>";
-	 break;
+         fgs = 4;               // CONSTRUCTOR ENTRY
+         mthd = "<init>";
+         break;
       case MAIN :
-	 fgs = 3;
-	 break;
+         fgs = 3;
+         break;
       case KEY :
       case EVENT :
-	 fgs = 3;		// ENTER AND EXIT
-	 break;
+         fgs = 3;               // ENTER AND EXIT
+         break;
       default :
-	 return;
+         return;
     }
 
    int args = 0;
@@ -726,9 +726,9 @@ private String getInternalType(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback Method Data							*/
-/*										*/
+/*                                                                              */
+/*      Callback Method Data                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CallbackMethod implements BdynCallback {
@@ -738,11 +738,11 @@ private static class CallbackMethod implements BdynCallback {
    private String method_name;
    private String method_args;
    private String return_type;
-   private int	  line_number;
-   private int	  definition_offset;
+   private int    line_number;
+   private int    definition_offset;
    private String file_name;
-   private int	  callback_id;
-   private int	  method_mods;
+   private int    callback_id;
+   private int    method_mods;
    private String callback_args;
    private CallbackType callback_type;
    private String user_label;
@@ -797,24 +797,24 @@ private static class CallbackMethod implements BdynCallback {
       line_number = 0;
     }
 
-   String getProject()				{ return project_name; }
-   @Override public String getClassName()	{ return class_name; }
-   @Override public String getMethodName()	{ return method_name; }
-   int getRawId()				{ return callback_id; }
+   String getProject()                          { return project_name; }
+   @Override public String getClassName()       { return class_name; }
+   @Override public String getMethodName()      { return method_name; }
+   int getRawId()                               { return callback_id; }
    @Override public int getId() {
       if (callback_id == 0) callback_id = callback_counter.incrementAndGet();
       return callback_id;
     }
-   @Override public String getArgs()	{ return method_args; }
-   String getReturnType()		{ return return_type; }
-   int getModifiers()			{ return method_mods; }
-   void setCallbackArgs(String s)	{ callback_args = s; }
-   String getCallbackArgs()		{ return callback_args; }
-   @Override public CallbackType getCallbackType()	{ return callback_type; }
+   @Override public String getArgs()    { return method_args; }
+   String getReturnType()               { return return_type; }
+   int getModifiers()                   { return method_mods; }
+   void setCallbackArgs(String s)       { callback_args = s; }
+   String getCallbackArgs()             { return callback_args; }
+   @Override public CallbackType getCallbackType()      { return callback_type; }
 
-   @Override public void setLabel(String lbl)		{ user_label = lbl; }
-   @Override public void setUserColor(Color c)		{ user_color = c; }
-   @Override public Color getUserColor()		{ return user_color; }
+   @Override public void setLabel(String lbl)           { user_label = lbl; }
+   @Override public void setUserColor(Color c)          { user_color = c; }
+   @Override public Color getUserColor()                { return user_color; }
 
    @Override public String getDisplayName() {
       if (user_label != null && user_label.length() > 0) return user_label;
@@ -847,11 +847,11 @@ private static class CallbackMethod implements BdynCallback {
       xw.end("CALLBACK");
     }
 
-}	// end of inner class CallbackMethod
+}       // end of inner class CallbackMethod
 
 
 
-}	// end of class BdynCallbacks
+}       // end of class BdynCallbacks
 
 
 

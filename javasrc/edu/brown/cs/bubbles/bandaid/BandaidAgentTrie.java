@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentTrie.java						*/
-/*										*/
-/*	Bandaid Agent to maintain a trie for runtime visualization		*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentTrie.java                                           */
+/*                                                                              */
+/*      Bandaid Agent to maintain a trie for runtime visualization              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,42 +39,42 @@ class BandaidAgentTrie extends BandaidAgent implements BandaidConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private TrieNode	root_node;
-private long		last_sample;
-private long		sample_count;
-private long		tsample_count;
-private long [] 	total_counts;
-private int		max_level;
+private TrieNode        root_node;
+private long            last_sample;
+private long            sample_count;
+private long            tsample_count;
+private long []         total_counts;
+private int             max_level;
 
-private long		active_samples;
-private long		total_active;
-private boolean 	have_active;
-private long		last_delta;
+private long            active_samples;
+private long            total_active;
+private boolean         have_active;
+private long            last_delta;
 
 private Map<Long,ThreadData> thread_map;
 private List<ThreadData> thread_list;
 
-private static int	node_counter = 0;
-private static int	thread_counter = 0;
-private static int	seq_counter = 0;
+private static int      node_counter = 0;
+private static int      thread_counter = 0;
+private static int      seq_counter = 0;
 
-private static final int	OP_RUN = 0;
-private static final int	OP_WAIT = 1;
-private static final int	OP_IO = 2;
-private static final int	CHANGE = 3;
-private static final int	OP_CT = 4;
+private static final int        OP_RUN = 0;
+private static final int        OP_WAIT = 1;
+private static final int        OP_IO = 2;
+private static final int        CHANGE = 3;
+private static final int        OP_CT = 4;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentTrie(BandaidController bc)
@@ -103,9 +103,9 @@ BandaidAgentTrie(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing Methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing Methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleThreadStack(long now,ThreadInfo ti,StackTraceElement [] trc)
@@ -136,50 +136,50 @@ BandaidAgentTrie(BandaidController bc)
    if (ti.getThreadState() == Thread.State.RUNNABLE) {
       // check if doing I/O and if so find first user call for that I/O
       for (int j = 0; j < trc.length; ++j) {
-	 StackTraceElement te = trc[j];
-	 String nm = te.getClassName();
-	 if (j == 0 && the_control.isIOClass(nm)) ioc = te;
-	 else if (j == 0) break;
-	 else if (startidx < 0 && the_control.isSystemClass(nm)) ioc = te;
-	 else if (startidx < 0) startidx = j;
+         StackTraceElement te = trc[j];
+         String nm = te.getClassName();
+         if (j == 0 && the_control.isIOClass(nm)) ioc = te;
+         else if (j == 0) break;
+         else if (startidx < 0 && the_control.isSystemClass(nm)) ioc = te;
+         else if (startidx < 0) startidx = j;
        }
 
       if (ioc != null && startidx >= 0) {
-	 addIoInstance(trc,startidx,td);
+         addIoInstance(trc,startidx,td);
        }
       else {
-	 // not I/O: Find first user class on the stack if there is one
-	 int frst = -1;
-	 for (int j = 0; j < trc.length; ++j) {
-	    StackTraceElement te = trc[j];
-	    String nm = te.getClassName();
-	    if (!the_control.isSystemClass(nm)) {
-	       frst = j;
-	       break;
-	     }
-	  }
-	 if (frst >= 0) {
-	    if (!have_active) { 	// only once per check
-	       have_active = true;
-	       total_active += last_delta;
-	       ++active_samples;
-	     }
-	    addRunInstance(trc,frst,td);
-	  }
+         // not I/O: Find first user class on the stack if there is one
+         int frst = -1;
+         for (int j = 0; j < trc.length; ++j) {
+            StackTraceElement te = trc[j];
+            String nm = te.getClassName();
+            if (!the_control.isSystemClass(nm)) {
+               frst = j;
+               break;
+             }
+          }
+         if (frst >= 0) {
+            if (!have_active) {         // only once per check
+               have_active = true;
+               total_active += last_delta;
+               ++active_samples;
+             }
+            addRunInstance(trc,frst,td);
+          }
        }
     }
 
    if (ti.getThreadState() == Thread.State.WAITING ||
-	 ti.getThreadState() == Thread.State.TIMED_WAITING) {
+         ti.getThreadState() == Thread.State.TIMED_WAITING) {
       startidx = -1;
       for (int j = 0; j < trc.length; ++j) {
-	 StackTraceElement te = trc[j];
-	 String nm = te.getClassName();
-	 if (startidx < 0 && the_control.isSystemClass(nm)) ;
-	 else if (startidx < 0) startidx = j;
+         StackTraceElement te = trc[j];
+         String nm = te.getClassName();
+         if (startidx < 0 && the_control.isSystemClass(nm)) ;
+         else if (startidx < 0) startidx = j;
        }
       if (startidx >= 0) {
-	 addWaitInstance(trc,startidx,td);
+         addWaitInstance(trc,startidx,td);
        }
     }
 }
@@ -192,9 +192,9 @@ BandaidAgentTrie(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void generateReport(BandaidXmlWriter xw,long now)
@@ -224,9 +224,9 @@ BandaidAgentTrie(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Stack snapshot checking for I/O and Wait processing			*/
-/*										*/
+/*                                                                              */
+/*      Stack snapshot checking for I/O and Wait processing                     */
+/*                                                                              */
 /********************************************************************************/
 
 void addIoInstance(StackTraceElement [] trc,int idx,ThreadData td)
@@ -251,9 +251,9 @@ void addRunInstance(StackTraceElement [] stk,int idx,ThreadData td)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for maintaining a method-trie					*/
-/*										*/
+/*                                                                              */
+/*      Methods for maintaining a method-trie                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class TrieNode {
@@ -298,14 +298,14 @@ private class TrieNode {
       num_counts[op]++;
       num_counts[CHANGE] = 1;
       if (tid > 0) {
-	 if (thread_counts == null) thread_counts = new HashMap<Integer,int []>();
-	 int [] tcts = thread_counts.get(tid);
-	 if (tcts == null) {
-	    tcts = new int[OP_CT];
-	    thread_counts.put(tid,tcts);
-	  }
-	 tcts[op]++;
-	 tcts[CHANGE] = 1;
+         if (thread_counts == null) thread_counts = new HashMap<Integer,int []>();
+         int [] tcts = thread_counts.get(tid);
+         if (tcts == null) {
+            tcts = new int[OP_CT];
+            thread_counts.put(tid,tcts);
+          }
+         tcts[op]++;
+         tcts[CHANGE] = 1;
        }
     }
 
@@ -317,15 +317,15 @@ private class TrieNode {
    private void insertItem(StackTraceElement [] trc,int idx,int base,int op,int lvl,int tid) {
       last_update = last_sample;
       if (idx < base || lvl >= max_level) {
-	 if (class_name != null) count(op,tid);
-	 return;
+         if (class_name != null) count(op,tid);
+         return;
        }
 
       for (TrieNode tn : next_nodes) {
-	 if (tn.matches(trc[idx])) {
-	    tn.insertItem(trc,idx-1,base,op,lvl+1,tid);
-	    return;
-	  }
+         if (tn.matches(trc[idx])) {
+            tn.insertItem(trc,idx-1,base,op,lvl+1,tid);
+            return;
+          }
        }
 
       if (op == OP_RUN && base < idx-1) base = idx-1;
@@ -340,10 +340,10 @@ private class TrieNode {
       TrieNode cn = createTrieNode(trc,idx-1,base,op,lvl+1,tid);
       TrieNode tn = new TrieNode(trc[idx]);
       if (cn == null) {
-	 tn.count(op,tid);
+         tn.count(op,tid);
        }
       else {
-	 tn.next_nodes.add(cn);
+         tn.next_nodes.add(cn);
        }
       return tn;
     }
@@ -363,42 +363,42 @@ private class TrieNode {
       if (last_update == 0) last_update = last_sample;
 
       if (last_output == 0 || num_counts[CHANGE] != 0) {
-	 if (class_name != null) {
-	    xw.begin("TRIENODE");
-	    xw.field("ID",node_id);
-	    if (is_system) xw.field("SYS",true);
-	    if (last_output == 0) {
-	       xw.field("PARENT",par.node_id);
-	       xw.field("CLASS",class_name);
-	       xw.field("METHOD",method_name);
-	       xw.field("LINE",line_number);
-	       xw.field("FILE",file_name);
-	       file_name = null;
-	     }
-	    outputFields(xw,num_counts);
-	    if (thread_counts != null) {
-	       for (Map.Entry<Integer,int[]> ent : thread_counts.entrySet()) {
-		  int [] tcts = ent.getValue();
-		  if (tcts[CHANGE] != 0) {
-		     xw.begin("THREAD");
-		     xw.field("ID",ent.getKey());
-		     outputFields(xw,tcts);
-		     xw.end();
-		   }
-		}
-	     }
-	    xw.end();
-	  }
-	 else if (last_output == 0) {
-	    xw.begin("TRIENODE");
-	    xw.field("ID",node_id);
-	    xw.field("ROOT",true);
-	    xw.end();
-	  }
+         if (class_name != null) {
+            xw.begin("TRIENODE");
+            xw.field("ID",node_id);
+            if (is_system) xw.field("SYS",true);
+            if (last_output == 0) {
+               xw.field("PARENT",par.node_id);
+               xw.field("CLASS",class_name);
+               xw.field("METHOD",method_name);
+               xw.field("LINE",line_number);
+               xw.field("FILE",file_name);
+               file_name = null;
+             }
+            outputFields(xw,num_counts);
+            if (thread_counts != null) {
+               for (Map.Entry<Integer,int[]> ent : thread_counts.entrySet()) {
+                  int [] tcts = ent.getValue();
+                  if (tcts[CHANGE] != 0) {
+                     xw.begin("THREAD");
+                     xw.field("ID",ent.getKey());
+                     outputFields(xw,tcts);
+                     xw.end();
+                   }
+                }
+             }
+            xw.end();
+          }
+         else if (last_output == 0) {
+            xw.begin("TRIENODE");
+            xw.field("ID",node_id);
+            xw.field("ROOT",true);
+            xw.end();
+          }
        }
 
       for (TrieNode tn : next_nodes) {
-	 tn.report(xw,this);
+         tn.report(xw,this);
        }
 
       last_output = last_sample;
@@ -412,19 +412,19 @@ private class TrieNode {
       cts[CHANGE] = 0;
     }
 
-}	// end of subclass TrieNode
+}       // end of subclass TrieNode
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread information							*/
-/*										*/
+/*                                                                              */
+/*      Thread information                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ThreadData {
 
-   private int	thread_id;
+   private int  thread_id;
    private ThreadInfo for_thread;
 
    ThreadData(ThreadInfo th) {
@@ -432,7 +432,7 @@ private static class ThreadData {
       thread_id = ++thread_counter;
     }
 
-   int getId()				{ return thread_id; }
+   int getId()                          { return thread_id; }
 
    void report(BandaidXmlWriter xw) {
       if (for_thread == null) return;
@@ -446,11 +446,11 @@ private static class ThreadData {
       for_thread = null;
     }
 
-}	// end of inner class ThreadData
+}       // end of inner class ThreadData
 
 
 
-}	// end of class BandaidAgentTrie
+}       // end of class BandaidAgentTrie
 
 
 

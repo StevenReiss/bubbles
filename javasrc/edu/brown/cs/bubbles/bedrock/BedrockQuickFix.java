@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockQuickFix.java						*/
-/*										*/
-/*	Tie into Eclipse's Quick Fix mechanism from bubbles                     */
-/*										*/
+/*                                                                              */
+/*              BedrockQuickFix.java                                            */
+/*                                                                              */
+/*      Tie into Eclipse's Quick Fix mechanism from bubbles                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,19 +70,19 @@ class BedrockQuickFix implements BedrockConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BedrockPlugin		our_plugin;
+private BedrockPlugin           our_plugin;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockQuickFix(BedrockPlugin bp)
@@ -93,21 +93,21 @@ BedrockQuickFix(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action routines 							*/
-/*										*/
+/*                                                                              */
+/*      Action routines                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void handleQuickFix(String proj,String bid,String file,int off,int len,List<Element> problems,
-		       IvyXmlWriter xw)
-	throws BedrockException
+                       IvyXmlWriter xw)
+        throws BedrockException
 {
    CompilationUnit cu = our_plugin.getAST(bid,proj,file);
    BedrockPlugin.logD("QUICK FIX FOR " + bid + " " + proj + " " + file + " " + off + " " + len);
 
    ICompilationUnit icu = our_plugin.getBaseCompilationUnit(proj,file);
    List<CategorizedProblem> probs = getProblems(cu,problems);
-   if (probs == null || probs.size() == 0) return;		// problem went away
+   if (probs == null || probs.size() == 0) return;              // problem went away
    if (off < 0) {
       CategorizedProblem p = probs.get(0);
       off = p.getSourceStart();
@@ -131,8 +131,8 @@ void handleQuickFix(String proj,String bid,String file,int off,int len,List<Elem
       IStatus rslt = wj.getResult();
       Throwable t = rslt.getException();
       if (t != null) {
-	 BedrockPlugin.logE("Problem running quick fix: " + fc + " " + pcs + t,t);
-//	 throw new BedrockException("Problem running quick fix: " + t,t);
+         BedrockPlugin.logE("Problem running quick fix: " + fc + " " + pcs + t,t);
+//       throw new BedrockException("Problem running quick fix: " + t,t);
        }
     }
    catch (InterruptedException e) { }
@@ -157,43 +157,43 @@ private class WJob extends WorkbenchJob {
 
    @Override public IStatus runInUIThread(IProgressMonitor m) {
       try {
-	 for (IQuickFixProcessor qp : getFixers()) {
-	    BedrockPlugin.logD("Quick fix processor " + qp + " " + problem_contexts.length);
-	    try {
-	       IJavaCompletionProposal [] props = qp.getCorrections(fix_context,problem_contexts);
-	       if (props == null) BedrockPlugin.logD("No completion proposals");
-	       else BedrockPlugin.logD("Returned " + props.length + " completion proposals");
-	       outputProposals(props,xml_writer);
-	     }
-	    catch (OperationCanceledException e) {
-	       BedrockPlugin.logE("Operation completion canceled",e);
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logE("Problem running completion proposal",e);
-	     }
-	    catch (ClassCastException e) {
-	       BedrockPlugin.logI("Problem with eclipse: " + e);
-	     }			
-	  }
-	 for (IQuickAssistProcessor qp : getAssisters()) {
-	    try {
-	       IJavaCompletionProposal [] props = qp.getAssists(fix_context,problem_contexts);
-	       if (props == null) BedrockPlugin.logD("No quick assist proposals");
-	       else BedrockPlugin.logD("Returned " + props.length + " quick assist proposals");
-	       outputProposals(props,xml_writer);
-	     }
-	    catch (OperationCanceledException e) {
-	       BedrockPlugin.logD("Operation quick assist canceled " + e);
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logE("Problem running quick assist proposal",e);
-	     }
-	  }
+         for (IQuickFixProcessor qp : getFixers()) {
+            BedrockPlugin.logD("Quick fix processor " + qp + " " + problem_contexts.length);
+            try {
+               IJavaCompletionProposal [] props = qp.getCorrections(fix_context,problem_contexts);
+               if (props == null) BedrockPlugin.logD("No completion proposals");
+               else BedrockPlugin.logD("Returned " + props.length + " completion proposals");
+               outputProposals(props,xml_writer);
+             }
+            catch (OperationCanceledException e) {
+               BedrockPlugin.logE("Operation completion canceled",e);
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logE("Problem running completion proposal",e);
+             }
+            catch (ClassCastException e) {
+               BedrockPlugin.logI("Problem with eclipse: " + e);
+             }                  
+          }
+         for (IQuickAssistProcessor qp : getAssisters()) {
+            try {
+               IJavaCompletionProposal [] props = qp.getAssists(fix_context,problem_contexts);
+               if (props == null) BedrockPlugin.logD("No quick assist proposals");
+               else BedrockPlugin.logD("Returned " + props.length + " quick assist proposals");
+               outputProposals(props,xml_writer);
+             }
+            catch (OperationCanceledException e) {
+               BedrockPlugin.logD("Operation quick assist canceled " + e);
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logE("Problem running quick assist proposal",e);
+             }
+          }
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem with quick fix: " + t,t);
-//	 return new Status(IStatus.ERROR,"BEDROCK","Problem with quick fix",t);
-	 return Status.OK_STATUS;
+         BedrockPlugin.logE("Problem with quick fix: " + t,t);
+//       return new Status(IStatus.ERROR,"BEDROCK","Problem with quick fix",t);
+         return Status.OK_STATUS;
        }
 
       return Status.OK_STATUS;
@@ -202,13 +202,13 @@ private class WJob extends WorkbenchJob {
    private List<IQuickFixProcessor> getFixers() {
       List<IQuickFixProcessor> rslt = new ArrayList<>();
       try {
-	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickFixProcessor());
-	 rslt.add(new org.eclipse.jdt.internal.ui.text.spelling.WordQuickFixProcessor());
-   //	 rslt.add(new org.eclipse.pde.internal.ui.correction.java.QuickFixProcessor());
-   //	 rslt.add(new org.eclipse.pde.api.tools.ui.internal.markers.ApiQuickFixProcessor());
+         rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickFixProcessor());
+         rslt.add(new org.eclipse.jdt.internal.ui.text.spelling.WordQuickFixProcessor());
+   //    rslt.add(new org.eclipse.pde.internal.ui.correction.java.QuickFixProcessor());
+   //    rslt.add(new org.eclipse.pde.api.tools.ui.internal.markers.ApiQuickFixProcessor());
        }
       catch (NoClassDefFoundError e) {
-	 BedrockPlugin.logE("Problem loading quick fixes",e);
+         BedrockPlugin.logE("Problem loading quick fixes",e);
        }
       return rslt;
     }
@@ -216,30 +216,30 @@ private class WJob extends WorkbenchJob {
    private List<IQuickAssistProcessor> getAssisters() {
       List<IQuickAssistProcessor> rslt = new ArrayList<>();
       try {
-	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickAssistProcessor());
-	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickTemplateProcessor());
-   //	 rslt.add(new org.eclipse.ui.internal.genericeditor.markers.MarkerResoltionQuickAssistProcessor());
-   //	 rslt.add(new org.eclipse.ui.texteditor.spelling.SpellingCorrectionProcessor());
-   //	 rslt.add(new org.eclipse.pde.internal.ui.editor.text.PDEQuickAssistProcessor());
-   //	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor());
-   //	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.ExternalNullAnnotationQuickAssistProcessor());
+         rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickAssistProcessor());
+         rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickTemplateProcessor());
+   //    rslt.add(new org.eclipse.ui.internal.genericeditor.markers.MarkerResoltionQuickAssistProcessor());
+   //    rslt.add(new org.eclipse.ui.texteditor.spelling.SpellingCorrectionProcessor());
+   //    rslt.add(new org.eclipse.pde.internal.ui.editor.text.PDEQuickAssistProcessor());
+   //    rslt.add(new org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor());
+   //    rslt.add(new org.eclipse.jdt.internal.ui.text.correction.ExternalNullAnnotationQuickAssistProcessor());
        }
       catch (NoClassDefFoundError e) {
-	 BedrockPlugin.logE("Problem loading quick assists",e);
+         BedrockPlugin.logE("Problem loading quick assists",e);
        }
       return rslt;
     }
 
-}	// end of inner class WJob
+}       // end of inner class WJob
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Relevant problems							*/
-/*										*/
+/*                                                                              */
+/*      Relevant problems                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private List<CategorizedProblem> getProblems(CompilationUnit cu,List<Element> xmls)
@@ -253,13 +253,13 @@ private List<CategorizedProblem> getProblems(CompilationUnit cu,List<Element> xm
       int sln = IvyXml.getAttrInt(e,"START");
       if (sln < 0) continue;
       for (IProblem ip : probs) {
-	 BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " " +
-	       ip.getArguments() + " " + mid);
-	 if (!(ip instanceof CategorizedProblem)) continue;
-	 if (ip.getID() != mid) continue;
-	 if (Math.abs(ip.getSourceStart() - sln) > 2) continue;
-	 BedrockPlugin.logD("Add problem " + ip.getMessage());
-	 pbs.add((CategorizedProblem) ip);
+         BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " " +
+               ip.getArguments() + " " + mid);
+         if (!(ip instanceof CategorizedProblem)) continue;
+         if (ip.getID() != mid) continue;
+         if (Math.abs(ip.getSourceStart() - sln) > 2) continue;
+         BedrockPlugin.logD("Add problem " + ip.getMessage());
+         pbs.add((CategorizedProblem) ip);
        }
     }
 
@@ -269,9 +269,9 @@ private List<CategorizedProblem> getProblems(CompilationUnit cu,List<Element> xm
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputProposals(IJavaCompletionProposal [] props,IvyXmlWriter xw)
@@ -280,12 +280,12 @@ private void outputProposals(IJavaCompletionProposal [] props,IvyXmlWriter xw)
 
    for (IJavaCompletionProposal p : props) {
       try {
-	 BedrockPlugin.logD("COMPLETION: " + p.getRelevance() + " " + p.getDisplayString() + " " +
-			       p.getClass());
+         BedrockPlugin.logD("COMPLETION: " + p.getRelevance() + " " + p.getDisplayString() + " " +
+                               p.getClass());
        }
       catch (Throwable t) { }
       if (isUsable(p)) {
-	 outputProposal(p,xw);
+         outputProposal(p,xw);
        }
     }
 }
@@ -321,21 +321,21 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
 
    try {
       if (p instanceof CUCorrectionProposal) {
-	 CUCorrectionProposal awcp = (CUCorrectionProposal) p;
-	 TextChange tc = awcp.getTextChange();
-	 if (tc != null) textedit = tc.getEdit();
+         CUCorrectionProposal awcp = (CUCorrectionProposal) p;
+         TextChange tc = awcp.getTextChange();
+         if (tc != null) textedit = tc.getEdit();
        }
       else if (p instanceof ChangeCorrectionProposal) {
-	 ChangeCorrectionProposal ccp = (ChangeCorrectionProposal) p;
-	 Change c = ccp.getChange();
-	 if (c instanceof TextChange) {
-	    TextChange tc = (TextChange) c;
-	    textedit = tc.getEdit();
-	  }
-	 else if (c instanceof NullChange) ;
-	 else {
-	    BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
-	  }
+         ChangeCorrectionProposal ccp = (ChangeCorrectionProposal) p;
+         Change c = ccp.getChange();
+         if (c instanceof TextChange) {
+            TextChange tc = (TextChange) c;
+            textedit = tc.getEdit();
+          }
+         else if (c instanceof NullChange) ;
+         else {
+            BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
+          }
        }
     }
    catch (Throwable t) {
@@ -361,9 +361,9 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Context for doing the quick fix 					*/
-/*										*/
+/*                                                                              */
+/*      Context for doing the quick fix                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FixContext implements IInvocationContext {
@@ -382,12 +382,12 @@ private static class FixContext implements IInvocationContext {
       node_finder = new NodeFinder(ast_root,off,len);
     }
 
-   @Override public CompilationUnit getASTRoot()		{ return ast_root; }
+   @Override public CompilationUnit getASTRoot()                { return ast_root; }
 
-   @Override public ICompilationUnit getCompilationUnit()	{ return comp_unit; }
+   @Override public ICompilationUnit getCompilationUnit()       { return comp_unit; }
 
-   @Override public int getSelectionLength()		{ return source_length; }
-   @Override public int getSelectionOffset()		{ return source_offset; }
+   @Override public int getSelectionLength()            { return source_length; }
+   @Override public int getSelectionOffset()            { return source_offset; }
 
    @Override public ASTNode getCoveredNode() {
       ASTNode n = node_finder.getCoveredNode();
@@ -400,14 +400,14 @@ private static class FixContext implements IInvocationContext {
       return n;
     }
 
-}	// end of inner class FixContext
+}       // end of inner class FixContext
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem context for quick fix						*/
-/*										*/
+/*                                                                              */
+/*      Problem context for quick fix                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProblemContext implements IProblemLocation {
@@ -423,12 +423,12 @@ private static class ProblemContext implements IProblemLocation {
    @Override public ASTNode getCoveredNode(CompilationUnit cu) {
       NodeFinder nf = null;
       synchronized (finder_map) {
-	 nf = finder_map.get(cu);
-	 if (nf == null) {
-	    BedrockPlugin.logD("CREATE NODE FINDER " + for_problem.getSourceStart() + " " + getLength());
-	    nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
-	    finder_map.put(cu,nf);
-	  }
+         nf = finder_map.get(cu);
+         if (nf == null) {
+            BedrockPlugin.logD("CREATE NODE FINDER " + for_problem.getSourceStart() + " " + getLength());
+            nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
+            finder_map.put(cu,nf);
+          }
        }
       ASTNode n = nf.getCoveredNode();
       BedrockPlugin.logD("Fix covered node " + n);
@@ -438,12 +438,12 @@ private static class ProblemContext implements IProblemLocation {
    @Override public ASTNode getCoveringNode(CompilationUnit cu) {
       NodeFinder nf = null;
       synchronized (finder_map) {
-	 nf = finder_map.get(cu);
-	 if (nf == null) {
-	    BedrockPlugin.logD("CREATE NODE FINDER1 " + for_problem.getSourceStart() + " " + getLength());
-	    nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
-	    finder_map.put(cu,nf);
-	  }
+         nf = finder_map.get(cu);
+         if (nf == null) {
+            BedrockPlugin.logD("CREATE NODE FINDER1 " + for_problem.getSourceStart() + " " + getLength());
+            nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
+            finder_map.put(cu,nf);
+          }
        }
       ASTNode n = nf.getCoveringNode();
       BedrockPlugin.logD("Fix covering node " + n);
@@ -475,18 +475,18 @@ private static class ProblemContext implements IProblemLocation {
       return for_problem.isError();
     }
 
-}	// end of inner class ProblemContext
+}       // end of inner class ProblemContext
 
 
 
 /********************************************************************************/
-/*										*/
-/*	<comment here>								*/
-/*										*/
+/*                                                                              */
+/*      <comment here>                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 
-}	// end of class BedrockQuickFix
+}       // end of class BedrockQuickFix
 

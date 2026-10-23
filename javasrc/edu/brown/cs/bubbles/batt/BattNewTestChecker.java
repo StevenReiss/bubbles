@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattNewTestChecker.java 					*/
-/*										*/
-/*	Bubble Automated Testing Tool class for checking new test specs 	*/
-/*										*/
+/*                                                                              */
+/*              BattNewTestChecker.java                                         */
+/*                                                                              */
+/*      Bubble Automated Testing Tool class for checking new test specs         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,17 +39,17 @@ class BattNewTestChecker implements BattConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattNewTestChecker() { }
@@ -57,9 +57,9 @@ BattNewTestChecker() { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Call test checking							*/
-/*										*/
+/*                                                                              */
+/*      Call test checking                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 String checkCallTest(BumpLocation mthd,String args,String rslt,
@@ -109,9 +109,9 @@ String generateCallTestCode(List<BattCallTest> tests)
 
 
 /********************************************************************************/
-/*										*/
-/*	Parsing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Parsing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private StreamTokenizer getTokenizer(String s)
@@ -192,7 +192,7 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
    else if (jt == Type.BOOLEAN_TYPE) {
       boolean val = false;
       if (stok.ttype == StreamTokenizer.TT_WORD) {
-	 if (stok.sval.startsWith("t") || stok.sval.startsWith("T")) val = true;
+         if (stok.sval.startsWith("t") || stok.sval.startsWith("T")) val = true;
        }
       else return null;
       rslt = new ValueLiteral(Boolean.toString(val));
@@ -207,27 +207,27 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
       while (!checkNextToken(stok,']')) {
          Value sv = parseTypedValue(stok,bjt);
          if (sv == null) return null;
-	 vals.add(sv);
-	 checkNextToken(stok,',');
-	 if (stok.ttype == StreamTokenizer.TT_EOF) return null;
+         vals.add(sv);
+         checkNextToken(stok,',');
+         if (stok.ttype == StreamTokenizer.TT_EOF) return null;
        }
       StringBuffer cbuf = new StringBuffer();
       for (Value v : vals) {
-	 if (v.getCode() != null) {
-	    cbuf.append(v.getCode());
-	    cbuf.append(";\n");
-	  }
+         if (v.getCode() != null) {
+            cbuf.append(v.getCode());
+            cbuf.append(";\n");
+          }
        }
       if (jt.getSort() == Type.ARRAY) {
-	 StringBuffer lbuf = new StringBuffer();
-	 lbuf.append("new " + bjt.getInternalName().replace("/",".") + "[] {");
-	 int ct = 0;
-	 for (Value v : vals) {
-	    if (ct++ != 0) lbuf.append(" , ");
-	    lbuf.append(v.getValue());
-	  }
-	 lbuf.append("}");
-	 rslt = new ValueLiteral(lbuf.toString(),cbuf.toString());
+         StringBuffer lbuf = new StringBuffer();
+         lbuf.append("new " + bjt.getInternalName().replace("/",".") + "[] {");
+         int ct = 0;
+         for (Value v : vals) {
+            if (ct++ != 0) lbuf.append(" , ");
+            lbuf.append(v.getValue());
+          }
+         lbuf.append("}");
+         rslt = new ValueLiteral(lbuf.toString(),cbuf.toString());
        }
     }
    else {
@@ -236,63 +236,63 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
       StringBuffer buf = new StringBuffer();
       String var = null;
       if (stok.ttype == StreamTokenizer.TT_WORD) {
-	 var = stok.sval;
-	 nextToken(stok);
-	 if (stok.ttype != '{') {
-	    buf.append(var);
-	    buf.append(" ");
-	    var = null;
-	  }
+         var = stok.sval;
+         nextToken(stok);
+         if (stok.ttype != '{') {
+            buf.append(var);
+            buf.append(" ");
+            var = null;
+          }
        }
       int lvl = 0;
       for ( ; ; ) {
-	 int ttyp = stok.ttype;
-	 if (ttyp == '{' || ttyp == '(') {
-	    ++lvl;
-	    buf.append((char) ttyp);
-	  }
-	 else if (ttyp == '}' || ttyp == ')') {
-	    --lvl;
-	    buf.append((char) ttyp);
-	    if (lvl == 0) break;
-	  }
-	 else if (ttyp == '"' || ttyp == '\'') {
-	    buf.append((char) ttyp);
-	    buf.append(stok.sval);
-	    buf.append((char) ttyp);
-	  }
+         int ttyp = stok.ttype;
+         if (ttyp == '{' || ttyp == '(') {
+            ++lvl;
+            buf.append((char) ttyp);
+          }
+         else if (ttyp == '}' || ttyp == ')') {
+            --lvl;
+            buf.append((char) ttyp);
+            if (lvl == 0) break;
+          }
+         else if (ttyp == '"' || ttyp == '\'') {
+            buf.append((char) ttyp);
+            buf.append(stok.sval);
+            buf.append((char) ttyp);
+          }
          else if (ttyp == ' ' || ttyp == '\t') {
             buf.append((char) ttyp);
           }
-	 else if (ttyp == ',' && lvl == 0) {
+         else if (ttyp == ',' && lvl == 0) {
             stok.pushBack();
             break;
-	  }
-	 else if (ttyp == StreamTokenizer.TT_EOF) {
-	    stok.pushBack();
-	    break;
-	  }
-	 else if (ttyp == StreamTokenizer.TT_WORD) {
-	    buf.append(stok.sval);
-	  }
-	 else if (ttyp == StreamTokenizer.TT_NUMBER) {
-	    Double db = Double.valueOf(stok.nval);
-	    if (db.doubleValue() == db.longValue()) {
-	       buf.append(db.longValue());
-	     }
-	    else buf.append(db.doubleValue());
-	  }
-	 else {
-	    buf.append((char) ttyp);
-	  }
-	 nextToken(stok);
+          }
+         else if (ttyp == StreamTokenizer.TT_EOF) {
+            stok.pushBack();
+            break;
+          }
+         else if (ttyp == StreamTokenizer.TT_WORD) {
+            buf.append(stok.sval);
+          }
+         else if (ttyp == StreamTokenizer.TT_NUMBER) {
+            Double db = Double.valueOf(stok.nval);
+            if (db.doubleValue() == db.longValue()) {
+               buf.append(db.longValue());
+             }
+            else buf.append(db.doubleValue());
+          }
+         else {
+            buf.append((char) ttyp);
+          }
+         nextToken(stok);
        }
       stok.whitespaceChars(' ',' ');
       String s = buf.toString();
       if (s.startsWith("{")) s = s.substring(1,s.length()-1);
       if (var == null) {
          // handle implicit Strings and others
-	 rslt = getResultValue(s,typ);
+         rslt = getResultValue(s,typ);
        }
       else return null;
     }
@@ -453,10 +453,10 @@ private boolean checkNextOperator(StreamTokenizer stok)
 
 private abstract static class Value {
    
-   String getCode()			{ return null; }
+   String getCode()                     { return null; }
    abstract String getValue();
    
-}	// end of subclass Value
+}       // end of subclass Value
 
 
 
@@ -477,10 +477,10 @@ private static class ValueLiteral extends Value {
       code_value = c;
     }
    
-   @Override String getCode()			{ return code_value; }
-   @Override String getValue()			{ return literal_value; }
+   @Override String getCode()                   { return code_value; }
+   @Override String getValue()                  { return literal_value; }
    
-}	// end of subclass ValueLiteral
+}       // end of subclass ValueLiteral
 
 
 
@@ -497,7 +497,7 @@ private static class ValueString extends Value {
       return "\"" + string_value + "\"";
     }
    
-}	// end of subclass ValueString
+}       // end of subclass ValueString
 
 
 

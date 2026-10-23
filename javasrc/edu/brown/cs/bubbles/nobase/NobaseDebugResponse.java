@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugResponse.java					*/
-/*										*/
-/*	Response from a command 						*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugResponse.java                                        */
+/*                                                                              */
+/*      Response from a command                                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -32,20 +32,20 @@ class NobaseDebugResponse implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JSONObject			result_object;
+private JSONObject                      result_object;
 private JSONObject                      error_object;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseDebugResponse(JSONObject resp)
@@ -66,9 +66,9 @@ NobaseDebugResponse(JSONObject resp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean isSuccess()
@@ -91,7 +91,7 @@ JSONObject getResult()
 
 
 
-}	// end of class NobaseDebugResponse
+}       // end of class NobaseDebugResponse
 
 
 

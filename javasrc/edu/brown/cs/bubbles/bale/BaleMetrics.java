@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleMetrics.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor data collection for metrics		*/
-/*										*/
+/*                                                                              */
+/*              BaleMetrics.java                                                */
+/*                                                                              */
+/*      Bubble Annotated Language Editor data collection for metrics            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -43,21 +43,21 @@ class BaleMetrics implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private int	num_visible;
-private int	num_reflow;
-private int	num_elision;
+private int     num_visible;
+private int     num_reflow;
+private int     num_elision;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleMetrics()
@@ -71,9 +71,9 @@ BaleMetrics()
 
 
 /********************************************************************************/
-/*										*/
-/*	Computation methods							*/
-/*										*/
+/*                                                                              */
+/*      Computation methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void computeMetrics(BaleFragmentEditor ed)
@@ -126,7 +126,7 @@ private void countElements(BaleElement be)
 
 
 
-}	// end of class BaleMetrics
+}       // end of class BaleMetrics
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocBubble.java 						*/
-/*										*/
-/*	Bubbles Environment Documentation javadoc bubble			*/
-/*										*/
+/*                                                                              */
+/*              BdocBubble.java                                                 */
+/*                                                                              */
+/*      Bubbles Environment Documentation javadoc bubble                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -44,9 +44,9 @@ class BdocBubble extends BudaBubble implements BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BdocReference for_ref;
@@ -57,9 +57,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocBubble(BdocReference br) throws BdocException
@@ -89,7 +89,7 @@ BdocBubble(BdocReference br) throws BdocException
 BdocReference getReference()            { return for_ref; }
 
 
-}	// end of class BdocBubble
+}       // end of class BdocBubble
 
 
 

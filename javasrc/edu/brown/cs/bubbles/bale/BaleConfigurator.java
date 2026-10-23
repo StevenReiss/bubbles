@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleConfigurator.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor bubble configuration creator		*/
-/*										*/
+/*                                                                              */
+/*              BaleConfigurator.java                                           */
+/*                                                                              */
+/*      Bubble Annotated Language Editor bubble configuration creator           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,15 +47,15 @@ import java.util.List;
 
 
 class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurator,
-	BudaConstants.PortConfigurator
+        BudaConstants.PortConfigurator
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -82,41 +82,41 @@ class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurato
       String head = name;
       if (name != null && idx > 0) head = name.substring(0,idx);
       switch (ftyp) {
-	 case NONE :
-	    break;
-	 case ROFILE :
-	    bb = bf.createFileBubble(proj,new File(head),null,null,0);
-	    break;
-	 case FILE :
-	    bb = bf.createFileBubble(proj,file,head);
-	    break;
-	 case METHOD :
-	    if (name != null) bb = bf.createMethodBubble(proj,name);
-	    break;
-	 case FIELDS :
-	    bb = bf.createFieldsBubble(proj,file,head);
-	    break;
-	 case STATICS :
-	    bb = bf.createStaticsBubble(proj,head,file);
-	    break;
-	 case MAIN :
-	    bb = bf.createMainProgramBubble(proj,head,file);
-	    break;
-	 case HEADER :
-	    bb = bf.createClassPrefixBubble(proj,file,head);
-	    break;
-	 case CLASS :
-	    bb = bf.createClassBubble(proj,name);
-	    break;
+         case NONE :
+            break;
+         case ROFILE :
+            bb = bf.createFileBubble(proj,new File(head),null,null,0);
+            break;
+         case FILE :
+            bb = bf.createFileBubble(proj,file,head);
+            break;
+         case METHOD :
+            if (name != null) bb = bf.createMethodBubble(proj,name);
+            break;
+         case FIELDS :
+            bb = bf.createFieldsBubble(proj,file,head);
+            break;
+         case STATICS :
+            bb = bf.createStaticsBubble(proj,head,file);
+            break;
+         case MAIN :
+            bb = bf.createMainProgramBubble(proj,head,file);
+            break;
+         case HEADER :
+            bb = bf.createClassPrefixBubble(proj,file,head);
+            break;
+         case CLASS :
+            bb = bf.createClassBubble(proj,name);
+            break;
          case IMPORTS :
          case EXPORTS :
          case CODE :
             // TODO: do something here
             break;
-	 case ROMETHOD:
-	    break;
-	 default:
-	    break;
+         case ROMETHOD:
+            break;
+         default:
+            break;
        }
     }
 
@@ -124,8 +124,8 @@ class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurato
    if (eld != null && bb != null) {
       List<BaleElisionData> elides = new ArrayList<BaleElisionData>();
       for (Element ex : IvyXml.children(eld,"ELISION")) {
-	 ElideData ed = new ElideData(ex);
-	 elides.add(ed);
+         ElideData ed = new ElideData(ex);
+         elides.add(ed);
        }
       BaleDocument bd = (BaleDocument) bb.getContentDocument();
       bd.applyElisions(elides);
@@ -147,18 +147,18 @@ class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurato
       String name = IvyXml.getAttrString(cnt,"NAME");
       BaleDocument bd = (BaleDocument) eb.getContentDocument();
       if (bd.getFile().getPath().equals(file) &&
-	    bd.getProjectName().equals(proj) &&
-	    name.equals(bd.getFragmentName()))
-	 return true;
+            bd.getProjectName().equals(proj) &&
+            name.equals(bd.getFragmentName()))
+         return true;
     }
 
    return false;
 }
 
 /********************************************************************************/
-/*										*/
-/*	Port creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Port creation methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaConstants.LinkPort createPort(BudaBubble bb,Element xml)
@@ -183,9 +183,9 @@ class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Elision information							*/
-/*										*/
+/*                                                                              */
+/*      Elision information                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ElideData implements BaleElisionData {
@@ -200,15 +200,15 @@ private static class ElideData implements BaleElisionData {
       element_name = IvyXml.getAttrString(xml,"NAME");
     }
 
-   @Override public int getStartOffset()	{ return start_offset; }
-   @Override public int getEndOffset()		{ return end_offset; }
-   @Override public String getElementName()	{ return element_name; }
+   @Override public int getStartOffset()        { return start_offset; }
+   @Override public int getEndOffset()          { return end_offset; }
+   @Override public String getElementName()     { return element_name; }
 
-}	// end of inner class ElideData
+}       // end of inner class ElideData
 
 
 
-}	// end of class BaleConfigurator
+}       // end of class BaleConfigurator
 
 
 

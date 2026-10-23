@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixOrderOrdering.java						*/
-/*										*/
-/*	Representation of an ordering between elements				*/
-/*										*/
+/*                                                                              */
+/*              BfixOrderOrdering.java                                          */
+/*                                                                              */
+/*      Representation of an ordering between elements                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,13 +43,13 @@ abstract class BfixOrderOrdering implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static BfixOrderOrdering createOrdering(Element xml)
-	throws IllegalArgumentException
+        throws IllegalArgumentException
 {
    if (!IvyXml.isElement(xml,"ORDER"))
       throw new IllegalArgumentException(xml.getNodeName());
@@ -59,38 +59,38 @@ static BfixOrderOrdering createOrdering(Element xml)
    for (Element e : IvyXml.children(xml)) {
       BfixOrderOrdering nord = null;
       switch (e.getNodeName()) {
-	 case "MODIFIER" :
-	    nord = new ModifierOrder(IvyXml.getAttrString(e,"ORDER"));
-	    break;
-	 case "PROTECT" :
-	    nord = new ProtectionOrder(IvyXml.getAttrString(e,"ORDER"));
-	    break;
-	 case "DEFINITION" :
-	    nord = new DefinitionOrder();
-	    break;
-	 case "NAME" :
-	    nord = new NameOrder(IvyXml.getAttrBool(e,"CASE"),
-		  IvyXml.getAttrString(e,"SELECT"),
-		  IvyXml.getAttrInt(e,"SELECTOR",1));
-	    break;
-	 case "TYPE" :
-	    nord = new ElementOrder(IvyXml.getAttrString(e,"ORDER"));
-	    break;
-	 case "PARAMETER" :
-	    // TODO: handle ordering based on parameters
-	    break;
-	 default :
-	    throw new IllegalArgumentException(e.getNodeName());
+         case "MODIFIER" :
+            nord = new ModifierOrder(IvyXml.getAttrString(e,"ORDER"));
+            break;
+         case "PROTECT" :
+            nord = new ProtectionOrder(IvyXml.getAttrString(e,"ORDER"));
+            break;
+         case "DEFINITION" :
+            nord = new DefinitionOrder();
+            break;
+         case "NAME" :
+            nord = new NameOrder(IvyXml.getAttrBool(e,"CASE"),
+                  IvyXml.getAttrString(e,"SELECT"),
+                  IvyXml.getAttrInt(e,"SELECTOR",1));
+            break;
+         case "TYPE" :
+            nord = new ElementOrder(IvyXml.getAttrString(e,"ORDER"));
+            break;
+         case "PARAMETER" :
+            // TODO: handle ordering based on parameters
+            break;
+         default :
+            throw new IllegalArgumentException(e.getNodeName());
        }
       if (nord != null) {
-	 if (ord == null) ord = nord;
-	 else {
-	    if (mord == null) {
-	       mord = new MultipleOrder(ord);
-	       ord = mord;
-	     }
-	    mord.addOrder(nord);
-	  }
+         if (ord == null) ord = nord;
+         else {
+            if (mord == null) {
+               mord = new MultipleOrder(ord);
+               ord = mord;
+             }
+            mord.addOrder(nord);
+          }
        }
     }
 
@@ -103,9 +103,9 @@ static BfixOrderOrdering createOrdering(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BfixOrderOrdering()
@@ -113,9 +113,9 @@ protected BfixOrderOrdering()
 
 
 /********************************************************************************/
-/*										*/
-/*	Ordering methods							*/
-/*										*/
+/*                                                                              */
+/*      Ordering methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 abstract int compareTo(BfixOrderElement be1,BfixOrderElement be2);
@@ -123,9 +123,9 @@ abstract int compareTo(BfixOrderElement be1,BfixOrderElement be2);
 
 
 /********************************************************************************/
-/*										*/
-/*	Definition order							*/
-/*										*/
+/*                                                                              */
+/*      Definition order                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class DefinitionOrder extends BfixOrderOrdering {
@@ -141,14 +141,14 @@ private static class DefinitionOrder extends BfixOrderOrdering {
       return (off1 < off2) ? -1 : 0;
     }
 
-}	// end of inner class DefinitionOrder
+}       // end of inner class DefinitionOrder
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Modifier Order								*/
-/*										*/
+/*                                                                              */
+/*      Modifier Order                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ModifierOrder extends BfixOrderOrdering {
@@ -181,16 +181,16 @@ private static class ModifierOrder extends BfixOrderOrdering {
       StringTokenizer tok = new StringTokenizer(s,",;: \t");
       mod_bits = new ArrayList<Integer>();
       while (tok.hasMoreTokens()) {
-	 String t = tok.nextToken();
-	 int bit = 0;
-	 if (t.startsWith("NO_")) {
-	    bit |= NEGATE;
-	    t = t.substring(3);
-	  }
-	 Integer val = mod_names.get(t);
-	 if (val == null) throw new IllegalArgumentException(t);
-	 bit |= val;
-	 mod_bits.add(bit);
+         String t = tok.nextToken();
+         int bit = 0;
+         if (t.startsWith("NO_")) {
+            bit |= NEGATE;
+            t = t.substring(3);
+          }
+         Integer val = mod_names.get(t);
+         if (val == null) throw new IllegalArgumentException(t);
+         bit |= val;
+         mod_bits.add(bit);
        }
     }
 
@@ -198,17 +198,17 @@ private static class ModifierOrder extends BfixOrderOrdering {
       int bit1 = modifiers(be1);
       int bit2 = modifiers(be2);
       for (Integer iv : mod_bits) {
-	 int chk = iv;
-	 int mul = 1;
-	 if ((chk & NEGATE) != 0) {
-	    chk |= ~NEGATE;
-	    mul = -1;
-	  }
-	 int v1 = (bit1 & chk) != 0 ? 1 : -1;
-	 int v2 = (bit2 & chk) != 0 ? 1 : -1;
-	 if (v1 == v2) continue;
-	 if (v1 > v2) return mul;
-	 return -mul;
+         int chk = iv;
+         int mul = 1;
+         if ((chk & NEGATE) != 0) {
+            chk |= ~NEGATE;
+            mul = -1;
+          }
+         int v1 = (bit1 & chk) != 0 ? 1 : -1;
+         int v2 = (bit2 & chk) != 0 ? 1 : -1;
+         if (v1 == v2) continue;
+         if (v1 > v2) return mul;
+         return -mul;
        }
       return 0;
     }
@@ -216,7 +216,7 @@ private static class ModifierOrder extends BfixOrderOrdering {
    private int modifiers(BfixOrderElement be) {
       int mods = be.getModifiers();
       if ((mods & (Modifier.PUBLIC | Modifier.PRIVATE | Modifier.PROTECTED)) == 0)
-	 mods |= PACKAGE;
+         mods |= PACKAGE;
        return mods;
     }
 }
@@ -224,9 +224,9 @@ private static class ModifierOrder extends BfixOrderOrdering {
 
 
 /********************************************************************************/
-/*										*/
-/*	Protection-based ordering						*/
-/*										*/
+/*                                                                              */
+/*      Protection-based ordering                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProtectionOrder extends ModifierOrder {
@@ -235,15 +235,15 @@ private static class ProtectionOrder extends ModifierOrder {
       super(s);
     }
 
-}	// end of inner class ProtectionOrder
+}       // end of inner class ProtectionOrder
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Name-based ordering							*/
-/*										*/
+/*                                                                              */
+/*      Name-based ordering                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NameOrder extends BfixOrderOrdering {
@@ -256,8 +256,8 @@ private static class NameOrder extends BfixOrderOrdering {
       ignore_case = !usecase;
       if (pat == null) use_regex = null;
       else {
-	 use_regex = Pattern.compile(pat);
-	 regex_element = patidx;
+         use_regex = Pattern.compile(pat);
+         regex_element = patidx;
        }
     }
 
@@ -265,36 +265,36 @@ private static class NameOrder extends BfixOrderOrdering {
       String nm1 = be1.getName();
       String nm2 = be2.getName();
       if (use_regex != null) {
-	 Matcher m1 = use_regex.matcher(nm1);
-	 if (m1.find()) {
-	    nm1 = m1.group(regex_element);
-	  }
-	 else nm1 = null;
-	 Matcher m2 = use_regex.matcher(nm2);
-	 if (m2.find()) {
-	    nm2 = m2.group(regex_element);
-	  }
-	 else nm2 = null;
+         Matcher m1 = use_regex.matcher(nm1);
+         if (m1.find()) {
+            nm1 = m1.group(regex_element);
+          }
+         else nm1 = null;
+         Matcher m2 = use_regex.matcher(nm2);
+         if (m2.find()) {
+            nm2 = m2.group(regex_element);
+          }
+         else nm2 = null;
        }
       if (nm1 == null && nm2 == null) return 0;
       if (nm1 == null) return 1;
       if (nm2 == null) return -1;
       if (ignore_case) {
-	 nm1 = nm1.toLowerCase();
-	 nm2 = nm2.toLowerCase();
+         nm1 = nm1.toLowerCase();
+         nm2 = nm2.toLowerCase();
        }
       return nm1.compareTo(nm2);
     }
 
-}	// end of inner class NameOrdering
+}       // end of inner class NameOrdering
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Element Type Ordering							*/
-/*										*/
+/*                                                                              */
+/*      Element Type Ordering                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ElementOrder extends BfixOrderOrdering {
@@ -305,8 +305,8 @@ private static class ElementOrder extends BfixOrderOrdering {
       symbol_types = new ArrayList<String>();
       StringTokenizer tok = new StringTokenizer(typs,",;: \t");
       while (tok.hasMoreTokens()) {
-	 String t = tok.nextToken();
-	 symbol_types.add(t);
+         String t = tok.nextToken();
+         symbol_types.add(t);
        }
     }
 
@@ -321,14 +321,14 @@ private static class ElementOrder extends BfixOrderOrdering {
       return 0;
     }
 
-}	// end of inner class ElementOrder
+}       // end of inner class ElementOrder
 
 
 
 /********************************************************************************/
-/*										*/
-/*	MultipleOrder -- order with multiple orderings				*/
-/*										*/
+/*                                                                              */
+/*      MultipleOrder -- order with multiple orderings                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MultipleOrder extends BfixOrderOrdering {
@@ -346,18 +346,18 @@ private static class MultipleOrder extends BfixOrderOrdering {
 
    @Override int compareTo(BfixOrderElement be1,BfixOrderElement be2) {
       for (BfixOrderOrdering ord : use_orders) {
-	 int val = ord.compareTo(be1,be2);
-	 if (val != 0) return val;
+         int val = ord.compareTo(be1,be2);
+         if (val != 0) return val;
        }
       return 0;
     }
 
-}	// end of inner class MultipleOrder
+}       // end of inner class MultipleOrder
 
 
 
 
-}	// end of class BfixOrderOrdering
+}       // end of class BfixOrderOrdering
 
 
 

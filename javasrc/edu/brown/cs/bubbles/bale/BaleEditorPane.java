@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleEditorPane.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor JEditorPane extension			*/
-/*										*/
+/*                                                                              */
+/*              BaleEditorPane.java                                             */
+/*                                                                              */
+/*      Bubble Annotated Language Editor JEditorPane extension                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -96,23 +96,23 @@ import java.util.Set;
 
 
 abstract class BaleEditorPane extends SwingEditorPane implements BaleConstants.BaleEditor,
-		BaleConstants
+                BaleConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	      overwrite_mode;
+private boolean               overwrite_mode;
 private transient BaleCompletionContext completion_context;
 private transient BaleRenameContext rename_context;
 private transient BaleHighlightContext highlight_context;
-private boolean 	      fixed_size;
-private transient BaleVisualizationKit	visual_kit = BaleVisualizationKit.getVisualizationKit();
+private boolean               fixed_size;
+private transient BaleVisualizationKit  visual_kit = BaleVisualizationKit.getVisualizationKit();
 
 private transient Map<BaleHighlightType,HighlightData> hilite_map;
 
@@ -124,9 +124,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors and finalizers						*/
-/*										*/
+/*                                                                              */
+/*      Constructors and finalizers                                             */
+/*                                                                              */
 /********************************************************************************/
 
 protected BaleEditorPane()
@@ -184,16 +184,16 @@ void dispose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public BaleDocument getBaleDocument() 		{ return (BaleDocument) getDocument(); }
+@Override public BaleDocument getBaleDocument()                 { return (BaleDocument) getDocument(); }
 
-@Override public Color getCaretColor()				{ return BoardColors.getColor(BALE_CARET_COLOR_PROP); }
-@Override public boolean getScrollableTracksViewportWidth()	{ return true; }
-@Override public boolean getScrollableTracksViewportHeight()	{ return false; }
+@Override public Color getCaretColor()                          { return BoardColors.getColor(BALE_CARET_COLOR_PROP); }
+@Override public boolean getScrollableTracksViewportWidth()     { return true; }
+@Override public boolean getScrollableTracksViewportHeight()    { return false; }
 
 @Override public void setOverwriteMode(boolean fg)
 {
@@ -205,14 +205,14 @@ void dispose()
 
 
 
-@Override public boolean getOverwriteMode()			{ return overwrite_mode; }
+@Override public boolean getOverwriteMode()                     { return overwrite_mode; }
 
-@Override public void setCompletionContext(BaleCompletionContext c)	{ completion_context = c; }
-@Override public BaleCompletionContext getCompletionContext()		{ return completion_context; }
+@Override public void setCompletionContext(BaleCompletionContext c)     { completion_context = c; }
+@Override public BaleCompletionContext getCompletionContext()           { return completion_context; }
 
 
-@Override public void setRenameContext(BaleRenameContext c)	{ rename_context = c; }
-@Override public BaleRenameContext getRenameContext()		{ return rename_context; }
+@Override public void setRenameContext(BaleRenameContext c)     { rename_context = c; }
+@Override public BaleRenameContext getRenameContext()           { return rename_context; }
 
 
 
@@ -222,7 +222,7 @@ void dispose()
       BaleDocument bd = (BaleDocument) d;
       bd.baleWriteLock();
       try {
-	 super.setDocument(bd);
+         super.setDocument(bd);
        }
       finally {
          bd.baleWriteUnlock();
@@ -237,9 +237,9 @@ void dispose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editing methods to increase size if appropriate 			*/
-/*										*/
+/*                                                                              */
+/*      Editing methods to increase size if appropriate                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void increaseSize(int nline)
@@ -247,18 +247,18 @@ void dispose()
    if (fixed_size) return;
 
    int ht = (int) (getBaleDocument().getFontHeight() * nline + 0.5);
-   Dimension r = getParent().getParent().getSize();	// size of viewport
+   Dimension r = getParent().getParent().getSize();     // size of viewport
    Dimension d = getSize();
-   if (d.height + ht < r.height) return;	     // it fits in current window
+   if (d.height + ht < r.height) return;             // it fits in current window
    if (r.height >= BALE_MAX_GROW_HEIGHT) return;     // too big to auto grow
    for (Component c = this; c != null; c = c.getParent()) {
       if (c instanceof BudaBubble) {
-	 Dimension br = c.getSize();
-	 if (br.height > BALE_MAX_GROW_HEIGHT) return;
-	 br.height += ht;
-	 if (br.height > BALE_MAX_GROW_HEIGHT) br.height = BALE_MAX_GROW_HEIGHT;
-	 c.setSize(br);
-	 break;
+         Dimension br = c.getSize();
+         if (br.height > BALE_MAX_GROW_HEIGHT) return;
+         br.height += ht;
+         if (br.height > BALE_MAX_GROW_HEIGHT) br.height = BALE_MAX_GROW_HEIGHT;
+         c.setSize(br);
+         break;
        }
     }
 }
@@ -295,13 +295,13 @@ void checkSize()
    if (d2.height > d1.height) {
       int delta = d2.height - d1.height;
       for (Component c = this; c != null; c = c.getParent()) {
-	 if (c instanceof BudaBubble) {
-	    Dimension br = c.getSize();
-	    if (br.height > BALE_MAX_GROW_HEIGHT) return;
-	    br.height -= delta;
-	    c.setSize(br);
-	    break;
-	  }
+         if (c instanceof BudaBubble) {
+            Dimension br = c.getSize();
+            if (br.height > BALE_MAX_GROW_HEIGHT) return;
+            br.height -= delta;
+            c.setSize(br);
+            break;
+          }
        }
     }
 }
@@ -320,7 +320,7 @@ private int fixIncreaseDelta(BaleDocument bd,BaleElement be)
    else if (!be.isLeaf()) {
       int ct = be.getElementCount();
       for (int i = 0; i < ct; ++i) {
-	 delta += fixIncreaseDelta(bd,be.getBaleElement(i));
+         delta += fixIncreaseDelta(bd,be.getBaleElement(i));
        }
     }
 
@@ -330,9 +330,9 @@ private int fixIncreaseDelta(BaleDocument bd,BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract methods for editing						*/
-/*										*/
+/*                                                                              */
+/*      Abstract methods for editing                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public abstract BaleFinder getFindBar();
@@ -343,9 +343,9 @@ void toggleFindBar() {}
 
 
 /********************************************************************************/
-/*										*/
-/*	Context menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Context menu methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static Map<String,String> context_names;
@@ -382,7 +382,7 @@ void handleContextMenu(MouseEvent evt)
    }
 
    if (getSelectionStart() == getSelectionEnd() ||
-	  loc < getSelectionStart() || loc > getSelectionEnd()) {
+          loc < getSelectionStart() || loc > getSelectionEnd()) {
       setCaretPosition(loc);
     }
 
@@ -458,20 +458,20 @@ private final class ContextMenuHandler implements ActionListener {
       String cmd = e.getActionCommand();
       String acmd = context_names.get(cmd);
       if (acmd != null) {
-	 ActionEvent nevt = new ActionEvent(BaleEditorPane.this,e.getID(),acmd,
+         ActionEvent nevt = new ActionEvent(BaleEditorPane.this,e.getID(),acmd,
                e.getWhen(),e.getModifiers());
-	 Action a = BaleEditorKit.findAction(acmd);
-	 if (a != null) {
-	    a.actionPerformed(nevt);
-	    BoardMetrics.noteCommand("BALE","CONTEXT_" + cmd);
-	  }
+         Action a = BaleEditorKit.findAction(acmd);
+         if (a != null) {
+            a.actionPerformed(nevt);
+            BoardMetrics.noteCommand("BALE","CONTEXT_" + cmd);
+          }
        }
       else {
-	 BoardLog.logE("BALE","CONTEXT MENU UNKOWN COMMAND " + cmd);
+         BoardLog.logE("BALE","CONTEXT MENU UNKOWN COMMAND " + cmd);
        }
     }
 
-}	// end of inner class ContextMenuHandler
+}       // end of inner class ContextMenuHandler
 
 
 private final class RemoveBubbleHandler implements ActionListener {
@@ -480,11 +480,11 @@ private final class RemoveBubbleHandler implements ActionListener {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BaleEditorPane.this);
       BudaBubble bbl = BudaRoot.findBudaBubble(BaleEditorPane.this);
       if (bbl != null && bba != null) {
-	 bba.userRemoveBubble(bbl);
+         bba.userRemoveBubble(bbl);
        }
     }
 
-}	// end of inner class RemoveBubbleHandler
+}       // end of inner class RemoveBubbleHandler
 
 
 
@@ -501,15 +501,15 @@ private class FixSizeButton extends AbstractAction {
       fixed_size = !fixed_size;
     }
 
-}	// end of inner class FixSizeButton
+}       // end of inner class FixSizeButton
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for doing highlighting						*/
-/*										*/
+/*                                                                              */
+/*      Methods for doing highlighting                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void removeHighlights(BaleHighlightType typ)
@@ -526,8 +526,8 @@ void addHighlight(BaleHighlightType typ,BaleRegion rgn)
    synchronized (hilite_map) {
       hd = hilite_map.get(typ);
       if (hd == null) {
-	 hd = new HighlightData(typ);
-	 hilite_map.put(typ,hd);
+         hd = new HighlightData(typ);
+         hilite_map.put(typ,hd);
        }
     }
 
@@ -568,9 +568,9 @@ void removeHighlights()
 
 
 /********************************************************************************/
-/*										*/
-/*	Visualization help methods						*/
-/*										*/
+/*                                                                              */
+/*      Visualization help methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private String getIconIndication()
@@ -598,9 +598,9 @@ private String getIndication(String key)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintComponent(Graphics g0)
@@ -635,8 +635,8 @@ private String getIndication(String key)
    if (BALE_PROPERTIES.getBoolean(VISUALIZATION_ICON_ENABLE)) {
       BufferedImage icon = visual_kit.getIcon(getIconIndication());
       if (icon != null) {
-	 Point location = visual_kit.getLocation(sz, new Dimension(icon.getWidth(), icon.getHeight()));
-	 g2.drawImage(icon, location.x, location.y, null);
+         Point location = visual_kit.getLocation(sz, new Dimension(icon.getWidth(), icon.getHeight()));
+         g2.drawImage(icon, location.x, location.y, null);
       }
    }
 
@@ -645,7 +645,7 @@ private String getIndication(String key)
       clearRegions(g2.getClipBounds());
       BaleAnnotationArea baa = getAnnotationArea();
       if (baa != null) {
-	 baa.paintEditor(g2);
+         baa.paintEditor(g2);
        }
       super.paintComponent(g0);
     }
@@ -657,9 +657,9 @@ private String getIndication(String key)
 
 
 /********************************************************************************/
-/*										*/
-/*	TextUI that does the correct bale locking				*/
-/*										*/
+/*                                                                              */
+/*      TextUI that does the correct bale locking                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BaleTextUI extends TextUI {
@@ -676,10 +676,10 @@ private static class BaleTextUI extends TextUI {
     }
 
    @Override public void damageRange(JTextComponent t,int p0,int p1,
-					Position.Bias fb,Position.Bias sb) {
+                                        Position.Bias fb,Position.Bias sb) {
       readLock(t);
       try {
-	 base_ui.damageRange(t,p0,p1,fb,sb);
+         base_ui.damageRange(t,p0,p1,fb,sb);
        }
       finally {
          readUnlock(t); 
@@ -691,11 +691,11 @@ private static class BaleTextUI extends TextUI {
     }
 
    @Override public int getNextVisualPositionFrom(JTextComponent t,int pos,Position.Bias b,
-						     int dir,Position.Bias [] bret)
-		throws BadLocationException {
+                                                     int dir,Position.Bias [] bret)
+                throws BadLocationException {
       readLock(t);
       try {
-	 return base_ui.getNextVisualPositionFrom(t,pos,b,dir,bret);
+         return base_ui.getNextVisualPositionFrom(t,pos,b,dir,bret);
        }
       finally { 
          readUnlock(t);
@@ -709,7 +709,7 @@ private static class BaleTextUI extends TextUI {
    @Deprecated public String getToolTipText(JTextComponent t,Point pt) {
       readLock(t);
       try {
-	 return SwingText.getToolTipText2D(base_ui,t,pt);
+         return SwingText.getToolTipText2D(base_ui,t,pt);
        }
       finally { 
          readUnlock(t); 
@@ -721,10 +721,10 @@ private static class BaleTextUI extends TextUI {
     }
 
    @Deprecated public Rectangle modelToView(JTextComponent t,int pos,Position.Bias bias)
-		throws BadLocationException {
+                throws BadLocationException {
       readLock(t);
       try {
-	 return SwingText.modelToView2D(base_ui,t,pos,bias);
+         return SwingText.modelToView2D(base_ui,t,pos,bias);
        }
       finally {
          readUnlock(t);
@@ -732,10 +732,10 @@ private static class BaleTextUI extends TextUI {
     }
 
    public Rectangle2D modelToView2D(JTextComponent t,int pos,Position.Bias bias)
-	    throws BadLocationException {
+            throws BadLocationException {
       readLock(t);
       try {
-	 return SwingText.modelToView2D(base_ui,t,pos,bias);
+         return SwingText.modelToView2D(base_ui,t,pos,bias);
       }
       finally {
          readUnlock(t);
@@ -753,7 +753,7 @@ private static class BaleTextUI extends TextUI {
    public int viewToModel2D(JTextComponent t,Point2D pt,Position.Bias [] bret) {
       readLock(t);
       try {
-	 return SwingText.viewToModel2D(base_ui,t,pt,bret);
+         return SwingText.viewToModel2D(base_ui,t,pt,bret);
        }
       finally {
          readUnlock(t); 
@@ -763,7 +763,7 @@ private static class BaleTextUI extends TextUI {
    @Override public void installUI(JComponent c) {
       writeLock(c);
       try {
-	 base_ui.installUI(c);
+         base_ui.installUI(c);
        }
       finally {
          writeUnlock(c);
@@ -777,7 +777,7 @@ private static class BaleTextUI extends TextUI {
    @Override public void paint(Graphics g,JComponent c) {
       readLock(c);
       try {
-	 base_ui.paint(g,c);
+         base_ui.paint(g,c);
        }
       finally {
          readUnlock(c); 
@@ -791,7 +791,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getPreferredSize(JComponent c) {
       readLock(c);
       try {
-	 return base_ui.getPreferredSize(c);
+         return base_ui.getPreferredSize(c);
        }
       finally {
          readUnlock(c); 
@@ -801,7 +801,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getMinimumSize(JComponent c) {
       readLock(c);
       try {
-	 return base_ui.getMinimumSize(c);
+         return base_ui.getMinimumSize(c);
        }
       finally {
          readUnlock(c);
@@ -811,7 +811,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getMaximumSize(JComponent c) {
       readLock(c);
       try {
-	 return base_ui.getMaximumSize(c);
+         return base_ui.getMaximumSize(c);
        }
       finally {
          readUnlock(c);
@@ -841,15 +841,15 @@ private static class BaleTextUI extends TextUI {
 
    private void readLock(JTextComponent t) {
       if (t.getDocument() instanceof BaleDocument) {
-	 BaleDocument bd = (BaleDocument) t.getDocument();
-	 bd.baleReadLock();
+         BaleDocument bd = (BaleDocument) t.getDocument();
+         bd.baleReadLock();
        }
     }
 
    private void readUnlock(JTextComponent t) {
       if (t.getDocument() instanceof BaleDocument) {
-	 BaleDocument bd = (BaleDocument) t.getDocument();
-	 bd.baleReadUnlock();
+         BaleDocument bd = (BaleDocument) t.getDocument();
+         bd.baleReadUnlock();
        }
     }
 
@@ -863,15 +863,15 @@ private static class BaleTextUI extends TextUI {
 
    private void writeLock(JTextComponent t) {
       if (t.getDocument() instanceof BaleDocument) {
-	 BaleDocument bd = (BaleDocument) t.getDocument();
-	 bd.baleWriteLock();
+         BaleDocument bd = (BaleDocument) t.getDocument();
+         bd.baleWriteLock();
        }
     }
 
    private void writeUnlock(JTextComponent t) {
       if (t.getDocument() instanceof BaleDocument) {
-	 BaleDocument bd = (BaleDocument) t.getDocument();
-	 bd.baleWriteUnlock();
+         BaleDocument bd = (BaleDocument) t.getDocument();
+         bd.baleWriteUnlock();
        }
     }
 
@@ -883,15 +883,15 @@ private static class BaleTextUI extends TextUI {
       if (c instanceof JTextComponent) writeUnlock((JTextComponent) c);
     }
 
-}	// end of inner class BaleTextUI
+}       // end of inner class BaleTextUI
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for holding hilite information					*/
-/*										*/
+/*                                                                              */
+/*      Class for holding hilite information                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class HighlightData {
@@ -913,30 +913,30 @@ private class HighlightData {
 
    synchronized void removeAll() {
       for (HighlightArea ha : active_hilites) {
-	 ha.remove();
+         ha.remove();
        }
       active_hilites.clear();
     }
 
    synchronized void update() {
       for (HighlightArea ha : active_hilites) {
-	 ha.update();
+         ha.update();
        }
     }
 
-   Highlighter.HighlightPainter getPainter()		{ return our_painter; }
+   Highlighter.HighlightPainter getPainter()            { return our_painter; }
 
    synchronized List<BaleSimpleRegion> getRegions() {
       List<BaleSimpleRegion> rslt = new ArrayList<BaleSimpleRegion>();
       for (HighlightArea ha : active_hilites) {
-	 BaleSimpleRegion bsr = ha.getSimpleRegion();
-	 if (bsr != null) rslt.add(bsr);
+         BaleSimpleRegion bsr = ha.getSimpleRegion();
+         if (bsr != null) rslt.add(bsr);
        }
       if (rslt.size() == 0) return null;
       return rslt;
     }
 
-}	// end of inner class HighlightData
+}       // end of inner class HighlightData
 
 
 
@@ -963,33 +963,33 @@ private class HighlightArea {
       from_offset = from_pos.getOffset();
       to_offset = to_pos.getOffset();
       try {
-	 our_tag = getHighlighter().addHighlight(from_offset,to_offset,use_painter);
+         our_tag = getHighlighter().addHighlight(from_offset,to_offset,use_painter);
        }
       catch (BadLocationException e) { }
     }
 
    void remove() {
       if (our_tag != null) {
-	 getHighlighter().removeHighlight(our_tag);
-	 our_tag = null;
+         getHighlighter().removeHighlight(our_tag);
+         our_tag = null;
        }
     }
 
    void update() {
       if (our_tag == null) add();
       else {
-	 int p0 = from_pos.getOffset();
-	 int p1 = to_pos.getOffset();
-	 if (p0 != from_offset || p1 != to_offset) {
-	    from_offset = p0;
-	    to_offset = p1;
-	    try {
-	       getHighlighter().changeHighlight(our_tag,from_offset,to_offset);
-	     }
-	    catch (BadLocationException e) {
-	       remove();
-	     }
-	  }
+         int p0 = from_pos.getOffset();
+         int p1 = to_pos.getOffset();
+         if (p0 != from_offset || p1 != to_offset) {
+            from_offset = p0;
+            to_offset = p1;
+            try {
+               getHighlighter().changeHighlight(our_tag,from_offset,to_offset);
+             }
+            catch (BadLocationException e) {
+               remove();
+             }
+          }
        }
     }
 
@@ -998,15 +998,15 @@ private class HighlightArea {
       return new BaleSimpleRegion(from_offset,to_offset - from_offset);
     }
 
-}	// end of inner class HighlightArea
+}       // end of inner class HighlightArea
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hover management							*/
-/*										*/
+/*                                                                              */
+/*      Hover management                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getToolTipText(MouseEvent e)
@@ -1045,11 +1045,11 @@ private String getHoverText(MouseEvent e)
       int soff = be.getStartOffset();
       int eoff = be.getEndOffset();
       try {
-	 txt = bd.getText(soff,eoff-soff);
-	 txt = IvyXml.xmlSanitize(txt,false,true);
-	 txt = txt.replace("&apos;","'");
-	 txt = txt.replace("&quot;","\"");
-	 txt = "<html><pre>" + txt + "</pre></html>";
+         txt = bd.getText(soff,eoff-soff);
+         txt = IvyXml.xmlSanitize(txt,false,true);
+         txt = txt.replace("&apos;","'");
+         txt = txt.replace("&quot;","\"");
+         txt = "<html><pre>" + txt + "</pre></html>";
        }
       catch (BadLocationException ex) { }
     }
@@ -1062,20 +1062,20 @@ private String getHoverText(MouseEvent e)
       BumpClient bc = BumpClient.getBump();
       String fullnm = null;
       fullnm  = bc.getFullyQualifiedName(bd.getProjectName(),bd.getFile(),
-					    bd.mapOffsetToEclipse(loc),
-					    bd.mapOffsetToEclipse(loc),5000);
+                                            bd.mapOffsetToEclipse(loc),
+                                            bd.mapOffsetToEclipse(loc),5000);
       if (fullnm != null) txt = fullnm;
     }
 
    if (txt == null) {
       BumpClient bc = BumpClient.getBump();
       Element rslt = bc.getHoverData(bd.getProjectName(),bd.getFile(),
-	    bd.mapOffsetToEclipse(loc),
-	    bd.mapOffsetToEclipse(loc),2000);
+            bd.mapOffsetToEclipse(loc),
+            bd.mapOffsetToEclipse(loc),2000);
       BoardLog.logD("BALE","HOVERDATA result: " + IvyXml.convertXmlToString(rslt));
       String hovertext = IvyXml.getTextElement(rslt,"HOVER");
       if (hovertext != null && hovertext.startsWith("<") && !hovertext.startsWith("<html>")) {
-	 hovertext = "<html>" + hovertext;
+         hovertext = "<html>" + hovertext;
        }
       if (hovertext != null && !hovertext.isEmpty()) txt = hovertext;
     }
@@ -1101,11 +1101,11 @@ BudaBubble getHoverBubble(MouseEvent e)
    if (be != null && be.isIdentifier() && be.getName().contains("CallId")) {
       String fullnm = null;
       fullnm  = bc.getFullyQualifiedName(bd.getProjectName(),bd.getFile(),
-					    bd.mapOffsetToEclipse(loc),
-					    bd.mapOffsetToEclipse(loc),5000);
+                                            bd.mapOffsetToEclipse(loc),
+                                            bd.mapOffsetToEclipse(loc),5000);
       if (fullnm != null) {
-	 BaleFactory bf = BaleFactory.getFactory();
-	 bb = bf.createMethodBubble(bd.getProjectName(),fullnm);
+         BaleFactory bf = BaleFactory.getFactory();
+         bb = bf.createMethodBubble(bd.getProjectName(),fullnm);
        }
     }
 
@@ -1120,8 +1120,8 @@ BudaBubble getHoverBubble(MouseEvent e)
 
 // if (bb == null) {
 //    Element rslt = bc.getHoverData(bd.getProjectName(),bd.getFile(),
-//	    bd.mapOffsetToEclipse(loc),
-//	    bd.mapOffsetToEclipse(loc),4000);
+//          bd.mapOffsetToEclipse(loc),
+//          bd.mapOffsetToEclipse(loc),4000);
 //    BoardLog.logD("BALE","HOVERDATA result: " + IvyXml.convertXmlToString(rslt));
 //    String text = IvyXml.getTextElement(rslt,"HOVER");
 //    if (text.startsWith("<") && !text.startsWith("<html>")) text = "<html>" + text;
@@ -1146,9 +1146,9 @@ BaleElement getHoverElement(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Active region management						*/
-/*										*/
+/*                                                                              */
+/*      Active region management                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void clearRegions()
@@ -1179,7 +1179,7 @@ boolean handleActiveClick(MouseEvent e)
 {
    for (ActiveRegion r : active_regions) {
       if (r.contains(e.getX(),e.getY())) {
-	 if (r.perform(e)) return true;
+         if (r.perform(e)) return true;
        }
     }
 
@@ -1192,8 +1192,8 @@ BudaBubble handleActiveHoverBubble(MouseEvent e)
 {
    for (ActiveRegion r : active_regions) {
       if (r.contains(e.getX(),e.getY())) {
-	 BudaBubble bb = r.hoverBubble(e);
-	 if (bb != null) return bb;
+         BudaBubble bb = r.hoverBubble(e);
+         if (bb != null) return bb;
        }
     }
 
@@ -1212,8 +1212,8 @@ private static class ActiveRegion {
       region_action = act;
     }
 
-   boolean contains(int x,int y)		{ return region_bounds.contains(x,y); }
-   boolean intersects(Rectangle r)		{ return region_bounds.intersects(r); }
+   boolean contains(int x,int y)                { return region_bounds.contains(x,y); }
+   boolean intersects(Rectangle r)              { return region_bounds.intersects(r); }
 
    boolean perform(MouseEvent e) {
       if (region_action == null) return false;
@@ -1226,7 +1226,7 @@ private static class ActiveRegion {
       return region_action.handleHoverBubble(e);
     }
 
-}	// end of inner class ActiveRegion
+}       // end of inner class ActiveRegion
 
 
 
@@ -1243,29 +1243,29 @@ private class ActiveMouser extends MouseAdapter {
    @Override public void mouseMoved(MouseEvent e) {
       boolean set = false;
       for (ActiveRegion r : active_regions) {
-	 if (r.contains(e.getX(),e.getY())) {
-	    set = true;
-	    break;
-	  }
+         if (r.contains(e.getX(),e.getY())) {
+            set = true;
+            break;
+          }
        }
       if (set == over_region) return;
       if (base_cursor == null) base_cursor = getCursor();
       over_region = set;
       if (set)
-	 BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+         BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       else
-	 BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+         BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
     }
 
-}	// end of inner class ActiveMouser
+}       // end of inner class ActiveMouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Context data for external users 					*/
-/*										*/
+/*                                                                              */
+/*      Context data for external users                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final Map<String,BaleContextType> CONTEXT_TYPES;
@@ -1294,8 +1294,8 @@ static {
 
 private class ContextData implements BaleContextConfig {
 
-   private int		editor_location;
-   private BaleElement	editor_element;
+   private int          editor_location;
+   private BaleElement  editor_element;
 
    ContextData(int loc,BaleElement be) {
       editor_location = loc;
@@ -1310,7 +1310,7 @@ private class ContextData implements BaleContextConfig {
       return (BaleFileOverview) getBaleDocument();
     }
 
-   @Override public int getOffset()				{ return editor_location; }
+   @Override public int getOffset()                             { return editor_location; }
    @Override public int getDocumentOffset() {
       return getBaleDocument().getDocumentOffset(editor_location);
     }
@@ -1321,8 +1321,8 @@ private class ContextData implements BaleContextConfig {
    @Override public String getToken() {
       if (editor_element == null || !editor_element.isIdentifier()) return null;
       try {
-	 return getBaleDocument().getText(editor_element.getStartOffset(),
-					     editor_element.getEndOffset()-editor_element.getStartOffset());
+         return getBaleDocument().getText(editor_element.getStartOffset(),
+                                             editor_element.getEndOffset()-editor_element.getStartOffset());
        }
       catch (BadLocationException e) { }
       return null;
@@ -1348,7 +1348,7 @@ private class ContextData implements BaleContextConfig {
       return editor_element.getFullName();
     }
 
-   @Override public boolean inAnnotationArea()		{ return false; }
+   @Override public boolean inAnnotationArea()          { return false; }
 
    @Override public int getSelectionStart() {
       return BaleEditorPane.this.getSelectionStart();
@@ -1358,14 +1358,14 @@ private class ContextData implements BaleContextConfig {
       return BaleEditorPane.this.getSelectionEnd();
     }
 
-}	// end of inner class ContextData
+}       // end of inner class ContextData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Reasonably sized tool tip implementation				*/
-/*										*/
+/*                                                                              */
+/*      Reasonably sized tool tip implementation                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public JToolTip createToolTip()
@@ -1377,7 +1377,7 @@ private class ContextData implements BaleContextConfig {
 
 
 
-}	// end of class BaleEditorPane
+}       // end of class BaleEditorPane
 
 
 

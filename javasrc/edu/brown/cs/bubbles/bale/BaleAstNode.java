@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleAstNode.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor simplified AST-type node information	*/
-/*										*/
+/*                                                                              */
+/*              BaleAstNode.java                                                */
+/*                                                                              */
+/*      Bubble Annotated Language Editor simplified AST-type node information   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,21 +49,21 @@ class BaleAstNode implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleDocumentIde for_document;
 private BaleAstNodeType node_type;
 private BaleAstIdType id_type;
 private boolean is_error;
-private double	elide_priority;
-private int	start_position;
-private int	end_position;
+private double  elide_priority;
+private int     start_position;
+private int     end_position;
 private List<BaleAstNode> child_nodes;
 private BaleAstNode parent_node;
-private String	full_name;
+private String  full_name;
 private Element hint_data;
 
 
@@ -133,9 +133,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleAstNode(Element d,BaleDocumentIde doc)
@@ -204,20 +204,20 @@ BaleAstNode(List<BaleAstNode> nodes)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BaleAstNodeType getNodeType()			{ return node_type; }
-BaleAstIdType getIdType()			{ return id_type; }
-boolean getErrorFlag()				{ return is_error; }
-int getStart()					{ return start_position; }
-int getEnd()					{ return end_position; }
-double getElidePriority()			{ return elide_priority; }
-BaleAstNode getParent() 			{ return parent_node; }
-String getFullName()				{ return full_name; }
-Element getHintData()				{ return hint_data; }
+BaleAstNodeType getNodeType()                   { return node_type; }
+BaleAstIdType getIdType()                       { return id_type; }
+boolean getErrorFlag()                          { return is_error; }
+int getStart()                                  { return start_position; }
+int getEnd()                                    { return end_position; }
+double getElidePriority()                       { return elide_priority; }
+BaleAstNode getParent()                         { return parent_node; }
+String getFullName()                            { return full_name; }
+Element getHintData()                           { return hint_data; }
 
 boolean isLastChild(BaleAstNode n) {
    if (child_nodes == null) return false;
@@ -244,9 +244,9 @@ int getEndLine()
 
 
 /********************************************************************************/
-/*										*/
-/*	Finding methods 							*/
-/*										*/
+/*                                                                              */
+/*      Finding methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 BaleAstNode getChild(int pos)
@@ -255,8 +255,8 @@ BaleAstNode getChild(int pos)
 
    if (child_nodes != null) {
       for (BaleAstNode c : child_nodes) {
-	 BaleAstNode c1 = c.getChild(pos);
-	 if (c1 != null) return c1;
+         BaleAstNode c1 = c.getChild(pos);
+         if (c1 != null) return c1;
        }
     }
 
@@ -271,8 +271,8 @@ BaleAstNode getNode(int spos,int epos)
 
    if (child_nodes != null) {
       for (BaleAstNode c : child_nodes) {
-	 BaleAstNode c1 = c.getNode(spos,epos);
-	 if (c1 != null) return c1;
+         BaleAstNode c1 = c.getNode(spos,epos);
+         if (c1 != null) return c1;
        }
     }
 
@@ -288,7 +288,7 @@ BaleAstNode getChildNode(int spos,int epos)
 
    if (child_nodes != null) {
       for (BaleAstNode c : child_nodes) {
-	 if (spos >= c.start_position && epos <= c.end_position) return c;
+         if (spos >= c.start_position && epos <= c.end_position) return c;
        }
     }
 
@@ -311,9 +311,9 @@ int countImports()
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -335,7 +335,7 @@ private void addToBuffer(StringBuffer buf,int indent)
    buf.append("\n");
    if (child_nodes != null) {
       for (BaleAstNode cn : child_nodes) {
-	 cn.addToBuffer(buf,indent+1);
+         cn.addToBuffer(buf,indent+1);
        }
     }
 }
@@ -348,7 +348,7 @@ private void addToBuffer(StringBuffer buf,int indent)
 
 
 
-}	// end of class BaleAstNode
+}       // end of class BaleAstNode
 
 
 

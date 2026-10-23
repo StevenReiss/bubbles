@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseAst.java							*/
-/*										*/
-/*	Abstract AST Definitions for NOBASE javascript				*/
-/*										*/
+/*                                                                              */
+/*              NobaseAst.java                                                  */
+/*                                                                              */
+/*      Abstract AST Definitions for NOBASE javascript                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -40,9 +40,9 @@ class NobaseAst implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static void setReference(ASTNode n,NobaseSymbol s)
@@ -142,9 +142,9 @@ static void clearResolve(ASTNode n)
 
 
 /********************************************************************************/
-/*										*/
-/*	Position methods							*/
-/*										*/
+/*                                                                              */
+/*      Position methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static int getStartPosition(ASTNode n)
@@ -167,35 +167,35 @@ static Point getExtendedPosition(ASTNode n,NobaseFile f)
    ASTNode usen = n;
    switch (n.getNodeType()) {
       case ASTNode.VARIABLE_DECLARATION_FRAGMENT :
-	 ASTNode p = n.getParent();
-	 switch (p.getNodeType()) {
-	    case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-	       VariableDeclarationStatement vds = (VariableDeclarationStatement) p;
-	       if (vds.fragments().get(0) == n) usen = p;
-	       break;
-	    default :
-	       System.err.println("CHECK HERE");
-	       break;
-	  }
-	 break;
+         ASTNode p = n.getParent();
+         switch (p.getNodeType()) {
+            case ASTNode.VARIABLE_DECLARATION_STATEMENT :
+               VariableDeclarationStatement vds = (VariableDeclarationStatement) p;
+               if (vds.fragments().get(0) == n) usen = p;
+               break;
+            default :
+               System.err.println("CHECK HERE");
+               break;
+          }
+         break;
       case ASTNode.FUNCTION_DECLARATION :
       case ASTNode.SINGLE_VARIABLE_DECLARATION :
       case ASTNode.TYPE_DECLARATION_STATEMENT :
       case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-	 break;
+         break;
       case ASTNode.TYPE_DECLARATION :
-	 p = n.getParent();
-	 switch (p.getNodeType()) {
-	    case ASTNode.TYPE_DECLARATION_STATEMENT :
-	       usen = p;
-	       break;
-	    default :
-	       break;
-	  }
-	 break;
+         p = n.getParent();
+         switch (p.getNodeType()) {
+            case ASTNode.TYPE_DECLARATION_STATEMENT :
+               usen = p;
+               break;
+            default :
+               break;
+          }
+         break;
       default :
-	 System.err.println("CHECK HERE");
-	 break;
+         System.err.println("CHECK HERE");
+         break;
     }
 
    int p3 = -1;
@@ -206,8 +206,8 @@ static Point getExtendedPosition(ASTNode n,NobaseFile f)
       List<?> plst = (List<?>) n1.getStructuralProperty(spd);
       int idx = plst.indexOf(usen);
       if (idx > 0) {
-	 ASTNode n2 = (ASTNode) plst.get(idx-1);
-	 p3 = n2.getStartPosition() + n2.getLength() + 1;
+         ASTNode n2 = (ASTNode) plst.get(idx-1);
+         p3 = n2.getStartPosition() + n2.getLength() + 1;
        }
     }
 
@@ -270,7 +270,7 @@ static int getEndColumn(ASTNode n)
 
 
 
-}	// end of class NobaseAst
+}       // end of class NobaseAst
 
 
 

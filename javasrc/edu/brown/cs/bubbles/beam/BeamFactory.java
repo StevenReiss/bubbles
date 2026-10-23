@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamFactory.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items bubble factory		*/
-/*										*/
+/*                                                                              */
+/*              BeamFactory.java                                                */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items bubble factory            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -91,7 +91,7 @@ import java.util.Map;
 
 
 /**
- *	This class implements the factory for a host of miscellanous bubbles.
+ *      This class implements the factory for a host of miscellanous bubbles.
  **/
 
 public final class BeamFactory implements BeamConstants, BudaConstants.ButtonListener
@@ -100,24 +100,24 @@ public final class BeamFactory implements BeamConstants, BudaConstants.ButtonLis
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static BeamFactory	the_factory = null;
-private static BeamHelpPanel	help_panel = null;
-private static BudaRoot 	buda_root = null;
+private static BeamFactory      the_factory = null;
+private static BeamHelpPanel    help_panel = null;
+private static BudaRoot         buda_root = null;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the singleton instance of the miscellaneous bubble factory.
+ *      Return the singleton instance of the miscellaneous bubble factory.
  **/
 
 public static synchronized BeamFactory getFactory()
@@ -139,13 +139,13 @@ private BeamFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Called automatically at startup to initialize the package.
+ *      Called automatically at startup to initialize the package.
  **/
 
 public static void setup()
@@ -180,22 +180,22 @@ public static void setup()
    BoardProperties bp = BoardProperties.getProperties("Beam");
    if (bp.getBoolean("Beam.show.save")) {
       BudaRoot.addToolbarButton(BEAM_TOOLBAR_MENU_BUTTON, new SaveButton(),
-	    "Save all", BoardImage.getImage("save"));
+            "Save all", BoardImage.getImage("save"));
     }
    if (bp.getBoolean("Beam.show.build")) {
       BudaRoot.addToolbarButton(BEAM_TOOLBAR_MENU_BUTTON, new BuildButton(),
-	    "Build all", BoardImage.getImage("build"));
+            "Build all", BoardImage.getImage("build"));
     }
    if (bp.getBoolean("Beam.show.refresh")) {
       BudaRoot.addToolbarButton(BEAM_TOOLBAR_MENU_BUTTON, new RefreshButton(),
-	    "Refresh", BoardImage.getImage("refresh"));
+            "Refresh", BoardImage.getImage("refresh"));
     }
 }
 
 
 
 /**
- *	Called automatically to initialize the package when Buda is set up
+ *      Called automatically to initialize the package when Buda is set up
  **/
 
 public static void initialize(BudaRoot br)
@@ -221,21 +221,21 @@ public static void initialize(BudaRoot br)
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case SERVER :
-	 BoardSetup bs = BoardSetup.getSetup();
-	 MintControl mc = bs.getMintControl();
-	 mc.register("<BEAM TYPE='NOTE' NAME='_VAR_0'><TEXT>_VAR_1</TEXT></BEAM>",
-	       new NoteServer());
-	 break;
+         BoardSetup bs = BoardSetup.getSetup();
+         MintControl mc = bs.getMintControl();
+         mc.register("<BEAM TYPE='NOTE' NAME='_VAR_0'><TEXT>_VAR_1</TEXT></BEAM>",
+               new NoteServer());
+         break;
       case CLIENT :
-	 bs = BoardSetup.getSetup();
-	 mc = bs.getMintControl();
-	 mc.register("<BEAM TYPE='NOTE' NAME='_VAR_0'><TEXT>_VAR_1</TEXT></BEAM>",
-	       new NoteClient());
-	 new BeamProgressBubble(br);
-	 break;
+         bs = BoardSetup.getSetup();
+         mc = bs.getMintControl();
+         mc.register("<BEAM TYPE='NOTE' NAME='_VAR_0'><TEXT>_VAR_1</TEXT></BEAM>",
+               new NoteClient());
+         new BeamProgressBubble(br);
+         break;
       case NORMAL :
-	 new BeamProgressBubble(br);
-	 break;
+         new BeamProgressBubble(br);
+         break;
     }
 
    // force key definitions
@@ -253,9 +253,9 @@ private static Icon imageToFlagIcon(String path)
 
 
 /********************************************************************************/
-/*										*/
-/*	Public interface							*/
-/*										*/
+/*                                                                              */
+/*      Public interface                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public BeamNoteBubble createNoteBubble(String cnts)
@@ -269,9 +269,9 @@ public BeamNoteBubble createNoteBubble(String cnts)
 
 
 /********************************************************************************/
-/*										*/
-/*	Common routines for browsing						*/
-/*										*/
+/*                                                                              */
+/*      Common routines for browsing                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static void showBrowser(URI uri)
@@ -287,8 +287,8 @@ static void showBrowser(URI uri)
       int idx = s.indexOf("?");
       if (idx >= 0) s = s.substring(0,idx);
       JOptionPane.showMessageDialog(buda_root,"<html><p>This version of Java does not support" +
-				       " the desktop API.  Please use your browser to navigate" +
-				       " to " + s);
+                                       " the desktop API.  Please use your browser to navigate" +
+                                       " to " + s);
     }
 }
 
@@ -305,7 +305,7 @@ static void sendMail(String addr,String subj,String body)
     }
    if (body != null) {
       try {
-	 body = URLEncoder.encode(body,"UTF-8");
+         body = URLEncoder.encode(body,"UTF-8");
        }
       catch (UnsupportedEncodingException e) { }
       body = body.replace("+","%20");
@@ -320,8 +320,8 @@ static void sendMail(String addr,String subj,String body)
    catch (Throwable t) {
       BoardLog.logE("BEAM","Problem sending mail " + full,t);
       JOptionPane.showMessageDialog(buda_root,"<html><p>This version of Java does not support" +
-				       " the desktop API.  Please use your mail program to send" +
-				       " mail to " + addr);
+                                       " the desktop API.  Please use your mail program to send" +
+                                       " mail to " + addr);
     }
 }
 
@@ -340,9 +340,9 @@ static void sendMailDirect(String to,String subj,String body,List<File> add,Stri
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu button handling							*/
-/*										*/
+/*                                                                              */
+/*      Menu button handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -431,10 +431,10 @@ static void sendMailDirect(String to,String subj,String body,List<File> add,Stri
       JFileChooser chooser = new JFileChooser();
       int returnval = chooser.showOpenDialog(buda_root);
       if (returnval == JFileChooser.APPROVE_OPTION) {
-	 File f = chooser.getSelectedFile();
-	 BoardColors.setPalette(f.getAbsolutePath());
-	 buda_root.repaint();
-	 buda_root.handlePropertyChange();
+         File f = chooser.getSelectedFile();
+         BoardColors.setPalette(f.getAbsolutePath());
+         buda_root.repaint();
+         buda_root.handlePropertyChange();
        }
     }
    else if (id.equals(TIMER_BUTTON)) {
@@ -452,9 +452,9 @@ static void sendMailDirect(String to,String subj,String body,List<File> add,Stri
 
 
 /********************************************************************************/
-/*										*/
-/*	Note Handling								*/
-/*										*/
+/*                                                                              */
+/*      Note Handling                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NoteHandler implements BaleContextListener {
@@ -468,14 +468,14 @@ private static class NoteHandler implements BaleContextListener {
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.getOffset() >= 0) {
-	 menu.add(new NoteAction(cfg));
+         menu.add(new NoteAction(cfg));
        }
     }
 
 
 
 
-}	// end of inner class NoteHandler
+}       // end of inner class NoteHandler
 
 
 
@@ -512,15 +512,15 @@ private static class NoteAction extends AbstractAction {
       bba.addLink(lnk);
     }
 
-}	// end of inner class NoteAction
+}       // end of inner class NoteAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handler for note requests when running in client/server mode		*/
-/*										*/
+/*                                                                              */
+/*      Handler for note requests when running in client/server mode            */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class NoteServer implements MintHandler {
@@ -531,16 +531,16 @@ private static final class NoteServer implements MintHandler {
       File dir = BoardSetup.getBubblesWorkingDirectory();
       File f1 = new File(dir,name);
       try {
-	 FileWriter fw = new FileWriter(f1);
-	 fw.write(cnts);
-	 fw.close();
+         FileWriter fw = new FileWriter(f1);
+         fw.write(cnts);
+         fw.close();
        }
       catch (IOException e) {
-	 BoardLog.logE("BEAM","Problem writing note file",e);
+         BoardLog.logE("BEAM","Problem writing note file",e);
        }
     }
 
-}	// end of inner class NoteServer
+}       // end of inner class NoteServer
 
 
 
@@ -552,14 +552,14 @@ private static final class NoteClient implements MintHandler {
       BeamNoteBubble.updateNote(name,cnts);
     }
 
-}	// end of inner class NoteClient
+}       // end of inner class NoteClient
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Error annotations in search box 					*/
-/*										*/
+/*                                                                              */
+/*      Error annotations in search box                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static ProblemFlag error_flag = new ProblemFlag("error_overlay",20);
@@ -589,19 +589,19 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
    @Override public synchronized void handleProblemRemoved(BumpProblem bp)   { flag_map = null; }
    @Override public synchronized void handleProblemsDone() {
       if (flag_map == null) {
-	 // System.err.println("FLAGS UPDATED");
-	 // BassFactory.getFactory().flagsUpdated();
-	 SwingUtilities.invokeLater(new FlagUpdater());
+         // System.err.println("FLAGS UPDATED");
+         // BassFactory.getFactory().flagsUpdated();
+         SwingUtilities.invokeLater(new FlagUpdater());
        }
     }
-   @Override public synchronized void handleClearProblems()		     { flag_map = null; }
+   @Override public synchronized void handleClearProblems()                  { flag_map = null; }
 
    private void computeFlagMap() {
       // System.err.println("FLAGS COMPUTED");
       Map<String,ProblemFlag> mpf = new HashMap<>();
       flag_map = mpf;
       for (BumpProblem bp : BumpClient.getBump().getAllProblems()) {
-	 addFlags(bp,mpf);
+         addFlags(bp,mpf);
        }
     }
 
@@ -644,7 +644,7 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       mpf.put(s,pf);
    }
 
-}	// end of inner class SearchProblemFlags
+}       // end of inner class SearchProblemFlags
 
 
 
@@ -658,10 +658,10 @@ private static class ProblemFlag implements BassFlag {
       flag_priority = pri;
     }
 
-   @Override public Icon getOverlayIcon()		{ return overlay_icon; }
-   @Override public int getPriority()			{ return flag_priority; }
+   @Override public Icon getOverlayIcon()               { return overlay_icon; }
+   @Override public int getPriority()                   { return flag_priority; }
 
-}	// end of inner class ProblemFlag
+}       // end of inner class ProblemFlag
 
 
 
@@ -672,14 +672,14 @@ private static final class FlagUpdater implements Runnable {
       BassFactory.getFactory().flagsUpdated();
    }
 
-}	// end of inner class FlagUpdater
+}       // end of inner class FlagUpdater
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Button action routines for save/compile/etc				*/
-/*										*/
+/*                                                                              */
+/*      Button action routines for save/compile/etc                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class SaveButton implements ActionListener, Runnable
@@ -693,16 +693,16 @@ private static final class SaveButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","SaveAll");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.saveAll();
-	 buda_root.handleSaveAllRequest();
+         BumpClient bc = BumpClient.getBump();
+         bc.saveAll();
+         buda_root.handleSaveAllRequest();
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
-}	// end of inner class SaveButton
+}       // end of inner class SaveButton
 
 
 
@@ -717,15 +717,15 @@ private static final class BuildButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","Build");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.compile(false, true, false);
+         BumpClient bc = BumpClient.getBump();
+         bc.compile(false, true, false);
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
-}	// end of inner class BuildButton
+}       // end of inner class BuildButton
 
 
 
@@ -741,20 +741,20 @@ private static final class RefreshButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BEAM","Refresh");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.compile(false, false, true);
+         BumpClient bc = BumpClient.getBump();
+         bc.compile(false, false, true);
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
-}	// end of inner class RefreshButton
+}       // end of inner class RefreshButton
 
 
 
 
-}	// end of class BeamFactory
+}       // end of class BeamFactory
 
 
 

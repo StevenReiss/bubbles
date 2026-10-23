@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoException.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator exception for internal use	*/
-/*										*/
+/*                                                                              */
+/*              BuenoException.java                                             */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator exception for internal use      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,9 +42,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoException(String id)
@@ -55,7 +55,7 @@ BuenoException(String id)
 
 
 
-}	// end of class BuenoException
+}       // end of class BuenoException
 
 
 

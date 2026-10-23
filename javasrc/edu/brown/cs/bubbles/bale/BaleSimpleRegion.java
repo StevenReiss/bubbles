@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleSimpleRegion.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor simple region definition		*/
-/*										*/
+/*                                                                              */
+/*              BaleSimpleRegion.java                                           */
+/*                                                                              */
+/*      Bubble Annotated Language Editor simple region definition               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -36,21 +36,21 @@ class BaleSimpleRegion implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private int		start_offset;
-private int		region_size;
+private int             start_offset;
+private int             region_size;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleSimpleRegion(int offset,int len)
@@ -63,20 +63,20 @@ BaleSimpleRegion(int offset,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-int getStart()				{ return start_offset; }
-int getEnd()				{ return start_offset + region_size; }
-int getLength() 			{ return region_size; }
+int getStart()                          { return start_offset; }
+int getEnd()                            { return start_offset + region_size; }
+int getLength()                         { return region_size; }
 
 
 
 
 
-}	// end of class BaleSimpleRegion
+}       // end of class BaleSimpleRegion
 
 
 

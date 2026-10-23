@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconRegionHeader.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer internal region for a header 	*/
-/*										*/
+/*                                                                              */
+/*              BconRegionHeader.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer internal region for a header         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -34,20 +34,20 @@ class BconRegionHeader extends BconRegion implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		region_name;
-private RegionType	region_type;
+private String          region_name;
+private RegionType      region_type;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconRegionHeader(BaleConstants.BaleFileOverview fov,int start,int end,String nm,RegionType rt)
@@ -63,9 +63,9 @@ BconRegionHeader(BaleConstants.BaleFileOverview fov,int start,int end,String nm,
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override RegionType getRegionType()
@@ -85,7 +85,7 @@ BconRegionHeader(BaleConstants.BaleFileOverview fov,int start,int end,String nm,
 
 
 
-}	// end of class BconRegionHeader
+}       // end of class BconRegionHeader
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeduCourseData.java						*/
-/*										*/
-/*	Data for a particular course						*/
-/*										*/
+/*                                                                              */
+/*              BeduCourseData.java                                             */
+/*                                                                              */
+/*      Data for a particular course                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -64,18 +64,18 @@ class BeduCourseData implements BeduConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	course_name;
-private String	initial_workspace;
-private String	workspace_url;
-private String	workspace_path;
+private String  course_name;
+private String  initial_workspace;
+private String  workspace_url;
+private String  workspace_path;
 private boolean ask_workspace;
-private String	help_url;
-private String	survey_url;
+private String  help_url;
+private String  survey_url;
 private boolean do_chat;
 private List<AssignmentData> course_assignments;
 
@@ -88,9 +88,9 @@ private static DateFormat [] date_formats = new DateFormat [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeduCourseData(Element xml)
@@ -113,31 +113,31 @@ BeduCourseData(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()			{ return course_name; }
+String getName()                        { return course_name; }
 
 List<Assignment> getAllAssignments()
 {
    return new ArrayList<Assignment>(course_assignments);
 }
 
-String getSurveyUrl()			{ return survey_url; }
+String getSurveyUrl()                   { return survey_url; }
 
-String getHelpUrl()			{ return help_url; }
+String getHelpUrl()                     { return help_url; }
 
-boolean doChat()			{ return do_chat; }
+boolean doChat()                        { return do_chat; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup initial workspace					*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup initial workspace                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void setupWorkspace() throws IOException
@@ -177,27 +177,27 @@ private void loadDirectory(String file,String url,File dir,boolean crlf) throws 
     }
    else {
       try {
-	 URI u = new URI(url);
-	 HttpURLConnection c = (HttpURLConnection) u.toURL().openConnection();
-	 if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
-	    InputStream ins = c.getInputStream();
-	    File tf = File.createTempFile("bubbles",".ws");
-	    tf.deleteOnExit();
-	    try (FileOutputStream ots = new FileOutputStream(tf)) {
-	       byte [] buf = new byte[16384];
-	       for ( ; ; ) {
-		  int ln = ins.read(buf);
-		  if (ln <= 0) break;
-		  ots.write(buf,0,ln);
-	       }
-	    }
-	    ins.close();
-	    unzip(tf,dir,true);
-	    tf.delete();
-	 }
+         URI u = new URI(url);
+         HttpURLConnection c = (HttpURLConnection) u.toURL().openConnection();
+         if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream ins = c.getInputStream();
+            File tf = File.createTempFile("bubbles",".ws");
+            tf.deleteOnExit();
+            try (FileOutputStream ots = new FileOutputStream(tf)) {
+               byte [] buf = new byte[16384];
+               for ( ; ; ) {
+                  int ln = ins.read(buf);
+                  if (ln <= 0) break;
+                  ots.write(buf,0,ln);
+               }
+            }
+            ins.close();
+            unzip(tf,dir,true);
+            tf.delete();
+         }
       }
       catch (URISyntaxException e) {
-	 throw new IOException("BAD URI",e);
+         throw new IOException("BAD URI",e);
       }
     }
 }
@@ -213,17 +213,17 @@ private void unzip(File zipf,File dir,boolean crlf) throws IOException
       String nm = file.getName().replace("/",File.separator);
       File f = new File(dir,nm);
       if (file.isDirectory()) { // if its a directory, create it
-	 f.mkdir();
-	 continue;
+         f.mkdir();
+         continue;
        }
       InputStream is1 = zip.getInputStream(file); // get the input stream
       InputStream is = new BufferedInputStream(is1);
       OutputStream fos = new BufferedOutputStream(new FileOutputStream(f));
 
       while (is.available() > 0) {  // write contents of 'is' to 'fos'
-	 int ch = is.read();
-	 if (crlf && nm.endsWith(".java") && ch == '\n') fos.write('\r');
-	 fos.write(ch);
+         int ch = is.read();
+         if (crlf && nm.endsWith(".java") && ch == '\n') fos.write('\r');
+         fos.write(ch);
        }
       fos.close();
       is.close();
@@ -235,9 +235,9 @@ private void unzip(File zipf,File dir,boolean crlf) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Assignment Information							*/
-/*										*/
+/*                                                                              */
+/*      Assignment Information                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class AssignmentData implements Assignment {
@@ -269,10 +269,10 @@ private class AssignmentData implements Assignment {
       assignment_survey = IvyXml.getTextElement(xml,"SURVEY");
     }
 
-   @Override public String getName()		{ return assignment_name; }
-   @Override public String getDescription()	{ return assignment_description; }
+   @Override public String getName()            { return assignment_name; }
+   @Override public String getDescription()     { return assignment_description; }
    @Override public String getDocumentationUrl() { return documentation_url; }
-   @Override public String getSurveyUrl()	{ return assignment_survey; }
+   @Override public String getSurveyUrl()       { return assignment_survey; }
 
    @Override public boolean isCurrent() {
       Date now = new Date();
@@ -307,12 +307,12 @@ private class AssignmentData implements Assignment {
       File pdir = new File(ws,project_name);
       if (pdir.exists()) return false;
       try {
-	 loadDirectory(initial_project,initial_url,pdir,fix_crlf);
-	 BumpClient bc = BumpClient.getBump();
-	 bc.importProject(project_name);
+         loadDirectory(initial_project,initial_url,pdir,fix_crlf);
+         BumpClient bc = BumpClient.getBump();
+         bc.importProject(project_name);
        }
       catch (IOException e) {
-	 return false;
+         return false;
        }
       return true;
     }
@@ -349,19 +349,19 @@ private class AssignmentData implements Assignment {
    private Date getDate(String txt) {
       if (txt == null) return null;
       for (DateFormat df : date_formats) {
-	 try {
-	    return df.parse(txt);
-	 }
-	 catch (ParseException e) { }
+         try {
+            return df.parse(txt);
+         }
+         catch (ParseException e) { }
        }
       BoardLog.logE("BEDU","Can't parse date " + txt);
       return null;
     }
 
-}	// end of inner class AssignmentData
+}       // end of inner class AssignmentData
 
 
-}	// end of class BeduCourseData
+}       // end of class BeduCourseData
 
 
 

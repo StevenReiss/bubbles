@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BurpEditorData.java						*/
-/*										*/
-/*	Bubble Undo/Redo Processor information for a particular editor		*/
-/*										*/
+/*                                                                              */
+/*              BurpEditorData.java                                             */
+/*                                                                              */
+/*      Bubble Undo/Redo Processor information for a particular editor          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -45,15 +45,15 @@ import java.awt.event.MouseListener;
 
 
 class BurpEditorData implements UndoableEditListener, CaretListener, KeyListener, MouseListener,
-		BurpConstants
+                BurpConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BurpHistory for_history;
@@ -70,9 +70,9 @@ private BurpChangeData save_change;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BurpEditorData(BurpHistory bh,JTextComponent be) {
@@ -96,9 +96,9 @@ BurpEditorData(BurpHistory bh,JTextComponent be) {
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addChange(BurpChangeData cd)
@@ -122,9 +122,9 @@ void remove()
 
 
 
-BurpChangeData getCurrentChange()		{ return current_change; }
-BurpChangeData getFirstChange() 		{ return first_change; }
-void setCurrentChange(BurpChangeData cd)	{ current_change = cd; }
+BurpChangeData getCurrentChange()               { return current_change; }
+BurpChangeData getFirstChange()                 { return first_change; }
+void setCurrentChange(BurpChangeData cd)        { current_change = cd; }
 
 String getBubbleId()
 {
@@ -151,9 +151,9 @@ void noteSave()
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit callbacks								*/
-/*										*/
+/*                                                                              */
+/*      Edit callbacks                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void undoableEditHappened(UndoableEditEvent evt)
@@ -172,9 +172,9 @@ void noteSave()
 
 
 /********************************************************************************/
-/*										*/
-/*	Caret and key callbacks for detecting significant edits 		*/
-/*										*/
+/*                                                                              */
+/*      Caret and key callbacks for detecting significant edits                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void caretUpdate(CaretEvent e)
@@ -202,10 +202,10 @@ void noteSave()
 }
 
 
-@Override public void keyTyped(KeyEvent e)		{ }
+@Override public void keyTyped(KeyEvent e)              { }
 
 
-@Override public void mouseClicked(MouseEvent e)	{ }
+@Override public void mouseClicked(MouseEvent e)        { }
 
 
 @Override public void mousePressed(MouseEvent e)
@@ -221,8 +221,8 @@ void noteSave()
    in_event = false;
 }
 
-@Override public void mouseEntered(MouseEvent e)	{ }
-@Override public void mouseExited(MouseEvent e) 	{ }
+@Override public void mouseEntered(MouseEvent e)        { }
+@Override public void mouseExited(MouseEvent e)         { }
 
 
 void beginEditAction()
@@ -244,7 +244,7 @@ private boolean isModifier(KeyEvent e)
       case KeyEvent.VK_CONTROL :
       case KeyEvent.VK_ALT :
       case KeyEvent.VK_META :
-	 return true;
+         return true;
     }
    return false;
 }
@@ -264,7 +264,7 @@ private boolean isTextual(KeyEvent e)
 
 
 
-}	// end of class BurpEditorData
+}       // end of class BurpEditorData
 
 
 

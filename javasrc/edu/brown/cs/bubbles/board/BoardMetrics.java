@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardMetrics.java						*/
-/*										*/
-/*	Bubbles attribute and property management metric gathering		*/
-/*										*/
+/*                                                                              */
+/*              BoardMetrics.java                                               */
+/*                                                                              */
+/*      Bubbles attribute and property management metric gathering              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -71,9 +71,9 @@ import java.util.Set;
 
 
 /**
- *	This class is used to gather and report various metrics about the
- *	use of code bubbles to effect appropriate user studies and system
- *	improvements.
+ *      This class is used to gather and report various metrics about the
+ *      use of code bubbles to effect appropriate user studies and system
+ *      improvements.
  **/
 
 public final class BoardMetrics implements BoardConstants {
@@ -82,9 +82,9 @@ public final class BoardMetrics implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JFrame root_window;
@@ -98,26 +98,26 @@ private boolean collect_options;
 private boolean collect_workingset;
 private Boolean error_reports;
 
-private String	user_id;
-private long	start_time;
+private String  user_id;
+private long    start_time;
 private List<String> command_data;
 
-private long	last_options;
-private long	last_active;
-private long	last_screen;
-private long	total_active;
+private long    last_options;
+private long    last_active;
+private long    last_screen;
+private long    total_active;
 
-private long	next_screen;
-private long	next_command;
-private long	next_feedback;
-private long	next_options;
-private long	next_workingset;
+private long    next_screen;
+private long    next_command;
+private long    next_feedback;
+private long    next_options;
+private long    next_workingset;
 
 private boolean do_dump;
 
-private static BoardMetrics	the_metrics = new BoardMetrics();
-private static String		run_id;
-private static Set<String>	bugs_reported = new HashSet<String>();
+private static BoardMetrics     the_metrics = new BoardMetrics();
+private static String           run_id;
+private static Set<String>      bugs_reported = new HashSet<String>();
 
 private static final int BLUR_SIZE = 8;
 private static final float [] BLUR_MATRIX;
@@ -147,9 +147,9 @@ private static final String [] CHECK_PROPERTIES = {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardMetrics()
@@ -181,15 +181,15 @@ private BoardMetrics()
 
 
 /********************************************************************************/
-/*										*/
-/*	External entries							*/
-/*										*/
+/*                                                                              */
+/*      External entries                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Called to setup metric gathering and reporting.  No metrics will be
- *	generated without this call.  The first time metrics are used, this
- *	call will let the user opt-out of any of the different metric types.
+ *      Called to setup metric gathering and reporting.  No metrics will be
+ *      generated without this call.  The first time metrics are used, this
+ *      call will let the user opt-out of any of the different metric types.
  **/
 
 public static void setupMetrics(boolean force)
@@ -199,8 +199,8 @@ public static void setupMetrics(boolean force)
 
 
 /**
- *	Called to set the root window so that screen dumps can be captured
- *	for metrics evaluation.
+ *      Called to set the root window so that screen dumps can be captured
+ *      for metrics evaluation.
  **/
 
 public static void setRootWindow(JFrame root)
@@ -211,7 +211,7 @@ public static void setRootWindow(JFrame root)
 
 
 /**
- *	Called to note that the user is active at this time.
+ *      Called to note that the user is active at this time.
  **/
 
 public static void noteActive(long when)
@@ -228,8 +228,8 @@ public static long getLastActive()
 
 
 /**
- *	Notes the issuance of a command from the given source. The command
- *	argument describes the command.
+ *      Notes the issuance of a command from the given source. The command
+ *      argument describes the command.
  **/
 
 public static void noteCommand(String src,Object... cmd)
@@ -237,18 +237,18 @@ public static void noteCommand(String src,Object... cmd)
    BoardLog.logD("BOARD","COMMAND: " + src + ":" + Arrays.toString(cmd));
    if (the_metrics.collect_commands) {
       if (cmd.length == 0 || (cmd.length == 1 && cmd == null)) {
-	 the_metrics.saveCommand(src,null,System.currentTimeMillis());
+         the_metrics.saveCommand(src,null,System.currentTimeMillis());
        }
       else if (cmd.length == 1) {
-	 the_metrics.saveCommand(src,cmd[0].toString(),System.currentTimeMillis());
+         the_metrics.saveCommand(src,cmd[0].toString(),System.currentTimeMillis());
        }
       else {
-	 StringBuffer buf = new StringBuffer();
-	 for (int i = 0; i < cmd.length; ++i) {
-	    if (i > 0) buf.append("_");
-	    buf.append(cmd[i].toString());
-	  }
-	 the_metrics.saveCommand(src,buf.toString(),System.currentTimeMillis());
+         StringBuffer buf = new StringBuffer();
+         for (int i = 0; i < cmd.length; ++i) {
+            if (i > 0) buf.append("_");
+            buf.append(cmd[i].toString());
+          }
+         the_metrics.saveCommand(src,buf.toString(),System.currentTimeMillis());
        }
     }
 }
@@ -262,12 +262,12 @@ public static void getLastCommands(String pfx,Appendable buf,int ct)
       int ln = the_metrics.command_data.size();
       int start = Math.max(0,ln-ct);
       for (int i = start; i < ln; ++i) {
-	 try {
-	    if (pfx != null) buf.append(pfx);
-	    buf.append(the_metrics.command_data.get(i));
-	    buf.append("\n");
-	  }								       
-	 catch (IOException e) { }
+         try {
+            if (pfx != null) buf.append(pfx);
+            buf.append(the_metrics.command_data.get(i));
+            buf.append("\n");
+          }                                                                    
+         catch (IOException e) { }
        }
     }
    try {
@@ -278,7 +278,7 @@ public static void getLastCommands(String pfx,Appendable buf,int ct)
 
 
 /**
- *	Force metrics to be dumped immediately
+ *      Force metrics to be dumped immediately
  **/
 
 public static void forceDump()
@@ -290,9 +290,9 @@ public static void forceDump()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bug report handling							*/
-/*										*/
+/*                                                                              */
+/*      Bug report handling                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static void generateBugReport(String src,String msg,Throwable t)
@@ -357,9 +357,9 @@ static void generateBugReport(String src,String msg,String id,String trace)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set user opt-in/out options					*/
-/*										*/
+/*                                                                              */
+/*      Methods to set user opt-in/out options                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupOptions(boolean force)
@@ -368,13 +368,13 @@ private void setupOptions(boolean force)
    user_id = bp.getProperty(BOARD_METRIC_PROP_USERID);
    if (user_id == null) {
       if (bp.getBoolean(BOARD_METRIC_PROP_AUTOID)) {
-	 user_id = getUserId();
-	 bp.setProperty(BOARD_METRIC_PROP_USERID,user_id);
-	 force = false;
-	 try {
-	    bp.save();
-	  }
-	 catch (IOException e) { }
+         user_id = getUserId();
+         bp.setProperty(BOARD_METRIC_PROP_USERID,user_id);
+         force = false;
+         try {
+            bp.save();
+          }
+         catch (IOException e) { }
       }
    }
 
@@ -383,7 +383,7 @@ private void setupOptions(boolean force)
    if (!force) {
       // ensure user is always asked about new properties
       for (String s : CHECK_PROPERTIES) {
-	 if (!bp.containsKey(s)) force = true;
+         if (!bp.containsKey(s)) force = true;
        }
     }
 
@@ -504,9 +504,9 @@ private String getUserId()
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to create a metrics setting up dialog box 			*/
-/*										*/
+/*                                                                              */
+/*      Class to create a metrics setting up dialog box                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class MetricsDialog extends JDialog implements ActionListener, CaretListener
@@ -622,15 +622,15 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
       }
    }
 
-}	// end of inner class MetricsDialog
+}       // end of inner class MetricsDialog
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to create a metrics setting up dialog box 			*/
-/*										*/
+/*                                                                              */
+/*      Class to create a metrics setting up dialog box                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class BugReportDialog extends JDialog implements ActionListener
@@ -712,15 +712,15 @@ private class BugReportDialog extends JDialog implements ActionListener
       this.setVisible(false);
     }
 
-}	// end of inner class MetricsDialog
+}       // end of inner class MetricsDialog
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle command data						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle command data                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupCommandData()
@@ -736,7 +736,7 @@ private void setupCommandData()
 
    BoardProperties bp = BoardProperties.getProperties("System");
    saveCommand("PROPERTY","updates="+bp.getProperty(BOARD_PROP_ECLIPSE_FOREGROUND) + "," +
-		  bp.getProperty(BOARD_PROP_AUTO_UPDATE),start_time);
+                  bp.getProperty(BOARD_PROP_AUTO_UPDATE),start_time);
 }
 
 
@@ -812,9 +812,9 @@ private void addBugCommands(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create screen dump						*/
-/*										*/
+/*                                                                              */
+/*      Methods to create screen dump                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void dumpScreen()
@@ -903,16 +903,16 @@ private class ScreenDumper implements Runnable {
        }
     }
 
-}	// end of inner class ScreenDumper
+}       // end of inner class ScreenDumper
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to send Options files						*/
-/*										*/
+/*                                                                              */
+/*      Methods to send Options files                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void dumpOptions()
@@ -920,9 +920,9 @@ private void dumpOptions()
    File [] files = getOptionsFiles();
    try {
       for (File f: files) {
-	 if (f != null && f.lastModified() > last_options) {
-	    sendFile(f,"OPTIONS",false);
-	  }
+         if (f != null && f.lastModified() > last_options) {
+            sendFile(f,"OPTIONS",false);
+          }
        }
       last_options = System.currentTimeMillis();
     }
@@ -952,15 +952,15 @@ private static final class OptionFileFilter implements FileFilter {
       return true;
     }
 
-}	// end of inner class OptionFileFilter
+}       // end of inner class OptionFileFilter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle uploading workingsets 				*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle uploading workingsets                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void dumpWorkingset()
@@ -968,13 +968,13 @@ private void dumpWorkingset()
    File f = privatizeConfiguration();
    if (f != null && f.exists()) {
       try {
-	 // TODO: Rewrite config file to remove any names
-	 // CONTENT should only include TYPE and FRAGTYPE
-	 sendFile(f,"WORKINGSET",false);
-	 f.delete();
+         // TODO: Rewrite config file to remove any names
+         // CONTENT should only include TYPE and FRAGTYPE
+         sendFile(f,"WORKINGSET",false);
+         f.delete();
       }
       catch (IOException e) {
-	 BoardLog.logE("BOARD", "Error to upload workingset file");
+         BoardLog.logE("BOARD", "Error to upload workingset file");
        }
     }
 }
@@ -1007,19 +1007,19 @@ private void privatizeXml(Element e)
    if (IvyXml.isElement(e,"CONTENT")) {
       NamedNodeMap nnm = e.getAttributes();
       for (int i = 0; i < nnm.getLength(); ) {
-	 Attr at = (Attr) nnm.item(i);
-	 if (at.getName().equals("TYPE") || at.getName().equals("FRAGTYPE")) ++i;
-	 else nnm.removeNamedItem(at.getName());
+         Attr at = (Attr) nnm.item(i);
+         if (at.getName().equals("TYPE") || at.getName().equals("FRAGTYPE")) ++i;
+         else nnm.removeNamedItem(at.getName());
        }
       for ( ; ; ) {
-	 Node n = e.getFirstChild();
-	 if (n == null) break;
-	 e.removeChild(n);
+         Node n = e.getFirstChild();
+         if (n == null) break;
+         e.removeChild(n);
        }
     }
    else {
       for (Element c : IvyXml.children(e)) {
-	 privatizeXml(c);
+         privatizeXml(c);
        }
     }
 }
@@ -1027,9 +1027,9 @@ private void privatizeXml(Element e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle user-requested dump					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle user-requested dump                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void dumpAll()
@@ -1043,9 +1043,9 @@ private void dumpAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Timing methods								*/
-/*										*/
+/*                                                                              */
+/*      Timing methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void setActive()
@@ -1070,49 +1070,49 @@ private void setActive(long when)
       last_active = when;
 
       if (delta > INACTIVE_TIME) {
-	 if (collect_active) {
-	    saveCommand("ACTIVE","inactive.start",prev);
-	    saveCommand("ACTIVE","inactive.end",when);
-	  }
+         if (collect_active) {
+            saveCommand("ACTIVE","inactive.start",prev);
+            saveCommand("ACTIVE","inactive.end",when);
+          }
        }
       else {
-	 total_active += delta;
-	 if (next_screen > 0 && total_active > next_screen) {
-	    doscreen = true;
-	    next_screen = total_active + SCREEN_DUMP_TIME;
-	  }
-	 if (next_command > 0 && total_active > next_command) {
-	    docommand = true;
-	    next_command = total_active + COMMAND_DUMP_TIME;
-	  }
-	 if (next_feedback > 0 && total_active > next_feedback) {
-	    dofeedback = true;
-	    next_feedback = total_active + USER_FEEDBACK_TIME;
-	  }
-	 if (next_options > 0 && total_active > next_options) {
-	    dooptions = true;
-	    next_options = total_active + OPTIONS_DUMP_TIME;
-	  }
-	 if (next_workingset > 0 && total_active > next_workingset) {
-	    doworkingset = true;
-	    next_workingset = total_active + WORKINGSET_DUMP_TIME;
-	  }
+         total_active += delta;
+         if (next_screen > 0 && total_active > next_screen) {
+            doscreen = true;
+            next_screen = total_active + SCREEN_DUMP_TIME;
+          }
+         if (next_command > 0 && total_active > next_command) {
+            docommand = true;
+            next_command = total_active + COMMAND_DUMP_TIME;
+          }
+         if (next_feedback > 0 && total_active > next_feedback) {
+            dofeedback = true;
+            next_feedback = total_active + USER_FEEDBACK_TIME;
+          }
+         if (next_options > 0 && total_active > next_options) {
+            dooptions = true;
+            next_options = total_active + OPTIONS_DUMP_TIME;
+          }
+         if (next_workingset > 0 && total_active > next_workingset) {
+            doworkingset = true;
+            next_workingset = total_active + WORKINGSET_DUMP_TIME;
+          }
        }
 
       if (doscreen) {
-	 BoardThreadPool.start(new ScreenDumpTask());
+         BoardThreadPool.start(new ScreenDumpTask());
        }
       if (docommand) {
-	 BoardThreadPool.start(new CommandDumpTask());
+         BoardThreadPool.start(new CommandDumpTask());
        }
       if (dofeedback) {
-	 BoardThreadPool.start(new UserFeedbackTask());
+         BoardThreadPool.start(new UserFeedbackTask());
        }
       if (dooptions) {
-	 BoardThreadPool.start(new OptionsDumpTask());
+         BoardThreadPool.start(new OptionsDumpTask());
        }
       if (doworkingset) {
-	 BoardThreadPool.start(new WorkingsetDumpTask());
+         BoardThreadPool.start(new WorkingsetDumpTask());
        }
     }
 }
@@ -1120,9 +1120,9 @@ private void setActive(long when)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to send a file to the repository				*/
-/*										*/
+/*                                                                              */
+/*      Methods to send a file to the repository                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void sendFile(File f,String typ,boolean del) throws IOException
@@ -1137,9 +1137,9 @@ private void sendFile(File f,String typ,boolean del) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Timer tasks								*/
-/*										*/
+/*                                                                              */
+/*      Timer tasks                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ScreenDumpTask implements Runnable {
@@ -1152,7 +1152,7 @@ private final class ScreenDumpTask implements Runnable {
       return "BOARD_ScreenDumpTask";
     }
 
-}	// end of inner class ScreenDumpTask
+}       // end of inner class ScreenDumpTask
 
 
 
@@ -1166,7 +1166,7 @@ private final class CommandDumpTask implements Runnable {
       return "BOARD_CommandDumpTask";
     }
 
-}	// end of inner class CommandDumpTask
+}       // end of inner class CommandDumpTask
 
 
 private final class UserFeedbackTask implements Runnable {
@@ -1179,7 +1179,7 @@ private final class UserFeedbackTask implements Runnable {
       return "BOARD_UserFeedbackTask";
     }
 
-}	// end of inner class CommandDumpTask
+}       // end of inner class CommandDumpTask
 
 
 
@@ -1197,7 +1197,7 @@ private final class OptionsDumpTask implements Runnable {
       return "BOARD_OptionsDumpTask";
     }
 
-}	// end of inner class OptionsDumpTask
+}       // end of inner class OptionsDumpTask
 
 
 
@@ -1211,7 +1211,7 @@ private final class WorkingsetDumpTask implements Runnable {
       return "BOARD_WorkingsetDumpTask";
     }
 
-}	// end of inner class WorkingsetDumpTask
+}       // end of inner class WorkingsetDumpTask
 
 
 
@@ -1229,12 +1229,12 @@ private class DumpAllTask extends Thread {
       dumpCommands();
     }
 
-}	// end of inner class DumpAllTask
+}       // end of inner class DumpAllTask
 
 
 
 
-}	// end of class BoardMetrics
+}       // end of class BoardMetrics
 
 
 

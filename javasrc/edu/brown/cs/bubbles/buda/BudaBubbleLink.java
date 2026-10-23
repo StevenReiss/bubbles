@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaBubbleLink.java						*/
-/*										*/
-/*	BUblles Display Area representation of an arrow between bubbles 	*/
-/*										*/
+/*                                                                              */
+/*              BudaBubbleLink.java                                             */
+/*                                                                              */
+/*      BUblles Display Area representation of an arrow between bubbles         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,7 +55,7 @@ import java.util.List;
 
 
 /**
- *	This class represents a link between two bubbles that is drawn on the display.
+ *      This class represents a link between two bubbles that is drawn on the display.
  **/
 
 public class BudaBubbleLink implements BudaConstants {
@@ -63,29 +63,29 @@ public class BudaBubbleLink implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaBubble	from_bubble;
-private LinkPort	from_port;
-private BudaBubble	to_bubble;
-private LinkPort	to_port;
-private Path2D		drawn_path;
+private BudaBubble      from_bubble;
+private LinkPort        from_port;
+private BudaBubble      to_bubble;
+private LinkPort        to_port;
+private Path2D          drawn_path;
 
-private BasicStroke	link_stroke;
-private BudaLinkStyle	link_style;
-private Color		link_color;
-private Color		focus_color;
-private boolean 	has_focus;
-private String		link_data;
+private BasicStroke     link_stroke;
+private BudaLinkStyle   link_style;
+private Color           link_color;
+private Color           focus_color;
+private boolean         has_focus;
+private String          link_data;
 
-private List<Point2D>	pivot_points;
+private List<Point2D>   pivot_points;
 private BudaPortEndType start_type;
 private BudaPortEndType finish_type;
 
-private boolean 	is_rectilinear;
+private boolean         is_rectilinear;
 
 
 private static final float [] DASH_ARRAY = new float [] { 10f, 5f };
@@ -93,14 +93,14 @@ private static final float [] DASH_ARRAY = new float [] { 10f, 5f };
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a solid rectilinear link from one bubble to another using the given
- *	port locations.
+ *      Create a solid rectilinear link from one bubble to another using the given
+ *      port locations.
  **/
 
 public BudaBubbleLink(BudaBubble frm,LinkPort fpt,BudaBubble to,LinkPort tpt)
@@ -116,12 +116,12 @@ public BudaBubbleLink(BudaBubble frm,LinkPort fpt,BudaBubble to,LinkPort tpt)
 
 
 /**
- *	Create a link from one bubble to another using the designated ports and
- *	letting the caller determine the arc style and whether it is rectilinear or not.
+ *      Create a link from one bubble to another using the designated ports and
+ *      letting the caller determine the arc style and whether it is rectilinear or not.
  **/
 
 public BudaBubbleLink(BudaBubble frm,LinkPort fpt,BudaBubble to,LinkPort tpt,boolean rect,
-			 BudaLinkStyle sty)
+                         BudaLinkStyle sty)
 {
    from_bubble = frm;
    from_port = fpt;
@@ -143,13 +143,13 @@ public BudaBubbleLink(BudaBubble frm,LinkPort fpt,BudaBubble to,LinkPort tpt,boo
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public BudaBubble getSource()				{ return from_bubble; }
-public BudaBubble getTarget()				{ return to_bubble; }
+public BudaBubble getSource()                           { return from_bubble; }
+public BudaBubble getTarget()                           { return to_bubble; }
 
 
 boolean usesBubble(BudaBubble b)
@@ -173,7 +173,7 @@ void setStyle(BudaLinkStyle sty)
 
 
 /**
- *	Set the style for the link.
+ *      Set the style for the link.
  **/
 
 public void setStyle(float w,BudaLinkStyle sty)
@@ -184,37 +184,37 @@ public void setStyle(float w,BudaLinkStyle sty)
    switch (sty) {
       case STYLE_SOLID :
       case STYLE_FLIP_SOLID :
-	 link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);
-	 break;
+         link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);
+         break;
       case STYLE_DASHED :
       case STYLE_FLIP_DASHED :
-	 link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,
-					  1.0f,DASH_ARRAY,0);
-	 break;
+         link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,
+                                          1.0f,DASH_ARRAY,0);
+         break;
       case STYLE_REFERENCE :
       case STYLE_FLIP_REFERENCE :
-	 link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND); //DoubleStroke(w);
-	 finish_type = BudaPortEndType.END_TRIANGLE_FILLED; 
-	 //TODO: make more different somehow...
-	 break;
+         link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND); //DoubleStroke(w);
+         finish_type = BudaPortEndType.END_TRIANGLE_FILLED; 
+         //TODO: make more different somehow...
+         break;
       default:
-	 break;
+         break;
     }
 
    switch (sty) {
       case STYLE_FLIP_SOLID :
       case STYLE_FLIP_DASHED :
       case STYLE_FLIP_REFERENCE :
-	 flip();
-	 break;
+         flip();
+         break;
       default :
-	 break;
+         break;
     }
 }
 
 
 /**
- *	Set the data to be displayed for the link
+ *      Set the data to be displayed for the link
  **/
 
 public void setLinkData(String txt)
@@ -226,7 +226,7 @@ public void setLinkData(String txt)
 
 
 /**
- *	Set the color to be used for the link
+ *      Set the color to be used for the link
  **/
 
 public void setColor(Color c)
@@ -238,7 +238,7 @@ public void setColor(Color c)
 
 
 /**
- *	Set the focus color for the link
+ *      Set the focus color for the link
  **/
 
 public void setFocusColor(Color c)
@@ -255,7 +255,7 @@ void setHasFocus(boolean fg)
 }
 
 
-boolean getHasFocus()				{ return has_focus; }
+boolean getHasFocus()                           { return has_focus; }
 
 
 public void setEndTypes(BudaPortEndType st,BudaPortEndType et)
@@ -273,15 +273,15 @@ public void flip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Pivot methods								*/
-/*										*/
+/*                                                                              */
+/*      Pivot methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-boolean isRectilinear() 			{ return is_rectilinear; }
-void setRectilinear(boolean fg) 		{ is_rectilinear = fg; }
+boolean isRectilinear()                         { return is_rectilinear; }
+void setRectilinear(boolean fg)                 { is_rectilinear = fg; }
 
-void clearPivots()				{ pivot_points = null; }
+void clearPivots()                              { pivot_points = null; }
 
 void addPivot(double x,double y)
 {
@@ -308,9 +308,9 @@ Point getTargetPoint(Point2D src)
 
 
 /********************************************************************************/
-/*										*/
-/*	Context menu processing 						*/
-/*										*/
+/*                                                                              */
+/*      Context menu processing                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void handlePopupMenu(MouseEvent e)
@@ -345,7 +345,7 @@ private class RemoveAction extends AbstractAction {
       if (bba != null) bba.removeLink(BudaBubbleLink.this);
    }
 
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 private class StyleAction extends AbstractAction {
@@ -365,7 +365,7 @@ private class StyleAction extends AbstractAction {
       if (bba != null) bba.repaint();
     }
 
-}	// end of inner class StyleAction
+}       // end of inner class StyleAction
 
 
 private class CollapseAction extends AbstractAction {
@@ -384,14 +384,14 @@ private class CollapseAction extends AbstractAction {
       if (bba != null) bba.collapseLinks(lnks);
     }
 
-}	// end of inner class CollapseAction
+}       // end of inner class CollapseAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle remove						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle remove                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void noteRemoved()
@@ -405,9 +405,9 @@ void noteRemoved()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void drawLink(Graphics2D g,boolean overview)
@@ -427,9 +427,9 @@ void drawLink(Graphics2D g,boolean overview)
     }
    else {
       for (Point2D pv : pivot_points) {
-	 if (second == null) second = pv;
-	 penult = pv;
-	 pa.lineTo(pv.getX(),pv.getY());
+         if (second == null) second = pv;
+         penult = pv;
+         pa.lineTo(pv.getX(),pv.getY());
        }
     }
    pa.lineTo(tgt.getX(),tgt.getY());
@@ -453,9 +453,9 @@ void drawLink(Graphics2D g,boolean overview)
 
 
 /********************************************************************************/
-/*										*/
-/*	End point drawing methods						*/
-/*										*/
+/*                                                                              */
+/*      End point drawing methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void drawEnd(Graphics2D g,Point2D from,Point2D to,BudaPortEndType typ)
@@ -463,29 +463,29 @@ private void drawEnd(Graphics2D g,Point2D from,Point2D to,BudaPortEndType typ)
    switch (typ) {
       default :
       case END_NONE :
-	 break;
+         break;
       case END_ARROW :
-	 drawArrow(g,from,to);
-	 break;
+         drawArrow(g,from,to);
+         break;
       case END_CIRCLE :
-	 drawCircle(g,from,to,false);
-	 break;
+         drawCircle(g,from,to,false);
+         break;
       case END_TRIANGLE :
-	 drawTriangle(g,from,to,false);
-	 break;
+         drawTriangle(g,from,to,false);
+         break;
       case END_SQUARE :
-	 drawSquare(g,from,to,false);
-	 break;
+         drawSquare(g,from,to,false);
+         break;
       case END_ARROW_FILLED :
       case END_TRIANGLE_FILLED :
-	 drawTriangle(g,from,to,true);
-	 break;
+         drawTriangle(g,from,to,true);
+         break;
       case END_CIRCLE_FILLED :
-	 drawCircle(g,from,to,true);
-	 break;
+         drawCircle(g,from,to,true);
+         break;
       case END_SQUARE_FILLED :
-	 drawSquare(g,from,to,false);
-	 break;
+         drawSquare(g,from,to,false);
+         break;
     }
 }
 
@@ -581,9 +581,9 @@ private void drawSquare(Graphics g,Point2D fp,Point2D tp,boolean fill)
 
 
 /********************************************************************************/
-/*										*/
-/*	Correlation methods							*/
-/*										*/
+/*                                                                              */
+/*      Correlation methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 BudaRegion correlate(int x,int y)
@@ -599,8 +599,8 @@ BudaRegion correlate(int x,int y)
    for (PathIterator pi = drawn_path.getPathIterator(null,1.0); !pi.isDone(); pi.next()) {
       int typ = pi.currentSegment(coords);
       if (typ == PathIterator.SEG_LINETO) {
-	 l2.setLine(lx,ly,coords[0],coords[1]);
-	 if (l2.intersects(tgt)) return BudaRegion.LINK;
+         l2.setLine(lx,ly,coords[0],coords[1]);
+         if (l2.intersects(tgt)) return BudaRegion.LINK;
        }
       lx = coords[0];
       ly = coords[1];
@@ -612,9 +612,9 @@ BudaRegion correlate(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -638,7 +638,7 @@ void outputXml(BudaXmlWriter xw)
 
 
 
-}	// end of class BudaBubbleLink
+}       // end of class BudaBubbleLink
 
 
 

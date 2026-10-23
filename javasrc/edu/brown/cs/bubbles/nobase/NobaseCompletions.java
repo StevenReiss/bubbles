@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseCompletions.java						*/
-/*										*/
-/*	Handle finding completions						*/
-/*										*/
+/*                                                                              */
+/*              NobaseCompletions.java                                          */
+/*                                                                              */
+/*      Handle finding completions                                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,20 +39,20 @@ class NobaseCompletions implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private ISemanticData	semantic_data;
-private NobaseFile	current_file;
+private ISemanticData   semantic_data;
+private NobaseFile      current_file;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseCompletions(ISemanticData isd)
@@ -65,9 +65,9 @@ NobaseCompletions(ISemanticData isd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Work methods							       */
-/*										*/
+/*                                                                              */
+/*      Work methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void findCompletions(int offset,IvyXmlWriter xw)
@@ -94,24 +94,24 @@ void findCompletions(int offset,IvyXmlWriter xw)
       int sidx = id.getStartPosition();
       int eidx = sidx + id.getLength();
       if (eidx != offset && sidx < offset && pfx.length() > offset-sidx) {
-	 pfx = pfx.substring(0,offset-sidx);
+         pfx = pfx.substring(0,offset-sidx);
        }
       while (scp != null) {
-	 for (NobaseSymbol sym : scp.getDefinedNames()) {
-	    if (pfx == null || sym.getName().startsWith(pfx)) {
-	       if (pfx == null || !sym.getName().equals(pfx))
-		  syms.add(sym);
-	    }
-	 }
-	 if (scp.getScopeType() == ScopeType.MEMBER) break;
-	 scp = scp.getParent();
+         for (NobaseSymbol sym : scp.getDefinedNames()) {
+            if (pfx == null || sym.getName().startsWith(pfx)) {
+               if (pfx == null || !sym.getName().equals(pfx))
+                  syms.add(sym);
+            }
+         }
+         if (scp.getScopeType() == ScopeType.MEMBER) break;
+         scp = scp.getParent();
       }
    }
    else if (node instanceof QualifiedName) {
       spos = offset;
       epos = offset;
       for (NobaseSymbol sym : scp.getDefinedNames()) {
-	 syms.add(sym);
+         syms.add(sym);
       }
    }
 
@@ -135,9 +135,9 @@ void findCompletions(int offset,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Ast node finder 							*/
-/*										*/
+/*                                                                              */
+/*      Ast node finder                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class FindAstLocation extends DefaultASTVisitor {
@@ -150,7 +150,7 @@ private class FindAstLocation extends DefaultASTVisitor {
       inner_node = null;
     }
 
-   ASTNode getRelevantNode()			{ return inner_node; }
+   ASTNode getRelevantNode()                    { return inner_node; }
 
    @Override public boolean visitNode(ASTNode n) {
       int soff = n.getStartPosition();
@@ -161,15 +161,15 @@ private class FindAstLocation extends DefaultASTVisitor {
       return true;
     }
 
-}	// end of inner class FindAstLocation
+}       // end of inner class FindAstLocation
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Find scope for ast node 						*/
-/*										*/
+/*                                                                              */
+/*      Find scope for ast node                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseScope findScope(ASTNode n)
@@ -182,7 +182,7 @@ NobaseScope findScope(ASTNode n)
    return null;
 }
 
-}	// end of class NobaseCompletions
+}       // end of class NobaseCompletions
 
 
 

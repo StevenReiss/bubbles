@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtConsoleBubble.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool console bubble implementation */
-/*										*/
+/*                                                                              */
+/*              BddtConsoleBubble.java                                          */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool console bubble implementation */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -83,9 +83,9 @@ class BddtConsoleBubble extends BudaBubble implements BddtConstants, BumpConstan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JScrollPane scroll_pane;
@@ -102,9 +102,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
@@ -164,9 +164,9 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handling							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handling                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -197,35 +197,35 @@ private GotoLine checkForGoto(Point pt0)
       int start = Math.max(0,pos-100);
       int end = Math.min(text_pane.getDocument().getLength(),pos+100);
       try {
-	 String txt = text_pane.getText(start,end-start);
-	 int p0 = pos - start;
-	 for (int i = p0; i >= 0; --i) {
-	    if (i >= txt.length()) continue;
-	    if (txt.charAt(i) == '\n') {
-	       start = start + i + 1;
-	       txt = txt.substring(i+1);
-	       break;
-	     }
-	  }
-	 p0 = pos-start;
-	 if (p0 < 0) return null;
-	 for (int i = p0; i < txt.length(); ++i) {
-	    if (txt.charAt(i) == '\n') {
-	       txt = txt.substring(0,i);
-	       break;
+         String txt = text_pane.getText(start,end-start);
+         int p0 = pos - start;
+         for (int i = p0; i >= 0; --i) {
+            if (i >= txt.length()) continue;
+            if (txt.charAt(i) == '\n') {
+               start = start + i + 1;
+               txt = txt.substring(i+1);
+               break;
+             }
+          }
+         p0 = pos-start;
+         if (p0 < 0) return null;
+         for (int i = p0; i < txt.length(); ++i) {
+            if (txt.charAt(i) == '\n') {
+               txt = txt.substring(0,i);
+               break;
 
-	     }
-	  }
-	 Matcher m = LOCATION_PATTERN.matcher(txt);
-	 if (m.find()) {
-	    int spos = m.start();
-	    int epos = m.end();
-	    if (spos <= p0 && epos >= p0) {
-	       int lno = Integer.parseInt(m.group(3));
-	       GotoLine gl = new GotoLine(m.group(1),m.group(2),lno);
-	       if (gl.isValid()) return gl;
-	     }
-	  }
+             }
+          }
+         Matcher m = LOCATION_PATTERN.matcher(txt);
+         if (m.find()) {
+            int spos = m.start();
+            int epos = m.end();
+            if (spos <= p0 && epos >= p0) {
+               int lno = Integer.parseInt(m.group(3));
+               GotoLine gl = new GotoLine(m.group(1),m.group(2),lno);
+               if (gl.isValid()) return gl;
+             }
+          }
        }
       catch (BadLocationException ex) { }
     }
@@ -235,14 +235,14 @@ private GotoLine checkForGoto(Point pt0)
 
 
 /********************************************************************************/
-/*										*/
-/*	handle automatic scrolling to end					*/
-/*										*/
+/*                                                                              */
+/*      handle automatic scrolling to end                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class EndScroll implements DocumentListener, Runnable {
 
-   private boolean	is_queued;
+   private boolean      is_queued;
 
    EndScroll() {
       is_queued = false;
@@ -298,15 +298,15 @@ private class EndScroll implements DocumentListener, Runnable {
        }
     }
 
-}	// end of inner class EndScroll
+}       // end of inner class EndScroll
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action									*/
-/*										*/
+/*                                                                              */
+/*      Action                                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private final class AutoScrollAction implements ActionListener {
@@ -321,14 +321,14 @@ private final class AutoScrollAction implements ActionListener {
        }
     }
 
-}	// end of inner class AutoScrollAction
+}       // end of inner class AutoScrollAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Input handler								*/
-/*										*/
+/*                                                                              */
+/*      Input handler                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class InputHandler implements ActionListener {
@@ -347,7 +347,7 @@ private class InputHandler implements ActionListener {
       console_control.handleInput(for_document,s);
     }
 
-}	// end of inner class InputHandler
+}       // end of inner class InputHandler
 
 
 private final class OutputInputHandler implements KeyListener {
@@ -462,9 +462,9 @@ private static class HistoryTextField extends SwingTextField {
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle mouse clicks that do a goto					*/
-/*										*/
+/*                                                                              */
+/*      Handle mouse clicks that do a goto                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private final class GotoMouser extends BoardMouser {
@@ -480,15 +480,15 @@ private final class GotoMouser extends BoardMouser {
       input_pane.requestFocusInWindow();
     }
 
-}	// end of inner class GotoMouser
+}       // end of inner class GotoMouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Go to a line from an error report					*/
-/*										*/
+/*                                                                              */
+/*      Go to a line from an error report                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class GotoLine extends AbstractAction {
@@ -540,7 +540,7 @@ private class GotoLine extends AbstractAction {
       goto_locs = locs;
     }
 
-   boolean isValid()			{ return goto_locs != null; }
+   boolean isValid()                    { return goto_locs != null; }
 
    @Override public void actionPerformed(ActionEvent e) {
       if (goto_locs != null && goto_locs.size() > 0) createBubble();
@@ -551,10 +551,10 @@ private class GotoLine extends AbstractAction {
       bf.createBubbleStack(BddtConsoleBubble.this,null,null,false,goto_locs,null);
     }
 
-}	// end of inner class GotoLine
+}       // end of inner class GotoLine
 
 
-}	// end of class BddtConsoleBubble
+}       // end of class BddtConsoleBubble
 
 
 

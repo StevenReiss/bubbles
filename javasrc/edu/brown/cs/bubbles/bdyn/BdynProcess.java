@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynProcess.java						*/
-/*										*/
-/*	Maintain dynamic information for a single process			*/
-/*										*/
+/*                                                                              */
+/*              BdynProcess.java                                                */
+/*                                                                              */
+/*      Maintain dynamic information for a single process                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -41,15 +41,15 @@ class BdynProcess implements BdynConstants, BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpTrieData	bump_trie_data;
-private BdynEventTrace	event_trace;
+private BumpTrieData    bump_trie_data;
+private BdynEventTrace  event_trace;
 
-private int		trace_seq;
+private int             trace_seq;
 
 private PriorityQueue<Element> trace_events;
 
@@ -57,9 +57,9 @@ private PriorityQueue<Element> trace_events;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdynProcess(BumpProcess bp)
@@ -75,17 +75,17 @@ BdynProcess(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BumpTrieNode getTrieRoot()		{ return bump_trie_data.getRoot(); }
+BumpTrieNode getTrieRoot()              { return bump_trie_data.getRoot(); }
 
-double getBaseSamples() 		{ return bump_trie_data.getBaseSamples(); }
-double getTotalSamples()		{ return bump_trie_data.getTotalSamples(); }
-double getBaseTime()			{ return bump_trie_data.getBaseTime(); }
-BdynEventTrace getEventTrace()		{ return event_trace; }
+double getBaseSamples()                 { return bump_trie_data.getBaseSamples(); }
+double getTotalSamples()                { return bump_trie_data.getTotalSamples(); }
+double getBaseTime()                    { return bump_trie_data.getBaseTime(); }
+BdynEventTrace getEventTrace()          { return event_trace; }
 
 
 void finish()
@@ -96,9 +96,9 @@ void finish()
 
 
 /********************************************************************************/
-/*										*/
-/*	Event Handlers								*/
-/*										*/
+/*                                                                              */
+/*      Event Handlers                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void handleTraceEvent(Element xml)
@@ -107,11 +107,11 @@ synchronized void handleTraceEvent(Element xml)
    if (seqid == trace_seq+1) {
       processTraceEvent(xml);
       while (!trace_events.isEmpty()) {
-	 Element e1 = trace_events.element();
-	 int sq = IvyXml.getAttrInt(e1,"SEQ");
-	 if (sq != trace_seq+1) break;
-	 e1 = trace_events.remove();
-	 processTraceEvent(e1);
+         Element e1 = trace_events.element();
+         int sq = IvyXml.getAttrInt(e1,"SEQ");
+         if (sq != trace_seq+1) break;
+         e1 = trace_events.remove();
+         processTraceEvent(e1);
        }
     }
    else {
@@ -131,15 +131,15 @@ private static final class EventComparator implements Comparator<Element> {
       return 0;
     }
 
-}	// end of inner class EventComparator
+}       // end of inner class EventComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace event processing							*/
-/*										*/
+/*                                                                              */
+/*      Trace event processing                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void processTraceEvent(Element xml)
@@ -164,7 +164,7 @@ private void processTraceData(String s)
 
 
 
-}	// end of class BdynProcess
+}       // end of class BdynProcess
 
 
 

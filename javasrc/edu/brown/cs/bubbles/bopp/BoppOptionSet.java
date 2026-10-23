@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoppOptionSet.java						*/
-/*										*/
-/*	Hold the various options and provide access to them			*/
-/*										*/
+/*                                                                              */
+/*              BoppOptionSet.java                                              */
+/*                                                                              */
+/*      Hold the various options and provide access to them                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Alexander Hills		      */
+/*      Copyright 2009 Brown University -- Alexander Hills                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,9 +57,9 @@ class BoppOptionSet implements BoppConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,List<BoppOptionNew>> tab_map;
@@ -71,9 +71,9 @@ private boolean doing_add;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BoppOptionSet(BudaRoot br)
@@ -95,9 +95,9 @@ BoppOptionSet(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<String> getTabNames()
@@ -120,9 +120,9 @@ void doingAdd(boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search Methods								*/
-/*										*/
+/*                                                                              */
+/*      Search Methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 List<BoppOptionNew> search(String text)
@@ -133,10 +133,10 @@ List<BoppOptionNew> search(String text)
 
    for (int i = 0; i < words.length; i++) {
       try {
-	 patterns[i] = (Pattern.compile(words[i], Pattern.CASE_INSENSITIVE));
+         patterns[i] = (Pattern.compile(words[i], Pattern.CASE_INSENSITIVE));
        }
       catch (PatternSyntaxException e) {
-	 patterns[i] = null;
+         patterns[i] = null;
        }
     }
    for (BoppOptionNew opt : all_options) {
@@ -149,9 +149,9 @@ List<BoppOptionNew> search(String text)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void saveOptions()
@@ -166,10 +166,10 @@ void saveOptions()
    for (String p : pkgs) {
       BoardProperties bp = BoardProperties.getProperties(p);
       try {
-	 if (bp != null) bp.save();
+         if (bp != null) bp.save();
        }
       catch (IOException e) {
-	 BoardLog.logE("BOPP","Problem saving properties",e);
+         BoardLog.logE("BOPP","Problem saving properties",e);
        }
     }
    changed_options.clear();
@@ -226,9 +226,9 @@ void finishChanges()
 
 
 /********************************************************************************/
-/*										*/
-/*	Loading methods 							*/
-/*										*/
+/*                                                                              */
+/*      Loading methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadXmlPackage(Element px)
@@ -249,8 +249,8 @@ private void loadXmlOption(Element ox,String pkgname)
    for (String tnm : bopt.getOptionTabs()) {
       List<BoppOptionNew> lopt = tab_map.get(tnm);
       if (lopt == null) {
-	 lopt = new ArrayList<BoppOptionNew>();
-	 tab_map.put(tnm,lopt);
+         lopt = new ArrayList<BoppOptionNew>();
+         tab_map.put(tnm,lopt);
        }
       lopt.add(bopt);
     }
@@ -259,7 +259,7 @@ private void loadXmlOption(Element ox,String pkgname)
 
 
 
-}	// end of class BoppOptionSet
+}       // end of class BoppOptionSet
 
 
 

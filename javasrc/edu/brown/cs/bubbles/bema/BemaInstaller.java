@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BemaInstaller.java						*/
-/*										*/
-/*	Installation program for code bubbles					*/
-/*										*/
+/*                                                                              */
+/*              BemaInstaller.java                                              */
+/*                                                                              */
+/*      Installation program for code bubbles                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -85,9 +85,9 @@ public final class BemaInstaller
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -99,9 +99,9 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 enum PanelType {
@@ -110,14 +110,14 @@ enum PanelType {
 
 
 
-private File			eclipse_directory;
+private File                    eclipse_directory;
 private String                  eclipse_version;
-private File			install_directory;
-private JFrame			outer_frame;
+private File                    install_directory;
+private JFrame                  outer_frame;
 private Map<String,String>      eclipse_versions;
 
-private Map<PanelType,InstallerPanel>	installer_panels;
-private PanelType			current_panel;
+private Map<PanelType,InstallerPanel>   installer_panels;
+private PanelType                       current_panel;
 
 
 private static final String BROWN_IMAGE_URL = "http://www.cs.brown.edu/people/spr/bubbles/images/brown.png";
@@ -158,9 +158,9 @@ private static final long BUBBLES_LENGTH = 44*1024*1024;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BemaInstaller()
@@ -183,9 +183,9 @@ private BemaInstaller()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -199,9 +199,9 @@ private void process()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel methods								*/
-/*										*/
+/*                                                                              */
+/*      Panel methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setPanel()
@@ -308,7 +308,7 @@ private boolean checkEclipseVersion(File pdf)
             if (ver != null) {
                double d = Double.parseDouble(ver);
                if (d < 4.0) {
-                  return false;			   // illegal Eclipse version
+                  return false;                    // illegal Eclipse version
                 }
              }
           }
@@ -423,9 +423,9 @@ private String checkVersionExists(String ver,String k1,String k2,String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic panel								*/
-/*										*/
+/*                                                                              */
+/*      Generic panel                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class InstallerPanel {
@@ -451,15 +451,15 @@ private abstract class InstallerPanel {
 
    protected abstract boolean validate();
 
-}	// end of inner class InstallerPanel
+}       // end of inner class InstallerPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Splash panel								*/
-/*										*/
+/*                                                                              */
+/*      Splash panel                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class SplashPanel extends InstallerPanel implements ActionListener {
@@ -481,26 +481,26 @@ private final class SplashPanel extends InstallerPanel implements ActionListener
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       switch (cmd) {
-	 case "EXIT" :
-	    exit();
-	    break;
-	 case "CONTINUE" :
-	    moveToPanel(PanelType.DIRECTORY);
-	    break;
+         case "EXIT" :
+            exit();
+            break;
+         case "CONTINUE" :
+            moveToPanel(PanelType.DIRECTORY);
+            break;
        }
     }
 
-   @Override protected boolean validate()		{ return true; }
+   @Override protected boolean validate()               { return true; }
 
-}	// end of inner class SplashPanel
+}       // end of inner class SplashPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Directory Panel 							*/
-/*										*/
+/*                                                                              */
+/*      Directory Panel                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class DirectoryPanel extends InstallerPanel implements ActionListener, UndoableEditListener
@@ -545,15 +545,15 @@ private class DirectoryPanel extends InstallerPanel implements ActionListener, U
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand().toUpperCase();
       switch (cmd) {
-	 case "CONTINUE" :
-	    moveToPanel(PanelType.ECLIPSE);
-	    break;
-	 case "BACK" :
-	    moveToPanel(PanelType.SPLASH);
-	    break;
-	 default :
-	    recheck();
-	    break;
+         case "CONTINUE" :
+            moveToPanel(PanelType.ECLIPSE);
+            break;
+         case "BACK" :
+            moveToPanel(PanelType.SPLASH);
+            break;
+         default :
+            recheck();
+            break;
        }
     }
    
@@ -568,40 +568,40 @@ private class DirectoryPanel extends InstallerPanel implements ActionListener, U
       
       File ind = new File(dirf);
       if (ind.exists() && ind.isDirectory() && ind.canWrite()) {
-	 boolean isempty = true;
-	 boolean isvalid = false;
-	 for (String cnt : ind.list()) {
-	    if (cnt.startsWith(".")) continue;
-	    if (cnt.equals("bubbles.jar")) isvalid = true;
-	    else isempty = false;
-	  }
-	 if (isempty || isvalid) {
-	    install_directory = ind;
-	    return true;
-	  }
-	 return false;
+         boolean isempty = true;
+         boolean isvalid = false;
+         for (String cnt : ind.list()) {
+            if (cnt.startsWith(".")) continue;
+            if (cnt.equals("bubbles.jar")) isvalid = true;
+            else isempty = false;
+          }
+         if (isempty || isvalid) {
+            install_directory = ind;
+            return true;
+          }
+         return false;
        }
       if (create_button.isSelected()) {
-	 for (File f = ind.getParentFile(); f != null; f = f.getParentFile()) {
-	    if (f.exists() && f.canWrite()) {
-	       install_directory = ind;
-	       return true;
-	     }
-	  }
+         for (File f = ind.getParentFile(); f != null; f = f.getParentFile()) {
+            if (f.exists() && f.canWrite()) {
+               install_directory = ind;
+               return true;
+             }
+          }
        }
       return false;
     }
    
    
-}	// end of inner class DirectoryPanel
+}       // end of inner class DirectoryPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse panel -- panel for checking eclipse installation		*/
-/*										*/
+/*                                                                              */
+/*      Eclipse panel -- panel for checking eclipse installation                */
+/*                                                                              */
 /********************************************************************************/
 
 private class EclipsePanel extends InstallerPanel implements ActionListener, UndoableEditListener {
@@ -714,15 +714,15 @@ private class EclipsePanel extends InstallerPanel implements ActionListener, Und
 
    
 
-}	// end of inner class EclipsePanel
+}       // end of inner class EclipsePanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse downloader							*/
-/*										*/
+/*                                                                              */
+/*      Eclipse downloader                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class EclipseDownloader extends Thread {
@@ -813,18 +813,18 @@ private class EclipseDownloader extends Thread {
 
 
 /********************************************************************************/
-/*										*/
-/*	Progress Panel								*/
-/*										*/
+/*                                                                              */
+/*      Progress Panel                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProgressPanel extends InstallerPanel implements ActionListener {
 
    private JProgressBar progress_bar;
-   private JLabel	task_label;
-   private Downloader	bubbles_downloader;
+   private JLabel       task_label;
+   private Downloader   bubbles_downloader;
    private EclipseDownloader eclipse_downloader;
-   private boolean	all_done;
+   private boolean      all_done;
    private boolean      do_eclipse;
 
    ProgressPanel() {
@@ -896,13 +896,13 @@ private class ProgressPanel extends InstallerPanel implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (evt.getActionCommand()) {
-	 case "BACK" :
-	    stopDownload();
-	    moveToPanel(PanelType.ECLIPSE);
-	    break;
-	 case "CONTINUE" :
-	    moveToPanel(PanelType.FINISH);
-	    break;
+         case "BACK" :
+            stopDownload();
+            moveToPanel(PanelType.ECLIPSE);
+            break;
+         case "CONTINUE" :
+            moveToPanel(PanelType.FINISH);
+            break;
        }
     }
 
@@ -964,7 +964,7 @@ private class ProgressPanel extends InstallerPanel implements ActionListener {
       recheck();
     }
 
-}	// end of inner class ProgressPanel
+}       // end of inner class ProgressPanel
 
 
 
@@ -1018,15 +1018,15 @@ private class Downloader extends Thread {
       else progress_panel.handleResult(true);
     }
 
-}	// end of inner class Downloader
+}       // end of inner class Downloader
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	FinishPanel								*/
-/*										*/
+/*                                                                              */
+/*      FinishPanel                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class FinishPanel extends InstallerPanel implements ActionListener {
@@ -1054,7 +1054,7 @@ private class FinishPanel extends InstallerPanel implements ActionListener {
       return pnl;
     }
 
-   @Override protected boolean validate()	{ return true; }
+   @Override protected boolean validate()       { return true; }
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (evt.getActionCommand()) {
@@ -1064,15 +1064,15 @@ private class FinishPanel extends InstallerPanel implements ActionListener {
        }
     }
 
-}	// end of inner class FinishPanel
+}       // end of inner class FinishPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Image panel -- panel containing an image				*/
-/*										*/
+/*                                                                              */
+/*      Image panel -- panel containing an image                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SplashImage extends JPanel {
@@ -1118,27 +1118,27 @@ private static class SplashImage extends JPanel {
       URL u1 = BemaInstaller.class.getResource(path);
       ImageIcon icn = null;
       if (u1 != null) {
-	 icn = new ImageIcon(u1,id);
+         icn = new ImageIcon(u1,id);
        }
       else {
-	 try {
-	    u1 = new URI(url).toURL();
-	    icn = new ImageIcon(u1,id);
-	  }
-	 catch (MalformedURLException | URISyntaxException e) {
-	    return null;
-	  }
+         try {
+            u1 = new URI(url).toURL();
+            icn = new ImageIcon(u1,id);
+          }
+         catch (MalformedURLException | URISyntaxException e) {
+            return null;
+          }
        }
 
       return icn.getImage();
     }
 
-}	// end of inner class ImagePanel
+}       // end of inner class ImagePanel
 
 
 
 
-}	// end of class BemaInstaller
+}       // end of class BemaInstaller
 
 
 

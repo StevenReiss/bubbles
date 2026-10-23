@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleFragmentEditor.java 					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment editor widget 		*/
-/*										*/
+/*                                                                              */
+/*              BaleFragmentEditor.java                                         */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment editor widget                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -80,36 +80,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 class BaleFragmentEditor extends SwingGridPanel implements CaretListener, BaleConstants,
-	BudaConstants.BudaBubbleOutputer, BumpConstants.BumpProblemHandler,
-	BumpConstants.BumpBreakpointHandler, BaleConstants.BaleAnnotationListener,
-	BudaConstants.Scalable, BaleConstants.BaleWindow
+        BudaConstants.BudaBubbleOutputer, BumpConstants.BumpProblemHandler,
+        BumpConstants.BumpBreakpointHandler, BaleConstants.BaleAnnotationListener,
+        BudaConstants.Scalable, BaleConstants.BaleWindow
 {
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private EditorPane	editor_pane;
-private BaleViewport	editor_viewport;
+private EditorPane      editor_pane;
+private BaleViewport    editor_viewport;
 private BaleAnnotationArea annot_area;
-private BaleCrumbBar	crumb_bar;
+private BaleCrumbBar    crumb_bar;
 private transient BaleFinder find_bar;
 private BaleDocumentIde base_document;
 private BaleFragmentType fragment_type;
 private transient List<BaleRegion> fragment_regions;
-private String		fragment_name;
-private int		start_cline;
-private int		end_cline;
+private String          fragment_name;
+private int             start_cline;
+private int             end_cline;
 private transient Map<BumpProblem,ProblemAnnot> problem_annotations;
 private transient Map<BumpBreakpoint,BreakpointAnnot> breakpoint_annotations;
 private transient Set<BaleAnnotation> document_annotations;
-private boolean 	check_annotations;
-private double		scale_factor;
+private boolean         check_annotations;
+private double          scale_factor;
 
 
 private static final long serialVersionUID = 1;
@@ -119,13 +119,13 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentEditor(String proj,File file,String name,BaleDocumentIde fdoc,BaleFragmentType typ,
-		      List<BaleRegion> regions)
+                      List<BaleRegion> regions)
 {
    base_document = fdoc;
    fdoc.checkProjectName(proj);
@@ -198,23 +198,23 @@ void dispose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BaleDocument getDocument()		{ return editor_pane.getBaleDocument(); }
+BaleDocument getDocument()              { return editor_pane.getBaleDocument(); }
 
-@Override public BaleEditorPane getEditor()	{ return editor_pane; }
+@Override public BaleEditorPane getEditor()     { return editor_pane; }
 
-BaleFragmentType getFragmentType()	{ return fragment_type; }
+BaleFragmentType getFragmentType()      { return fragment_type; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	External BaleWindow interface						*/
-/*										*/
+/*                                                                              */
+/*      External BaleWindow interface                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BaleWindowDocument getWindowDocument()
@@ -248,9 +248,9 @@ BaleFragmentType getFragmentType()	{ return fragment_type; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle initial sizing							*/
-/*										*/
+/*                                                                              */
+/*      Handle initial sizing                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void setInitialSize(Dimension d)
@@ -313,9 +313,9 @@ void setInitialSize(Dimension d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle scaling								*/
-/*										*/
+/*                                                                              */
+/*      Handle scaling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setScaleFactor(double sf)
@@ -331,9 +331,9 @@ void setInitialSize(Dimension d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle caret events							*/
-/*										*/
+/*                                                                              */
+/*      Handle caret events                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void caretUpdate(CaretEvent evt)
@@ -360,9 +360,9 @@ void setInitialSize(Dimension d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle context menu							*/
-/*										*/
+/*                                                                              */
+/*      Handle context menu                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void handleContextMenu(MouseEvent e)
@@ -372,23 +372,23 @@ void handleContextMenu(MouseEvent e)
    Component c = SwingUtilities.getDeepestComponentAt(this,p.x,p.y);
    while (c != null) {
       if (c == crumb_bar) {
-	 convertMouseEvent(e,p,c);
-	 crumb_bar.handleContextMenu(e);
-	 break;
+         convertMouseEvent(e,p,c);
+         crumb_bar.handleContextMenu(e);
+         break;
        }
       else if (c == find_bar) {
-	 convertMouseEvent(e,p,c);
-	 break;
+         convertMouseEvent(e,p,c);
+         break;
        }
       else if (c == annot_area) {
-	 convertMouseEvent(e,p,c);
-	 annot_area.handleContextMenu(e);
-	 break;
+         convertMouseEvent(e,p,c);
+         annot_area.handleContextMenu(e);
+         break;
        }
       else if (c == editor_pane || c == this) {
-	 convertMouseEvent(e,p,c);
-	 editor_pane.handleContextMenu(e);
-	 break;
+         convertMouseEvent(e,p,c);
+         editor_pane.handleContextMenu(e);
+         break;
        }
       c = c.getParent();
     }
@@ -409,20 +409,20 @@ private final class HelpMouser extends MouseAdapter {
       Component c = (Component) evt.getSource();
       int ht = c.getHeight();
       if (c.getWidth() - evt.getX() + evt.getY() <= ht) {
-	 BudaRoot.showHelp(evt);
+         BudaRoot.showHelp(evt);
       }
    }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -430,13 +430,13 @@ private final class HelpMouser extends MouseAdapter {
    if (check_annotations) checkInitialAnnotations();
 
 //   if (scale_factor == 1 || scale_factor == 0) {
-//	super.paint(g);
+//      super.paint(g);
 //   }
 //   else {
-//	Graphics2D g1 = (Graphics2D) g.create();
-//	g1.scale(scale_factor,scale_factor);
-//	g1.setClip(0,0,getWidth(),getHeight());
-//	super.paint(g1);
+//      Graphics2D g1 = (Graphics2D) g.create();
+//      g1.scale(scale_factor,scale_factor);
+//      g1.setClip(0,0,getWidth(),getHeight());
+//      super.paint(g1);
 //   }
 
    super.paint(g);
@@ -446,12 +446,12 @@ private final class HelpMouser extends MouseAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()		{ return "BALE"; }
+@Override public String getConfigurator()               { return "BALE"; }
 
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -469,9 +469,9 @@ private final class HelpMouser extends MouseAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle problems relevant to this fragment			*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle problems relevant to this fragment                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleProblemAdded(BumpProblem bp)
@@ -481,9 +481,9 @@ private final class HelpMouser extends MouseAdapter {
 
    if (soff >= 0) {
       try {
-	 ProblemAnnot pa = new ProblemAnnot(bp,bd,bd.createPosition(soff));
-	 problem_annotations.put(bp,pa);
-	 annot_area.addAnnotation(pa);
+         ProblemAnnot pa = new ProblemAnnot(bp,bd,bd.createPosition(soff));
+         problem_annotations.put(bp,pa);
+         annot_area.addAnnotation(pa);
        }
       catch (BadLocationException e) { }
     }
@@ -537,9 +537,9 @@ private final class HelpMouser extends MouseAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle breakpoints for the fragment				*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle breakpoints for the fragment                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleBreakpointAdded(BumpBreakpoint bb)
@@ -552,9 +552,9 @@ private final class HelpMouser extends MouseAdapter {
 
    if (soff >= 0) {
       try {
-	 BreakpointAnnot ba = new BreakpointAnnot(bb,bd,bd.createPosition(soff));
-	 breakpoint_annotations.put(bb,ba);
-	 annot_area.addAnnotation(ba);
+         BreakpointAnnot ba = new BreakpointAnnot(bb,bd,bd.createPosition(soff));
+         breakpoint_annotations.put(bb,ba);
+         annot_area.addAnnotation(ba);
        }
       catch (BadLocationException e) { }
     }
@@ -583,9 +583,9 @@ private final class HelpMouser extends MouseAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor Pane specializations						*/
-/*										*/
+/*                                                                              */
+/*      Editor Pane specializations                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class EditorPane extends BaleEditorPane implements BaleEditor {
@@ -598,8 +598,8 @@ private class EditorPane extends BaleEditorPane implements BaleEditor {
       return new BaleEditorKit.FragmentKit(base_document,fragment_type,fragment_regions);
     }
 
-   @Override public BaleFinder getFindBar()			{ return find_bar; }
-   @Override public BaleAnnotationArea getAnnotationArea()	{ return annot_area; }
+   @Override public BaleFinder getFindBar()                     { return find_bar; }
+   @Override public BaleAnnotationArea getAnnotationArea()      { return annot_area; }
 
    @Override void toggleFindBar() {
       Component finder = find_bar.getComponent();
@@ -637,15 +637,15 @@ private class EditorPane extends BaleEditorPane implements BaleEditor {
       }
     }
 
-}	// end of inner class EditorPane
+}       // end of inner class EditorPane
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	FindBar methods 							*/
-/*										*/
+/*                                                                              */
+/*      FindBar methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void hideFindBar() {
@@ -672,9 +672,9 @@ void relocateFindBar()
 
 
 /********************************************************************************/
-/*										*/
-/*	Annotation methods for outside (document) annotations			*/
-/*										*/
+/*                                                                              */
+/*      Annotation methods for outside (document) annotations                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void annotationAdded(BaleAnnotation ba)
@@ -703,8 +703,8 @@ void relocateFindBar()
 
    if (ba.getForceVisible(bb)) {
       try {
-	 Position p0 = getDocument().createPosition(fragoffset);
-	 SwingUtilities.invokeLater(new ForceVisible(p0));
+         Position p0 = getDocument().createPosition(fragoffset);
+         SwingUtilities.invokeLater(new ForceVisible(p0));
        }
       catch (BadLocationException e) { }
     }
@@ -734,15 +734,15 @@ void checkInitialAnnotations()
 
    synchronized (document_annotations) {
       for (BaleAnnotation ba : document_annotations) {
-	 int fragoffset = getDocument().getFragmentOffset(ba.getDocumentOffset());
-	 if (fragoffset < 0) continue;
-	 if (ba.getForceVisible(bb)) {
-	    try {
-	       Position p0 = getDocument().createPosition(fragoffset);
-	       SwingUtilities.invokeLater(new ForceVisible(p0));
-	     }
-	    catch (BadLocationException e) { }
-	  }
+         int fragoffset = getDocument().getFragmentOffset(ba.getDocumentOffset());
+         if (fragoffset < 0) continue;
+         if (ba.getForceVisible(bb)) {
+            try {
+               Position p0 = getDocument().createPosition(fragoffset);
+               SwingUtilities.invokeLater(new ForceVisible(p0));
+             }
+            catch (BadLocationException e) { }
+          }
        }
     }
 }
@@ -789,14 +789,14 @@ private class ForceVisible implements Runnable {
       repaint();
     }
 
-}	// end of inner class ForceVisible
+}       // end of inner class ForceVisible
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging Routines							*/
-/*										*/
+/*                                                                              */
+/*      Debugging Routines                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -808,9 +808,9 @@ private class ForceVisible implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem annotations							*/
-/*										*/
+/*                                                                              */
+/*      Problem annotations                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProblemAnnot implements BaleAnnotation {
@@ -825,7 +825,7 @@ private static class ProblemAnnot implements BaleAnnotation {
       error_pos = p;
     }
 
-   @Override public File getFile()		{ return for_document.getFile(); }
+   @Override public File getFile()              { return for_document.getFile(); }
    @Override public int getDocumentOffset() {
       return for_document.getDocumentOffset(error_pos.getOffset());
     }
@@ -850,10 +850,10 @@ private static class ProblemAnnot implements BaleAnnotation {
       return IvyXml.htmlSanitize(for_problem.getMessage());
     }
 
-   @Override public Color getLineColor(BudaBubble bbl)		{ return null; }
-   @Override public Color getBackgroundColor()			{ return null; }
-   @Override public boolean getForceVisible(BudaBubble bb)	{ return false; }
-   @Override public int getPriority()				{ return 10; }
+   @Override public Color getLineColor(BudaBubble bbl)          { return null; }
+   @Override public Color getBackgroundColor()                  { return null; }
+   @Override public boolean getForceVisible(BudaBubble bb)      { return false; }
+   @Override public int getPriority()                           { return 10; }
    @Override public void addPopupButtons(Component c,JPopupMenu m) {
       switch (for_problem.getCategory()) {
          case "BSTYLE" :
@@ -868,15 +868,15 @@ private static class ProblemAnnot implements BaleAnnotation {
        }
    }
 
-}	// end of inner class ProblemAnnot
+}       // end of inner class ProblemAnnot
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint annotations							*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint annotations                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BreakpointAnnot implements BaleAnnotation {
@@ -891,7 +891,7 @@ private static class BreakpointAnnot implements BaleAnnotation {
       break_pos = p;
     }
 
-   @Override public File getFile()		{ return for_document.getFile(); }
+   @Override public File getFile()              { return for_document.getFile(); }
    @Override public int getDocumentOffset() {
       return for_document.getDocumentOffset(break_pos.getOffset());
     }
@@ -917,13 +917,13 @@ private static class BreakpointAnnot implements BaleAnnotation {
       return id;
     }
 
-   @Override public Color getLineColor(BudaBubble bbl)		{ return null; }
-   @Override public Color getBackgroundColor()			{ return null; }
-   @Override public boolean getForceVisible(BudaBubble bb)	{ return false; }
-   @Override public int getPriority()				{ return 5; }
+   @Override public Color getLineColor(BudaBubble bbl)          { return null; }
+   @Override public Color getBackgroundColor()                  { return null; }
+   @Override public boolean getForceVisible(BudaBubble bb)      { return false; }
+   @Override public int getPriority()                           { return 5; }
    @Override public void addPopupButtons(Component c,JPopupMenu m) { }
 
-}	// end of inner class BreakpointAnnot
+}       // end of inner class BreakpointAnnot
 
 
 
@@ -932,7 +932,7 @@ private static class BreakpointAnnot implements BaleAnnotation {
 
 
 
-}	// end of class BaleFragmentEditor
+}       // end of class BaleFragmentEditor
 
 
 

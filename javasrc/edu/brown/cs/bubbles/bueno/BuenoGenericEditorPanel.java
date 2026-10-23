@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoGenericEditorPanel.java					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BuenoGenericEditorPanel.java                                    */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -73,9 +73,9 @@ class BuenoGenericEditorPanel implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BuenoGenericProjectEditor project_editor;
@@ -86,9 +86,9 @@ private Set<BuenoPathEntry> base_paths;
 private boolean force_update;
 
 
-private static File		last_directory;
+private static File             last_directory;
 
-private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
+private static int      dialog_placement = BudaConstants.PLACEMENT_PREFER |
       BudaConstants.PLACEMENT_LOGICAL|
       BudaConstants.PLACEMENT_GROUPED;
 
@@ -106,9 +106,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoGenericEditorPanel(BuenoGenericProjectEditor ed,Element tabxml)
@@ -123,9 +123,9 @@ BuenoGenericEditorPanel(BuenoGenericProjectEditor ed,Element tabxml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 JPanel getPanel()
@@ -135,12 +135,12 @@ JPanel getPanel()
    return edit_panel;
 }
 
-boolean hasChanged()	
+boolean hasChanged()    
 {
    boolean chng = force_update;
    if (base_paths != null) {
       for (BuenoPathEntry pe : base_paths) {
-	 chng |= pe.hasChanged();
+         chng |= pe.hasChanged();
        }
     }
 
@@ -169,20 +169,20 @@ private void createPanel()
    switch (typ) {
       default :
       case "NONE" :
-	 return;
+         return;
       case "SOURCE" :
-	 edit_panel = createSourcePanel();
-	 break;
+         edit_panel = createSourcePanel();
+         break;
       case "LIBRARY" :
       case "PATH" :
-	 edit_panel = createPathPanel();
-	 break;
+         edit_panel = createPathPanel();
+         break;
       case "FIELDS" :
-	 edit_panel = createFieldsPanel();
-	 break;
+         edit_panel = createFieldsPanel();
+         break;
       case "PROJECTS" :
-	 edit_panel = createProjectPanel();
-	 break;
+         edit_panel = createProjectPanel();
+         break;
     }
 }
 
@@ -206,9 +206,9 @@ private abstract class EditPanel extends SwingGridPanel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Path Panel								*/
-/*										*/
+/*                                                                              */
+/*      Path Panel                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private EditPanel createPathPanel()
@@ -257,25 +257,25 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("New Jar File")) {
-	 askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
+         askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
        }
       else if (cmd.equals("New Directory")) {
-	 askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
+         askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
        }
       else if (cmd.equals("Edit")) {
-	 BuenoPathEntry pe = path_display.getSelectedValue();
-	 if (pe == null || pe.getBinaryPath() == null) return;
-	 BudaBubble bb = new EditLibraryPathEntryBubble(pe);
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 BudaBubble rbb = BudaRoot.findBudaBubble(this);
-	 if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
+         BuenoPathEntry pe = path_display.getSelectedValue();
+         if (pe == null || pe.getBinaryPath() == null) return;
+         BudaBubble bb = new EditLibraryPathEntryBubble(pe);
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         BudaBubble rbb = BudaRoot.findBudaBubble(this);
+         if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
        }
       else if (cmd.equals("Delete")) {
-	 for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
-	    panel_paths.removeElement(pe);
-	    project_editor.getLibraryPaths().remove(pe);
-	  }
-	 force_update = true;
+         for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
+            panel_paths.removeElement(pe);
+            project_editor.getLibraryPaths().remove(pe);
+          }
+         force_update = true;
        }
       else BoardLog.logE("BUENO","Unknown path panel command " + cmd);
     }
@@ -308,7 +308,7 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
       delete_button.setEnabled(sels.size() >= 1);
     }
 
-}	// end of inner class PathPanel
+}       // end of inner class PathPanel
 
 
 private class PathCellRenderer implements ListCellRenderer<BuenoPathEntry> {
@@ -392,7 +392,7 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
          closeWindow(this);
        }
     }
-}	// end of inner class NewPathEntryBubble
+}       // end of inner class NewPathEntryBubble
 
 
 
@@ -406,7 +406,7 @@ private void closeWindow(Component c)
 
 private static final class BinaryFileFilter extends FileFilter {
 
-   @Override public String getDescription()	{ return "Java Class File Directory"; }
+   @Override public String getDescription()     { return "Java Class File Directory"; }
 
    @Override public boolean accept(File f) {
       if (!f.isDirectory()) return false;
@@ -414,12 +414,12 @@ private static final class BinaryFileFilter extends FileFilter {
       return true;
     }
 
-}	// end of inner class BinaryFileFilter
+}       // end of inner class BinaryFileFilter
 
 
 private class EditLibraryPathEntryBubble extends BudaBubble implements ActionListener {
 
-   private BuenoPathEntry	for_path;
+   private BuenoPathEntry       for_path;
    private JTextField file_field;
    
    private static final long serialVersionUID = 1;
@@ -470,14 +470,14 @@ private class EditLibraryPathEntryBubble extends BudaBubble implements ActionLis
        }
     }
 
-}	// end of inner class EditJSPathEntryBubble
+}       // end of inner class EditJSPathEntryBubble
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Path Panel								*/
-/*										*/
+/*                                                                              */
+/*      Path Panel                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private EditPanel createSourcePanel()
@@ -556,7 +556,7 @@ private class SourcePanel extends EditPanel implements ActionListener, ListSelec
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       BudaBubble rbb = BudaRoot.findBudaBubble(this);
       if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement,
-	    BudaConstants.BudaBubblePosition.STATIC);
+            BudaConstants.BudaBubblePosition.STATIC);
     }
 
    private void updateButtons() {
@@ -568,7 +568,7 @@ private class SourcePanel extends EditPanel implements ActionListener, ListSelec
       if (delete_button != null) delete_button.setEnabled(candel);
     }
 
-}	// end of inner class SourcePanel
+}       // end of inner class SourcePanel
 
 
 
@@ -621,7 +621,7 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
        }
     }
 
-}	// end of inner class EditSourcePathEntryBubble
+}       // end of inner class EditSourcePathEntryBubble
 
 
 
@@ -635,8 +635,8 @@ private class SourcePattern {
       is_exclude = exc;
     }
 
-   boolean isExclude()				{ return is_exclude; }
-   String getPattern()				{ return source_pattern; }
+   boolean isExclude()                          { return is_exclude; }
+   String getPattern()                          { return source_pattern; }
 
    @Override public int hashCode() {
       int hc = source_pattern.hashCode();
@@ -646,8 +646,8 @@ private class SourcePattern {
 
    @Override public boolean equals(Object v) {
       if (v instanceof SourcePattern) {
-	 SourcePattern sv = (SourcePattern) v;
-	 return sv.source_pattern.equals(source_pattern) && sv.is_exclude == is_exclude;
+         SourcePattern sv = (SourcePattern) v;
+         return sv.source_pattern.equals(source_pattern) && sv.is_exclude == is_exclude;
        }
       return false;
     }
@@ -657,7 +657,7 @@ private class SourcePattern {
       return "[" + what + "]  " + source_pattern;
     }
 
-}	// end of inner class SourcePattern
+}       // end of inner class SourcePattern
 
 
 
@@ -707,13 +707,13 @@ private class PatternPanel extends SwingListPanel<SourcePattern> {
 
    protected SourcePattern deleteItem(Object opat) {
       if (opat != null && opat instanceof SourcePattern) {
-	 SourcePattern pat = (SourcePattern) opat;
-	 for_path.removePattern(pat.getPattern(),pat.isExclude());
+         SourcePattern pat = (SourcePattern) opat;
+         for_path.removePattern(pat.getPattern(),pat.isExclude());
        }
       return null;
     }
 
-}	// end of inner class PatternPanel
+}       // end of inner class PatternPanel
 
 
 
@@ -729,7 +729,7 @@ private class SourcePatternPanel extends SwingGridPanel {
       PatternOptions typ = PatternOptions.EXCLUDE;
       if (pat != null && !pat.isExclude()) typ = PatternOptions.INCLUDE;
       if (IvyXml.getAttrBool(tab_xml,"EXCLUDE") && IvyXml.getAttrBool(tab_xml,"INCLUDE")) {
-	 option_field =  addChoice("Type",typ,null);
+         option_field =  addChoice("Type",typ,null);
        }
     }
 
@@ -738,20 +738,20 @@ private class SourcePatternPanel extends SwingGridPanel {
       if (txt.isEmpty()) return null;
       boolean exl = true;
       if (option_field != null) {
-	 exl = option_field.getSelectedItem() == PatternOptions.EXCLUDE;
+         exl = option_field.getSelectedItem() == PatternOptions.EXCLUDE;
        }
       return new SourcePattern(txt,exl);
     }
 
-}	// end of inner class NewSourcePatternBubble
+}       // end of inner class NewSourcePatternBubble
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*     Referenced Project Panel 						*/
-/*										*/
+/*                                                                              */
+/*     Referenced Project Panel                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private EditPanel createProjectPanel()
@@ -785,14 +785,14 @@ private class ReferencesPanel extends EditPanel implements ActionListener {
       force_update = true;
     }
 
-}	// end of inner class ReferencesPanel
+}       // end of inner class ReferencesPanel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Fields panel								*/
-/*										*/
+/*                                                                              */
+/*      Fields panel                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private EditPanel createFieldsPanel()
@@ -900,8 +900,8 @@ private class FieldsPanel extends EditPanel implements ActionListener {
           if (s.startsWith(opt + ".name.")) {
              int idx = s.lastIndexOf(".");
              try {
-        	int v = Integer.parseInt(s.substring(idx+1));
-        	opts.put(v,s);
+                int v = Integer.parseInt(s.substring(idx+1));
+                opts.put(v,s);
               }
              catch (NumberFormatException e) { }
            }
@@ -1028,8 +1028,8 @@ private boolean compatibleSets(Map<String,String> umap,Map<String,String> kmap)
       String k = ent.getKey();
       String v = ent.getValue();
       if (kmap.containsKey(k)) {
-	 if (!kmap.get(k).equals(v))
-	    compat = false;
+         if (!kmap.get(k).equals(v))
+            compat = false;
        }
       else xtra.add(k);
     }
@@ -1044,7 +1044,7 @@ private boolean compatibleSets(Map<String,String> umap,Map<String,String> kmap)
 
 
 
-}	// end of class BuenoGenericEditorPanel
+}       // end of class BuenoGenericEditorPanel
 
 
 

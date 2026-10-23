@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpTrieProcessor.java						*/
-/*										*/
-/*	Build the performance trie from a debugger session			*/
-/*										*/
+/*                                                                              */
+/*              BumpTrieProcessor.java                                          */
+/*                                                                              */
+/*      Build the performance trie from a debugger session                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,9 +42,9 @@ class BumpTrieProcessor implements BumpConstants, BumpRunEventHandler
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<BumpProcess,TrieDataImpl> process_data;
@@ -52,9 +52,9 @@ private Map<BumpProcess,TrieDataImpl> process_data;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpTrieProcessor()
@@ -65,9 +65,9 @@ BumpTrieProcessor()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BumpTrieData getTrieDataForProcess(BumpProcess bp)
@@ -86,9 +86,9 @@ BumpTrieData getTrieDataForProcess(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup a new process							*/
-/*										*/
+/*                                                                              */
+/*      Setup a new process                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized TrieDataImpl setupProcess(BumpProcess bp)
@@ -104,9 +104,9 @@ private synchronized TrieDataImpl setupProcess(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Run Events								*/
-/*										*/
+/*                                                                              */
+/*      Run Events                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public synchronized void handleProcessEvent(BumpRunEvent evt)
@@ -117,29 +117,29 @@ private synchronized TrieDataImpl setupProcess(BumpProcess bp)
 
    switch (evt.getEventType()) {
       case PROCESS_ADD :
-	 if (bp == null) setupProcess(evt.getProcess());
-	 break;
+         if (bp == null) setupProcess(evt.getProcess());
+         break;
       case PROCESS_REMOVE :
-	 if (bp != null) {
-	    process_data.remove(proc);
-	  }
-	 break;
+         if (bp != null) {
+            process_data.remove(proc);
+          }
+         break;
       case PROCESS_TRIE :
-	 if (bp != null) {
-	    Element xml = (Element) evt.getEventData();
-	    bp.handleTrieEvent(xml);
-	  }
-	 break;
+         if (bp != null) {
+            Element xml = (Element) evt.getEventData();
+            bp.handleTrieEvent(xml);
+          }
+         break;
       default :
-	 break;
+         break;
     }
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Container of data for a process 					*/
-/*										*/
+/*                                                                              */
+/*      Container of data for a process                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class TrieDataImpl implements BumpTrieData {
@@ -165,25 +165,25 @@ private static class TrieDataImpl implements BumpTrieData {
       base_time = 0;
     }
 
-   @Override public BumpTrieNode getRoot()		{ return root_node; }
-   @Override public double getBaseSamples()		{ return base_samples; }
-   @Override public double getTotalSamples()		{ return total_samples; }
-   @Override public double getBaseTime()		{ return base_time; }
+   @Override public BumpTrieNode getRoot()              { return root_node; }
+   @Override public double getBaseSamples()             { return base_samples; }
+   @Override public double getTotalSamples()            { return total_samples; }
+   @Override public double getBaseTime()                { return base_time; }
 
    void handleTrieEvent(Element xml) {
       int seqid = IvyXml.getAttrInt(xml,"SEQ");
       if (seqid == event_seq+1) {
-	 processTrieEvent(xml);
-	 while (!queued_events.isEmpty()) {
-	    Element e1 = queued_events.element();
-	    int sq = IvyXml.getAttrInt(e1,"SEQ");
-	    if (sq != event_seq+1) break;
-	    e1 = queued_events.remove();
-	    processTrieEvent(e1);
-	  }
+         processTrieEvent(xml);
+         while (!queued_events.isEmpty()) {
+            Element e1 = queued_events.element();
+            int sq = IvyXml.getAttrInt(e1,"SEQ");
+            if (sq != event_seq+1) break;
+            e1 = queued_events.remove();
+            processTrieEvent(e1);
+          }
        }
       else {
-	 queued_events.add(xml);
+         queued_events.add(xml);
        }
     }
 
@@ -202,10 +202,10 @@ private static class TrieDataImpl implements BumpTrieData {
       event_seq = IvyXml.getAttrInt(xml,"SEQ",event_seq+1);
 
       for (Element thel : IvyXml.children(xml,"THREAD")) {
-	 handleThreadData(thel);
+         handleThreadData(thel);
        }
       for (Element trel : IvyXml.children(xml,"TRIENODE")) {
-	 handleTrieNode(trel);
+         handleTrieNode(trel);
        }
     }
 
@@ -214,10 +214,10 @@ private static class TrieDataImpl implements BumpTrieData {
       String nm = IvyXml.getAttrString(xml,"NAME");
       String tid = IvyXml.getAttrString(xml,"TID");
       for (BumpThread th : for_process.getThreads()) {
-	 if (th.getId().equals(tid) && th.getName().equals(nm)) {
-	    thread_data.put(id,th);
-	    break;
-	  }
+         if (th.getId().equals(tid) && th.getName().equals(nm)) {
+            thread_data.put(id,th);
+            break;
+          }
        }
     }
 
@@ -225,24 +225,24 @@ private static class TrieDataImpl implements BumpTrieData {
       int id = IvyXml.getAttrInt(xml,"ID");
       TrieNodeImpl tn = trie_data.get(id);
       if (tn == null) {
-	 tn = new TrieNodeImpl(this,xml);
-	 trie_data.put(id,tn);
-	 if (IvyXml.getAttrBool(xml,"ROOT")) {
-	    root_node = tn;
-	  }
+         tn = new TrieNodeImpl(this,xml);
+         trie_data.put(id,tn);
+         if (IvyXml.getAttrBool(xml,"ROOT")) {
+            root_node = tn;
+          }
        }
       else tn.update(xml);
     }
 
-}	// end of inner class BumpTrieData
+}       // end of inner class BumpTrieData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trie Node implementation						*/
-/*										*/
+/*                                                                              */
+/*      Trie Node implementation                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class TrieNodeImpl implements BumpTrieNode {
@@ -252,7 +252,7 @@ private static class TrieNodeImpl implements BumpTrieNode {
    private List<TrieNodeImpl> child_nodes;
    private String class_name;
    private String method_name;
-   private int	  line_number;
+   private int    line_number;
    private String file_name;
    private int [] count_data;
    private int [] total_data;
@@ -273,44 +273,44 @@ private static class TrieNodeImpl implements BumpTrieNode {
       updateCounts(xml);
     }
 
-   @Override public BumpTrieNode getParent()		{ return parent_node; }
+   @Override public BumpTrieNode getParent()            { return parent_node; }
    @Override public Collection<BumpTrieNode> getChildren() {
       List<BumpTrieNode> rslt = new ArrayList<>();
       if (child_nodes != null) rslt.addAll(child_nodes);
       return rslt;
     }
-   @Override public int [] getCounts()		{ return count_data; }
+   @Override public int [] getCounts()          { return count_data; }
    @Override public Collection<BumpThread> getThreads() {
       List<BumpThread> rslt = new ArrayList<>();
       if (thread_counts != null) {
-	 rslt.addAll(thread_counts.keySet());
+         rslt.addAll(thread_counts.keySet());
        }
       return rslt;
     }
    @Override public int [] getThreadCounts(BumpThread th) {
       return thread_counts.get(th);
     }
-   @Override public String getClassName()		{ return class_name; }
-   @Override public String getMethodName()		{ return method_name; }
-   @Override public int getLineNumber() 		{ return line_number; }
-   @Override public String getFileName()		{ return file_name; }
+   @Override public String getClassName()               { return class_name; }
+   @Override public String getMethodName()              { return method_name; }
+   @Override public int getLineNumber()                 { return line_number; }
+   @Override public String getFileName()                { return file_name; }
 
-   @Override public int [] getTotals()			{ return total_data; }
+   @Override public int [] getTotals()                  { return total_data; }
 
    void update(Element xml) {
       if (parent_node == null && IvyXml.getAttrPresent(xml,"PARENT")) {
-	 setValues(xml);
+         setValues(xml);
        }
       updateCounts(xml);
     }
 
    private void setValues(Element xml) {
       if (parent_node == null) {
-	 int pid = IvyXml.getAttrInt(xml,"PARENT");
-	 if (pid > 0) {
-	    parent_node = base_data.getTrieNodeFromId(pid);;
-	    if (parent_node != null) parent_node.addChild(this);
-	  }
+         int pid = IvyXml.getAttrInt(xml,"PARENT");
+         if (pid > 0) {
+            parent_node = base_data.getTrieNodeFromId(pid);;
+            if (parent_node != null) parent_node.addChild(this);
+          }
        }
       class_name = IvyXml.getAttrString(xml,"CLASS",class_name);
       method_name = IvyXml.getAttrString(xml,"METHOD",method_name);
@@ -326,17 +326,17 @@ private static class TrieNodeImpl implements BumpTrieNode {
    private void updateCounts(Element xml) {
       count_data = getCounts(xml,count_data);
       for (Element th : IvyXml.children(xml,"THREAD")) {
-	 int tid = IvyXml.getAttrInt(th,"ID");
-	 BumpThread bt = base_data.getThreadFromId(tid);
-	 if (bt != null) {
-	    if (thread_counts == null) thread_counts = new HashMap<>();
-	    int [] cts = thread_counts.get(bt);
-	    if (cts == null) {
-	       cts = getCounts(th,cts);
-	       if (cts != null) thread_counts.put(bt,cts);
-	     }
-	    else getCounts(th,cts);
-	  }
+         int tid = IvyXml.getAttrInt(th,"ID");
+         BumpThread bt = base_data.getThreadFromId(tid);
+         if (bt != null) {
+            if (thread_counts == null) thread_counts = new HashMap<>();
+            int [] cts = thread_counts.get(bt);
+            if (cts == null) {
+               cts = getCounts(th,cts);
+               if (cts != null) thread_counts.put(bt,cts);
+             }
+            else getCounts(th,cts);
+          }
        }
     }
 
@@ -345,36 +345,36 @@ private static class TrieNodeImpl implements BumpTrieNode {
       int ict = IvyXml.getAttrInt(xml,"IO",0);
       int wct = IvyXml.getAttrInt(xml,"WAIT",0);
       if (rct > 0 || ict > 0 || wct > 0) {
-	 if (cts == null) cts = new int[BUMP_TRIE_OP_COUNT];
-	 cts[BUMP_TRIE_OP_RUN] = rct;
-	 cts[BUMP_TRIE_OP_IO] = ict;
-	 cts[BUMP_TRIE_OP_WAIT] = wct;
+         if (cts == null) cts = new int[BUMP_TRIE_OP_COUNT];
+         cts[BUMP_TRIE_OP_RUN] = rct;
+         cts[BUMP_TRIE_OP_IO] = ict;
+         cts[BUMP_TRIE_OP_WAIT] = wct;
        }
       return cts;
     }
 
    @Override public void computeTotals() {
       if (count_data == null && child_nodes == null) {
-	 total_data = null;
+         total_data = null;
        }
       else {
-	 boolean ok = false;
-	 total_data = new int[BUMP_TRIE_OP_COUNT];
-	 if (count_data != null) {
-	    ok = true;
-	    for (int i = 0; i < BUMP_TRIE_OP_COUNT; ++i) total_data[i] += count_data[i];
-	  }
-	 if (child_nodes != null) {
-	    for (TrieNodeImpl tni : child_nodes) {
-	       tni.computeTotals();
-	       int [] tots = tni.total_data;
-	       if (tots != null) {
-		  ok = true;
-		  for (int i = 0; i < BUMP_TRIE_OP_COUNT; ++i) total_data[i] += tots[i];
-		}
-	     }
-	  }
-	 if (!ok) total_data = null;
+         boolean ok = false;
+         total_data = new int[BUMP_TRIE_OP_COUNT];
+         if (count_data != null) {
+            ok = true;
+            for (int i = 0; i < BUMP_TRIE_OP_COUNT; ++i) total_data[i] += count_data[i];
+          }
+         if (child_nodes != null) {
+            for (TrieNodeImpl tni : child_nodes) {
+               tni.computeTotals();
+               int [] tots = tni.total_data;
+               if (tots != null) {
+                  ok = true;
+                  for (int i = 0; i < BUMP_TRIE_OP_COUNT; ++i) total_data[i] += tots[i];
+                }
+             }
+          }
+         if (!ok) total_data = null;
        }
     }
 
@@ -382,23 +382,23 @@ private static class TrieNodeImpl implements BumpTrieNode {
       String s = "<";
       if (getClassName() == null) s += "^";
       else {
-	 s += getClassName() + "." + getMethodName() + "@" + getLineNumber();
+         s += getClassName() + "." + getMethodName() + "@" + getLineNumber();
        }
       if (count_data != null) {
-	 s += " " + count_data;
+         s += " " + count_data;
        }
       s += ">";
       return s;
     }
 
-}	// end of inner class TrieNodeImpl
+}       // end of inner class TrieNodeImpl
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparator for events in priority queue 				*/
-/*										*/
+/*                                                                              */
+/*      Comparator for events in priority queue                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class EventComparator implements Comparator<Element> {
@@ -411,7 +411,7 @@ private static final class EventComparator implements Comparator<Element> {
       return 0;
     }
 
-}	// end of inner class EventComparator
+}       // end of inner class EventComparator
 
 
 
@@ -419,7 +419,7 @@ private static final class EventComparator implements Comparator<Element> {
 
 
 
-}	// end of class BumpTrieProcessor
+}       // end of class BumpTrieProcessor
 
 
 

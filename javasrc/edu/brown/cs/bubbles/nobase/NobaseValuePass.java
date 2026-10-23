@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseValuePass.java						*/
-/*										*/
-/*	Semantics resolution pass to compute names,types, and values		*/
-/*										*/
+/*                                                                              */
+/*              NobaseValuePass.java                                            */
+/*                                                                              */
+/*      Semantics resolution pass to compute names,types, and values            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -132,13 +132,13 @@ class NobaseValuePass extends DefaultASTVisitor implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseScope		global_scope;
-private NobaseProject		for_project;
+private NobaseScope             global_scope;
+private NobaseProject           for_project;
 
 private NobaseScope cur_scope;
 private List<NobaseMessage> error_list;
@@ -164,13 +164,13 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseValuePass(NobaseProject proj,NobaseScope glbl,NobaseFile module,
-	List<NobaseMessage> errors)
+        List<NobaseMessage> errors)
 {
    global_scope = glbl;
    for_project = proj;
@@ -188,9 +188,9 @@ NobaseValuePass(NobaseProject proj,NobaseScope glbl,NobaseFile module,
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean checkChanged()
@@ -201,7 +201,7 @@ boolean checkChanged()
 }
 
 
-void setForceDefine()				{ force_define = true; }
+void setForceDefine()                           { force_define = true; }
 
 
 
@@ -276,9 +276,9 @@ void setForceDefine()				{ force_define = true; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Top Level visit methods 						*/
-/*										*/
+/*                                                                              */
+/*      Top Level visit methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean visit(JavaScriptUnit b)
@@ -292,7 +292,7 @@ void setForceDefine()				{ force_define = true; }
    NobaseSymbol osym = NobaseAst.getDefinition(b);
    if (osym == null) {
       NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,b,
-	    enclosing_file.getModuleName(),false);
+            enclosing_file.getModuleName(),false);
       nsym.setBubblesName(enclosing_file.getModuleName());
       NobaseAst.setDefinition(b,nsym);
     }
@@ -311,9 +311,9 @@ void setForceDefine()				{ force_define = true; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants and literal handling						*/
-/*										*/
+/*                                                                              */
+/*      Constants and literal handling                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void endVisit(BooleanLiteral n)
@@ -458,9 +458,9 @@ void setForceDefine()				{ force_define = true; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Expression processing							*/
-/*										*/
+/*                                                                              */
+/*      Expression processing                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean visit(ArrayAccess n)
@@ -481,7 +481,7 @@ void setForceDefine()				{ force_define = true; }
    else {
       Object idxv = (ivl == null ? null : ivl.getKnownValue());
       if (idxv != null && idxv instanceof String && nvl != null) {
-	 if (nvl.addProperty(idxv,lvl)) change_flag = true;
+         if (nvl.addProperty(idxv,lvl)) change_flag = true;
        }
       else if (nvl != null) nvl.addProperty(null,lvl);
       setValue(n,lvl);
@@ -624,8 +624,8 @@ void setForceDefine()				{ force_define = true; }
       n.getExpression().accept(this);
       scp = NobaseAst.getScope(n);
       if (scp == null) {
-	 scp = new NobaseScope(ScopeType.MEMBER,cur_scope);
-	 NobaseAst.setScope(n,scp);
+         scp = new NobaseScope(ScopeType.MEMBER,cur_scope);
+         NobaseAst.setScope(n,scp);
        }
       scp.setValue(NobaseAst.getNobaseValue(n.getExpression()));
       cur_scope = scp;
@@ -680,45 +680,45 @@ void setForceDefine()				{ force_define = true; }
       args.add(NobaseAst.getNobaseValue(n.getLeftOperand()));
       args.add(NobaseAst.getNobaseValue(n.getRightOperand()));
       if (n.hasExtendedOperands()) {
-	 for (Object o : n.extendedOperands()) {
-	    Expression e = (Expression) o;
-	    args.add(NobaseAst.getNobaseValue(e));
-	  }
+         for (Object o : n.extendedOperands()) {
+            Expression e = (Expression) o;
+            args.add(NobaseAst.getNobaseValue(e));
+          }
        }
       nv = ev.evaluate(enclosing_file,args,NobaseValue.createUndefined());
     }
    else {
       switch (ops) {
-	 case "+" :
-	    // handled by evaluator
-	    break;
-	 case "*" :
-	 case "/" :
-	 case "%" :
-	 case "-" :
-	 case "<<" :
-	 case ">>" :
-	 case ">>>" :
-	 case "^" :
-	 case "&" :
-	 case "|" :
-	    nv = NobaseValue.createNumber();
-	    break;
-	 case "<" :
-	 case ">" :
-	 case "<=" :
-	 case ">=" :
-	 case "==" :
-	 case "!=" :
-	 case "&&" :
-	 case "||" :
-	 case "===" :
-	 case "in" :
-	    nv = NobaseValue.createBoolean();
-	    break;
-	 default :
-	    nv = NobaseValue.createAnyValue();
-	    break;
+         case "+" :
+            // handled by evaluator
+            break;
+         case "*" :
+         case "/" :
+         case "%" :
+         case "-" :
+         case "<<" :
+         case ">>" :
+         case ">>>" :
+         case "^" :
+         case "&" :
+         case "|" :
+            nv = NobaseValue.createNumber();
+            break;
+         case "<" :
+         case ">" :
+         case "<=" :
+         case ">=" :
+         case "==" :
+         case "!=" :
+         case "&&" :
+         case "||" :
+         case "===" :
+         case "in" :
+            nv = NobaseValue.createBoolean();
+            break;
+         default :
+            nv = NobaseValue.createAnyValue();
+            break;
        }
     }
 
@@ -854,9 +854,9 @@ void setForceDefine()				{ force_define = true; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Name methods								*/
-/*										*/
+/*                                                                              */
+/*      Name methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void endVisit(ArrayName n)
@@ -912,9 +912,9 @@ private void handleName(String name,ASTNode id)
       ref = cur_scope.lookup(name);
       NobaseValue val = cur_scope.lookupValue(name,(set_lvalue != null));
       if (ref == null && force_define && val == null &&
-	    !NobaseResolver.isGeneratedName(name)) {
-	 // see if we should create implicit definition
-	 NobaseScope dscope = cur_scope.getDefaultScope();
+            !NobaseResolver.isGeneratedName(name)) {
+         // see if we should create implicit definition
+         NobaseScope dscope = cur_scope.getDefaultScope();
          if (cur_scope.getScopeType() != ScopeType.FUNCTION) {
             switch (dscope.getScopeType()) {
                case FILE :
@@ -937,33 +937,33 @@ private void handleName(String name,ASTNode id)
           }
        }
       if (ref != null) {
-	 NobaseAst.setReference(id,ref);
-	 NobaseScope dscp = ref.getDefScope();
-	 if (dscp != null) {
-	    boolean fnd = false;
-	    for (NobaseScope scp = cur_scope; scp != null; scp = scp.getParent()) {
-	       if (scp == dscp) {
-		  fnd = true;
-		  break;
-		}
-	     }
-	    if (!fnd) {
-	       NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
-		     "Possible misuse of variable " + name + " based on lexical scope ",
-		     NobaseAst.getLineNumber(id),NobaseAst.getColumn(id),
-		     NobaseAst.getEndLine(id),NobaseAst.getEndColumn(id));
-	       error_list.add(msg);
-	     }
-	  }
+         NobaseAst.setReference(id,ref);
+         NobaseScope dscp = ref.getDefScope();
+         if (dscp != null) {
+            boolean fnd = false;
+            for (NobaseScope scp = cur_scope; scp != null; scp = scp.getParent()) {
+               if (scp == dscp) {
+                  fnd = true;
+                  break;
+                }
+             }
+            if (!fnd) {
+               NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
+                     "Possible misuse of variable " + name + " based on lexical scope ",
+                     NobaseAst.getLineNumber(id),NobaseAst.getColumn(id),
+                     NobaseAst.getEndLine(id),NobaseAst.getEndColumn(id));
+               error_list.add(msg);
+             }
+          }
        }
     }
    if (ref != null) {
       if (set_lvalue != null) {
-	 NobaseValue nv = NobaseValue.mergeValues(set_lvalue,ref.getValue());
-	 setValue(id,nv);
+         NobaseValue nv = NobaseValue.mergeValues(set_lvalue,ref.getValue());
+         setValue(id,nv);
        }
       else {
-	 NobaseAst.setNobaseValue(id,ref.getValue());
+         NobaseAst.setNobaseValue(id,ref.getValue());
        }
     }
    else {
@@ -973,7 +973,7 @@ private void handleName(String name,ASTNode id)
             NobaseMain.logD("No value found for " + name + " at " +
                   NobaseAst.getLineNumber(id));
           }
-	 nv = NobaseValue.createUnknownValue();
+         nv = NobaseValue.createUnknownValue();
        }
       NobaseAst.setNobaseValue(id,nv);
     }
@@ -983,9 +983,9 @@ private void handleName(String name,ASTNode id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Statement methods							*/
-/*										*/
+/*                                                                              */
+/*      Statement methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean visit(Block n)
@@ -1150,7 +1150,7 @@ private void handleAwaitedFor(ASTNode n)
 }
 
 
-@Override public void endVisit(LabeledStatement n)	{ }
+@Override public void endVisit(LabeledStatement n)      { }
 
 
 @Override public void endVisit(ReturnStatement n)
@@ -1181,11 +1181,11 @@ private void handleAwaitedFor(ASTNode n)
    localScopeEnd();
 }
 
-@Override public void endVisit(SwitchCase n)		{ }
+@Override public void endVisit(SwitchCase n)            { }
 
 
 
-@Override public void endVisit(ThrowStatement n)	{ }
+@Override public void endVisit(ThrowStatement n)        { }
 
 
 @Override public boolean visit(TryStatement n)
@@ -1244,9 +1244,9 @@ private void handleAwaitedFor(ASTNode n)
 
 
 /********************************************************************************/
-/*										*/
-/*	Type methods								*/
-/*										*/
+/*                                                                              */
+/*      Type methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void endVisit(ArrayType n) { }
@@ -1265,15 +1265,15 @@ private void handleAwaitedFor(ASTNode n)
 @Override public void endVisit(TypeLiteral n)
 {
    // type.class
-   setValue(n,NobaseValue.createAnyValue());	// should be type value
+   setValue(n,NobaseValue.createAnyValue());    // should be type value
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class methods								*/
-/*										*/
+/*                                                                              */
+/*      Class methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void endVisit(AnonymousClassDeclaration n) { }
@@ -1355,9 +1355,9 @@ private void handleAwaitedFor(ASTNode n)
 
 
 /********************************************************************************/
-/*										*/
-/*	Module methods								*/
-/*										*/
+/*                                                                              */
+/*      Module methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void endVisit(ExportDeclaration n) { }
@@ -1380,9 +1380,9 @@ private void handleAwaitedFor(ASTNode n)
 
 
 /********************************************************************************/
-/*										*/
-/*	Variable Declaration methods						*/
-/*										*/
+/*                                                                              */
+/*      Variable Declaration methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean visit(SingleVariableDeclaration fp)
@@ -1475,7 +1475,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
       VariableDeclarationExpression vde = (VariableDeclarationExpression) par;
       vk = vde.getKind();
       if (vde.getType() != null) {
-	 decltype = NobaseAst.getType(vde.getType());
+         decltype = NobaseAst.getType(vde.getType());
        }
       par = par.getParent();
     }
@@ -1483,7 +1483,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
       VariableDeclarationStatement vds = (VariableDeclarationStatement) par;
       vk = vds.getKind();
       if (vds.getType() != null) {
-	 decltype = NobaseAst.getType(vds.getType());
+         decltype = NobaseAst.getType(vds.getType());
        }
       par = par.getParent();
     }
@@ -1491,28 +1491,28 @@ private boolean handleDeclaration(VariableDeclaration vd)
    if (par instanceof FunctionDeclaration) {
       // parameter
       if (fident != null) {
-	 String newname = fident.getIdentifier();
-	 NobaseSymbol osym = NobaseAst.getDefinition(vd);
-	 NobaseScope scp = cur_scope.getParent();
-	 NobaseSymbol psym = scp.lookup(newname);
-	 if (psym != null) {
-	    NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
-		  "Parameter " + newname + " hides outside variable",
-		  NobaseAst.getLineNumber(vd),NobaseAst.getColumn(vd),
-		  NobaseAst.getEndLine(vd),NobaseAst.getEndColumn(vd));
-	    error_list.add(msg);
-	  }
-	 if (osym == null) {
-	    NobaseSymbol sym = new NobaseSymbol(for_project,enclosing_file,vd,newname,true);
-	    setName(sym,newname,cur_scope);
-	    osym = cur_scope.define(sym);
-	    if (osym != sym) duplicateDef(fident.getIdentifier(),vd);
-	    if (enclosing_function != null) {
-	       newname = enclosing_function + "." + newname;
-	     }
-	    NobaseAst.setDefinition(vd,osym);
-	    NobaseAst.setDefinition(fident,osym);
-	  }
+         String newname = fident.getIdentifier();
+         NobaseSymbol osym = NobaseAst.getDefinition(vd);
+         NobaseScope scp = cur_scope.getParent();
+         NobaseSymbol psym = scp.lookup(newname);
+         if (psym != null) {
+            NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
+                  "Parameter " + newname + " hides outside variable",
+                  NobaseAst.getLineNumber(vd),NobaseAst.getColumn(vd),
+                  NobaseAst.getEndLine(vd),NobaseAst.getEndColumn(vd));
+            error_list.add(msg);
+          }
+         if (osym == null) {
+            NobaseSymbol sym = new NobaseSymbol(for_project,enclosing_file,vd,newname,true);
+            setName(sym,newname,cur_scope);
+            osym = cur_scope.define(sym);
+            if (osym != sym) duplicateDef(fident.getIdentifier(),vd);
+            if (enclosing_function != null) {
+               newname = enclosing_function + "." + newname;
+             }
+            NobaseAst.setDefinition(vd,osym);
+            NobaseAst.setDefinition(fident,osym);
+          }
        }
       return false;
     }
@@ -1522,10 +1522,10 @@ private boolean handleDeclaration(VariableDeclaration vd)
       NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,fident.getIdentifier(),true);
       nsym.setSymbolType(SymbolType.LET);
       if (enclosing_function != null) {
-	 setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
+         setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
        }
       else {
-	 setName(nsym,fident.getIdentifier(),cur_scope);
+         setName(nsym,fident.getIdentifier(),cur_scope);
        }
       NobaseSymbol sym = cur_scope.define(nsym);
       NobaseAst.setDefinition(fident,sym);
@@ -1562,13 +1562,13 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
       else if (vk == VariableKind.CONST) nsym.setSymbolType(SymbolType.CONST);
       else if (vk == VariableKind.VAR) nsym.setSymbolType(SymbolType.VAR);
       if (enclosing_function != null) {
-	 setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
+         setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
        }
       else {
-	 setName(nsym,fident.getIdentifier(),cur_scope);
+         setName(nsym,fident.getIdentifier(),cur_scope);
        }
       if (decltype != null) {
-	 nsym.setDataType(decltype);
+         nsym.setDataType(decltype);
        }
       if (initv != null) {
          if (mult != null) {
@@ -1581,9 +1581,9 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
       
       sym = cur_scope.define(nsym);
       if (nsym != sym) {
-	 boolean dupok = false;
+         boolean dupok = false;
          if (initv != null && initv.isFunction() && initv == sym.getValue()) dupok = true;
-	 if (!dupok) duplicateDef(fident.getIdentifier(),vd);
+         if (!dupok) duplicateDef(fident.getIdentifier(),vd);
        }
       
       if (vd != null)  NobaseAst.setDefinition(vd,sym);
@@ -1594,9 +1594,9 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
 
 
 /********************************************************************************/
-/*										*/
-/*	Function Declaration methods						*/
-/*										*/
+/*                                                                              */
+/*      Function Declaration methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean visit(FunctionDeclaration n)
@@ -1613,7 +1613,7 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
    if (fctname != null) {
       NobaseSymbol osym = NobaseAst.getDefinition(n);
       if (osym == null) {
-	 ASTNode defnode = n;
+         ASTNode defnode = n;
          ASTNode pn = defnode.getParent();
          if (pn instanceof FunctionExpression) {
             ASTNode gpn = pn.getParent();
@@ -1630,30 +1630,30 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
                 }
              }
           }
-	 NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,defnode,fctname,true);
-	 setName(nsym,fctname,defscope);
-	 nsym.setValue(nv);
-	 osym = defscope.define(nsym);
+         NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,defnode,fctname,true);
+         setName(nsym,fctname,defscope);
+         nsym.setValue(nv);
+         osym = defscope.define(nsym);
          if (osym != nsym) {
-	    duplicateDef(fctname,n);
-	    nsym = osym;
-	  }
-	 NobaseAst.setDefinition(n,osym);
+            duplicateDef(fctname,n);
+            nsym = osym;
+          }
+         NobaseAst.setDefinition(n,osym);
        }
     }
-	
+        
    NobaseScope nscp = NobaseAst.getScope(n);
    if (nscp == null) {
       NobaseValue othis = null;
       if (enclosing_function != null) {
-	 NobaseSymbol othissym = cur_scope.lookup("this");
-	 if (othissym != null) othis = othissym.getValue();
+         NobaseSymbol othissym = cur_scope.lookup("this");
+         if (othissym != null) othis = othissym.getValue();
        }
       nscp = new NobaseScope(ScopeType.FUNCTION,cur_scope);
       NobaseAst.setScope(n,nscp);
       nscp.setValue(nv);
       if (othis != null) {
-	 nv.mergeProperties(othis);
+         nv.mergeProperties(othis);
        }
       NobaseSymbol thissym = new NobaseSymbol(for_project,null,null,"this",true);
       thissym.setValue(nv);
@@ -1667,19 +1667,19 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
       NobaseSymbol nsym = NobaseAst.getDefinition(defnd);
       if (nsym == null) nsym = NobaseAst.getDefinition(n);
       if (nsym == null) {
-	 nsym = new NobaseSymbol(for_project,enclosing_file,defnd,fctname,true);
-	 nsym.setValue(nv);
-	 setName(nsym,fctname,defscope);
+         nsym = new NobaseSymbol(for_project,enclosing_file,defnd,fctname,true);
+         nsym.setValue(nv);
+         setName(nsym,fctname,defscope);
        }
       if (!fctname.equals(nsym.getName()))
-	 cur_scope.defineAll(nsym,fctname);
+         cur_scope.defineAll(nsym,fctname);
       NobaseAst.setDefinition(defnd,nsym);
       if (enclosing_function == null) enclosing_function = fctname;
       else if (fctname.contains(".")) enclosing_function = fctname;
       else enclosing_function += "." + fctname;
       Expression id = n.getMethodName();
       if (id != null && NobaseAst.getDefinition(id) == null) {
-	 NobaseAst.setDefinition(id,nsym);
+         NobaseAst.setDefinition(id,nsym);
        }
     }
 
@@ -1698,35 +1698,35 @@ private String getFunctionName(FunctionDeclaration fc)
    if (fc.getMethodName() != null && fc.getMethodName() instanceof SimpleName) {
       SimpleName fnm = (SimpleName) fc.getMethodName();
       if (!NobaseResolver.isGeneratedName(fnm.getIdentifier()))
-	 return fnm.getIdentifier();
+         return fnm.getIdentifier();
     }
    if (fc.getParent() instanceof VariableDeclaration) {
       VariableDeclaration d = (VariableDeclaration) fc.getParent();
       return d.getName().getIdentifier();
     }
    if (fc.getParent() instanceof FunctionExpression &&
-	 fc.getParent().getParent() instanceof Assignment) {
+         fc.getParent().getParent() instanceof Assignment) {
       Assignment ao = (Assignment) fc.getParent().getParent();
       if (ao.getRightHandSide() != fc.getParent()) return null;
       if (ao.getLeftHandSide() instanceof FieldAccess) {
-	 FieldAccess ma = (FieldAccess) ao.getLeftHandSide();
-	 String m1 = getStringIdentName(ma.getName());
-	 if (m1 == null) return null;
-	 String m0 = getStringIdentName(ma.getExpression());
-	 if (m0 != null && m0.equals("this") && enclosing_function != null) {
-	    return m1;
-	  }
-	 else if (m0 == null && ma.getExpression() instanceof FieldAccess) {
-	    FieldAccess ma1 = (FieldAccess) ma.getExpression();
-	    String k1 = getStringIdentName(ma1.getExpression());
-	    String k2 = getStringIdentName(ma1.getName());
-	    if (k2 != null && k2.equals("prototype") && k1 != null) {
-	       return k1 + "." + m1;
-	     }
-	  }
-	 else if (m0 != null && m0.equals("exports") && enclosing_function == null) {
-	    return m1;
-	  }
+         FieldAccess ma = (FieldAccess) ao.getLeftHandSide();
+         String m1 = getStringIdentName(ma.getName());
+         if (m1 == null) return null;
+         String m0 = getStringIdentName(ma.getExpression());
+         if (m0 != null && m0.equals("this") && enclosing_function != null) {
+            return m1;
+          }
+         else if (m0 == null && ma.getExpression() instanceof FieldAccess) {
+            FieldAccess ma1 = (FieldAccess) ma.getExpression();
+            String k1 = getStringIdentName(ma1.getExpression());
+            String k2 = getStringIdentName(ma1.getName());
+            if (k2 != null && k2.equals("prototype") && k1 != null) {
+               return k1 + "." + m1;
+             }
+          }
+         else if (m0 != null && m0.equals("exports") && enclosing_function == null) {
+            return m1;
+          }
        }
     }
    return getStringIdentName(fc.getMethodName());
@@ -1742,7 +1742,7 @@ private ASTNode getFunctionNode(FunctionDeclaration fc)
     }
    if (fc.getParent() instanceof VariableDeclaration) return fc.getParent();
    if (fc.getParent() instanceof FunctionExpression &&
-	 fc.getParent().getParent() instanceof Assignment)
+         fc.getParent().getParent() instanceof Assignment)
       return fc.getParent().getParent();
    if (fc.getMethodName() != null)
       return fc;
@@ -1753,9 +1753,9 @@ private ASTNode getFunctionNode(FunctionDeclaration fc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Ignored constructors							*/
-/*										*/
+/*                                                                              */
+/*      Ignored constructors                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 // comment types
@@ -1771,9 +1771,9 @@ private ASTNode getFunctionNode(FunctionDeclaration fc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility functions for setting properties				*/
-/*										*/
+/*                                                                              */
+/*      Utility functions for setting properties                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void setValue(ASTNode n,NobaseValue v)
@@ -1785,9 +1785,9 @@ private void setValue(ASTNode n,NobaseValue v)
 
 
 /********************************************************************************/
-/*										*/
-/*	Name utility methods							*/
-/*										*/
+/*                                                                              */
+/*      Name utility methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private Object getIdentName(Expression e,Expression rhs)
@@ -1841,17 +1841,17 @@ private void setName(NobaseSymbol sym,String name,NobaseScope dscope)
 private void duplicateDef(String nm,ASTNode n)
 {
    NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
-	 "Duplicate defintion of " + nm,
-	 NobaseAst.getLineNumber(n),NobaseAst.getColumn(n),NobaseAst.getEndLine(n),NobaseAst.getEndColumn(n));
+         "Duplicate defintion of " + nm,
+         NobaseAst.getLineNumber(n),NobaseAst.getColumn(n),NobaseAst.getEndLine(n),NobaseAst.getEndColumn(n));
    error_list.add(msg);
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Scope utility methods							*/
-/*										*/
+/*                                                                              */
+/*      Scope utility methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void localScopeBegin(ASTNode n)
@@ -1874,9 +1874,9 @@ private void localScopeEnd()
 
 
 /********************************************************************************/
-/*										*/
-/*	Operator implementations						*/
-/*										*/
+/*                                                                              */
+/*      Operator implementations                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class EvalPlus implements Evaluator {
@@ -1918,7 +1918,7 @@ private static final class EvalPlus implements Evaluator {
       return null;
     }
 
-}	// end of inner class EvalPlus
+}       // end of inner class EvalPlus
 
 
 
@@ -1974,12 +1974,12 @@ private static class EvalNumeric implements Evaluator {
       return NobaseValue.createNumber(v);
     }
    
-}	// end of inner class EvalNumeric
+}       // end of inner class EvalNumeric
 
 
 
 
-}	// end of class NobaseValuePass
+}       // end of class NobaseValuePass
 
 
 

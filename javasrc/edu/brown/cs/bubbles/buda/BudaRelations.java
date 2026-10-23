@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaRelations.java						*/
-/*										*/
-/*	BUblles Display Area holder of relations that can be queried		*/
-/*										*/
+/*                                                                              */
+/*              BudaRelations.java                                              */
+/*                                                                              */
+/*      BUblles Display Area holder of relations that can be queried            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,20 +42,20 @@ class BudaRelations implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private List<GroupSet>		group_sets;
+private List<GroupSet>          group_sets;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaRelations()
@@ -67,9 +67,9 @@ BudaRelations()
 
 
 /********************************************************************************/
-/*										*/
-/*	Load methods								*/
-/*										*/
+/*                                                                              */
+/*      Load methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void loadRelations(Element xml)
@@ -77,8 +77,8 @@ void loadRelations(Element xml)
    Element ge = IvyXml.getChild(xml,"GROUPS");
    if (ge != null) {
       for (Element e : IvyXml.children(ge,"GROUP")) {
-	 GroupSet gs = new GroupSet(e);
-	 group_sets.add(gs);
+         GroupSet gs = new GroupSet(e);
+         group_sets.add(gs);
        }
     }
 }
@@ -86,9 +86,9 @@ void loadRelations(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addGroup(BudaBubbleGroup bg)
@@ -103,9 +103,9 @@ void addGroup(BudaBubbleGroup bg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -122,9 +122,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold a group set						*/
-/*										*/
+/*                                                                              */
+/*      Class to hold a group set                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class GroupSet {
@@ -144,8 +144,8 @@ private static class GroupSet {
       group_name = bbg.getTitle();
       group_elements = new ArrayList<BubbleInfo>();
       for (BudaBubble bb : bbg.getBubbles()) {
-	 BubbleInfo bi = new BubbleInfo(bb);
-	 if (bi.isValid()) group_elements.add(bi);
+         BubbleInfo bi = new BubbleInfo(bb);
+         if (bi.isValid()) group_elements.add(bi);
        }
     }
 
@@ -153,20 +153,20 @@ private static class GroupSet {
       xw.begin("GROUP");
       xw.field("NAME",group_name);
       for (BubbleInfo bi : group_elements) {
-	 bi.outputXml(xw);
+         bi.outputXml(xw);
        }
       xw.end("GROUP");
     }
 
-}	// end of inner class GroupSet
+}       // end of inner class GroupSet
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold information about a bubble				*/
-/*										*/
+/*                                                                              */
+/*      Class to hold information about a bubble                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BubbleInfo {
@@ -202,15 +202,15 @@ private static class BubbleInfo {
 
    boolean isValid() {
       return project_file != null && content_name != null &&
-	 name_type != BudaContentNameType.NONE;
+         name_type != BudaContentNameType.NONE;
     }
 
-}	// end of inner class BubbleInfo
+}       // end of inner class BubbleInfo
 
 
 
 
-}	// end of class BudaRelations
+}       // end of class BudaRelations
 
 
 

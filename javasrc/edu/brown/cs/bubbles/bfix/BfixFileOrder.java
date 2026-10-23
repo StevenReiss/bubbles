@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixFileOrder.java						*/
-/*										*/
-/*	Representation of the current order of elements in a file		*/
-/*										*/
+/*                                                                              */
+/*              BfixFileOrder.java                                              */
+/*                                                                              */
+/*      Representation of the current order of elements in a file               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -47,20 +47,20 @@ class BfixFileOrder implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BfixCorrector		for_corrector;
+private BfixCorrector           for_corrector;
 private SortedSet<BfixOrderElement> elements_set;
-private boolean 		needs_update;
+private boolean                 needs_update;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixFileOrder(BfixCorrector bcor)
@@ -74,9 +74,9 @@ BfixFileOrder(BfixCorrector bcor)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void noteChange()
@@ -102,9 +102,9 @@ BfixCorrector getCorrector()            { return for_corrector; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set up the set of elements					*/
-/*										*/
+/*                                                                              */
+/*      Methods to set up the set of elements                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupElements()
@@ -123,25 +123,25 @@ private void setupElements()
    while (locs != null && !locs.isEmpty()) {
       List<BumpLocation> newlocs = new ArrayList<BumpLocation>();
       for (BumpLocation bl : locs) {
-	 BfixOrderElement be = BfixOrderElement.create(for_corrector,bl);
-	 if (minpos < 0 || be.getStartOffset() < minpos)
-	    minpos = be.getStartOffset();
-	 if (be.getEndOffset() > maxpos) maxpos = be.getEndOffset();
-	 elements_set.add(be);
+         BfixOrderElement be = BfixOrderElement.create(for_corrector,bl);
+         if (minpos < 0 || be.getStartOffset() < minpos)
+            minpos = be.getStartOffset();
+         if (be.getEndOffset() > maxpos) maxpos = be.getEndOffset();
+         elements_set.add(be);
        }
       for (BumpLocation bl : locs) {
-	 switch (bl.getSymbolType()) {
-	    case ENUM :
-	    case CLASS :
-	    case INTERFACE :
-	       if (bl.getDefinitionOffset() == minpos) break;
-	       List<BumpLocation> nlocs;
-	       nlocs = bump.findAllDeclarations(project,file,bl.getSymbolName(),false);
-	       if (nlocs != null) newlocs.addAll(nlocs);
-	       break;
-	    default :
-	       break;
-	 }
+         switch (bl.getSymbolType()) {
+            case ENUM :
+            case CLASS :
+            case INTERFACE :
+               if (bl.getDefinitionOffset() == minpos) break;
+               List<BumpLocation> nlocs;
+               nlocs = bump.findAllDeclarations(project,file,bl.getSymbolName(),false);
+               if (nlocs != null) newlocs.addAll(nlocs);
+               break;
+            default :
+               break;
+         }
       }
 
       locs = newlocs;
@@ -151,10 +151,10 @@ private void setupElements()
    if (minpos >= 0) {
       Segment s = new Segment();
       try {
-	 basedoc.getText(minpos,maxpos-minpos+1,s);
+         basedoc.getText(minpos,maxpos-minpos+1,s);
       }
       catch (BadLocationException e) {
-	 BoardLog.logE("BFIX","Problem reading file",e);
+         BoardLog.logE("BFIX","Problem reading file",e);
       }
 
       commentScan(s,minpos);
@@ -165,13 +165,13 @@ private void setupElements()
    for (Iterator<BfixOrderElement> it = elements_set.iterator(); it.hasNext(); ) {
       BfixOrderElement elt = it.next();
       while (prior != null) {
-	 if (prior.getStartOffset() <= elt.getStartOffset() &&
-	       prior.getEndOffset() >= elt.getEndOffset()) {
-	    it.remove();
-	    prior.addChild(elt);
-	    break;
-	  }
-	 else prior = prior.getParent();
+         if (prior.getStartOffset() <= elt.getStartOffset() &&
+               prior.getEndOffset() >= elt.getEndOffset()) {
+            it.remove();
+            prior.addChild(elt);
+            break;
+          }
+         else prior = prior.getParent();
        }
       prior = elt;
     }
@@ -181,18 +181,18 @@ private void setupElements()
 
 
 /********************************************************************************/
-/*										*/
-/*	Comment scanning methods						*/
-/*										*/
+/*                                                                              */
+/*      Comment scanning methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void commentScan(Segment s,int offset)
 {
    BfixOrderTokenizer btok = new BfixOrderTokenizer(s);
-   BfixToken cmmtstart = null;		// current comment start
-   BfixToken laststart = null;		// possible start of adjacent comments
-   boolean isjavadoc = false;		// current is javadoc
-   boolean lasteol = true;		// prior token was an eol
+   BfixToken cmmtstart = null;          // current comment start
+   BfixToken laststart = null;          // possible start of adjacent comments
+   boolean isjavadoc = false;           // current is javadoc
+   boolean lasteol = true;              // prior token was an eol
    boolean havecmmt = false;
 
    for ( ; ; ) {
@@ -200,42 +200,42 @@ private void commentScan(Segment s,int offset)
       if (tok == null) break;
 
       switch (tok.getTokenType()) {
-	 case EOL :
-	    if (lasteol && cmmtstart == null) cmmtstart = tok;
-	    lasteol = true;
-	    break;
-	 case BLOCK_CMMT :
-	 case DOC_CMMT :
-	 case LINE_CMMT :
-	    if (lasteol && cmmtstart == null) {
-	       cmmtstart = tok;
-	       laststart = null;
-	       havecmmt = true;
-	       isjavadoc = (tok.getTokenType() == BfixTokenType.DOC_CMMT);
-	     }
-	    else if (lasteol) {
-	       isjavadoc &= (tok.getTokenType() == BfixTokenType.DOC_CMMT);
-	       laststart = tok;
-	       havecmmt = true;
-	     }
-	    lasteol = false;
-	    break;
-	 default:
-	 case OTHER :
-	    if (cmmtstart != null) {
-	       BfixToken etok = (lasteol ? tok : laststart);
-	       int eoff = etok.getStart();
-	       String typ = "COMMENT";
-	       if (isjavadoc) typ = "JAVADOC";
-	       else if (!havecmmt) typ = "BLANKS";
-	       int soff = cmmtstart.getStart();
-	       outputComment(offset,cmmtstart,etok,typ,s.subSequence(soff,eoff));
-	     }
-	    cmmtstart = null;
-	    lasteol = false;
-	    havecmmt = false;
-	    isjavadoc = false;
-	    break;
+         case EOL :
+            if (lasteol && cmmtstart == null) cmmtstart = tok;
+            lasteol = true;
+            break;
+         case BLOCK_CMMT :
+         case DOC_CMMT :
+         case LINE_CMMT :
+            if (lasteol && cmmtstart == null) {
+               cmmtstart = tok;
+               laststart = null;
+               havecmmt = true;
+               isjavadoc = (tok.getTokenType() == BfixTokenType.DOC_CMMT);
+             }
+            else if (lasteol) {
+               isjavadoc &= (tok.getTokenType() == BfixTokenType.DOC_CMMT);
+               laststart = tok;
+               havecmmt = true;
+             }
+            lasteol = false;
+            break;
+         default:
+         case OTHER :
+            if (cmmtstart != null) {
+               BfixToken etok = (lasteol ? tok : laststart);
+               int eoff = etok.getStart();
+               String typ = "COMMENT";
+               if (isjavadoc) typ = "JAVADOC";
+               else if (!havecmmt) typ = "BLANKS";
+               int soff = cmmtstart.getStart();
+               outputComment(offset,cmmtstart,etok,typ,s.subSequence(soff,eoff));
+             }
+            cmmtstart = null;
+            lasteol = false;
+            havecmmt = false;
+            isjavadoc = false;
+            break;
        }
     }
 }
@@ -248,18 +248,18 @@ private void commentScan(Segment s,int offset)
 
 
 private void outputComment(int offset,BfixToken start,BfixToken end,String type,
-			      CharSequence body)
+                              CharSequence body)
 {
    int spos = start.getStart() + offset;
    int epos = end.getStart() + offset;
 
    for (BfixOrderElement br : elements_set) {
       if (br.getStartOffset() >= spos && epos > br.getStartOffset() &&
-	     epos < br.getEndOffset()) {
-	 elements_set.remove(br);
-	 br.setPosition(epos,br.getEndOffset());
-	 elements_set.add(br);
-	 break;
+             epos < br.getEndOffset()) {
+         elements_set.remove(br);
+         br.setPosition(epos,br.getEndOffset());
+         elements_set.add(br);
+         break;
        }
     }
 
@@ -270,7 +270,7 @@ private void outputComment(int offset,BfixToken start,BfixToken end,String type,
 
 
 
-}	// end of class BfixFileOrder
+}       // end of class BfixFileOrder
 
 
 

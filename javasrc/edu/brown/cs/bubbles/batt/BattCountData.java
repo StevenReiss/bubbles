@@ -230,9 +230,9 @@ private static class MethodCountData {
        }
     }
    
-   String getName()			{ return method_name; }
-   int getCalledCount() 		{ return called_count; }
-   int getTopCount()			{ return top_count; }
+   String getName()                     { return method_name; }
+   int getCalledCount()                 { return called_count; }
+   int getTopCount()                    { return top_count; }
    
    Collection<Integer> getBlocks()      { return block_data.keySet(); }
    BlockCountData getBlockData(int id)  { return block_data.get(id); }
@@ -274,18 +274,18 @@ private static class MethodCountData {
       xw.field("COUNT",called_count);
       xw.field("TOP",top_count);
       for (Map.Entry<String,Integer> ent : calls_counts.entrySet()) {
-	 xw.begin("CALLS");
-	 xw.field("NAME",ent.getKey());
-	 xw.field("COUNT",ent.getValue());
-	 xw.end("CALLS");
+         xw.begin("CALLS");
+         xw.field("NAME",ent.getKey());
+         xw.field("COUNT",ent.getValue());
+         xw.end("CALLS");
        }
       for (BlockCountData bcd : block_data.values()) {
-	 bcd.report(xw);
+         bcd.report(xw);
        }
       xw.end("METHOD");
     }
    
-}	// end of inner class MethodCountData
+}       // end of inner class MethodCountData
 
 
 
@@ -318,7 +318,7 @@ private static class BlockCountData {
        }
     }
    
-   int getBlockIndex()				{ return block_index; }
+   int getBlockIndex()                          { return block_index; }
    int getStartLine()                           { return start_line; }
    int getEndLine()                             { return end_line; }
    
@@ -337,7 +337,7 @@ private static class BlockCountData {
       xw.end("BLOCK");
     }
    
-}	// end of inner class BlockCountData
+}       // end of inner class BlockCountData
 
 
 

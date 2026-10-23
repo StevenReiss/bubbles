@@ -1,4 +1,4 @@
-/*	Copyright 2011 Brown University -- Steven P. Reiss		*/
+/*      Copyright 2011 Brown University -- Steven P. Reiss              */
 
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
@@ -105,4 +105,4 @@ public void testInvertColors()
 
 
 
-}	// end of BoardTest
+}       // end of BoardTest

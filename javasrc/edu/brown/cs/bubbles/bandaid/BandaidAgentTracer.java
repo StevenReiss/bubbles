@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentTracer.java 					*/
-/*										*/
-/*	Agent to capture event trace for visualization				*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentTracer.java                                         */
+/*                                                                              */
+/*      Agent to capture event trace for visualization                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -50,44 +50,44 @@ import java.util.StringTokenizer;
 
 
 public class BandaidAgentTracer extends BandaidAgent implements BandaidConstants,
-	ClassFileTransformer
+        ClassFileTransformer
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,Map<String,TraceData>> trace_map;
-private boolean 	trace_enabled;
-private int		max_size;
-private long		start_time;
-private long		last_output;
-private TraceSet []	trace_sets;
-private int		current_set;
-private ThreadMXBean	thread_bean;
-private int		sequence_number;
+private boolean         trace_enabled;
+private int             max_size;
+private long            start_time;
+private long            last_output;
+private TraceSet []     trace_sets;
+private int             current_set;
+private ThreadMXBean    thread_bean;
+private int             sequence_number;
 
 private static BandaidAgentTracer the_tracer = null;
 
-private static boolean	get_cpu_time = true;
+private static boolean  get_cpu_time = true;
 
-private static boolean	do_debug = false;
+private static boolean  do_debug = false;
 
-private static final int	NUM_SETS = 3;
-private static final int	ENTRY_COUNT = 10240;
-private static final long	NULL_DELAY = 1000;
+private static final int        NUM_SETS = 3;
+private static final int        ENTRY_COUNT = 10240;
+private static final long       NULL_DELAY = 1000;
 
-private static final int	ASM_API = Opcodes.ASM9;
+private static final int        ASM_API = Opcodes.ASM9;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentTracer(BandaidController bc)
@@ -121,9 +121,9 @@ BandaidAgentTracer(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*     Agent interface								*/
-/*										*/
+/*                                                                              */
+/*     Agent interface                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void enableMonitoring(boolean fg,long now)
@@ -148,9 +148,9 @@ BandaidAgentTracer(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Patching interface							*/
-/*										*/
+/*                                                                              */
+/*      Patching interface                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override ClassFileTransformer getTransformer()
@@ -158,15 +158,15 @@ BandaidAgentTracer(BandaidController bc)
    if (trace_enabled && trace_map == null) {
       String sf = the_control.getBaseDirectory();
       if (sf != null) {
-	 trace_map = new HashMap<String,Map<String,TraceData>>();
-	 File f1 = new File(sf);
-	 f1 = new File(f1,TRACE_DATA_FILE);
-	 loadTraceData(f1);
-	 if (trace_map == null) trace_enabled = false;
+         trace_map = new HashMap<String,Map<String,TraceData>>();
+         File f1 = new File(sf);
+         f1 = new File(f1,TRACE_DATA_FILE);
+         loadTraceData(f1);
+         if (trace_map == null) trace_enabled = false;
        }
       else {
-	 System.err.println("TRACE DISABLED");
-	 trace_enabled = false;
+         System.err.println("TRACE DISABLED");
+         trace_enabled = false;
        }
     }
 
@@ -257,70 +257,70 @@ private class ClassTransformer extends ClassVisitor {
       return mv;
     }
 
-}	// end of inner class ClassTransformer
+}       // end of inner class ClassTransformer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Load information on what to trace					*/
-/*										*/
+/*                                                                              */
+/*      Load information on what to trace                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadTraceData(File f)
 {
    try (BufferedReader fr = new BufferedReader(new FileReader(f))) {
       for ( ; ; ) {
-	 String ln = fr.readLine();
-	 if (ln == null) break;
-	 ln = ln.trim();
-	 if (ln.length() == 0) continue;
-	 if (ln.startsWith("#")) continue;
-	 StringTokenizer tok = new StringTokenizer(ln);
-	 int id = 0;
-	 int fgs = 0;
-	 int cargs = 0;
-	 String cls = null;
-	 String mthd = null;
-	 String args = null;
-	 try {
-	    if (tok.hasMoreTokens()) {
-	       id = Integer.parseInt(tok.nextToken());
-	     }
-	    if (tok.hasMoreTokens()) {
-	       fgs = Integer.parseInt(tok.nextToken());
-	     }
-	    if (tok.hasMoreTokens()) {
-	       cargs = Integer.parseInt(tok.nextToken());
-	     }
-	    if (tok.hasMoreTokens()) {
-	       cls = tok.nextToken();
-	     }
-	    if (tok.hasMoreTokens()) {
-	       mthd = tok.nextToken();
-	     }
-	    if (tok.hasMoreTokens()) {
-	       args = tok.nextToken();
-	     }
+         String ln = fr.readLine();
+         if (ln == null) break;
+         ln = ln.trim();
+         if (ln.length() == 0) continue;
+         if (ln.startsWith("#")) continue;
+         StringTokenizer tok = new StringTokenizer(ln);
+         int id = 0;
+         int fgs = 0;
+         int cargs = 0;
+         String cls = null;
+         String mthd = null;
+         String args = null;
+         try {
+            if (tok.hasMoreTokens()) {
+               id = Integer.parseInt(tok.nextToken());
+             }
+            if (tok.hasMoreTokens()) {
+               fgs = Integer.parseInt(tok.nextToken());
+             }
+            if (tok.hasMoreTokens()) {
+               cargs = Integer.parseInt(tok.nextToken());
+             }
+            if (tok.hasMoreTokens()) {
+               cls = tok.nextToken();
+             }
+            if (tok.hasMoreTokens()) {
+               mthd = tok.nextToken();
+             }
+            if (tok.hasMoreTokens()) {
+               args = tok.nextToken();
+             }
 
-	    if (mthd != null && mthd.equals("<init>") && fgs != 4) continue;
+            if (mthd != null && mthd.equals("<init>") && fgs != 4) continue;
 
-	    if (mthd != null && cls != null && id > 0 && fgs != 0) {
-	       String mkey = mthd;
-	       if (args != null) mkey += args;
-	       mkey = mkey.replace('$','/');
-	       TraceData td = new TraceData(id,fgs,cargs);
-	       Map<String,TraceData> tm = trace_map.get(cls);
-	       // System.err.println("TRACER: Add class " + cls + " " + mkey);
-	       if (tm == null) {
-		  tm = new HashMap<String,TraceData>();
-		  trace_map.put(cls,tm);
-		}
-	       // System.err.println("TRACE ENTER KEY " + mkey);
-	       tm.put(mkey,td);
-	     }
-	  }
-	 catch (NumberFormatException e) { }
+            if (mthd != null && cls != null && id > 0 && fgs != 0) {
+               String mkey = mthd;
+               if (args != null) mkey += args;
+               mkey = mkey.replace('$','/');
+               TraceData td = new TraceData(id,fgs,cargs);
+               Map<String,TraceData> tm = trace_map.get(cls);
+               // System.err.println("TRACER: Add class " + cls + " " + mkey);
+               if (tm == null) {
+                  tm = new HashMap<String,TraceData>();
+                  trace_map.put(cls,tm);
+                }
+               // System.err.println("TRACE ENTER KEY " + mkey);
+               tm.put(mkey,td);
+             }
+          }
+         catch (NumberFormatException e) { }
        }
     }
    catch (IOException e) {
@@ -332,9 +332,9 @@ private void loadTraceData(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	TraceData -- information for instumentation/tracing			*/
-/*										*/
+/*                                                                              */
+/*      TraceData -- information for instumentation/tracing                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class TraceData {
@@ -349,20 +349,20 @@ private static class TraceData {
       trace_args = arg;
     }
 
-   int getTraceId()			{ return trace_id; }
-   boolean traceOnEnter()		{ return (trace_flags & TRACE_ENTER) != 0; }
-   boolean traceOnExit()		{ return (trace_flags & TRACE_EXIT) != 0; }
-   boolean traceConstructor()		{ return (trace_flags & TRACE_CONSTRUCTOR) != 0; }
-   int getTraceArgs()			{ return trace_args; }
+   int getTraceId()                     { return trace_id; }
+   boolean traceOnEnter()               { return (trace_flags & TRACE_ENTER) != 0; }
+   boolean traceOnExit()                { return (trace_flags & TRACE_EXIT) != 0; }
+   boolean traceConstructor()           { return (trace_flags & TRACE_CONSTRUCTOR) != 0; }
+   int getTraceArgs()                   { return trace_args; }
 
-}	// end of inner class TraceData
+}       // end of inner class TraceData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace Patcher								*/
-/*										*/
+/*                                                                              */
+/*      Trace Patcher                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class TracePatcher extends MethodVisitor {
@@ -378,25 +378,25 @@ private class TracePatcher extends MethodVisitor {
 
    @Override public void visitCode() {
       if (trace_data.traceOnEnter()) {
-	 generateTrace(false);
+         generateTrace(false);
        }
       super.visitCode();
     }
 
    @Override public void visitInsn(int opc) {
       switch (opc) {
-	 case Opcodes.IRETURN :
-	 case Opcodes.LRETURN :
-	 case Opcodes.FRETURN :
-	 case Opcodes.DRETURN :
-	 case Opcodes.ARETURN :
-	 case Opcodes.RETURN :
-	    if (trace_data.traceOnExit()) {
-	       generateTrace(true);
-	     }
-	    break;
-	 default :
-	    break;
+         case Opcodes.IRETURN :
+         case Opcodes.LRETURN :
+         case Opcodes.FRETURN :
+         case Opcodes.DRETURN :
+         case Opcodes.ARETURN :
+         case Opcodes.RETURN :
+            if (trace_data.traceOnExit()) {
+               generateTrace(true);
+             }
+            break;
+         default :
+            break;
        }
       super.visitInsn(opc);
     }
@@ -429,15 +429,15 @@ private class TracePatcher extends MethodVisitor {
             "traceEntry",atyp,false);
     }
 
-}	// end of inner class TracePatcher
+}       // end of inner class TracePatcher
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods and classes						*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods and classes                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Tracer extends MethodVisitor {
@@ -462,15 +462,15 @@ private static class Tracer extends MethodVisitor {
       return "TRACE_METHOD " + method_name;
     }
 
-}	// end of inner class Tracer
+}       // end of inner class Tracer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace Entry Points							*/
-/*										*/
+/*                                                                              */
+/*      Trace Entry Points                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public static void traceEntry(int id)
@@ -528,14 +528,14 @@ private void collectStatistics(Writer w)
 
    try {
       if (w != null) {
-	 boolean out = eval.output(w);
-	 // System.err.println("TRACEOUT " + prior + " " + out);
-	 if (out || now - last_output > NULL_DELAY * 1000000) {
-	    w.append("DONE ");
-	    w.append(Long.toString(now));
-	    w.append("\n");
-	    last_output = now;
-	  }
+         boolean out = eval.output(w);
+         // System.err.println("TRACEOUT " + prior + " " + out);
+         if (out || now - last_output > NULL_DELAY * 1000000) {
+            w.append("DONE ");
+            w.append(Long.toString(now));
+            w.append("\n");
+            last_output = now;
+          }
        }
     }
    catch (IOException e) { }
@@ -545,9 +545,9 @@ private void collectStatistics(Writer w)
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace Set -- top level holder of current trace information		*/
-/*										*/
+/*                                                                              */
+/*      Trace Set -- top level holder of current trace information              */
+/*                                                                              */
 /********************************************************************************/
 
 private class TraceSet {
@@ -566,28 +566,28 @@ private class TraceSet {
       buf.append(" ");
       buf.append(time);
       if (get_cpu_time) {
-	 long tcp = thread_bean.getCurrentThreadCpuTime();
-	 tcp -= last_cputime;
-	 last_cputime += tcp;
-	 buf.append(" ");
-	 buf.append(tcp);
+         long tcp = thread_bean.getCurrentThreadCpuTime();
+         tcp -= last_cputime;
+         last_cputime += tcp;
+         buf.append(" ");
+         buf.append(tcp);
        }
       if (mid != 0) {
-	 buf.append(" ");
-	 buf.append(mid);
+         buf.append(" ");
+         buf.append(mid);
        }
       if (mid2 != 0) {
-	 buf.append(" ");
-	 buf.append(mid2);
+         buf.append(" ");
+         buf.append(mid2);
        }
       getThreadSet(th).addEntry(buf);
     }
 
    void reset() {
       for (Iterator<Map.Entry<Thread,ThreadSet>> it = thread_map.entrySet().iterator(); it.hasNext(); ) {
-	 Map.Entry<Thread,ThreadSet> ent = it.next();
-	 if (ent.getKey().isAlive()) ent.getValue().reset();
-	 else it.remove();
+         Map.Entry<Thread,ThreadSet> ent = it.next();
+         if (ent.getKey().isAlive()) ent.getValue().reset();
+         else it.remove();
        }
     }
 
@@ -601,8 +601,8 @@ private class TraceSet {
              }
             Thread th = ent.getKey();
             w.append("THREAD " + System.identityHashCode(th) + " " +
-        		BandaidController.getThreadId(th) + " " +
-        	   th.getName() + "\n");
+                        BandaidController.getThreadId(th) + " " +
+                   th.getName() + "\n");
             fg = true;
             ts.output(w);
           }
@@ -613,23 +613,23 @@ private class TraceSet {
    ThreadSet getThreadSet(Thread th) {
       ThreadSet ts = thread_map.get(th);
       if (ts == null) {
-	 ts = new ThreadSet();
-	 synchronized (this) {
-	    thread_map.put(th,ts);
-	  }
+         ts = new ThreadSet();
+         synchronized (this) {
+            thread_map.put(th,ts);
+          }
        }
       return ts;
     }
 
-}	// end of inner class TraceSet
+}       // end of inner class TraceSet
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread Set -- holder of trace entries for a thread			*/
-/*										*/
+/*                                                                              */
+/*      Thread Set -- holder of trace entries for a thread                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadSet {
@@ -660,11 +660,11 @@ private class ThreadSet {
       w.append(output_data);
     }
 
-}	// end of inner class ThreadSet
+}       // end of inner class ThreadSet
 
 
 
-}	// end of class BandaidAgentTracer
+}       // end of class BandaidAgentTracer
 
 
 

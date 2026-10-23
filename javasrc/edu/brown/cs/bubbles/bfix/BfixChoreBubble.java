@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixChoreBubble.java						*/
-/*										*/
-/*	Bubble to display the list of minion chore      			*/
-/*										*/
+/*                                                                              */
+/*              BfixChoreBubble.java                                            */
+/*                                                                              */
+/*      Bubble to display the list of minion chore                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -56,15 +56,15 @@ class BfixChoreBubble extends BudaBubble implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private transient BfixChoreManager chore_manager;
-private TableButton		chore_buttons;
-private ChoreTable		chore_table;
-private ChoreList		chore_list;
+private TableButton             chore_buttons;
+private ChoreTable              chore_table;
+private ChoreList               chore_list;
 private transient ChoreUpdater  chore_updater;
 
 
@@ -77,9 +77,9 @@ private static final long serialVersionUID = 0;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixChoreBubble(BfixChoreManager mgr)
@@ -107,9 +107,9 @@ BfixChoreBubble(BfixChoreManager mgr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -125,9 +125,9 @@ BfixChoreBubble(BfixChoreManager mgr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Chore List class 							*/
-/*										*/
+/*                                                                              */
+/*      Chore List class                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ChoreList extends JTable {
@@ -148,15 +148,15 @@ private class ChoreList extends JTable {
       removecol.setMaxWidth(16);
     }
 
-}	// end of inner class ChoreList
+}       // end of inner class ChoreList
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table Model								*/
-/*										*/
+/*                                                                              */
+/*      Table Model                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class ChoreTable extends AbstractTableModel {
@@ -166,7 +166,7 @@ private class ChoreTable extends AbstractTableModel {
    ChoreTable() {
     }
 
-   @Override public int getColumnCount()		{ return 3; }
+   @Override public int getColumnCount()                { return 3; }
 
    @Override public int getRowCount() {
       return chore_manager.getSize();
@@ -182,14 +182,14 @@ private class ChoreTable extends AbstractTableModel {
       return (col == 0 || col == 2);
     }
 
-}	// end of inner class ChoreTable
+}       // end of inner class ChoreTable
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Move changes to chore model to table model				*/
-/*										*/
+/*                                                                              */
+/*      Move changes to chore model to table model                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ChoreUpdater implements ListDataListener {
@@ -207,7 +207,7 @@ private final class ChoreUpdater implements ListDataListener {
       int delta = row1 - row0;
       int sz = chore_manager.getSize();
       for (int i = sz-1; i >= row1; --i) {
-	 chore_buttons.moveRow(i-delta,i);
+         chore_buttons.moveRow(i-delta,i);
        }
       chore_table.fireTableRowsInserted(row0,row1-1);
     }
@@ -218,27 +218,27 @@ private final class ChoreUpdater implements ListDataListener {
       int delta = row1 - row0 + 1;
       int sz = chore_manager.getSize();
       for (int i = row0; i <= row1; ++i) {
-	 chore_buttons.removeRow(i);
+         chore_buttons.removeRow(i);
        }
       for (int i = row1+1; i < sz+delta; ++i) {
-	 chore_buttons.moveRow(i,i-delta);
+         chore_buttons.moveRow(i,i-delta);
        }
       chore_table.fireTableRowsDeleted(row0,row1);
     }
 
-}	// end of inner class ChoreUpdater
+}       // end of inner class ChoreUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Editable Button interface						*/
-/*										*/
+/*                                                                              */
+/*      Editable Button interface                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class TableButton extends AbstractCellEditor
-	implements TableCellEditor, TableCellRenderer
+        implements TableCellEditor, TableCellRenderer
 {
    private static final long serialVersionUID = 5647725208335645741L;
 
@@ -276,10 +276,10 @@ private class TableButton extends AbstractCellEditor
       Map<Integer,JButton> map = (col == 0 ? action_map : delete_map);
       JButton btn = map.get(row);
       if (btn == null) {
-	 btn = new JButton((col == 0 ? yes_icon : no_icon));
-	 btn.setMargin(new Insets(2,2,2,2));
-	 btn.addActionListener(new ButtonAction(row,col));
-	 map.put(row,btn);
+         btn = new JButton((col == 0 ? yes_icon : no_icon));
+         btn.setMargin(new Insets(2,2,2,2));
+         btn.addActionListener(new ButtonAction(row,col));
+         map.put(row,btn);
        }
       return btn;
     }
@@ -307,27 +307,27 @@ private class ButtonAction implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       JButton btn = (JButton) e.getSource();
       if (col_number == 0) {
-	 for_chore.execute();
-	 chore_manager.removeChore(for_chore);
-	 chore_list.setEditingRow(-1);
-	 chore_list.setCellEditor(null);
+         for_chore.execute();
+         chore_manager.removeChore(for_chore);
+         chore_list.setEditingRow(-1);
+         chore_list.setCellEditor(null);
        }
       else if (col_number == 2) {
-	 chore_manager.removeChore(for_chore);
-	 chore_list.setEditingRow(-1);
-	 chore_list.setCellEditor(null);
+         chore_manager.removeChore(for_chore);
+         chore_list.setEditingRow(-1);
+         chore_list.setCellEditor(null);
        }
       Container c = btn.getParent();
       if (c != null) c.remove(btn);
     }
 
-}	// end of inner class ButtonAction
+}       // end of inner class ButtonAction
 
 
 
 
 
-}	// end of class BfixChoreBubble
+}       // end of class BfixChoreBubble
 
 
 

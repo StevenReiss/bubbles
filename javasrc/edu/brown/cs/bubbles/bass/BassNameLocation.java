@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassNameLocation.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies name based on set of locations	*/
-/*										*/
+/*                                                                              */
+/*              BassNameLocation.java                                           */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies name based on set of locations       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,24 +51,24 @@ class BassNameLocation extends BassNameBase implements BassConstants, BumpConsta
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private List<BumpLocation>	location_set;
-private BumpLocation		base_location;
-private Icon			appropriate_icon;
-private String			method_params;
-private String			file_prefix;
+private List<BumpLocation>      location_set;
+private BumpLocation            base_location;
+private Icon                    appropriate_icon;
+private String                  method_params;
+private String                  file_prefix;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassNameLocation(BumpLocation bl,String prefix)
@@ -80,60 +80,60 @@ BassNameLocation(BumpLocation bl,String prefix)
 
    switch (bl.getSymbolType()) {
       case PROJECT :
-	 name_type = BassNameType.PROJECT;
-	 break;
+         name_type = BassNameType.PROJECT;
+         break;
       case PACKAGE :
-	 name_type = BassNameType.PACKAGE;
-	 break;
+         name_type = BassNameType.PACKAGE;
+         break;
       case CLASS :
-	 name_type = BassNameType.CLASS;
-	 break;
+         name_type = BassNameType.CLASS;
+         break;
       case ANNOTATION :
-	 name_type = BassNameType.ANNOTATION;
-	 break;
+         name_type = BassNameType.ANNOTATION;
+         break;
       case THROWABLE :
-	 name_type = BassNameType.THROWABLE;
-	 break;
+         name_type = BassNameType.THROWABLE;
+         break;
       case INTERFACE :
-	 name_type = BassNameType.INTERFACE;
-	 break;
+         name_type = BassNameType.INTERFACE;
+         break;
       case ENUM :
-	 name_type = BassNameType.ENUM;
-	 break;
+         name_type = BassNameType.ENUM;
+         break;
       case FUNCTION :
-	 name_type = BassNameType.METHOD;
-	 break;
+         name_type = BassNameType.METHOD;
+         break;
       case CONSTRUCTOR :
-	 name_type = BassNameType.CONSTRUCTOR;
-	 break;
+         name_type = BassNameType.CONSTRUCTOR;
+         break;
       case ENUM_CONSTANT :
       case FIELD :
-	 name_type = BassNameType.FIELDS;
-	 break;
+         name_type = BassNameType.FIELDS;
+         break;
       case GLOBAL :
-	 name_type = BassNameType.VARIABLES;
-	 break;
+         name_type = BassNameType.VARIABLES;
+         break;
       case MAIN_PROGRAM :
-	 name_type = BassNameType.MAIN_PROGRAM;
-	 break;
+         name_type = BassNameType.MAIN_PROGRAM;
+         break;
       case STATIC_INITIALIZER :
-	 name_type = BassNameType.STATICS;
-	 break;
+         name_type = BassNameType.STATICS;
+         break;
       case MODULE :
-	 name_type = BassNameType.MODULE;
-	 break;
+         name_type = BassNameType.MODULE;
+         break;
       case IMPORT :
-	 name_type = BassNameType.IMPORTS;
-	 break;
+         name_type = BassNameType.IMPORTS;
+         break;
       case EXPORT :
-	 name_type = BassNameType.EXPORTS;
-	 break;
+         name_type = BassNameType.EXPORTS;
+         break;
       case PROGRAM :
-	 name_type = BassNameType.CODE;
-	 break;
+         name_type = BassNameType.CODE;
+         break;
       default :
-	 name_type = BassNameType.NONE;
-	 break;
+         name_type = BassNameType.NONE;
+         break;
     }
 
    method_params = base_location.getDetail();
@@ -166,9 +166,9 @@ BassNameLocation(BumpLocation bl,BassNameType typ,String pfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addLocation(BumpLocation bl)
@@ -182,56 +182,56 @@ void addLocation(BumpLocation bl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProject()			{ return base_location.getSymbolProject(); }
+@Override public String getProject()                    { return base_location.getSymbolProject(); }
 
 @Override public String getSubProject()
 {
    return file_prefix;
 }
 
-@Override public int getModifiers()			{ return base_location.getModifiers(); }
+@Override public int getModifiers()                     { return base_location.getModifiers(); }
 
-@Override protected String getKey()			
+@Override protected String getKey()                     
 { 
    return base_location.getKey(); 
 }
 
-@Override protected String getSymbolName()		{ return base_location.getSymbolName(); }
-@Override protected String getParameters()		{ return method_params; }
+@Override protected String getSymbolName()              { return base_location.getSymbolName(); }
+@Override protected String getParameters()              { return method_params; }
 
-File getFile()						{ return base_location.getFile(); }
+File getFile()                                          { return base_location.getFile(); }
 
 int getEclipseStartOffset() {
    switch (name_type) {
       case HEADER :
-	 if (!base_location.getKey().contains("$")) return 0;
-	 break;
+         if (!base_location.getKey().contains("$")) return 0;
+         break;
       case FILE :
-	 return 0;
+         return 0;
       default :
-	 break;
+         break;
    }
    return base_location.getDefinitionOffset();
 }
-int getEclipseEndOffset()				
+int getEclipseEndOffset()                               
 { 
    switch (name_type) {
       case FILE :
-	 return (int) getFile().length();
+         return (int) getFile().length();
       default :
-	 break;
+         break;
    }
    return base_location.getDefinitionEndOffset(); 
 }
 
-BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
+BumpSymbolType getSymbolType()                          { return base_location.getSymbolType(); }
 
-@Override public BumpLocation getLocation()		{ return base_location; }
+@Override public BumpLocation getLocation()             { return base_location; }
 @Override public Collection<BumpLocation> getLocations()
 {
    if (location_set == null || location_set.size() <= 1) return null;
@@ -244,29 +244,29 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
 {
    switch (name_type) {
       case FIELDS :
-	 return "< FIELDS >";
+         return "< FIELDS >";
       case VARIABLES :
-	 return "< VARIABLES >";
+         return "< VARIABLES >";
       case STATICS :
-	 return "< INITIALIZERS >";
+         return "< INITIALIZERS >";
       case MAIN_PROGRAM :
-	 return "< MAIN >";
+         return "< MAIN >";
       case IMPORTS :
       case EXPORTS :
       case HEADER :
-	 return "< PREFIX >";
+         return "< PREFIX >";
       case FILE :
-	 return "< FILE >";
+         return "< FILE >";
       case MODULE :
-	 return "< MODULE >";
+         return "< MODULE >";
       case CLASS :
       case ENUM :
       case INTERFACE :
       case THROWABLE :
       case ANNOTATION :
-	 return "< BODY OF " + super.getLocalName() + " >";
+         return "< BODY OF " + super.getLocalName() + " >";
       default:
-	 break;
+         break;
     }
 
    return super.getLocalName();
@@ -288,11 +288,11 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case OTHER_CLASS :
       case MODULE :
       case VIRTUAL_CODE :
-	 String nm = getUserSymbolName();
-	 nm = stripTemplates(nm);
-	 return nm;			// we add <PREFIX> or <BODY> for classes
+         String nm = getUserSymbolName();
+         nm = stripTemplates(nm);
+         return nm;                     // we add <PREFIX> or <BODY> for classes
       default:
-	 break;
+         break;
     }
 
    return super.getNameHead();
@@ -318,9 +318,9 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case OTHER_CLASS :
       case FILE :
       case MODULE :
-	 return getNameHead() + ". " + getLocalName();
+         return getNameHead() + ". " + getLocalName();
       default:
-	 break;
+         break;
     }
 
    return super.getFullName();
@@ -335,9 +335,9 @@ protected String getPrefix()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble()
@@ -350,39 +350,39 @@ protected String getPrefix()
    switch (name_type) {
       case CONSTRUCTOR :
       case METHOD :
-	 bb = bf.createMethodBubble(getProject(),getFullName());
-	 break;
+         bb = bf.createMethodBubble(getProject(),getFullName());
+         break;
       case FIELDS :
       case VARIABLES :
-	 bb = bf.createFieldsBubble(getProject(),getFile(),getNameHead());
-	 break;
+         bb = bf.createFieldsBubble(getProject(),getFile(),getNameHead());
+         break;
       case STATICS :
-	 bb = bf.createStaticsBubble(getProject(),getNameHead(),getFile());
-	 break;
+         bb = bf.createStaticsBubble(getProject(),getNameHead(),getFile());
+         break;
       case MAIN_PROGRAM :
-	 bb = bf.createMainProgramBubble(getProject(),getNameHead(),getFile());
-	 break;
+         bb = bf.createMainProgramBubble(getProject(),getNameHead(),getFile());
+         break;
       case CLASS :
       case ENUM :
       case INTERFACE :
       case THROWABLE :
       case ANNOTATION :
-	 bb = bf.createClassBubble(getProject(),getNameHead());
-	 break;
+         bb = bf.createClassBubble(getProject(),getNameHead());
+         break;
       case HEADER :
-	 bb = bf.createClassPrefixBubble(getProject(),getFile(),getNameHead());
-	 break;
+         bb = bf.createClassPrefixBubble(getProject(),getFile(),getNameHead());
+         break;
       case FILE :
-	 bb = bf.createFileBubble(getProject(),getFile(),getNameHead());
-	 break;
+         bb = bf.createFileBubble(getProject(),getFile(),getNameHead());
+         break;
       case PROJECT :
-	 break;
+         break;
       case MODULE :
-	 bb = bf.createFileBubble(getProject(),getFile(),getNameHead());
-	 break;
+         bb = bf.createFileBubble(getProject(),getFile(),getNameHead());
+         break;
       default :
-	 BoardLog.logW("BASS","NO BUBBLE FOR " + getKey());
-	 break;
+         BoardLog.logW("BASS","NO BUBBLE FOR " + getKey());
+         break;
     }
 
    return bb;
@@ -397,7 +397,7 @@ protected String getPrefix()
       case PACKAGE :
       case FILE :
       default :
-	 break;
+         break;
       case MODULE :
       case CONSTRUCTOR :
       case METHOD :
@@ -411,7 +411,7 @@ protected String getPrefix()
       case THROWABLE :
       case ANNOTATION :
       case HEADER :
-	 return createBubble();
+         return createBubble();
     }
 
    return null;
@@ -422,9 +422,9 @@ protected String getPrefix()
 {
    switch (name_type) {
       case FILE :
-	 return "Show file bubble for " + getNameHead();
+         return "Show file bubble for " + getNameHead();
       default:
-	 break;
+         break;
     }
 
    return null;
@@ -433,9 +433,9 @@ protected String getPrefix()
 
 
 /********************************************************************************/
-/*										*/
-/*	Display methods 							*/
-/*										*/
+/*                                                                              */
+/*      Display methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Icon getDisplayIcon()
@@ -443,17 +443,17 @@ protected String getPrefix()
    switch (name_type) {
       case CONSTRUCTOR :
       case METHOD :
-	 return appropriate_icon;
+         return appropriate_icon;
       default:
-	 break;
+         break;
    }
-						
+                                                
    return null;
 }
 
 
 
-}	// end of class BassNameLocation
+}       // end of class BassNameLocation
 
 
 

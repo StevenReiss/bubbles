@@ -92,9 +92,9 @@ public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private NamingFixer findFixer(BfixCorrector corr,BumpProblem bp)
@@ -122,9 +122,9 @@ private NamingFixer findFixer(BfixCorrector corr,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Fixing code								*/
-/*										*/
+/*                                                                              */
+/*      Fixing code                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NamingFixer extends BfixFixer {
@@ -156,14 +156,14 @@ private static class NamingFixer extends BfixFixer {
       return nd;
     }
    
-}	// end of inner class NamingFixer
+}       // end of inner class NamingFixer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Code to change the visibility						*/
-/*										*/
+/*                                                                              */
+/*      Code to change the visibility                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NamingDoer extends BfixFixDoer {
@@ -187,7 +187,7 @@ private static class NamingDoer extends BfixFixDoer {
    
    @Override public double getRegionOrder()                { return 0; } 
    
-}	// end of inner class NamingDoer
+}       // end of inner class NamingDoer
 
 
 

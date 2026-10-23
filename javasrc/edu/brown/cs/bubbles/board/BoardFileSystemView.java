@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardFileSystemView.java					*/
-/*										*/
-/*	Provide a view of local/remote file system				*/
-/*										*/
+/*                                                                              */
+/*              BoardFileSystemView.java                                        */
+/*                                                                              */
+/*      Provide a view of local/remote file system                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -54,36 +54,36 @@ public final class BoardFileSystemView extends FileSystemView implements BoardCo
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static MintControl	mint_control = null;
-private static FileSystemView	default_view = null;
-private static boolean		server_running = false;
-private static FileSystemView	board_view = null;
+private static MintControl      mint_control = null;
+private static FileSystemView   default_view = null;
+private static boolean          server_running = false;
+private static FileSystemView   board_view = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized FileSystemView getFileSystemView()
 {
    if (board_view == null) {
       switch (BoardSetup.getSetup().getRunMode()) {
-	 case NORMAL :
-	 case SERVER :
-	    board_view = FileSystemView.getFileSystemView();
-	    break;
-	 case CLIENT :
-	    if (mint_control == null) setupRemoteServer();
-	    board_view = new BoardFileSystemView();
-	    break;
+         case NORMAL :
+         case SERVER :
+            board_view = FileSystemView.getFileSystemView();
+            break;
+         case CLIENT :
+            if (mint_control == null) setupRemoteServer();
+            board_view = new BoardFileSystemView();
+            break;
        }
     }
    return board_view;
@@ -97,23 +97,23 @@ private BoardFileSystemView() { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Server methods								*/
-/*										*/
+/*                                                                              */
+/*      Server methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static synchronized void setupRemoteServer()
 {
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
-	 return;
+         return;
       case SERVER :
-	 default_view = FileSystemView.getFileSystemView();
-	 startServer();
-	 break;
+         default_view = FileSystemView.getFileSystemView();
+         startServer();
+         break;
       case CLIENT :
-	 mint_control = BoardSetup.getSetup().getMintControl();
-	 break;
+         mint_control = BoardSetup.getSetup().getMintControl();
+         break;
     }
 }
 
@@ -141,20 +141,20 @@ private static void startServer()
       if (i == 0) rslt = rply.waitForString(1000);
       else rslt = rply.waitForString();
       if (rslt != null) {
-	 server_running = true;
-	 break;
+         server_running = true;
+         break;
        }
       if (i == 0) {
-	 try {
-	    IvyExec exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
-	    BoardLog.logD("BOARD","Run " + exec.getCommand());
-	  }
-	 catch (IOException e) {
-	    break;
-	  }
+         try {
+            IvyExec exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
+            BoardLog.logD("BOARD","Run " + exec.getCommand());
+          }
+         catch (IOException e) {
+            break;
+          }
        }
       try {
-	 Thread.sleep(2000);
+         Thread.sleep(2000);
        }
       catch (InterruptedException e) { }
     }
@@ -168,9 +168,9 @@ private static void startServer()
 
 
 /********************************************************************************/
-/*										*/
-/*	File System methods							*/
-/*										*/
+/*                                                                              */
+/*      File System methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public File createFileObject(File dir,String nm)
@@ -245,7 +245,7 @@ private static final class HideFilter implements java.io.FileFilter {
       return !f.isHidden();
     }
 
-}	// end of inner class HideFilter
+}       // end of inner class HideFilter
 
 
 @Override public File getHomeDirectory()
@@ -432,9 +432,9 @@ File getRemoteResourceDirectory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Remote File								*/
-/*										*/
+/*                                                                              */
+/*      Remote File                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class RemoteFile extends File {
@@ -555,11 +555,11 @@ private class RemoteFile extends File {
       int ct = IvyXml.getAttrInt(xml,"COUNT",-1);
       if (ct < 0) return null;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-	 String nm = IvyXml.getAttrString(fe,"NAME");
-	 if (flt2 != null && !flt2.accept(this,nm)) continue;
-	 File f1 = new RemoteFile(this,nm);
-	 if (flt1 != null && !flt1.accept(f1)) continue;
-	 rslt.add(f1);
+         String nm = IvyXml.getAttrString(fe,"NAME");
+         if (flt2 != null && !flt2.accept(this,nm)) continue;
+         File f1 = new RemoteFile(this,nm);
+         if (flt1 != null && !flt1.accept(f1)) continue;
+         rslt.add(f1);
        }
       File [] rf = new File[rslt.size()];
       rf = rslt.toArray(rf);
@@ -613,15 +613,15 @@ private class RemoteFile extends File {
       return false;
     }
 
-}	// end of inner class RemoteFile
+}       // end of inner class RemoteFile
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Calls to get remote info						*/
-/*										*/
+/*                                                                              */
+/*      Calls to get remote info                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static Element getFileInfo(File f)
@@ -703,9 +703,9 @@ private static Element sendMessage(String cmd,File f,String x,String q)
 
 
 /********************************************************************************/
-/*										*/
-/*	FileServer to handle remote requests					*/
-/*										*/
+/*                                                                              */
+/*      FileServer to handle remote requests                                    */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -714,9 +714,9 @@ public static void main(String [] args)
 
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-m") && i+1 < args.length) {                   // -m <mint>
-	    mnm = args[++i];
-	  }
+         if (args[i].startsWith("-m") && i+1 < args.length) {                   // -m <mint>
+            mnm = args[++i];
+          }
        }
     }
    if (mnm == null) {
@@ -742,10 +742,10 @@ public static void main(String [] args)
 
    for ( ; ; ) {
       synchronized (fs) {
-	 try {
-	    fs.wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            fs.wait();
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -823,7 +823,7 @@ private static class FileServer implements MintHandler {
       xw.close();
     }
 
-}	// end of inner class FileServer
+}       // end of inner class FileServer
 
 
 
@@ -833,7 +833,7 @@ private static final class ExitHandler implements MintHandler {
       System.exit(0);
     }
 
-}	// end of inner class ExitHandler
+}       // end of inner class ExitHandler
 
 
 
@@ -911,12 +911,12 @@ private static void handleMkdir(File f,boolean dirs,boolean newd,IvyXmlWriter xw
 
    if (newd) {
       try {
-	 f = default_view.createNewFolder(f);
-	 sts = true;
+         f = default_view.createNewFolder(f);
+         sts = true;
        }
       catch (IOException e) {
-	 f = null;
-	 sts = false;
+         f = null;
+         sts = false;
        }
     }
    else if (dirs) sts = f.mkdirs();
@@ -942,9 +942,9 @@ private static void handleListFiles(File f,IvyXmlWriter xw)
    else {
       xw.field("COUNT",sub.length);
       for (File s : sub) {
-	 xw.begin("FILE");
-	 xw.field("NAME",s.getAbsolutePath());
-	 xw.end();
+         xw.begin("FILE");
+         xw.field("NAME",s.getAbsolutePath());
+         xw.end();
        }
     }
 }
@@ -1004,7 +1004,7 @@ private static void setResult(IvyXmlWriter xw,boolean sts)
 
 
 
-}	// end of class BoardFileSystemView
+}       // end of class BoardFileSystemView
 
 
 

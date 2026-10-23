@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtEvaluationBubble.java					*/
-/*										*/
-/*	Bubble Environment expression evaluation bubble 			*/
-/*										*/
+/*                                                                              */
+/*              BddtEvaluationBubble.java                                       */
+/*                                                                              */
+/*      Bubble Environment expression evaluation bubble                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -68,24 +68,24 @@ import java.util.regex.Pattern;
 
 
 class BddtEvaluationBubble extends BudaBubble implements BddtConstants, BudaConstants,
-	BumpConstants, BddtConstants.BddtFrameListener
+        BumpConstants, BddtConstants.BddtFrameListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BddtLaunchControl	for_control;
-private EvaluationTableModel	eval_model;
-private EvaluationTable 	eval_table;
-private JLabel			frame_label;
-private JTextField		input_field;
-private BumpStackFrame		active_frame;
-private Color			display_color;
-private Color			outline_color;
+private BddtLaunchControl       for_control;
+private EvaluationTableModel    eval_model;
+private EvaluationTable         eval_table;
+private JLabel                  frame_label;
+private JTextField              input_field;
+private BumpStackFrame          active_frame;
+private Color                   display_color;
+private Color                   outline_color;
 
 
 enum EvalState {
@@ -103,9 +103,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtEvaluationBubble(BddtLaunchControl ctrl)
@@ -154,9 +154,9 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Activation routines							*/
-/*										*/
+/*                                                                              */
+/*      Activation routines                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setActiveFrame(BumpStackFrame frm)
@@ -173,9 +173,9 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu management 							*/
-/*										*/
+/*                                                                              */
+/*      Menu management                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -202,9 +202,9 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Event management							*/
-/*										*/
+/*                                                                              */
+/*      Event management                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ExprAdder implements ActionListener {
@@ -222,7 +222,7 @@ private final class ExprAdder implements ActionListener {
       tfld.setText("");
     }
 
-}	// end of inner class ExprAdder
+}       // end of inner class ExprAdder
 
 
 
@@ -241,7 +241,7 @@ private class RemoveAction extends AbstractAction {
       eval_model.remove(for_expr);
     }
 
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 
@@ -261,14 +261,14 @@ private static class EditAction extends AbstractAction {
       // TODO: handle expression and property editing
     }
 
-}	// end of inner class EditAction
+}       // end of inner class EditAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Display Panel   							*/
-/*										*/
+/*                                                                              */
+/*      Display Panel                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class EvaluationPanel extends SwingGridPanel {
@@ -294,9 +294,9 @@ private class EvaluationPanel extends SwingGridPanel {
 
 
 /********************************************************************************/
-/*										*/
-/*	Evaluation table							*/
-/*										*/
+/*                                                                              */
+/*      Evaluation table                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class EvaluationTable extends JTable {
@@ -343,15 +343,15 @@ private class EvaluationTable extends JTable {
       return null;
     }
 
-}	// end of inner class EvaluationTable
+}       // end of inner class EvaluationTable
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Cell rendering								*/
-/*										*/
+/*                                                                              */
+/*      Cell rendering                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class EvaluationTableRenderer implements TableCellRenderer {
@@ -363,36 +363,36 @@ private class EvaluationTableRenderer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       Object vx = eval_model.getValueAt(r,-1);
       if (vx != null) {
-	 EvalExpr ee = (EvalExpr) vx;
-	 switch (ee.getState()) {
-	    default:
-	       break;
-	    // different colors based on states
-	 }
+         EvalExpr ee = (EvalExpr) vx;
+         switch (ee.getState()) {
+            default:
+               break;
+            // different colors based on states
+         }
       }
 
       return cmp;
     }
 
-}	// end of inner class EvaluationTableRenderer
+}       // end of inner class EvaluationTableRenderer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table model								*/
-/*										*/
+/*                                                                              */
+/*      Table model                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class EvaluationTableModel extends AbstractTableModel {
 
-   private List<EvalExpr>	eval_exprs;
+   private List<EvalExpr>       eval_exprs;
 
    private String [] column_names = { "Expression", "Value" };
 
@@ -403,67 +403,67 @@ private class EvaluationTableModel extends AbstractTableModel {
       eval_exprs = new ArrayList<EvalExpr>();
     }
 
-   @Override public int getColumnCount()		{ return column_names.length; }
-   @Override public String getColumnName(int i) 	{ return column_names[i]; }
-   @Override public int getRowCount()			{ return eval_exprs.size(); }
-   @Override public Class<?> getColumnClass(int i)	{ return String.class; }
+   @Override public int getColumnCount()                { return column_names.length; }
+   @Override public String getColumnName(int i)         { return column_names[i]; }
+   @Override public int getRowCount()                   { return eval_exprs.size(); }
+   @Override public Class<?> getColumnClass(int i)      { return String.class; }
    @Override public boolean isCellEditable(int r,int c) { return false; }
 
    @Override public Object getValueAt(int r,int c) {
       EvalExpr ee;
       synchronized (eval_exprs) {
-	 if (r < 0 || r >= eval_exprs.size()) return null;
-	 ee = eval_exprs.get(r);
+         if (r < 0 || r >= eval_exprs.size()) return null;
+         ee = eval_exprs.get(r);
        }
       switch (c) {
-	 case -1 :
-	    return ee;
-	 case 0 :
-	    return ee.getExpr();
-	 case 1 :
-	    return ee.getValue();
+         case -1 :
+            return ee;
+         case 0 :
+            return ee.getExpr();
+         case 1 :
+            return ee.getValue();
        }
       return null;
     }
 
    void add(EvalExpr ee) {
       synchronized (eval_exprs) {
-	 int idx = eval_exprs.size();
-	 eval_exprs.add(ee);
-	 ee.updateForFrame(active_frame);
-	 fireTableRowsInserted(idx,idx);
+         int idx = eval_exprs.size();
+         eval_exprs.add(ee);
+         ee.updateForFrame(active_frame);
+         fireTableRowsInserted(idx,idx);
        }
     }
 
    void remove(EvalExpr ee) {
       synchronized (eval_exprs) {
-	 int idx = eval_exprs.indexOf(ee);
-	 if (idx < 0) return;
-	 eval_exprs.remove(idx);
-	 fireTableRowsDeleted(idx,idx);
+         int idx = eval_exprs.indexOf(ee);
+         if (idx < 0) return;
+         eval_exprs.remove(idx);
+         fireTableRowsDeleted(idx,idx);
        }
     }
 
    void updateForFrame(BumpStackFrame frm) {
       synchronized (eval_exprs) {
-	 for (int i = 0; i < eval_exprs.size(); ++i) {
-	    EvalExpr ee = eval_exprs.get(i);
-	    if (ee.updateForFrame(frm)) {
-	       fireTableRowsUpdated(i,i);
-	     }
-	  }
+         for (int i = 0; i < eval_exprs.size(); ++i) {
+            EvalExpr ee = eval_exprs.get(i);
+            if (ee.updateForFrame(frm)) {
+               fireTableRowsUpdated(i,i);
+             }
+          }
        }
     }
 
-}	// end of inner class EvaluationTableModel
+}       // end of inner class EvaluationTableModel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	EvalExpr -- holder of expression to evaluation				*/
-/*										*/
+/*                                                                              */
+/*      EvalExpr -- holder of expression to evaluation                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class EvalExpr {
@@ -484,9 +484,9 @@ private class EvalExpr {
       method_match = null;
     }
 
-   String getExpr()				{ return expr_string; }
-   String getValue()				{ return current_value; }
-   EvalState getState() 			{ return current_state; }
+   String getExpr()                             { return expr_string; }
+   String getValue()                            { return current_value; }
+   EvalState getState()                         { return current_state; }
 
    boolean updateForFrame(BumpStackFrame frm) {
       if (frm == null) return false;
@@ -517,12 +517,12 @@ private class EvalExpr {
     }
 
 
-}	// end of inner class EvalExpr
+}       // end of inner class EvalExpr
 
 
 
 
-}	// end of class BddtEvaluationBubble
+}       // end of class BddtEvaluationBubble
 
 
 

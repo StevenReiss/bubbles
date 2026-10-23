@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BtedConfigurator.java						*/
-/*										*/
-/*	Bubble Environment text editor facility bubble configurator		*/
-/*										*/
+/*                                                                              */
+/*              BtedConfigurator.java                                           */
+/*                                                                              */
+/*      Bubble Environment text editor facility bubble configurator             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook 			*/
+/*      Copyright 2010 Brown University -- Adam M. Cook                         */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -39,9 +39,9 @@ class BtedConfigurator implements BudaConstants.BubbleConfigurator {
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -74,6 +74,6 @@ class BtedConfigurator implements BudaConstants.BubbleConfigurator {
 
 
 
-}	// end of class BtedConfigurator
+}       // end of class BtedConfigurator
 
 /* end of BtedConfigurator.java */

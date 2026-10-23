@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizHoverButton.java						*/
-/*										*/
-/*	Button with hover capabilities						*/
-/*										*/
+/*                                                                              */
+/*              BwizHoverButton.java                                            */
+/*                                                                              */
+/*      Button with hover capabilities                                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -37,9 +37,9 @@ class BwizHoverButton extends JButton implements MouseListener
 {
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected Color text_color;
@@ -49,9 +49,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizHoverButton()
@@ -76,16 +76,16 @@ BwizHoverButton(String text, Color color, Color hoverColor)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-Color getHoverColor()				{ return hover_color; }
+Color getHoverColor()                           { return hover_color; }
 
-void setHoverColor(Color color) 		{ hover_color = color; }
+void setHoverColor(Color color)                 { hover_color = color; }
 
-Color getTextColor()				{ return text_color; }
+Color getTextColor()                            { return text_color; }
 
 
 void setTextColor(Color color)
@@ -97,16 +97,16 @@ void setTextColor(Color color)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public void mouseClicked(MouseEvent e)		{ }
+@Override public void mouseClicked(MouseEvent e)                { }
 
-@Override public void mousePressed(MouseEvent e)		{ }
+@Override public void mousePressed(MouseEvent e)                { }
 
-@Override public void mouseReleased(MouseEvent e)		{ }
+@Override public void mouseReleased(MouseEvent e)               { }
 
 @Override public void mouseEntered(MouseEvent e)
 {
@@ -125,7 +125,7 @@ void setTextColor(Color color)
 
 
 
-}	// end of class BwizHoverButton
+}       // end of class BwizHoverButton
 
 
 

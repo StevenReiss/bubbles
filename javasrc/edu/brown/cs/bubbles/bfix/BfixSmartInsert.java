@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixSmartInsert.java						*/
-/*										*/
-/*	Algorithm to use ordering information to do a smart insertion		*/
-/*										*/
+/*                                                                              */
+/*              BfixSmartInsert.java                                            */
+/*                                                                              */
+/*      Algorithm to use ordering information to do a smart insertion           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -35,20 +35,20 @@ class BfixSmartInsert implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BfixFileOrder	file_order;
+private BfixFileOrder   file_order;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixSmartInsert(BfixCorrector corr)
@@ -58,9 +58,9 @@ BfixSmartInsert(BfixCorrector corr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Change methods								*/
-/*										*/
+/*                                                                              */
+/*      Change methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void noteChange()
@@ -71,9 +71,9 @@ void noteChange()
 
 
 /********************************************************************************/
-/*										*/
-/*	Worker methods								*/
-/*										*/
+/*                                                                              */
+/*      Worker methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void smartInsertSetup(BfixOrderNewElement newelt)
@@ -234,7 +234,7 @@ private void updateNewElement(BfixOrderSet ordering,
 
 
 
-}	// end of class BfixSmartInsert
+}       // end of class BfixSmartInsert
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaAnimator.java						*/
-/*										*/
-/*	BUblles Display Area animations 					*/
-/*										*/
+/*                                                                              */
+/*              BudaAnimator.java                                               */
+/*                                                                              */
+/*      BUblles Display Area animations                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,22 +47,22 @@ class BudaMoveAnimator implements ActionListener, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaBubbleArea		bubble_area;
-private Collection<Movement>	move_bubbles;
-private Timer			move_timer;
+private BudaBubbleArea          bubble_area;
+private Collection<Movement>    move_bubbles;
+private Timer                   move_timer;
 private List<BudaBubble>  refresh_set;
 
  
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaMoveAnimator()
@@ -83,9 +83,9 @@ BudaMoveAnimator()
 
 
 /********************************************************************************/
-/*										*/
-/*	Set up methods								*/
-/*										*/
+/*                                                                              */
+/*      Set up methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void moveBubble(BudaBubble bbl,Point target,boolean update)
@@ -115,9 +115,9 @@ synchronized boolean isActive()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -127,16 +127,16 @@ synchronized boolean isActive()
 
    synchronized (this) {
       for (Iterator<Movement> it = move_bubbles.iterator(); it.hasNext(); ) {
-	 Movement mb = it.next();
-	 if (mb.nextMove()) {
+         Movement mb = it.next();
+         if (mb.nextMove()) {
             it.remove();
             bubble_area.noteBubbleMoved(mb.for_bubble,mb.start_point); 
           }
        }
       if (move_bubbles.size() == 0) {
-	 stop = true;
-	 upds = refresh_set;
-	 refresh_set = null;
+         stop = true;
+         upds = refresh_set;
+         refresh_set = null;
        }
     }
 
@@ -147,7 +147,7 @@ synchronized boolean isActive()
 
    if (upds != null && upds.size() > 0) {
       for (BudaBubble xbb : upds) {
-	 bubble_area.fixupBubble(xbb);
+         bubble_area.fixupBubble(xbb);
        }
     }
 }
@@ -156,18 +156,18 @@ synchronized boolean isActive()
 
 
 /********************************************************************************/
-/*										*/
-/*	Movement animator							*/
-/*										*/
+/*                                                                              */
+/*      Movement animator                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Movement
 {
-   private BudaBubble	for_bubble;
-   private Point	target_point;
-   private Point	start_point;
-   private double	total_distance;
-   private double	move_count;
+   private BudaBubble   for_bubble;
+   private Point        target_point;
+   private Point        start_point;
+   private double       total_distance;
+   private double       move_count;
 
    Movement(BudaBubble m,Point target) {
       for_bubble = m;
@@ -193,12 +193,12 @@ private static class Movement
       return move_count == total_distance;
     }
 
-}	// end of inner class Movement
+}       // end of inner class Movement
 
 
 
 
-}	// end of class BudaMoveAnimator
+}       // end of class BudaMoveAnimator
 
 
 

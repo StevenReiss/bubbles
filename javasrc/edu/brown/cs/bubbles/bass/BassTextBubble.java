@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BassTextBubble.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies text search				*/
-/*										*/
+/*                                                                              */
+/*              BassTextBubble.java                                             */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies text search                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,9 +42,9 @@ class BassTextBubble extends BudaBubble implements BassConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -53,9 +53,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassTextBubble(String initialsearch,String project)
@@ -75,9 +75,9 @@ BassTextBubble(String initialsearch,String project)
 
 
 /********************************************************************************/
-/*										*/
-/*     Action methods								*/
-/*										*/
+/*                                                                              */
+/*     Action methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -87,7 +87,7 @@ BassTextBubble(String initialsearch,String project)
 
 
 
-}	// end of class BassTextBubble
+}       // end of class BassTextBubble
 
 
 

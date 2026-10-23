@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BumpException.java						*/
-/*										*/
-/*	BUblles Mint Partnership exception class				*/
-/*										*/
+/*                                                                              */
+/*              BumpException.java                                              */
+/*                                                                              */
+/*      BUblles Mint Partnership exception class                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -33,7 +33,7 @@ package edu.brown.cs.bubbles.bump;
 
 
 /**
- *	Exception that indicates a problem during BUMP/ECLIPSE processing.
+ *      Exception that indicates a problem during BUMP/ECLIPSE processing.
  **/
 
 public class BumpException extends Exception implements BumpConstants {
@@ -41,9 +41,9 @@ public class BumpException extends Exception implements BumpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -52,9 +52,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpException(String msg)
@@ -71,7 +71,7 @@ BumpException(String msg,Throwable cause)
 
 
 
-}	// end of class BumpException
+}       // end of class BumpException
 
 
 

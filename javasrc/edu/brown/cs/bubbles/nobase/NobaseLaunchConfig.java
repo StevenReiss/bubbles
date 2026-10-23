@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseLaunchConfig.java 					*/
-/*										*/
-/*	Implementation of a launch configuration				*/
-/*										*/
+/*                                                                              */
+/*              NobaseLaunchConfig.java                                         */
+/*                                                                              */
+/*      Implementation of a launch configuration                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -41,14 +41,14 @@ class NobaseLaunchConfig implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String config_name;
 private String config_id;
-private int	config_number;
+private int     config_number;
 private File   base_file;
 private NobaseLaunchConfig original_config;
 private NobaseLaunchConfig working_copy;
@@ -60,9 +60,9 @@ private static IdCounter launch_counter = new IdCounter();
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseLaunchConfig(String nm)
@@ -131,9 +131,9 @@ NobaseLaunchConfig(NobaseLaunchConfig orig)
 
 
 /********************************************************************************/
-/*										*/
-/*	Working copy methods							*/
-/*										*/
+/*                                                                              */
+/*      Working copy methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseLaunchConfig getWorkingCopy()
@@ -150,7 +150,7 @@ void commitWorkingCopy()
 {
    if (!is_saved) {
       if (original_config != null) {
-	 original_config.commitWorkingCopy();
+         original_config.commitWorkingCopy();
        }
       else is_saved = true;
     }
@@ -165,16 +165,16 @@ void commitWorkingCopy()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public String getName() 			{ return config_name; }
-String getId()					{ return config_id; }
-void setName(String nm) 			{ config_name = nm; }
+public String getName()                         { return config_name; }
+String getId()                                  { return config_id; }
+void setName(String nm)                         { config_name = nm; }
 
-public File getFileToRun()			{ return base_file; }
+public File getFileToRun()                      { return base_file; }
 public void setFileToRun(File f) {
    base_file = f;
    setAttribute(NobaseConfigAttribute.MAIN_TYPE,f.getPath());
@@ -189,10 +189,10 @@ void setAttribute(NobaseConfigAttribute k,String v)
    else config_attrs.put(k,v);
 }
 
-boolean isSaved()				{ return is_saved; }
-void setSaved(boolean fg)			{ is_saved = fg; }
+boolean isSaved()                               { return is_saved; }
+void setSaved(boolean fg)                       { is_saved = fg; }
 
-public String [] getEnvironment()		{ return null; }
+public String [] getEnvironment()               { return null; }
 
 public File getWorkingDirectory()
 {
@@ -285,9 +285,9 @@ private void addUserArgs(List<String> cmdargs)
 
 
 /********************************************************************************/
-/*										*/
-/*	OutputMethods								*/
-/*										*/
+/*                                                                              */
+/*      OutputMethods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void outputSaveXml(IvyXmlWriter xw)
@@ -336,7 +336,7 @@ void outputBubbles(IvyXmlWriter xw)
 
 
 
-}	// end of class NobaseLaunchConfig
+}       // end of class NobaseLaunchConfig
 
 
 

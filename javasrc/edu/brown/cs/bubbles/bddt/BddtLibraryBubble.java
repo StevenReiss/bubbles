@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BddtLibraryBubble.java						*/
-/*										*/
-/*	Bubble Environment bubble for a library routine 			*/
-/*										*/
+/*                                                                              */
+/*              BddtLibraryBubble.java                                          */
+/*                                                                              */
+/*      Bubble Environment bubble for a library routine                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss			*/
+/*      Copyright 2010 Brown University -- Steven P. Reiss                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,22 +40,22 @@ class BddtLibraryBubble extends BudaBubble implements BddtConstants, BumpConstan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpStackFrame	current_frame;
-private JTextField	method_field;
-private JTextField	line_field;
+private BumpStackFrame  current_frame;
+private JTextField      method_field;
+private JTextField      line_field;
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtLibraryBubble(BumpStackFrame bsf)
@@ -68,9 +68,9 @@ BddtLibraryBubble(BumpStackFrame bsf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for changing the context					*/
-/*										*/
+/*                                                                              */
+/*      Methods for changing the context                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void resetFrame(BumpStackFrame bsf)
@@ -85,9 +85,9 @@ void resetFrame(BumpStackFrame bsf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -111,7 +111,7 @@ private void setupPanel()
 
 
 
-}	// end of BddtLibraryBubble
+}       // end of BddtLibraryBubble
 
 
 

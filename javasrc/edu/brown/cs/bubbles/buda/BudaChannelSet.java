@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaChannelSet.java						*/
-/*										*/
-/*	BUblles Display Area channel set					*/
-/*										*/
+/*                                                                              */
+/*              BudaChannelSet.java                                             */
+/*                                                                              */
+/*      BUblles Display Area channel set                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -48,9 +48,9 @@ import java.util.List;
 
 
 /**
- *	This class represents a set of channels that can be used to represent
- *	parallel or multiple instances of bubble areas, for example multiple
- *	debugging sessions
+ *      This class represents a set of channels that can be used to represent
+ *      parallel or multiple instances of bubble areas, for example multiple
+ *      debugging sessions
  **/
 
 public class BudaChannelSet implements BudaConstants
@@ -59,27 +59,27 @@ public class BudaChannelSet implements BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot		for_root;
-private JScrollPane		scroll_pane;
-private ChannelPanel		channel_panel;
-private List<BudaChannel>	channel_items;
-private String			top_color_name;
-private String			bottom_color_name;
-private BudaBubbleArea		current_area;
-private Element 		default_config;
+private BudaRoot                for_root;
+private JScrollPane             scroll_pane;
+private ChannelPanel            channel_panel;
+private List<BudaChannel>       channel_items;
+private String                  top_color_name;
+private String                  bottom_color_name;
+private BudaBubbleArea          current_area;
+private Element                 default_config;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaChannelSet(BudaRoot root,String topc,String botc,String dflt)
@@ -108,12 +108,12 @@ public BudaChannelSet(BudaRoot root,String topc,String botc,String dflt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public JComponent getComponent()		{ return scroll_pane; }
+public JComponent getComponent()                { return scroll_pane; }
 
 
 public BudaBubbleArea getBubbleArea()
@@ -123,15 +123,15 @@ public BudaBubbleArea getBubbleArea()
 
 
 /**
- *	Return the number of channels in the channel set.
+ *      Return the number of channels in the channel set.
  **/
 
-public int getNumChannels()		{ return channel_items.size(); }
+public int getNumChannels()             { return channel_items.size(); }
 
 
 
 /**
- *	Determine if the current channel is empty or not
+ *      Determine if the current channel is empty or not
  **/
 
 public boolean isChannelEmpty()
@@ -153,7 +153,7 @@ void setBubbleArea(BudaBubbleArea bba)
 
 
 /**
- *	Set the name of the current channel
+ *      Set the name of the current channel
  **/
 
 public void setChannelName(String name)
@@ -162,7 +162,7 @@ public void setChannelName(String name)
 
    for (BudaChannel bc : channel_items) {
       if (bc.getBubbleArea() == current_area) {
-	 bc.setChannelName(name);
+         bc.setChannelName(name);
        }
     }
 }
@@ -170,13 +170,13 @@ public void setChannelName(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Channel manipulation methods						*/
-/*										*/
+/*                                                                              */
+/*      Channel manipulation methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Add a new channel to the channel set
+ *      Add a new channel to the channel set
  **/
 
 public BudaBubbleArea addChannel(String label)
@@ -226,9 +226,9 @@ void resetSizes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Viewport methods							*/
-/*										*/
+/*                                                                              */
+/*      Viewport methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void setViewport(int x,int y)
@@ -260,7 +260,7 @@ private BudaChannel getCurrentChannel()
 {
    for (Component c = current_area; c != null; c = c.getParent()) {
       if (c instanceof BudaChannel) {
-	 return (BudaChannel) c;
+         return (BudaChannel) c;
        }
     }
 
@@ -274,9 +274,9 @@ private BudaChannel getCurrentChannel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Sizing methods								*/
-/*										*/
+/*                                                                              */
+/*      Sizing methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkSizes()
@@ -325,15 +325,15 @@ private final class SizeListener extends ComponentAdapter {
       checkSizes();
     }
 
-}	// end of inner class SizeListener
+}       // end of inner class SizeListener
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -351,9 +351,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel for holding items 						*/
-/*										*/
+/*                                                                              */
+/*      Panel for holding items                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ChannelPanel extends JComponent implements Scrollable {
@@ -385,12 +385,12 @@ private static class ChannelPanel extends JComponent implements Scrollable {
       return 1;
     }
 
-}	// end of inner class ChannelPanel
+}       // end of inner class ChannelPanel
 
 
 
 
-}	// end of class BudaChannelSet
+}       // end of class BudaChannelSet
 
 
 

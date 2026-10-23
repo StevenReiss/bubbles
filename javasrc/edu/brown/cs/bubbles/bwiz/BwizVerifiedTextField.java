@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizNewWizard.java						*/
-/*										*/
-/*	Text field that handles verification as you type			*/
-/*										*/
+/*                                                                              */
+/*              BwizNewWizard.java                                              */
+/*                                                                              */
+/*      Text field that handles verification as you type                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -49,9 +49,9 @@ class BwizVerifiedTextField extends BwizFocusTextField
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Data								*/
-/*										*/
+/*                                                                              */
+/*      Private Data                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BwizConstants.IVerifier the_verifier;
@@ -65,13 +65,13 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static BwizVerifiedTextField getStyledField(String text, String tooltip,
-					       BwizConstants.IVerifier verifier)
+                                               BwizConstants.IVerifier verifier)
 {
    BwizVerifiedTextField field = new BwizVerifiedTextField(text, verifier);
 
@@ -113,9 +113,9 @@ BwizVerifiedTextField(String text, BwizConstants.IVerifier v)
 
 
 /********************************************************************************/
-/*										*/
-/*	Verification methods							*/
-/*										*/
+/*                                                                              */
+/*      Verification methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void setVerifier(BwizConstants.IVerifier v)
@@ -190,58 +190,58 @@ private final class DocHandler implements DocumentListener {
 
    @Override public void insertUpdate(DocumentEvent e) {
       try {
-	 Document doc = e.getDocument();
-	 String data = doc.getText(0, doc.getLength());
-	
-	 if (!verify(data)) {
-	    //Show some message or UI
-	    verificationFailure();
-	  }
-	 else
-	    verificationSuccess();
+         Document doc = e.getDocument();
+         String data = doc.getText(0, doc.getLength());
+        
+         if (!verify(data)) {
+            //Show some message or UI
+            verificationFailure();
+          }
+         else
+            verificationSuccess();
        }
       catch (BadLocationException ex) {}
     }
 
    @Override public void changedUpdate(DocumentEvent e) {
       try {
-	 Document doc = e.getDocument();
-	 String data = doc.getText(0, doc.getLength());
-	
-	 if (!verify(data)) {
-	    //Show some message or UI
-	    verificationFailure();
-	  }
-	 else
-	    verificationSuccess();
+         Document doc = e.getDocument();
+         String data = doc.getText(0, doc.getLength());
+        
+         if (!verify(data)) {
+            //Show some message or UI
+            verificationFailure();
+          }
+         else
+            verificationSuccess();
        }
       catch (BadLocationException ex) {}
     }
 
    @Override public void removeUpdate(DocumentEvent e) {
       try {
-	 Document doc = e.getDocument();
-	 String data = doc.getText(0, doc.getLength());
-	
-	 if (!verify(data)) {
-	    //Show some message or UI
-	    verificationFailure();
-	  }
-	 else
-	    verificationSuccess();
+         Document doc = e.getDocument();
+         String data = doc.getText(0, doc.getLength());
+        
+         if (!verify(data)) {
+            //Show some message or UI
+            verificationFailure();
+          }
+         else
+            verificationSuccess();
        }
       catch (BadLocationException ex) {}
     }
 
-}	// end of inner class DocHandler
+}       // end of inner class DocHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener management							*/
-/*										*/
+/*                                                                              */
+/*      Listener management                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void addVerificationListener(BwizConstants.VerificationListener listener)
@@ -265,7 +265,7 @@ private void fireVerificationFailure()
 
 
 
-}	// end of class BwizVerifiedTextField
+}       // end of class BwizVerifiedTextField
 
 
 /* end of BwizVerifiedTextField.java */

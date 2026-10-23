@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrChangeSet.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository external change management	*/
-/*										*/
+/*                                                                              */
+/*              BvcrChangeSet.java                                              */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository external change management      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,27 +55,27 @@ class BvcrChangeSet implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BvcrMain		for_main;
-private String			project_name;
-private String			repo_id;
-private String			user_id;
-private SecretKey		repo_key;
+private BvcrMain                for_main;
+private String                  project_name;
+private String                  repo_id;
+private String                  user_id;
+private SecretKey               repo_key;
 
-private long			last_update;
-private Map<File,FileChanges>	change_map;
+private long                    last_update;
+private Map<File,FileChanges>   change_map;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrChangeSet(BvcrMain bm,String proj,String rid,String uid,SecretKey sk)
@@ -93,9 +93,9 @@ BvcrChangeSet(BvcrMain bm,String proj,String rid,String uid,SecretKey sk)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void findChanges(File f,IvyXmlWriter xw)
@@ -134,9 +134,9 @@ void findActualChanges(File f,BvcrVersionManager bvm,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void update()
@@ -196,11 +196,11 @@ private int [] readHeader(InputStream ins) throws IOException
    StringBuffer buf = new StringBuffer();
    for ( ; ; ) {
       for ( ; ; ) {
-	 int v = ins.read();
-	 if (v < 0) return null;
-	 char ch = (char) v;
-	 if (ch == '\n') break;
-	 buf.append(ch);
+         int v = ins.read();
+         if (v < 0) return null;
+         char ch = (char) v;
+         if (ch == '\n') break;
+         buf.append(ch);
        }
       IvyLog.logD("BVCR","READ HEADER: " + buf);
       if (buf.length() > 0 && Character.isDigit(buf.charAt(0))) break;
@@ -260,18 +260,18 @@ private static class SubInputStream extends FilterInputStream {
       sub_ptr = 0;
     }
 
-   @Override public boolean markSupported()		{ return false; }
+   @Override public boolean markSupported()             { return false; }
 
-}	// end of inner class SubInputStream
+}       // end of inner class SubInputStream
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to add all the changes in a change set for a user		*/
-/*										*/
+/*                                                                              */
+/*      Methods to add all the changes in a change set for a user               */
+/*                                                                              */
 /********************************************************************************/
 
 private void addChanges(Element xml)
@@ -304,8 +304,8 @@ private void addChanges(Element xml)
       
       FileChanges fc = change_map.get(f1);
       if (fc == null) {
-	 fc = new FileChanges();
-	 change_map.put(f1,fc);
+         fc = new FileChanges();
+         change_map.put(f1,fc);
          File f2 = IvyFile.getCanonical(f1);
          change_map.put(f2,fc);
        }
@@ -318,9 +318,9 @@ private void addChanges(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of all changes to a file 				*/
-/*										*/
+/*                                                                              */
+/*      Representation of all changes to a file                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FileChanges {
@@ -360,12 +360,12 @@ private static class FileChanges {
       xw.end("CHANGESET");
    }
 
-}	// end of inner class FileChanges
+}       // end of inner class FileChanges
 
 
 
 
-}	// end of class BvcrChangeSet
+}       // end of class BvcrChangeSet
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconLine.java							*/
-/*										*/
-/*	Bubbles Environment Context Viewer line data				*/
-/*										*/
+/*                                                                              */
+/*              BconLine.java                                                   */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer line data                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -33,21 +33,21 @@ class BconLine implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private LineType	line_type;
-private int		line_length;
+private LineType        line_type;
+private int             line_length;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconLine(LineType lt,int len)
@@ -60,20 +60,20 @@ BconLine(LineType lt,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-LineType getLineType()				{ return line_type; }
+LineType getLineType()                          { return line_type; }
 
 
-int getLineLength()				{ return line_length; }
+int getLineLength()                             { return line_length; }
 
 
 
 
-}	// end of class BconLine
+}       // end of class BconLine
 
 
 

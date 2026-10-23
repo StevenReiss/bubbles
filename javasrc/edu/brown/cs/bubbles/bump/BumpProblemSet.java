@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpProblemSet.java						*/
-/*										*/
-/*	BUblles Mint Partnership problem set maintainer 			*/
-/*										*/
+/*                                                                              */
+/*              BumpProblemSet.java                                             */
+/*                                                                              */
+/*      BUblles Mint Partnership problem set maintainer                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -54,22 +54,22 @@ class BumpProblemSet implements BumpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<String,BumpProblemImpl>	current_problems;
+private Map<String,BumpProblemImpl>     current_problems;
 private SwingEventListenerList<BumpProblemHandler> handler_set;
-private Map<BumpProblemHandler,File>	problem_handlers;
+private Map<BumpProblemHandler,File>    problem_handlers;
 private Map<String,Set<BumpProblemImpl>> private_problems;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpProblemSet()
@@ -83,9 +83,9 @@ BumpProblemSet()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addProblemHandler(File f,BumpProblemHandler ph)
@@ -109,9 +109,9 @@ synchronized void removeProblemHandler(BumpProblemHandler ph)
 
 
 /********************************************************************************/
-/*										*/
-/*	Set access methods							*/
-/*										*/
+/*                                                                              */
+/*      Set access methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 List<BumpProblem> getProblems(File f)
@@ -120,9 +120,9 @@ List<BumpProblem> getProblems(File f)
 
    synchronized (current_problems) {
       for (BumpProblemImpl bp : current_problems.values()) {
-	 if (fileMatch(f,bp)) {
-	    rslt.add(bp);
-	  }
+         if (fileMatch(f,bp)) {
+            rslt.add(bp);
+          }
        }
     }
 
@@ -134,11 +134,11 @@ BumpErrorType getErrorType(String cat)
    BumpErrorType er = BumpErrorType.NOTICE;
    synchronized (current_problems) {
       for (BumpProblemImpl bp : current_problems.values()) {
-	if (cat != null && bp.getCategory() != null && !cat.equals(bp.getCategory())) {
-	   continue;
-	 }
-	BumpErrorType en = bp.getErrorType();
-	if (er == null || en.ordinal() < er.ordinal()) er = en;
+        if (cat != null && bp.getCategory() != null && !cat.equals(bp.getCategory())) {
+           continue;
+         }
+        BumpErrorType en = bp.getErrorType();
+        if (er == null || en.ordinal() < er.ordinal()) er = en;
        }
     }
    return er;
@@ -147,9 +147,9 @@ BumpErrorType getErrorType(String cat)
 
 
 /********************************************************************************/
-/*										*/
-/*	Maintenance methods							*/
-/*										*/
+/*                                                                              */
+/*      Maintenance methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
@@ -163,36 +163,36 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 
    synchronized (current_problems) {
       for (Element e : IvyXml.children(ep,"PROBLEM")) {
-	 String pid = getProblemId(e);
-	 BumpProblemImpl bp = current_problems.get(pid);
-	 if (bp == null) {
-	    bp = new BumpProblemImpl(e,pid,eid,proj);
-	    BoardLog.logD("BUMP","Add problem " + bp);
-	    current_problems.put(pid,bp);
-	    if (added == null) added = new ArrayList<>();
-	    added.add(bp);
-	  }
-	 else {
-	    BoardLog.logD("BUMP","Update problem " + bp);
-	    bp.setEditId(eid);
-	    bp.update(e);
-	  }
+         String pid = getProblemId(e);
+         BumpProblemImpl bp = current_problems.get(pid);
+         if (bp == null) {
+            bp = new BumpProblemImpl(e,pid,eid,proj);
+            BoardLog.logD("BUMP","Add problem " + bp);
+            current_problems.put(pid,bp);
+            if (added == null) added = new ArrayList<>();
+            added.add(bp);
+          }
+         else {
+            BoardLog.logD("BUMP","Update problem " + bp);
+            bp.setEditId(eid);
+            bp.update(e);
+          }
 
-	 found.add(bp);
+         found.add(bp);
        }
 
       // next remove any problems that seem to have disappeared
       if (forfile != null) {
-	 for (Iterator<BumpProblemImpl> it = current_problems.values().iterator(); it.hasNext(); ) {
-	    BumpProblemImpl bp = it.next();
-	    if (found.contains(bp)) continue;
-	    if (!fileMatch(forfile,bp)) continue;
-	    if (cat != null && !cat.equals(bp.getCategory())) continue;
-	    if (deled == null) deled = new ArrayList<>();
-	    deled.add(bp);
-	    BoardLog.logD("BUMP","Remove problem " + bp);
-	    it.remove();
-	 }
+         for (Iterator<BumpProblemImpl> it = current_problems.values().iterator(); it.hasNext(); ) {
+            BumpProblemImpl bp = it.next();
+            if (found.contains(bp)) continue;
+            if (!fileMatch(forfile,bp)) continue;
+            if (cat != null && !cat.equals(bp.getCategory())) continue;
+            if (deled == null) deled = new ArrayList<>();
+            deled.add(bp);
+            BoardLog.logD("BUMP","Remove problem " + bp);
+            it.remove();
+         }
       }
     }
 
@@ -240,51 +240,51 @@ void clearProblems(String proj,File file,String category)
    List<BumpProblemImpl> clear;
    synchronized (current_problems) {
       if (proj == null) {
-	 clear = new ArrayList<>(current_problems.values());
-	 current_problems.clear();
+         clear = new ArrayList<>(current_problems.values());
+         current_problems.clear();
        }
       else {
-	 clear = new ArrayList<>();
-	 for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
-	    it.hasNext(); ) {
-	    BumpProblemImpl bp = it.next();
-	    if (file != null) {
-	       File f1 = bp.getFile();
-	       if (f1 == null) continue;
-	       if (!f1.equals(file) && f1.getName().equals(file.getName())) {
-		  if (fcanon == null) fcanon = IvyFile.getCanonical(file);
-		  File f2 = IvyFile.getCanonical(f1);
-		  if (!fcanon.equals(f2)) continue;
-		  BoardLog.logD("BUMP","REMOVE FILE PROBLEM " + bp);
-		  clear.add(bp);
-		  it.remove();
-		}
-	     }
-	    if (bp.getProject() == null) {
-	       BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
-		     bp.getMessage());
-	     }
-	    if (bp.getProject() != null && proj != null && bp.getProject().equals(proj)) {
-	       if (category == null || bp.getCategory() == null ||
-		     category.equals(bp.getCategory())) {
-		  BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
-		  clear.add(bp);
-		  it.remove();
-		}
-	     }
-	  }
+         clear = new ArrayList<>();
+         for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
+            it.hasNext(); ) {
+            BumpProblemImpl bp = it.next();
+            if (file != null) {
+               File f1 = bp.getFile();
+               if (f1 == null) continue;
+               if (!f1.equals(file) && f1.getName().equals(file.getName())) {
+                  if (fcanon == null) fcanon = IvyFile.getCanonical(file);
+                  File f2 = IvyFile.getCanonical(f1);
+                  if (!fcanon.equals(f2)) continue;
+                  BoardLog.logD("BUMP","REMOVE FILE PROBLEM " + bp);
+                  clear.add(bp);
+                  it.remove();
+                }
+             }
+            if (bp.getProject() == null) {
+               BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
+                     bp.getMessage());
+             }
+            if (bp.getProject() != null && proj != null && bp.getProject().equals(proj)) {
+               if (category == null || bp.getCategory() == null ||
+                     category.equals(bp.getCategory())) {
+                  BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
+                  clear.add(bp);
+                  it.remove();
+                }
+             }
+          }
        }
     }
 
    synchronized (problem_handlers) {
       if (clear.size() > 0) {
-	 for (BumpProblemHandler bph : handler_set) {
-	    for (BumpProblemImpl bp : clear) {
-	       bph.handleProblemRemoved(bp);
-	     }
-	    bph.handleClearProjectProblems(proj);
-	    bph.handleProblemsDone();
-	  }
+         for (BumpProblemHandler bph : handler_set) {
+            for (BumpProblemImpl bp : clear) {
+               bph.handleProblemRemoved(bp);
+             }
+            bph.handleClearProjectProblems(proj);
+            bph.handleProblemsDone();
+          }
        }
     }
 }
@@ -300,9 +300,9 @@ void fireClearAll(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private buffer problem management					*/
-/*										*/
+/*                                                                              */
+/*      Private buffer problem management                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void clearPrivateProblems(String pid)
@@ -341,20 +341,20 @@ Collection<BumpProblem> getPrivateErrors(String privid)
 
    synchronized (private_problems) {
       while (!private_problems.containsKey(privid)) {
-	 if ((System.currentTimeMillis() - start) > 10000) {
+         if ((System.currentTimeMillis() - start) > 10000) {
             BoardLog.logE("BUMP","Timeout waiting for private errors");
             break;
           }
-	 try {
-	    private_problems.wait(1000);
-	  }
-	 catch (InterruptedException e) {
-	    BoardLog.logE("BUMP","Interrupted getting Private problems " + privid);
-	  }
+         try {
+            private_problems.wait(1000);
+          }
+         catch (InterruptedException e) {
+            BoardLog.logE("BUMP","Interrupted getting Private problems " + privid);
+          }
        }
 
       if (!private_problems.containsKey(privid)) {
-	 BoardLog.logE("BUMP","Failed to get private problems " + privid);
+         BoardLog.logE("BUMP","Failed to get private problems " + privid);
        }
       if (private_problems.get(privid) == null) return null;
       return new ArrayList<BumpProblem>(private_problems.get(privid));
@@ -364,9 +364,9 @@ Collection<BumpProblem> getPrivateErrors(String privid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem handling methods						*/
-/*										*/
+/*                                                                              */
+/*      Problem handling methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean fileMatch(File forfile,BumpProblemImpl bp)
@@ -396,7 +396,7 @@ private String getProblemId(Element e)
 
 
 
-}	// end of class BumpProblemSet
+}       // end of class BumpProblemSet
 
 
 

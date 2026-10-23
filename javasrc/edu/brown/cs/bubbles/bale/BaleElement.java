@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleElement.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor programming language elements		*/
-/*										*/
+/*                                                                              */
+/*              BaleElement.java                                                */
+/*                                                                              */
+/*      Bubble Annotated Language Editor programming language elements          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,14 +57,14 @@ import java.util.Set;
 
 
 abstract class BaleElement implements Element, MutableAttributeSet, TreeNode, Style, BaleConstants,
-	BaleConstants.BaleWindowElement {
+        BaleConstants.BaleWindowElement {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleDocument for_document;
@@ -73,14 +73,14 @@ private AttributeSet default_attrs;
 private MutableAttributeSet element_attrs;
 private Map<Object,Object> attr_cache;
 private int num_overlap;
-private BaleAstNode	ast_node;
+private BaleAstNode     ast_node;
 private org.w3c.dom.Element old_hint;
-private boolean 	is_elided;
+private boolean         is_elided;
 
-private static boolean	elide_statement = BALE_PROPERTIES.getBoolean("Bale.elide.statement");
-private static boolean	elide_body = BALE_PROPERTIES.getBoolean("Bale.elide.body");
-private static boolean	elide_members = BALE_PROPERTIES.getBoolean("Bale.elide.members");
-private static int	tab_size;
+private static boolean  elide_statement = BALE_PROPERTIES.getBoolean("Bale.elide.statement");
+private static boolean  elide_body = BALE_PROPERTIES.getBoolean("Bale.elide.body");
+private static boolean  elide_members = BALE_PROPERTIES.getBoolean("Bale.elide.members");
+private static int      tab_size;
 
 static {
    String v = BALE_PROPERTIES.getProperty("indent.tabluation.size");
@@ -96,9 +96,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleElement(BaleDocument d,BaleElement.Branch parent,AttributeSet a)
@@ -122,59 +122,59 @@ BaleElement(BaleDocument d,BaleElement.Branch parent,AttributeSet a)
 
 
 /********************************************************************************/
-/*										*/
-/*	BALE specific methods							*/
-/*										*/
+/*                                                                              */
+/*      BALE specific methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
-BaleDocument getBaleDocument()			{ return for_document; }
+BaleDocument getBaleDocument()                  { return for_document; }
 
-BaleAstNode getAstNode()			{ return ast_node; }
+BaleAstNode getAstNode()                        { return ast_node; }
 void setAstNode(BaleAstNode bn) {
    ast_node = bn;
    old_hint = null;
 }
 
 
-boolean isEndOfLine()				{ return false; }
+boolean isEndOfLine()                           { return false; }
 
-BaleElement.Indent getIndent()			{ return null; }
-boolean isLineElement() 			{ return false; }
-boolean isUnknown()				{ return false; }
-boolean isInsideLine()				{ return false; }
-boolean isOutsideLine() 			{ return false; }
-boolean isEmpty()				{ return false; }
-boolean isComment()				{ return false; }
-@Override public boolean isIdentifier() 	{ return false; }
-@Override public boolean isTypeIdentifier()	{ return false; }
-boolean isUndefined()				{ return false; }
-BaleFragmentType getBubbleType()		{ return BaleFragmentType.NONE; }
-boolean isDeclSet()				{ return false; }
-boolean isStatement()				{ return false; }
-boolean isOrphan()				{ return false; }
-boolean isHint()				{ return false; }
-String getHintText()				    { return null; }
-org.w3c.dom.Element getOldHintData()		{ return old_hint; }
-void setOldHintData(org.w3c.dom.Element hint)	 { old_hint = hint; }
+BaleElement.Indent getIndent()                  { return null; }
+boolean isLineElement()                         { return false; }
+boolean isUnknown()                             { return false; }
+boolean isInsideLine()                          { return false; }
+boolean isOutsideLine()                         { return false; }
+boolean isEmpty()                               { return false; }
+boolean isComment()                             { return false; }
+@Override public boolean isIdentifier()         { return false; }
+@Override public boolean isTypeIdentifier()     { return false; }
+boolean isUndefined()                           { return false; }
+BaleFragmentType getBubbleType()                { return BaleFragmentType.NONE; }
+boolean isDeclSet()                             { return false; }
+boolean isStatement()                           { return false; }
+boolean isOrphan()                              { return false; }
+boolean isHint()                                { return false; }
+String getHintText()                                { return null; }
+org.w3c.dom.Element getOldHintData()            { return old_hint; }
+void setOldHintData(org.w3c.dom.Element hint)    { old_hint = hint; }
 
-@Override public BaleElement.Branch getBaleParent()	{ return parent_element; }
+@Override public BaleElement.Branch getBaleParent()     { return parent_element; }
 
-BaleElement getBaleElement(int idx)		{ return null; }
-BaleTokenState getStartTokenState()		{ return BaleTokenState.NORMAL; }
-BaleTokenState getEndTokenState()		{ return BaleTokenState.NORMAL; }
-@Override public BaleTokenType getTokenType()	{ return BaleTokenType.NONE; }
-BaleElement.Leaf getFirstChild()		{ return null; }
-BaleElement.Leaf getLastChild() 		{ return null; }
-int getChildIndex(BaleElement e)		{ return -1; }
+BaleElement getBaleElement(int idx)             { return null; }
+BaleTokenState getStartTokenState()             { return BaleTokenState.NORMAL; }
+BaleTokenState getEndTokenState()               { return BaleTokenState.NORMAL; }
+@Override public BaleTokenType getTokenType()   { return BaleTokenType.NONE; }
+BaleElement.Leaf getFirstChild()                { return null; }
+BaleElement.Leaf getLastChild()                 { return null; }
+int getChildIndex(BaleElement e)                { return -1; }
 
-boolean isElided()				{ return is_elided; }
-void setElided(boolean fg)			{ is_elided = fg; }
-BaleElideMode getElideMode()			{ return for_document.getElideMode(); }
+boolean isElided()                              { return is_elided; }
+void setElided(boolean fg)                      { is_elided = fg; }
+BaleElideMode getElideMode()                    { return for_document.getElideMode(); }
 
-void setReflowCount(int ct)			{ }
-int getReflowCount()				{ return 0; }
+void setReflowCount(int ct)                     { }
+int getReflowCount()                            { return 0; }
 
-void fixParents()				{ }
+void fixParents()                               { }
 
 
 boolean canElide()
@@ -184,27 +184,27 @@ boolean canElide()
    if (isLineElement()) return false;
    if (isOutsideLine()) {
       if (getChildCount() > 1) {
-	 if (!elide_statement && isStatement()) return false;
-	 if (isComment()) return true;
-	 if (!elide_body) {
-	    BaleElement.Branch par = getBaleParent();
-	    if (par == null || par.isDeclSet())
-	       return false;
-	    BaleElement.Branch gpar = par.getBaleParent();
-	    if (gpar == null && for_document.getLanguage() == BoardLanguage.JS) return false;
-	  }
-	 if (!elide_members) {
-	    if (getBubbleType() != BaleFragmentType.NONE) {
-	       BaleElement.Branch par = getBaleParent();
-	       if (par != null && par.getBubbleType() == BaleFragmentType.CLASS) return false;
-	       if (par != null) {
-		  BaleElement.Branch gpar = par.getBaleParent();
-		  if (gpar != null) gpar = gpar.getBaleParent();
-		  if (gpar == null) return false;
-		}
-	     }
-	 }
-	 return true;
+         if (!elide_statement && isStatement()) return false;
+         if (isComment()) return true;
+         if (!elide_body) {
+            BaleElement.Branch par = getBaleParent();
+            if (par == null || par.isDeclSet())
+               return false;
+            BaleElement.Branch gpar = par.getBaleParent();
+            if (gpar == null && for_document.getLanguage() == BoardLanguage.JS) return false;
+          }
+         if (!elide_members) {
+            if (getBubbleType() != BaleFragmentType.NONE) {
+               BaleElement.Branch par = getBaleParent();
+               if (par != null && par.getBubbleType() == BaleFragmentType.CLASS) return false;
+               if (par != null) {
+                  BaleElement.Branch gpar = par.getBaleParent();
+                  if (gpar != null) gpar = gpar.getBaleParent();
+                  if (gpar == null) return false;
+                }
+             }
+         }
+         return true;
        }
     }
 
@@ -291,7 +291,7 @@ int getDocumentEndOffset()
 
 
 
-BaleElement.Leaf getBaleChildAtPosition(int off)	{ return null; }
+BaleElement.Leaf getBaleChildAtPosition(int off)        { return null; }
 
 
 
@@ -312,7 +312,7 @@ public String getMethodName()
    for ( ; be != null; be = be.getBaleParent()) {
 //    BoardLog.logD("BALE","getMethodName look at " + be.getName());
       if (be.getName().equals("Method") || be.getName().equals("DeclSet"))
-	 break;
+         break;
       if (be.getBubbleType() != BaleFragmentType.NONE) return null;
     }
 
@@ -324,7 +324,7 @@ public String getMethodName()
    BaleElement le = ce;
    while (ce != null) {
       if (ce.getName().equals("MethodDeclId")) {
-	 return ce.getFullName();
+         return ce.getFullName();
        }
       if (ce.getTokenType() == BaleTokenType.LPAREN) break;
       if (ce.getTokenType() == BaleTokenType.LBRACE) break;
@@ -335,7 +335,7 @@ public String getMethodName()
    ce = le;
    while (ce != null) {
       if (ce.getName().equals("MethodDeclId")) {
-	 return ce.getFullName();
+         return ce.getFullName();
        }
       if (ce.getTokenType() == BaleTokenType.RBRACE) break;
       if (ce.getTokenType() == BaleTokenType.SEMICOLON) break;
@@ -349,9 +349,9 @@ public String getMethodName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Attribute set management methods					*/
-/*										*/
+/*                                                                              */
+/*      Attribute set management methods                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int getAttributeCount()
@@ -404,10 +404,10 @@ public String getMethodName()
    else {
       Set<Object> r = new HashSet<>();
       for (Enumeration<?> e = element_attrs.getAttributeNames(); e.hasMoreElements(); ) {
-	 r.add(e.nextElement());
+         r.add(e.nextElement());
        }
       for (Enumeration<?> e = default_attrs.getAttributeNames(); e.hasMoreElements(); ) {
-	 r.add(e.nextElement());
+         r.add(e.nextElement());
        }
       return Collections.enumeration(r);
     }
@@ -519,9 +519,9 @@ private synchronized void setupElementAttributes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Attribute caching methods						*/
-/*										*/
+/*                                                                              */
+/*      Attribute caching methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void addToCache(Object k,Object v)
@@ -567,18 +567,18 @@ void clearLocalCache()
 
 
 /********************************************************************************/
-/*										*/
-/*	Element methods 							*/
-/*										*/
+/*                                                                              */
+/*      Element methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public Document getDocument() 	{ return for_document; }
+@Override public Document getDocument()         { return for_document; }
 
-@Override public Element getParentElement()	{ return parent_element; }
+@Override public Element getParentElement()     { return parent_element; }
 
-@Override public AttributeSet getAttributes()	{ return this; }
+@Override public AttributeSet getAttributes()   { return this; }
 
-@Override public String getName()		{ return null; }
+@Override public String getName()               { return null; }
 
 @Override public int getStartOffset()
 {
@@ -606,16 +606,16 @@ abstract Position getEndPosition();
 
 
 /********************************************************************************/
-/*										*/
-/*	TreeNode interface							*/
-/*										*/
+/*                                                                              */
+/*      TreeNode interface                                                      */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public TreeNode getChildAt(int idx)	{ return (TreeNode) getElement(idx); }
+@Override public TreeNode getChildAt(int idx)   { return (TreeNode) getElement(idx); }
 
-@Override public int getChildCount()		{ return getElementCount(); }
+@Override public int getChildCount()            { return getElementCount(); }
 
-@Override public TreeNode getParent()		{ return (TreeNode) getParentElement(); }
+@Override public TreeNode getParent()           { return (TreeNode) getParentElement(); }
 
 @Override public int getIndex(TreeNode n)
 {
@@ -625,29 +625,29 @@ abstract Position getEndPosition();
    return -1;
 }
 
-@Override public boolean getAllowsChildren()	{ return !isLeaf(); }
+@Override public boolean getAllowsChildren()    { return !isLeaf(); }
 
 @Override public abstract Enumeration<? extends TreeNode> children();
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Style methods								*/
-/*										*/
+/*                                                                              */
+/*      Style methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public void addChangeListener(ChangeListener l)	{ }
+@Override public void addChangeListener(ChangeListener l)       { }
 
-@Override public void removeChangeListener(ChangeListener l)	{ }
+@Override public void removeChangeListener(ChangeListener l)    { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -677,12 +677,12 @@ private void dumpElement(StringBuffer buf,int indent)
    buf.append(";" + getStartOffset() + ":" + getEndOffset() + "]");
    if (ast_node != null) {
       if (parent_element == null || parent_element.getAstNode() != ast_node) {
-	 buf.append(" {" + ast_node.getElidePriority());
-	 buf.append("," + ast_node.getNodeType());
-	 buf.append("," + ast_node.getIdType());
-	 if (ast_node.getFullName() != null) buf.append(",NAME=" + ast_node.getFullName());
-	 if (ast_node.getErrorFlag()) buf.append(",ERROR");
-	 buf.append("}");
+         buf.append(" {" + ast_node.getElidePriority());
+         buf.append("," + ast_node.getNodeType());
+         buf.append("," + ast_node.getIdType());
+         if (ast_node.getFullName() != null) buf.append(",NAME=" + ast_node.getFullName());
+         if (ast_node.getErrorFlag()) buf.append(",ERROR");
+         buf.append("}");
        }
     }
 
@@ -697,9 +697,9 @@ private void dumpElement(StringBuffer buf,int indent)
 
 
 /********************************************************************************/
-/*										*/
-/*	Branch Elements 							*/
-/*										*/
+/*                                                                              */
+/*      Branch Elements                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static class Branch extends BaleElement {
@@ -723,10 +723,10 @@ static class Branch extends BaleElement {
       end_pos = null;
     }
 
-   @Override BaleTokenState getStartTokenState()	{ return start_state; }
-   @Override BaleTokenState getEndTokenState()		{ return end_state; }
-   void setStartTokenState(BaleTokenState s)		{ start_state = s; }
-   void setEndTokenState(BaleTokenState s)		{ end_state = s; }
+   @Override BaleTokenState getStartTokenState()        { return start_state; }
+   @Override BaleTokenState getEndTokenState()          { return end_state; }
+   void setStartTokenState(BaleTokenState s)            { start_state = s; }
+   void setEndTokenState(BaleTokenState s)              { end_state = s; }
 
    @Override public BaleTokenType getTokenType() {
       if (isElided()) return BaleTokenType.ELIDED;
@@ -736,12 +736,12 @@ static class Branch extends BaleElement {
    void replace(BaleElement old,BaleElement rep) {
       checkCycle(rep);
       for (int i = 0; i < num_children; ++i) {
-	 if (children_elts[i] == old) {
-	    children_elts[i] = rep;
-	    rep.parent_element = this;
-	    old.parent_element = null;
-	    return;
-	  }
+         if (children_elts[i] == old) {
+            children_elts[i] = rep;
+            rep.parent_element = this;
+            old.parent_element = null;
+            return;
+          }
        }
       if (old != null) old.clearCache();
       if (rep != null) rep.clearCache();
@@ -753,22 +753,22 @@ static class Branch extends BaleElement {
       int nsz = children_elts.length;
       while (sz - 1 + num_children >= nsz) nsz *= 2;
       if (nsz != children_elts.length) {
-	 children_elts = Arrays.copyOf(children_elts,nsz);
+         children_elts = Arrays.copyOf(children_elts,nsz);
        }
       int idx = -1;
       for (int i = 0; i < num_children; ++i) {
-	 if (children_elts[i] == old) {
-	    idx = i;
-	    break;
-	  }
+         if (children_elts[i] == old) {
+            idx = i;
+            break;
+          }
        }
       if (idx < 0) return;
       System.arraycopy(children_elts,idx,children_elts,idx+sz-1,num_children-idx);
       for (BaleElement be : rep) {
-	 checkCycle(be);
-	 children_elts[idx++] = be;
-	 be.parent_element = this;
-	 be.clearCache();
+         checkCycle(be);
+         children_elts[idx++] = be;
+         be.parent_element = this;
+         be.clearCache();
        }
       old.parent_element = null;
       num_children += sz-1;
@@ -779,7 +779,7 @@ static class Branch extends BaleElement {
    void remove(int frm,int to) {
       int nsz = to - frm + 1;
       for (int i = frm; i < num_children - nsz; ++i) {
-	 children_elts[i] = children_elts[i+nsz];
+         children_elts[i] = children_elts[i+nsz];
        }
       for (int i = num_children-nsz; i < num_children; ++i) children_elts[i] = null;
       num_children -= nsz;
@@ -793,7 +793,7 @@ static class Branch extends BaleElement {
    void add(BaleElement e) {
       checkCycle(e);
       if (num_children >= children_elts.length) {
-	 children_elts = Arrays.copyOf(children_elts,children_elts.length*2);
+         children_elts = Arrays.copyOf(children_elts,children_elts.length*2);
        }
       children_elts[num_children++] = e;
       e.parent_element = this;
@@ -804,19 +804,19 @@ static class Branch extends BaleElement {
    @Override protected Position getStartPosition() {
       if (num_children == 0) return null;
       if (start_pos == null) {
-	 BaleElement c = children_elts[0];
-	 start_pos = c.getStartPosition();
+         BaleElement c = children_elts[0];
+         start_pos = c.getStartPosition();
        }
       return start_pos;
     }
 
    @Override protected Position getEndPosition() {
       if (end_pos == null) {
-	 BaleElement c;
-	 if (num_children > 0) c = children_elts[num_children-1];
-	 else c = children_elts[0];
-	 if (c == null) return null;
-	 end_pos = c.getEndPosition();
+         BaleElement c;
+         if (num_children > 0) c = children_elts[num_children-1];
+         else c = children_elts[0];
+         if (c == null) return null;
+         end_pos = c.getEndPosition();
        }
       return end_pos;
     }
@@ -824,12 +824,12 @@ static class Branch extends BaleElement {
    void setChildPosition(Position spos,Position epos,BaleElement c) {
       boolean rpt = false;
       if (num_children > 0 && c == children_elts[num_children-1]) {
-	 end_pos = epos;
-	 rpt = true;
+         end_pos = epos;
+         rpt = true;
        }
       if (num_children > 0 && c == children_elts[0]) {
-	 start_pos = spos;
-	 rpt = true;
+         start_pos = spos;
+         rpt = true;
        }
       if (rpt && getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
     }
@@ -845,7 +845,7 @@ static class Branch extends BaleElement {
 
    @Override int getChildIndex(BaleElement c) {
       for (int i = 0; i < num_children; ++i) {
-	 if (children_elts[i] == c) return i;
+         if (children_elts[i] == c) return i;
        }
       return -1;
     }
@@ -854,13 +854,13 @@ static class Branch extends BaleElement {
       int idx = getElementIndex(pos);
       BaleElement be = getBaleElement(idx);
       if (be == null) {
-	 BoardLog.logE("BALE","Problem getting child for position " + pos + " " + idx);
-	 return null;
+         BoardLog.logE("BALE","Problem getting child for position " + pos + " " + idx);
+         return null;
        }
       return be.getBaleChildAtPosition(pos);
     }
 
-   @Override public int getElementCount()	{ return num_children; }
+   @Override public int getElementCount()       { return num_children; }
 
    @Override public int getElementIndex(int off) {
       int index;
@@ -874,26 +874,26 @@ static class Branch extends BaleElement {
       if (off >= p1) return num_children - 1;
 
       if (last_index >= lower && last_index <= upper) {
-	 Element last = children_elts[last_index];
-	 p0 = last.getStartOffset();
-	 p1 = last.getEndOffset();
-	 if (off >= p0 && off < p1) return last_index;
-	 if (off < p0) upper = last_index;
-	 else lower = last_index;
+         Element last = children_elts[last_index];
+         p0 = last.getStartOffset();
+         p1 = last.getEndOffset();
+         if (off >= p0 && off < p1) return last_index;
+         if (off < p0) upper = last_index;
+         else lower = last_index;
        }
 
       while (lower <= upper) {
-	 mid = lower + ((upper - lower) / 2);
-	 Element elem = children_elts[mid];
-	 p0 = elem.getStartOffset();
-	 p1 = elem.getEndOffset();
-	 if (off >= p0 && off < p1) {
-	    index = mid;
-	    last_index = index;
-	    return index;
-	  }
-	 else if (off < p0) upper = mid-1;
-	 else lower = mid+1;
+         mid = lower + ((upper - lower) / 2);
+         Element elem = children_elts[mid];
+         p0 = elem.getStartOffset();
+         p1 = elem.getEndOffset();
+         if (off >= p0 && off < p1) {
+            index = mid;
+            last_index = index;
+            return index;
+          }
+         else if (off < p0) upper = mid-1;
+         else lower = mid+1;
        }
 
       if (off < p0) index = mid;
@@ -902,7 +902,7 @@ static class Branch extends BaleElement {
       return index;
    }
 
-   @Override public boolean isLeaf()		{ return false; }
+   @Override public boolean isLeaf()            { return false; }
 
    @Override public Enumeration<BaleElement> children() {
       if (num_children == 0) return null;
@@ -913,20 +913,20 @@ static class Branch extends BaleElement {
 
    @Override BaleElement.Leaf getFirstChild() {
       for (BaleElement.Branch bb = this; bb != null; ) {
-	 if (bb.num_children == 0) return null;
-	 BaleElement be = bb.children_elts[0];
-	 if (be.isLeaf()) return (BaleElement.Leaf) be;
-	 bb = (BaleElement.Branch) be;
+         if (bb.num_children == 0) return null;
+         BaleElement be = bb.children_elts[0];
+         if (be.isLeaf()) return (BaleElement.Leaf) be;
+         bb = (BaleElement.Branch) be;
        }
       return null;
     }
 
    @Override BaleElement.Leaf getLastChild() {
       for (BaleElement.Branch bb = this; bb != null; ) {
-	 if (bb.num_children == 0) return null;
-	 BaleElement be = bb.children_elts[bb.num_children-1];
-	 if (be.isLeaf()) return (BaleElement.Leaf) be;
-	 bb = (BaleElement.Branch) be;
+         if (bb.num_children == 0) return null;
+         BaleElement be = bb.children_elts[bb.num_children-1];
+         if (be.isLeaf()) return (BaleElement.Leaf) be;
+         bb = (BaleElement.Branch) be;
        }
       return null;
     }
@@ -940,24 +940,24 @@ static class Branch extends BaleElement {
 
   @Override void fixParents() {
      for (int i = 0; i < num_children; ++i) {
-	BaleElement ce = children_elts[i];
-	ce.parent_element = this;
-	ce.fixParents();
+        BaleElement ce = children_elts[i];
+        ce.parent_element = this;
+        ce.fixParents();
       }
      clearLocalCache();
      clearChildPositions();
    }
 
-}	// end of inner class Branch
+}       // end of inner class Branch
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Leaf Elements								*/
-/*										*/
+/*                                                                              */
+/*      Leaf Elements                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static class Leaf extends BaleElement {
@@ -976,56 +976,56 @@ static class Leaf extends BaleElement {
       setPosition(off0,off1);
     }
 
-   @Override protected Position getStartPosition()		{ return start_pos; }
-   @Override protected Position getEndPosition()		{ return end_pos; }
-   @Override public int getElementIndex(int pos)		{ return -1; }
-   @Override public Element getElement(int idx) 		{ return null; }
-   @Override public int getElementCount()			{ return 0; }
-   @Override public boolean isLeaf()				{ return true; }
-   @Override public Enumeration<? extends TreeNode> children()	{ return null; }
+   @Override protected Position getStartPosition()              { return start_pos; }
+   @Override protected Position getEndPosition()                { return end_pos; }
+   @Override public int getElementIndex(int pos)                { return -1; }
+   @Override public Element getElement(int idx)                 { return null; }
+   @Override public int getElementCount()                       { return 0; }
+   @Override public boolean isLeaf()                            { return true; }
+   @Override public Enumeration<? extends TreeNode> children()  { return null; }
 
-   @Override BaleElement.Leaf getBaleChildAtPosition(int off)	{ return this; }
-   @Override public BaleTokenType getTokenType()		{ return token_type; }
-   @Override BaleElement.Leaf getFirstChild()			{ return this; }
-   @Override BaleElement.Leaf getLastChild()			{ return this; }
+   @Override BaleElement.Leaf getBaleChildAtPosition(int off)   { return this; }
+   @Override public BaleTokenType getTokenType()                { return token_type; }
+   @Override BaleElement.Leaf getFirstChild()                   { return this; }
+   @Override BaleElement.Leaf getLastChild()                    { return this; }
 
    void setPosition(int off0,int off1) {
       BaleDocument bd = getBaleDocument();
       try {
-	 start_pos = bd.createPosition(off0);
-	 end_pos = bd.createPosition(off1);
-	 if (start_pos.getOffset() > end_pos.getOffset()) {
-	    BoardLog.logE("BALE","Bad token: end is less than start");
-	    start_pos = bd.createPosition(off0);
-	    end_pos = bd.createPosition(off1);
-	    int p0 = start_pos.getOffset();
-	    int p1 = end_pos.getOffset();
-	    BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
-			     token_type + " " +
-			     getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
-			     off0 + " " + off1);
+         start_pos = bd.createPosition(off0);
+         end_pos = bd.createPosition(off1);
+         if (start_pos.getOffset() > end_pos.getOffset()) {
+            BoardLog.logE("BALE","Bad token: end is less than start");
+            start_pos = bd.createPosition(off0);
+            end_pos = bd.createPosition(off1);
+            int p0 = start_pos.getOffset();
+            int p1 = end_pos.getOffset();
+            BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
+                             token_type + " " +
+                             getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
+                             off0 + " " + off1);
 
-	    end_pos = start_pos;
-	  }
-	 if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
+            end_pos = start_pos;
+          }
+         if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
        }
       catch (BadLocationException e) {
-	 start_pos = null;
+         start_pos = null;
          end_pos = null;
-	 throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
+         throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
        }
     }
 
 
-}	// end of inner class Leaf
+}       // end of inner class Leaf
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Specialized Branch Elements						*/
-/*										*/
+/*                                                                              */
+/*      Specialized Branch Elements                                             */
+/*                                                                              */
 /********************************************************************************/
 
 static class DeclSet extends Branch {
@@ -1034,11 +1034,11 @@ static class DeclSet extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "DeclSet"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override boolean isDeclSet()		{ return true; }
+   @Override public String getName()            { return "DeclSet"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override boolean isDeclSet()                { return true; }
 
-}	// end of inner class DeclSet
+}       // end of inner class DeclSet
 
 
 
@@ -1048,10 +1048,10 @@ static class CompilationUnitNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "CompilationUnit"; }
-   @Override boolean isOutsideLine()		{ return true; }
+   @Override public String getName()            { return "CompilationUnit"; }
+   @Override boolean isOutsideLine()            { return true; }
 
-}	// end of inner class CompilationUnitNode
+}       // end of inner class CompilationUnitNode
 
 
 
@@ -1061,11 +1061,11 @@ static class ClassNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Class"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.CLASS; }
+   @Override public String getName()            { return "Class"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override BaleFragmentType getBubbleType()   { return BaleFragmentType.CLASS; }
 
-}	// end of inner class ClassNode
+}       // end of inner class ClassNode
 
 
 
@@ -1075,11 +1075,11 @@ static class MethodNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Method"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.METHOD; }
+   @Override public String getName()            { return "Method"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override BaleFragmentType getBubbleType()   { return BaleFragmentType.METHOD; }
 
-}	// end of inner class MethodNode
+}       // end of inner class MethodNode
 
 
 
@@ -1089,11 +1089,11 @@ static class FieldNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Field"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.FIELDS; }
+   @Override public String getName()            { return "Field"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override BaleFragmentType getBubbleType()   { return BaleFragmentType.FIELDS; }
 
-}	// end of inner class FieldNode
+}       // end of inner class FieldNode
 
 
 static class VariableNode extends Branch {
@@ -1103,11 +1103,11 @@ static class VariableNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Variable"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.FIELDS; }
+   @Override public String getName()            { return "Variable"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override BaleFragmentType getBubbleType()   { return BaleFragmentType.FIELDS; }
 
-}	// end of inner class FieldNode
+}       // end of inner class FieldNode
 
 
 
@@ -1117,10 +1117,10 @@ static class AnnotationNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Annotation"; }
-   @Override boolean isOutsideLine()		{ return true; }
+   @Override public String getName()            { return "Annotation"; }
+   @Override boolean isOutsideLine()            { return true; }
 
-}	// end of inner class AnnotationNode
+}       // end of inner class AnnotationNode
 
 
 
@@ -1131,11 +1131,11 @@ static class InitializerNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Initializer"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.STATICS; }
+   @Override public String getName()            { return "Initializer"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override BaleFragmentType getBubbleType()   { return BaleFragmentType.STATICS; }
 
-}	// end of inner class InitializerNode
+}       // end of inner class InitializerNode
 
 
 
@@ -1148,22 +1148,22 @@ static class LineNode extends Branch {
       reflow_count = 0;
     }
 
-   @Override public String getName()			{ return "Line"; }
+   @Override public String getName()                    { return "Line"; }
 
-   @Override boolean isLineElement()			{ return true; }
+   @Override boolean isLineElement()                    { return true; }
    @Override boolean isEmpty() {
       int n = getElementCount();
       for (int i = 0; i < n; ++i) {
-	 BaleElement be = getBaleElement(i);
-	 if (!be.isEmpty()) return false;
+         BaleElement be = getBaleElement(i);
+         if (!be.isEmpty()) return false;
        }
       return true;
     }
 
-   @Override void setReflowCount(int ct)		{ reflow_count = ct; }
-   @Override int getReflowCount()			{ return reflow_count; }
+   @Override void setReflowCount(int ct)                { reflow_count = ct; }
+   @Override int getReflowCount()                       { return reflow_count; }
 
-}	// end of inner class LineNode
+}       // end of inner class LineNode
 
 
 
@@ -1173,10 +1173,10 @@ static class StatementNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Statement"; }
-   @Override boolean isInsideLine()		{ return true; }
+   @Override public String getName()            { return "Statement"; }
+   @Override boolean isInsideLine()             { return true; }
 
-}	// end of inner class StatementNode
+}       // end of inner class StatementNode
 
 
 
@@ -1186,11 +1186,11 @@ static class SplitStatementNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "SplitStatement"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override boolean isStatement()		{ return true; }
+   @Override public String getName()            { return "SplitStatement"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override boolean isStatement()              { return true; }
 
-}	// end of inner class StatementNode
+}       // end of inner class StatementNode
 
 
 
@@ -1200,10 +1200,10 @@ static class ExpressionNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Expression"; }
-   @Override boolean isInsideLine()		{ return true; }
+   @Override public String getName()            { return "Expression"; }
+   @Override boolean isInsideLine()             { return true; }
 
-}	// end of inner class ExpressionNode
+}       // end of inner class ExpressionNode
 
 
 
@@ -1213,11 +1213,11 @@ static class SplitExpressionNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "SplitExpression"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override boolean isStatement()		{ return true; }
+   @Override public String getName()            { return "SplitExpression"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override boolean isStatement()              { return true; }
 
-}	// end of inner class ExpressionNode
+}       // end of inner class ExpressionNode
 
 
 
@@ -1227,10 +1227,10 @@ static class BlockNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "Block"; }
-   @Override boolean isOutsideLine()		{ return true; }
+   @Override public String getName()            { return "Block"; }
+   @Override boolean isOutsideLine()            { return true; }
 
-}	// end of inner class BlockNode
+}       // end of inner class BlockNode
 
 
 
@@ -1240,10 +1240,10 @@ static class SwitchBlockNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "SwitchBlock"; }
-   @Override boolean isOutsideLine()		{ return true; }
+   @Override public String getName()            { return "SwitchBlock"; }
+   @Override boolean isOutsideLine()            { return true; }
 
-}	// end of inner class BlockNode
+}       // end of inner class BlockNode
 
 
 
@@ -1253,11 +1253,11 @@ static class BlockCommentNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "BlockComment"; }
-   @Override boolean isOutsideLine()		{ return true; }
-   @Override boolean isComment()		{ return true; }
+   @Override public String getName()            { return "BlockComment"; }
+   @Override boolean isOutsideLine()            { return true; }
+   @Override boolean isComment()                { return true; }
 
-}	// end of inner class BlockNode
+}       // end of inner class BlockNode
 
 
 
@@ -1267,10 +1267,10 @@ static class InternalBlockNode extends Branch {
       super(d,par,null);
     }
 
-   @Override public String getName()		{ return "InternalBlock"; }
-   @Override boolean isInsideLine()		{ return true; }
+   @Override public String getName()            { return "InternalBlock"; }
+   @Override boolean isInsideLine()             { return true; }
 
-}	// end of inner class BlockNode
+}       // end of inner class BlockNode
 
 
 
@@ -1285,23 +1285,23 @@ static class UnknownNode extends Branch {
       reflow_count = 0;
     }
 
-   void setEndOfLine()				{ has_eol = true; }
+   void setEndOfLine()                          { has_eol = true; }
 
-   @Override public String getName()		{ return "Unknown"; }
-   @Override boolean isEndOfLine()		{ return has_eol; }
-   @Override boolean isUnknown()		{ return true; }
-   @Override void setReflowCount(int ct)	{ reflow_count = ct; }
-   @Override int getReflowCount()		{ return reflow_count; }
+   @Override public String getName()            { return "Unknown"; }
+   @Override boolean isEndOfLine()              { return has_eol; }
+   @Override boolean isUnknown()                { return true; }
+   @Override void setReflowCount(int ct)        { reflow_count = ct; }
+   @Override int getReflowCount()               { return reflow_count; }
 
-}	// end of inner class Unknown
+}       // end of inner class Unknown
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Specialized Leaf Elements						*/
-/*										*/
+/*                                                                              */
+/*      Specialized Leaf Elements                                               */
+/*                                                                              */
 /********************************************************************************/
 
 static class Token extends Leaf {
@@ -1310,10 +1310,10 @@ static class Token extends Leaf {
       super(d,p,null,offs,offe,tt);
     }
 
-   @Override public String getName()		{ return "Token"; }
-   @Override boolean isInsideLine()		{ return true; }
+   @Override public String getName()            { return "Token"; }
+   @Override boolean isInsideLine()             { return true; }
 
-}	// end of inner class Token
+}       // end of inner class Token
 
 
 
@@ -1323,10 +1323,10 @@ static class Brace extends Leaf {
       super(d,p,null,offs,offe,tt);
     }
 
-   @Override public String getName()		{ return "Brace"; }
-   @Override boolean isInsideLine()		{ return true; }
+   @Override public String getName()            { return "Brace"; }
+   @Override boolean isInsideLine()             { return true; }
 
-}	// end of inner class Brace
+}       // end of inner class Brace
 
 
 
@@ -1336,9 +1336,9 @@ static class Keyword extends Leaf {
       super(d,p,null,offs,offe,tt);
     }
 
-   @Override public String getName()		{ return "Keyword"; }
+   @Override public String getName()            { return "Keyword"; }
 
-}	// end of inner class Keyword
+}       // end of inner class Keyword
 
 
 
@@ -1348,9 +1348,9 @@ static class Return extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.RETURN);
     }
 
-   @Override public String getName()		{ return "Return"; }
+   @Override public String getName()            { return "Return"; }
 
-}	// end of inner class Return
+}       // end of inner class Return
 
 
 
@@ -1360,10 +1360,10 @@ static class Identifier extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.IDENTIFIER);
     }
 
-   @Override public String getName()		{ return "Identifier"; }
-   @Override public boolean isIdentifier()	{ return true; }
+   @Override public String getName()            { return "Identifier"; }
+   @Override public boolean isIdentifier()      { return true; }
 
-}	// end of inner class Identifier
+}       // end of inner class Identifier
 
 
 
@@ -1373,9 +1373,9 @@ static class FieldId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "FieldId"; }
+   @Override public String getName()            { return "FieldId"; }
 
-}	// end of inner class FieldId
+}       // end of inner class FieldId
 
 
 
@@ -1385,9 +1385,9 @@ static class StaticFieldId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "StaticFieldId"; }
+   @Override public String getName()            { return "StaticFieldId"; }
 
-}	// end of inner class StaticFieldId
+}       // end of inner class StaticFieldId
 
 
 
@@ -1397,9 +1397,9 @@ static class ClassDeclId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "ClassDeclId"; }
+   @Override public String getName()            { return "ClassDeclId"; }
 
-}	// end of inner class ClassDeclId
+}       // end of inner class ClassDeclId
 
 
 
@@ -1409,9 +1409,9 @@ static class ClassDeclMemberId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "ClassDeclMemberId"; }
+   @Override public String getName()            { return "ClassDeclMemberId"; }
 
-}	// end of inner class ClassDeclMemberId
+}       // end of inner class ClassDeclMemberId
 
 
 
@@ -1421,9 +1421,9 @@ static class MethodDeclId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "MethodDeclId"; }
+   @Override public String getName()            { return "MethodDeclId"; }
 
-}	// end of inner class MethodDeclId
+}       // end of inner class MethodDeclId
 
 
 
@@ -1433,9 +1433,9 @@ static class LocalDeclId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "LocalDeclId"; }
+   @Override public String getName()            { return "LocalDeclId"; }
 
-}	// end of inner class LocalDeclId
+}       // end of inner class LocalDeclId
 
 
 
@@ -1446,9 +1446,9 @@ static class FieldDeclId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "FieldDeclId"; }
+   @Override public String getName()            { return "FieldDeclId"; }
 
-}	// end of inner class FieldDeclId
+}       // end of inner class FieldDeclId
 
 
 
@@ -1458,9 +1458,9 @@ static class CallId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "CallId"; }
+   @Override public String getName()            { return "CallId"; }
 
-}	// end of inner class CallId
+}       // end of inner class CallId
 
 
 
@@ -1470,9 +1470,9 @@ static class StaticCallId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "StaticCallId"; }
+   @Override public String getName()            { return "StaticCallId"; }
 
-}	// end of inner class StaticCallId
+}       // end of inner class StaticCallId
 
 
 
@@ -1482,11 +1482,11 @@ static class UndefCallId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "UndefCallId"; }
+   @Override public String getName()            { return "UndefCallId"; }
 
-   @Override boolean isUndefined()		{ return true; }
+   @Override boolean isUndefined()              { return true; }
 
-}	// end of inner class UndefCallId
+}       // end of inner class UndefCallId
 
 
 
@@ -1496,9 +1496,9 @@ static class AnnotationId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "AnnotationId"; }
+   @Override public String getName()            { return "AnnotationId"; }
 
-}	// end of inner class StaticCallId
+}       // end of inner class StaticCallId
 
 
 
@@ -1508,9 +1508,9 @@ static class LabelId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "LabelId"; }
+   @Override public String getName()            { return "LabelId"; }
 
-}	// end of inner class StaticCallId
+}       // end of inner class StaticCallId
 
 
 
@@ -1520,11 +1520,11 @@ static class BuiltinId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "BuiltinId"; }
+   @Override public String getName()            { return "BuiltinId"; }
 
-   @Override boolean isUndefined()		{ return true; }
+   @Override boolean isUndefined()              { return true; }
 
-}	// end of inner class BuiltinId
+}       // end of inner class BuiltinId
 
 
 
@@ -1534,11 +1534,11 @@ static class UndefId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "UndefId"; }
+   @Override public String getName()            { return "UndefId"; }
 
-   @Override boolean isUndefined()		{ return true; }
+   @Override boolean isUndefined()              { return true; }
 
-}	// end of inner class UndefId
+}       // end of inner class UndefId
 
 
 
@@ -1548,9 +1548,9 @@ static class DeprecatedCallId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "DeprecatedCallId"; }
+   @Override public String getName()            { return "DeprecatedCallId"; }
 
-}	// end of inner class DeprecatedCallId
+}       // end of inner class DeprecatedCallId
 
 
 
@@ -1560,10 +1560,10 @@ static class TypeId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "TypeId"; }
-   @Override public boolean isTypeIdentifier()	{ return true; }
+   @Override public String getName()            { return "TypeId"; }
+   @Override public boolean isTypeIdentifier()  { return true; }
 
-}	// end of inner class TypeId
+}       // end of inner class TypeId
 
 
 
@@ -1573,9 +1573,9 @@ static class ConstId extends Identifier {
       super(d,p,offs,offe);
     }
 
-   @Override public String getName()		{ return "ConstId"; }
+   @Override public String getName()            { return "ConstId"; }
 
-}	// end of inner class TypeId
+}       // end of inner class TypeId
 
 
 
@@ -1585,9 +1585,9 @@ static class Number extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.NUMBER);
     }
 
-   @Override public String getName()		{ return "Number"; }
+   @Override public String getName()            { return "Number"; }
 
-}	// end of inner class Number
+}       // end of inner class Number
 
 
 
@@ -1596,18 +1596,18 @@ static class Literal extends Leaf {
    private boolean end_line;
 
    Literal(BaleDocument d,BaleElement.Branch p,int offs,int offe,
-	 boolean eol,BaleTokenType tt) {
+         boolean eol,BaleTokenType tt) {
       super(d,p,null,offs,offe,tt);
       end_line = eol;
     }
 
-   @Override public String getName()		{ return "Literal"; }
-   @Override boolean isEndOfLine()		{ return end_line; }
+   @Override public String getName()            { return "Literal"; }
+   @Override boolean isEndOfLine()              { return end_line; }
    @Override BaleTokenState getEndTokenState() {
       return (end_line ? BaleTokenState.IN_MULTILINE_STRING : BaleTokenState.NORMAL);
     }
 
-}	// end of inner class Literal
+}       // end of inner class Literal
 
 
 
@@ -1617,11 +1617,11 @@ static class Space extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.SPACE);
     }
 
-   @Override public String getName()		{ return "Space"; }
+   @Override public String getName()            { return "Space"; }
 
-   @Override boolean isEmpty()			{ return true; }
+   @Override boolean isEmpty()                  { return true; }
 
-}	// end of inner class Space
+}       // end of inner class Space
 
 
 
@@ -1636,32 +1636,32 @@ static class Indent extends Space {
       num_exdent = EXDENT_UNKNOWN;
       first_column = -1;
       try {
-	 String txt = d.getText(offs,offe-offs);
-	 int c = 0;
-	 for (int i = 0; i < txt.length(); ++i) {
-	    char ch = txt.charAt(i);
-	    if (ch == ' ') ++c;
-	    else if (ch == '\t') c = (c+tab_size)/tab_size*tab_size;
-	    else if (Character.isWhitespace(c)) ;
-	    else break;
-	  }
-	 first_column = c+1;
+         String txt = d.getText(offs,offe-offs);
+         int c = 0;
+         for (int i = 0; i < txt.length(); ++i) {
+            char ch = txt.charAt(i);
+            if (ch == ' ') ++c;
+            else if (ch == '\t') c = (c+tab_size)/tab_size*tab_size;
+            else if (Character.isWhitespace(c)) ;
+            else break;
+          }
+         first_column = c+1;
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem looking at indent text",e);
+         BoardLog.logE("BALE","Problem looking at indent text",e);
        }
     }
 
-   @Override public String getName()		{ return "Indent"; }
+   @Override public String getName()            { return "Indent"; }
 
-   @Override Indent getIndent() 		{ return this; }
+   @Override Indent getIndent()                 { return this; }
 
-   public int getFirstColumn()			{ return first_column; }
+   public int getFirstColumn()                  { return first_column; }
 
-   public int getNumExdent()			{ return num_exdent; }
-   public void setNumExdent(int fg)		{ num_exdent = fg; }
+   public int getNumExdent()                    { return num_exdent; }
+   public void setNumExdent(int fg)             { num_exdent = fg; }
 
-}	// end of inner class Space
+}       // end of inner class Space
 
 
 
@@ -1672,12 +1672,12 @@ static class Eol extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.EOL);
     }
 
-   @Override public String getName()		{ return "EOL"; }
+   @Override public String getName()            { return "EOL"; }
 
-   @Override boolean isEndOfLine()		{ return true; }
-   @Override boolean isEmpty()			{ return true; }
+   @Override boolean isEndOfLine()              { return true; }
+   @Override boolean isEmpty()                  { return true; }
 
-}	// end of inner class Eol
+}       // end of inner class Eol
 
 
 
@@ -1691,30 +1691,30 @@ static class Comment extends Leaf {
       end_line = eol;
     }
 
-   @Override public String getName()		{ return "Comment"; }
-   @Override boolean isEndOfLine()		{ return end_line; }
-   @Override boolean isComment()		{ return true; }
+   @Override public String getName()            { return "Comment"; }
+   @Override boolean isEndOfLine()              { return end_line; }
+   @Override boolean isComment()                { return true; }
    @Override BaleTokenState getEndTokenState() {
       return (end_line ? BaleTokenState.IN_COMMENT : BaleTokenState.NORMAL);
     }
 
-}	// end of inner class Comment
+}       // end of inner class Comment
 
 
 
 static class JavaDocComment extends Comment {
 
    JavaDocComment(BaleDocument d,BaleElement.Branch p,int offs,int offe,boolean eol,
-		     BaleTokenType tt) {
+                     BaleTokenType tt) {
       super(d,p,offs,offe,eol,tt);
     }
 
-   @Override public String getName()		{ return "JavaDocComment"; }
+   @Override public String getName()            { return "JavaDocComment"; }
    @Override BaleTokenState getEndTokenState() {
       return (isEndOfLine() ? BaleTokenState.IN_FORMAL_COMMENT : BaleTokenState.NORMAL);
     }
 
-}	// end of inner class JavaDocComment
+}       // end of inner class JavaDocComment
 
 
 
@@ -1724,18 +1724,18 @@ static class LineComment extends Leaf {
       super(d,p,null,offs,offe,BaleTokenType.LINECOMMENT);
     }
 
-   @Override public String getName()		{ return "LineComment"; }
-   @Override boolean isEndOfLine()		{ return false; }
-   @Override boolean isComment()		{ return true; }
+   @Override public String getName()            { return "LineComment"; }
+   @Override boolean isEndOfLine()              { return false; }
+   @Override boolean isComment()                { return true; }
 
-}	// end of inner class LineComment
+}       // end of inner class LineComment
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Special elements for orphaned windows					*/
-/*										*/
+/*                                                                              */
+/*      Special elements for orphaned windows                                   */
+/*                                                                              */
 /********************************************************************************/
 
 static class OrphanElement extends Leaf {
@@ -1747,10 +1747,10 @@ static class OrphanElement extends Leaf {
       // fragment_name = nm;
     }
 
-   @Override public String getName()		{ return "Orphan"; }
-   @Override boolean isOrphan() 		{ return true; }
+   @Override public String getName()            { return "Orphan"; }
+   @Override boolean isOrphan()                 { return true; }
 
-}	// end of inner class OrphanElement
+}       // end of inner class OrphanElement
 
 
 
@@ -1764,16 +1764,16 @@ static class HintElement extends Leaf {
       hint_text = hint;
     }
 
-   @Override public String getName()		{ return "Hint"; }
-   @Override boolean isComment()		{ return true; }
-   @Override boolean isHint()			{ return true; }
-   @Override String getHintText()		    { return hint_text; }
+   @Override public String getName()            { return "Hint"; }
+   @Override boolean isComment()                { return true; }
+   @Override boolean isHint()                   { return true; }
+   @Override String getHintText()                   { return hint_text; }
 
 }
 
 
 
-}	// end of interface BaleElement
+}       // end of interface BaleElement
 
 
 

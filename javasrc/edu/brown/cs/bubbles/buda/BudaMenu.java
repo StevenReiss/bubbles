@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaMenu.java							*/
-/*										*/
-/*	BUblles Display Area bubble menu					*/
-/*										*/
+/*                                                                              */
+/*              BudaMenu.java                                                   */
+/*                                                                              */
+/*      BUblles Display Area bubble menu                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -76,24 +76,24 @@ class BudaMenu implements BudaConstants, BudaConstants.BubbleViewCallback {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,Set<MenuItem>>  menu_groups;
-private List<MenuData>		   active_menus;
+private List<MenuData>             active_menus;
 
-private static final int	MENU_DELTA = 15;
+private static final int        MENU_DELTA = 15;
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaMenu()
@@ -107,9 +107,9 @@ BudaMenu()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addMenuItem(String id,ButtonListener callback,Icon icon,String tooltip)
@@ -142,9 +142,9 @@ void addMenuItem(String id,ButtonListener callback,Icon icon,String tooltip)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle creating search and menu together			*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle creating search and menu together                     */
+/*                                                                              */
 /********************************************************************************/
 
 void createMenuAndSearch(BudaRoot br,Point pt,BudaBubble search)
@@ -201,9 +201,9 @@ void noteMenuUsed(Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to build the actual menu					*/
-/*										*/
+/*                                                                              */
+/*      Methods to build the actual menu                                        */
+/*                                                                              */
 /********************************************************************************/
 
 MenuPanel createMenu(Point pt,int width)
@@ -245,23 +245,23 @@ private void addPopupItems(Point pt,Set<MenuItem> itms,JComponent menu,String pf
       String tnm = nm.substring(pln);
       int idx = tnm.indexOf(".");
       if (idx < 0) {
-	 MenuBtn btn = new MenuBtn(mi,pt);
-	 menu.add(btn);
+         MenuBtn btn = new MenuBtn(mi,pt);
+         menu.add(btn);
        }
       else {
-	 String xnm = tnm.substring(0,idx);
-	 String npfx = (pfx == null ? xnm : pfx + xnm) + ".";
-	 MenuSubBtn m = new MenuSubBtn(xnm);
-	 if (menu instanceof MenuPanel) {
-	    MenuSubBar mb = new MenuSubBar(m);
-	    menu.add(mb);
-	  }
-	 else menu.add(m);
-	 Set<MenuItem> nitem = new TreeSet<MenuItem>();
-	 for (MenuItem xmi : itms) {
-	    if (xmi.getName().startsWith(npfx)) nitem.add(xmi);
-	  }
-	 addPopupItems(pt,nitem,m.getPopupMenu(),npfx,done);
+         String xnm = tnm.substring(0,idx);
+         String npfx = (pfx == null ? xnm : pfx + xnm) + ".";
+         MenuSubBtn m = new MenuSubBtn(xnm);
+         if (menu instanceof MenuPanel) {
+            MenuSubBar mb = new MenuSubBar(m);
+            menu.add(mb);
+          }
+         else menu.add(m);
+         Set<MenuItem> nitem = new TreeSet<MenuItem>();
+         for (MenuItem xmi : itms) {
+            if (xmi.getName().startsWith(npfx)) nitem.add(xmi);
+          }
+         addPopupItems(pt,nitem,m.getPopupMenu(),npfx,done);
        }
       done.add(mi);
     }
@@ -291,9 +291,9 @@ private int countItems(Set<MenuItem> itms,Set<Object> done)
 
 
 /********************************************************************************/
-/*										*/
-/*	View callback								*/
-/*										*/
+/*                                                                              */
+/*      View callback                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void bubbleRemoved(BudaBubble bb)
@@ -306,9 +306,9 @@ private int countItems(Set<MenuItem> itms,Set<Object> done)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold a menu item						*/
-/*										*/
+/*                                                                              */
+/*      Class to hold a menu item                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MenuItem implements Comparable<MenuItem> {
@@ -329,29 +329,29 @@ private static class MenuItem implements Comparable<MenuItem> {
       order_text = (order == null ? "" : order) + "#" + item_name;
     }
 
-   String getId()				{ return full_id; }
-   String getName()				{ return item_name; }
-   Icon getIcon()				{ return menu_icon; }
-   ButtonListener getCallback() 		{ return call_back; }
-   String getToolTip()				{ return tool_tip; }
+   String getId()                               { return full_id; }
+   String getName()                             { return item_name; }
+   Icon getIcon()                               { return menu_icon; }
+   ButtonListener getCallback()                 { return call_back; }
+   String getToolTip()                          { return tool_tip; }
 
    @Override public int compareTo(MenuItem mi) {
       return order_text.compareTo(mi.order_text);
     }
 
-}	// end of inner class MenuItem
+}       // end of inner class MenuItem
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	MenuPanel class 							*/
-/*										*/
+/*                                                                              */
+/*      MenuPanel class                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MenuPanel extends SwingGridPanel implements FocusListener,
-		BudaBubbleOutputer
+                BudaBubbleOutputer
 {
 
    private Color fg_color;
@@ -423,15 +423,15 @@ private static class MenuPanel extends SwingGridPanel implements FocusListener,
 
    private void colorSeparator(JSeparator js,boolean transp) {  }
    
-   @Override public void focusGained(FocusEvent e)	{ setNontransparent(); }
-   @Override public void focusLost(FocusEvent e)	{ setTransparent(); }
+   @Override public void focusGained(FocusEvent e)      { setNontransparent(); }
+   @Override public void focusLost(FocusEvent e)        { setTransparent(); }
 
-   @Override public String getConfigurator()		{ return "BUDAMENU"; }
+   @Override public String getConfigurator()            { return "BUDAMENU"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","MENU");
     }
 
-}	// end of inner class MenuPanel
+}       // end of inner class MenuPanel
 
 
 
@@ -503,7 +503,7 @@ private class MenuBtn extends JMenuItem implements MenuComponent, ActionListener
       return for_item.getId();
     }
 
-}	// end of inner class MenuBtn
+}       // end of inner class MenuBtn
 
 
 
@@ -533,16 +533,16 @@ private static class MenuSubBtn extends JMenu implements MenuComponent {
    @Override public void setPopupMenuVisible(boolean b) {
       boolean isVisible = isPopupMenuVisible();
       if (b != isVisible) {
-	 if (b && isShowing()) {
-	    getPopupMenu().show(this, getWidth(), 0);
+         if (b && isShowing()) {
+            getPopupMenu().show(this, getWidth(), 0);
           }
          else {
-	    getPopupMenu().setVisible(false);
+            getPopupMenu().setVisible(false);
           }
        }
     }
    
-}	// end of inner class MenuSubBtn
+}       // end of inner class MenuSubBtn
 
 
 
@@ -561,10 +561,10 @@ private static class MenuSubBar extends JMenuBar implements MenuComponent {
       menu_btn = btn;
 
       if (BUBBLE_MENU_FONT.canDisplay(ARROW)) {
-	 menu_btn.setText(menu_btn.getText() + " " + ARROW);
+         menu_btn.setText(menu_btn.getText() + " " + ARROW);
        }
       else {
-	 menu_btn.setText(menu_btn.getText() + " >");
+         menu_btn.setText(menu_btn.getText() + " >");
        }
 
       menu_btn.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -583,15 +583,15 @@ private static class MenuSubBar extends JMenuBar implements MenuComponent {
       menu_btn.setNontransparent(fg);
     }
 
-}	// end of inner class MenuSubBar
+}       // end of inner class MenuSubBar
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu Bubble class							*/
-/*										*/
+/*                                                                              */
+/*      Menu Bubble class                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MenuBubble extends BudaBubble {
@@ -605,14 +605,14 @@ private static class MenuBubble extends BudaBubble {
       setTransient(true);
     }
 
-}	// end of inner class MenuBubble
+}       // end of inner class MenuBubble
 
 
 
 /********************************************************************************/
-/*										*/
-/*	MenuData : manage currently active menus and search boxes		*/
-/*										*/
+/*                                                                              */
+/*      MenuData : manage currently active menus and search boxes               */
+/*                                                                              */
 /********************************************************************************/
 
 private class MenuData extends ComponentAdapter {
@@ -643,29 +643,29 @@ private class MenuData extends ComponentAdapter {
 
    @Override public void componentShown(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
-	 // doesn't work for some reason: wrong focus or invisible?
-	 // need to give focus to text area
-	 search_bubble.grabFocus();
+         // doesn't work for some reason: wrong focus or invisible?
+         // need to give focus to text area
+         search_bubble.grabFocus();
        }
     }
 
    @Override public void componentHidden(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
-	 menu_bubble.setVisible(false);
+         menu_bubble.setVisible(false);
        }
       else if (e.getSource() == menu_bubble) {
-	 active_menus.remove(this);
+         active_menus.remove(this);
        }
     }
 
-}	// end of inner class MenuData
+}       // end of inner class MenuData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configurator for menu bubbles						*/
-/*										*/
+/*                                                                              */
+/*      Configurator for menu bubbles                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class MenuConfigurator implements BubbleConfigurator {
@@ -695,11 +695,11 @@ private final class MenuConfigurator implements BubbleConfigurator {
       return false;
     }
 
-}	// end of inner class MenuConfigurator
+}       // end of inner class MenuConfigurator
 
 
 
-}	// end of class BudaMenu
+}       // end of class BudaMenu
 
 
 

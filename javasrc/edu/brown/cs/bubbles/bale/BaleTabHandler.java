@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleTabHandler.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor tab handler				*/
-/*										*/
+/*                                                                              */
+/*              BaleTabHandler.java                                             */
+/*                                                                              */
+/*      Bubble Annotated Language Editor tab handler                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -40,9 +40,9 @@ class BaleTabHandler implements TabExpander, BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleElement cur_element;
@@ -53,7 +53,7 @@ private int font_height;
 private static int base_tab_size;
 
 
-private static float	rounding_value = 0.95f; 	// matches AWT
+private static float    rounding_value = 0.95f;         // matches AWT
 
 static {
    String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
@@ -69,9 +69,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleTabHandler()
@@ -85,9 +85,9 @@ BaleTabHandler()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void setElement(BaleElement e) {
@@ -119,9 +119,9 @@ static void setBaseTabSize(int tz)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tab computation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Tab computation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public float nextTabStop(float x,int offset) {
@@ -159,9 +159,9 @@ private int localNextTabPosition(int pos)
 
 
 /********************************************************************************/
-/*										*/
-/*	Font management methods 						*/
-/*										*/
+/*                                                                              */
+/*      Font management methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void setFont()
@@ -191,7 +191,7 @@ private void setFont()
 
 
 
-}	// end of class BaleTabHandler
+}       // end of class BaleTabHandler
 
 
 

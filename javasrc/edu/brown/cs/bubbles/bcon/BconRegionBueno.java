@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconRegionBueno.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer bueno location for bcon region	*/
-/*										*/
+/*                                                                              */
+/*              BconRegionBueno.java                                            */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer bueno location for bcon region       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,25 +42,25 @@ class BconRegionBueno extends BuenoLocation implements BconConstants, BuenoConst
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		for_project;
-private String		for_package;
-private String		for_class;
-private File		for_file;
+private String          for_project;
+private String          for_package;
+private String          for_class;
+private File            for_file;
 
-private boolean 	is_after;
-private BconRegion	for_region;
+private boolean         is_after;
+private BconRegion      for_region;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconRegionBueno(String proj,String cnm,File f,BconRegion br,boolean after)
@@ -80,18 +80,18 @@ BconRegionBueno(String proj,String cnm,File f,BconRegion br,boolean after)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access Methods								*/
-/*										*/
+/*                                                                              */
+/*      Access Methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProject()			{ return for_project; }
+@Override public String getProject()                    { return for_project; }
 
-@Override public String getPackage()			{ return for_package; }
+@Override public String getPackage()                    { return for_package; }
 
-@Override public String getClassName()			{ return for_class; }
+@Override public String getClassName()                  { return for_class; }
 
-@Override public File getFile() 			{ return for_file; }
+@Override public File getFile()                         { return for_file; }
 
 @Override public int getOffset()
 {
@@ -133,7 +133,7 @@ BconRegionBueno(String proj,String cnm,File f,BconRegion br,boolean after)
 
 
 
-}	// end of class BconRegionBueno
+}       // end of class BconRegionBueno
 
 
 

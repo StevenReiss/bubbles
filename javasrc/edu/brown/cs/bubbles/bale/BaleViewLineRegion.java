@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewLineRegion.java 					*/
-/*										*/
-/*	Bubble Annotated Language Editor abstract view for horizontal region	*/
-/*										*/
+/*                                                                              */
+/*              BaleViewLineRegion.java                                         */
+/*                                                                              */
+/*      Bubble Annotated Language Editor abstract view for horizontal region    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,21 +47,21 @@ abstract class BaleViewLineRegion extends BaleViewBase implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected BaleTabHandler tab_handler;
 
-private Rectangle	paint_rect;
+private Rectangle       paint_rect;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewLineRegion(BaleElement elem)
@@ -75,9 +75,9 @@ BaleViewLineRegion(BaleElement elem)
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic methods for CompositeView 					*/
-/*										*/
+/*                                                                              */
+/*      Basic methods for CompositeView                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected boolean isBefore(int x,int y,Rectangle alloc)
@@ -102,16 +102,16 @@ BaleViewLineRegion(BaleElement elem)
 
    for (int i = 0; i < n; i++) {
       if (y < (alloc.y + view_data[i].yOffset() + view_data[i].ySpan())) {
-	 if (y < alloc.y + view_data[i].yOffset()) {
-	    int j = (i > 0 ? i-1 : i);
-	    childAllocation(j,alloc);
-	    return getView(j);
-	  }
-	 if (x < (alloc.x + view_data[i].xOffset())) {
-	    int j = (i == 0 ? 0 : i-1);
-	    childAllocation(j, alloc);
-	    return getView(j);
-	  }
+         if (y < alloc.y + view_data[i].yOffset()) {
+            int j = (i > 0 ? i-1 : i);
+            childAllocation(j,alloc);
+            return getView(j);
+          }
+         if (x < (alloc.x + view_data[i].xOffset())) {
+            int j = (i == 0 ? 0 : i-1);
+            childAllocation(j, alloc);
+            return getView(j);
+          }
        }
     }
    childAllocation(n-1, alloc);
@@ -121,9 +121,9 @@ BaleViewLineRegion(BaleElement elem)
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic methods for View							*/
-/*										*/
+/*                                                                              */
+/*      Basic methods for View                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public float getPreferredSpan(int axis)
@@ -166,13 +166,13 @@ BaleViewLineRegion(BaleElement elem)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void forwardUpdate(DocumentEvent.ElementChange ec,
-					  DocumentEvent e, Shape a, ViewFactory f)
+                                          DocumentEvent e, Shape a, ViewFactory f)
 {
    boolean wasvalid = layout_valid;
    
@@ -186,16 +186,16 @@ BaleViewLineRegion(BaleElement elem)
    // determine if a repaint is needed
    if (wasvalid && !layout_valid) {
       // Repaint is needed because one of the tiled children
-      // have changed their span along the major axis.	If there
+      // have changed their span along the major axis.  If there
       // is a hosting component and an allocated shape we repaint.
       Component c = getContainer();
       if ((a != null) && (c != null)) {
-	 int pos = e.getOffset();
-	 int index = getViewIndexAtPosition(pos);
-	 Rectangle alloc = getInsideAllocation(a);
-	 alloc.y += view_data[index].yOffset();
-	 alloc.height -= view_data[index].yOffset();
-	 c.repaint(alloc.x, alloc.y, alloc.width, alloc.height);
+         int pos = e.getOffset();
+         int index = getViewIndexAtPosition(pos);
+         Rectangle alloc = getInsideAllocation(a);
+         alloc.y += view_data[index].yOffset();
+         alloc.height -= view_data[index].yOffset();
+         c.repaint(alloc.x, alloc.y, alloc.width, alloc.height);
        }
     }
 }
@@ -222,9 +222,9 @@ BaleViewLineRegion(BaleElement elem)
 
 
 /********************************************************************************/
-/*										*/
-/*	Size management methods 						*/
-/*										*/
+/*                                                                              */
+/*      Size management methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 protected void computeSizes()
@@ -252,21 +252,21 @@ protected void computeSizes()
       maxy = Math.max(maxy,view_data[i].maxHeight());
       prfy = Math.max(prfy,view_data[i].preferredHeight());
       if (v instanceof TabableView) {
-	 TabableView tv = (TabableView) v;
-	 span1 = tv.getTabbedSpan(minx,tab_handler);
-	 if (minx == maxx) span2 = span1;
-	 else span2 = tv.getTabbedSpan(maxx,tab_handler);
-	 if (prfx == minx) span3 = span1;
-	 else if (prfx == maxx) span3 = span2;
-	 else span3 = tv.getTabbedSpan(prfx,tab_handler);
-	 minx += span1;
-	 maxx += span2;
-	 prfx += span3;
+         TabableView tv = (TabableView) v;
+         span1 = tv.getTabbedSpan(minx,tab_handler);
+         if (minx == maxx) span2 = span1;
+         else span2 = tv.getTabbedSpan(maxx,tab_handler);
+         if (prfx == minx) span3 = span1;
+         else if (prfx == maxx) span3 = span2;
+         else span3 = tv.getTabbedSpan(prfx,tab_handler);
+         minx += span1;
+         maxx += span2;
+         prfx += span3;
        }
       else {
-	 minx += view_data[i].minWidth();
-	 maxx += view_data[i].maxWidth();
-	 prfx += view_data[i].preferredWidth();
+         minx += view_data[i].minWidth();
+         maxx += view_data[i].maxWidth();
+         prfx += view_data[i].preferredWidth();
        }
     }
    if (maxy > Integer.MAX_VALUE) maxy = Integer.MAX_VALUE;
@@ -280,9 +280,9 @@ protected void computeSizes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Layout methods								*/
-/*										*/
+/*                                                                              */
+/*      Layout methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void computeLayout()
@@ -298,11 +298,11 @@ protected void computeSizes()
       View v = getView(i);
       float wd = 0;
       if (v instanceof TabableView) {
-	 TabableView tv = (TabableView) v;
-	 wd = tv.getTabbedSpan(pos,tab_handler);
+         TabableView tv = (TabableView) v;
+         wd = tv.getTabbedSpan(pos,tab_handler);
        }
       else {
-	 wd = view_data[i].preferredWidth();
+         wd = view_data[i].preferredWidth();
        }
       view_data[i].setPosition((int) pos,0);
       view_data[i].setActualSize(wd,view_data[i].preferredHeight());
@@ -332,17 +332,17 @@ protected void adjustFontSizes(int sidx,int eidx)
    for (int i = sidx; i < eidx; ++i) {
       float ht = view_data[i].getActualHeight();
       if (maxidx < 0) {
-	 maxidx = i;
-	 maxht = ht;
-	 base = view_data[i].yOffset();
+         maxidx = i;
+         maxht = ht;
+         base = view_data[i].yOffset();
        }
       else if (ht != maxht) {
-	 delta = true;
-	 if (ht > maxht) {
-	    maxidx = i;
-	    maxht = ht;
-	    base = view_data[i].yOffset();
-	  }
+         delta = true;
+         if (ht > maxht) {
+            maxidx = i;
+            maxht = ht;
+            base = view_data[i].yOffset();
+          }
        }
     }
 
@@ -359,13 +359,13 @@ protected void adjustFontSizes(int sidx,int eidx)
       Font fn = getFont(getView(i));
       if (fn == ft0) view_data[i].setPosition(view_data[i].xOffset(),(int) base);
       else {
-	 if (fn != fn0) {
-	    lmn = fn.getLineMetrics("Ap",frc);
-	    float fht1 = lmn.getAscent();
-	    lastoffset = (int) (base + fnht - fht1 + 0.5);
-	    fn0 = fn;
-	  }
-	 view_data[i].setPosition(view_data[i].xOffset(),lastoffset);
+         if (fn != fn0) {
+            lmn = fn.getLineMetrics("Ap",frc);
+            float fht1 = lmn.getAscent();
+            lastoffset = (int) (base + fnht - fht1 + 0.5);
+            fn0 = fn;
+          }
+         view_data[i].setPosition(view_data[i].xOffset(),lastoffset);
        }
     }
 }
@@ -393,9 +393,9 @@ private Font getFont(View v)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g,Shape allocation)
@@ -436,8 +436,8 @@ private Font getFont(View v)
 
       // check if inside or adjacent to clip area
       if ((trx1 >= crx0) && (try1 >= cry0) && (crx1 >= trx0) && (cry1 >= try0)) {
-	 View v = getView(i);
-	 v.paint(g,paint_rect);
+         View v = getView(i);
+         v.paint(g,paint_rect);
        }
     }
 }
@@ -445,7 +445,7 @@ private Font getFont(View v)
 
 
 
-}	// end of class BaleViewLineRegion
+}       // end of class BaleViewLineRegion
 
 
 

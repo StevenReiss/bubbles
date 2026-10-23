@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassTextSearch.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies text search area			*/
-/*										*/
+/*                                                                              */
+/*              BassTextSearch.java                                             */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies text search area                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -79,26 +79,26 @@ import java.util.Collection;
 
 
 class BassTextSearch extends SwingGridPanel implements BassConstants,
-	ActionListener, BudaConstants.BudaBubbleOutputer, BudaConstants
+        ActionListener, BudaConstants.BudaBubbleOutputer, BudaConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextField	input_field;
-private JRadioButton	literal_button;
-private JRadioButton	regex_button;
-private JCheckBox	usecase_button;
+private JTextField      input_field;
+private JRadioButton    literal_button;
+private JRadioButton    regex_button;
+private JCheckBox       usecase_button;
 private boolean         first_time;
 private String          for_project;
 
-private static String	search_text = "";
-private static boolean	search_literal = false;
-private static boolean	search_case = false;
+private static String   search_text = "";
+private static boolean  search_literal = false;
+private static boolean  search_case = false;
 
 
 
@@ -108,9 +108,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassTextSearch(String proj)
@@ -175,14 +175,14 @@ BassTextSearch(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-JTextField getEditor()			{ return input_field; }
+JTextField getEditor()                  { return input_field; }
 
-@Override public void grabFocus()	
+@Override public void grabFocus()       
 { 
    input_field.requestFocusInWindow();
    // input_field.grabFocus();
@@ -192,9 +192,9 @@ JTextField getEditor()			{ return input_field; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for text input						*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for text input                                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent evt)
@@ -245,9 +245,9 @@ private class Searcher implements Runnable {
             BumpClient bc = BumpClient.getBump();
             int max = BASS_PROPERTIES.getInt("Bass.text.search.max",512);
             Collection<BumpLocation> locs = bc.textSearch(search_project,searcher_text,
-        	     search_literal,
-        	     !search_case,
-        	     false,max);
+                     search_literal,
+                     !search_case,
+                     false,max);
             search_result = locs;
           }
          finally { BowiFactory.stopTask(); }
@@ -271,15 +271,15 @@ private class Searcher implements Runnable {
        }
     }
 
-}	// end of inner class Searcher
+}       // end of inner class Searcher
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Keyboard actions							*/
-/*										*/
+/*                                                                              */
+/*      Keyboard actions                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AbortAction extends AbstractAction {
@@ -295,7 +295,7 @@ private static class AbortAction extends AbstractAction {
       if (bb != null) bb.setVisible(false);
     }
 
-}	// end of inner class AbortAction
+}       // end of inner class AbortAction
 
 
 
@@ -312,18 +312,18 @@ private class SearchAction extends AbstractAction {
       performSearch(false);
     }
 
-}	// end of inner class SearchAction
+}       // end of inner class SearchAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()		{ return "BASS"; }
+@Override public String getConfigurator()               { return "BASS"; }
 
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -356,9 +356,9 @@ static void loadStatic(Element data)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintComponent(Graphics g)
@@ -383,7 +383,7 @@ static void loadStatic(Element data)
 
 
 
-}	// end of class BassTextSearch
+}       // end of class BassTextSearch
 
 
 

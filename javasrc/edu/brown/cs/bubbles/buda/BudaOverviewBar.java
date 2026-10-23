@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaOverviewBar.java						*/
-/*										*/
-/*	BUblles Display Area overview bar					*/
-/*										*/
+/*                                                                              */
+/*              BudaOverviewBar.java                                            */
+/*                                                                              */
+/*      BUblles Display Area overview bar                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,23 +51,23 @@ import java.util.Map;
 
 
 class BudaOverviewBar extends JPanel implements BudaConstants,
-	BudaConstants.BubbleAreaCallback, BudaHelpClient
+        BudaConstants.BubbleAreaCallback, BudaHelpClient
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot	for_root;
-private BudaBubbleArea	bubble_area;
-private BudaViewport	view_area;
+private BudaRoot        for_root;
+private BudaBubbleArea  bubble_area;
+private BudaViewport    view_area;
 private RoundRectangle2D.Double view_position;
-private MouseContext	mouse_context;
-private boolean 	fake_working_set;
+private MouseContext    mouse_context;
+private boolean         fake_working_set;
 
 private static final long serialVersionUID = 1L;
 
@@ -75,9 +75,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaOverviewBar(BudaBubbleArea ba,BudaViewport view,BudaRoot root)
@@ -106,12 +106,12 @@ BudaOverviewBar(BudaBubbleArea ba,BudaViewport view,BudaRoot root)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BudaBubbleArea getBubbleArea()			{ return bubble_area; }
+BudaBubbleArea getBubbleArea()                  { return bubble_area; }
 
 
 Rectangle getViewPosition()
@@ -125,16 +125,16 @@ Rectangle getViewPosition()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle changing current position					*/
-/*										*/
+/*                                                                              */
+/*      Handle changing current position                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void setViewPosition(Rectangle r)
 {
    if (view_position != null &&
-	  r.x == (int) view_position.getX() && r.y == (int) view_position.getY() &&
-	  r.width == (int) view_position.getWidth() && r.height == (int) view_position.getHeight())
+          r.x == (int) view_position.getX() && r.y == (int) view_position.getY() &&
+          r.width == (int) view_position.getWidth() && r.height == (int) view_position.getHeight())
       return;
    
    if (BUDA_PROPERTIES.getBoolean(OVERVIEW_STYLIZED_VIEW_BOOL)) {
@@ -151,9 +151,9 @@ void setViewPosition(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool Tip Methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool Tip Methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getHelpLabel(MouseEvent e)
@@ -173,9 +173,9 @@ void setViewPosition(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintComponent(Graphics g0)
@@ -201,21 +201,21 @@ void setViewPosition(Rectangle r)
       bubble_area.paintOverview(g);
       //changed by ian strickman
       if (view_position != null) {
-	 if (BUDA_PROPERTIES.getBoolean(OVERVIEW_STYLIZED_VIEW_BOOL)){
-	    Color c = BoardColors.getColor(OVERVIEW_STYLIZED_VIEW_BORDER_COLOR_PROP);
-	    g.setColor(c);
-	    g.setStroke(new BasicStroke(100));
-	    setViewPosition(new Rectangle((int) view_position.x, (int) view_position.y,
-		  (int) view_position.width, (int) view_position.height));
-	    g.draw(view_position);
-	 }
-	 else {
-	    Color c = BoardColors.getColor(OVERVIEW_NONSTYLIZED_VIEW_BORDER_COLOR_PROP);
-	    g.setColor(c);
-	    setViewPosition(new Rectangle((int) view_position.x,
-		  (int) view_position.y, (int) view_position.width, (int) view_position.height));
-	    g.draw(view_position);
-	 }
+         if (BUDA_PROPERTIES.getBoolean(OVERVIEW_STYLIZED_VIEW_BOOL)){
+            Color c = BoardColors.getColor(OVERVIEW_STYLIZED_VIEW_BORDER_COLOR_PROP);
+            g.setColor(c);
+            g.setStroke(new BasicStroke(100));
+            setViewPosition(new Rectangle((int) view_position.x, (int) view_position.y,
+                  (int) view_position.width, (int) view_position.height));
+            g.draw(view_position);
+         }
+         else {
+            Color c = BoardColors.getColor(OVERVIEW_NONSTYLIZED_VIEW_BORDER_COLOR_PROP);
+            g.setColor(c);
+            setViewPosition(new Rectangle((int) view_position.x,
+                  (int) view_position.y, (int) view_position.width, (int) view_position.height));
+            g.draw(view_position);
+         }
        }
       if (fake_working_set) drawFakeWorkingSet(g);
     }
@@ -230,7 +230,7 @@ private void drawFakeWorkingSet(Graphics2D g)
    Color ct = BoardColors.getColor(OVERVIEW_FAKE_TOP_COLOR_PROP);
    Color cb = BoardColors.getColor(OVERVIEW_FAKE_BOTTOM_COLOR_PROP);
    Paint p = new GradientPaint((int) view_position.x, loc.y, ct,
-	 (int) (view_position.x + view_position.width), loc.y + sz.height, cb);
+         (int) (view_position.x + view_position.width), loc.y + sz.height, cb);
    g.setPaint(p);
    g.fillRect((int) view_position.x, loc.y, (int) view_position.width, sz.height);
 }
@@ -250,9 +250,9 @@ void setFakeWorkingSet(boolean b)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -265,9 +265,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Area update calls							*/
-/*										*/
+/*                                                                              */
+/*      Area update calls                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void updateOverview()
@@ -276,14 +276,14 @@ void outputXml(BudaXmlWriter xw)
 }
 
 
-@Override public void moveDelta(int dx,int dy)				{ }
+@Override public void moveDelta(int dx,int dy)                          { }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle dragging the display area				*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle dragging the display area                             */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleMouseEvent(MouseEvent e)
@@ -304,19 +304,19 @@ private void handleMouseEvent(MouseEvent e)
    BudaBubbleGroup bg = null;
    if (bbls.size() > 0) {
       for (BudaBubble bbx : bbls) {
-	 if (bb == null || bb.isFixed()) bb = bbx;
+         if (bb == null || bb.isFixed()) bb = bbx;
        }
       for (BudaBubbleGroup bgx : bubble_area.getBubbleGroups()) {
-	 if (bgx.getBubbles().contains(bb)) bg = bgx;
+         if (bgx.getBubbles().contains(bb)) bg = bgx;
       }
    }
 
    if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON3 &&
-	    bb != null) {
+            bb != null) {
       mouse_context = new BubbleMoveContext(e,bb,bg);
     }
    else if (r.contains((int) x0,(int) y0) && e.getID() == MouseEvent.MOUSE_PRESSED &&
-	  e.getButton() == MouseEvent.BUTTON3) {
+          e.getButton() == MouseEvent.BUTTON3) {
       mouse_context = new PanelMoveContext(e);
     }
    else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON1) {
@@ -347,7 +347,7 @@ private abstract class MouseContext {
 
    abstract void next(MouseEvent e);
 
-}	// end of inner class MouseContext
+}       // end of inner class MouseContext
 
 
 
@@ -389,7 +389,7 @@ private class PanelMoveContext extends MouseContext {
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","overviewMove");
     }
 
-}	// end of inner class PanelMoveContext
+}       // end of inner class PanelMoveContext
 
 
 
@@ -409,7 +409,7 @@ private class BubbleMoveContext extends MouseContext {
       scale_y = sz.getHeight() / bounds.getHeight();
       initial_position = new HashMap<>();
       if (bg != null) {
-	 for (BudaBubble bbx : bg.getBubbles()) addInitialPosition(bbx);
+         for (BudaBubble bbx : bg.getBubbles()) addInitialPosition(bbx);
        }
       else if (bb != null) addInitialPosition(bb);
       move_count = 0;
@@ -428,11 +428,11 @@ private class BubbleMoveContext extends MouseContext {
       y1 = Math.min(y1,BudaOverviewBar.this.getHeight());
 
       for (Map.Entry<BudaBubble,Point> ent : initial_position.entrySet()) {
-	 BudaBubble bb = ent.getKey();
-	 Point ip = ent.getValue();
-	 double x0 = ip.x + (x1 - initial_mouse.x)/scale_x;
-	 double y0 = ip.y + (y1 - initial_mouse.y)/scale_y;
-	 bb.setLocation(new Point((int) x0,(int) y0));
+         BudaBubble bb = ent.getKey();
+         Point ip = ent.getValue();
+         double x0 = ip.x + (x1 - initial_mouse.x)/scale_x;
+         double y0 = ip.y + (y1 - initial_mouse.y)/scale_y;
+         bb.setLocation(new Point((int) x0,(int) y0));
        }
     }
 
@@ -456,15 +456,15 @@ private class BubbleMoveContext extends MouseContext {
       initial_position.put(bb,bb.getLocation());
     }
 
-}	// end of inner class PanelMoveContext
+}       // end of inner class PanelMoveContext
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Viewport methods							*/
-/*										*/
+/*                                                                              */
+/*      Viewport methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void setViewport(int x,int y)
@@ -490,9 +490,9 @@ private void setViewport(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Mouser extends MouseAdapter {
@@ -511,14 +511,14 @@ private final class Mouser extends MouseAdapter {
 
    @Override public void mouseReleased(MouseEvent e) {
       if (mouse_context != null) {
-	 mouse_context.finish();
-	 mouse_context = null;
+         mouse_context.finish();
+         mouse_context = null;
        }
     }
 
-}	 // end of inner class Mouser
+}        // end of inner class Mouser
 
-}	// end of class BudaOverviewBar
+}       // end of class BudaOverviewBar
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterImports.java 					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterImports.java                                         */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -56,9 +56,9 @@ class BfixAdapterImports extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static List<BfixErrorPattern> ignore_patterns;
@@ -75,9 +75,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterImports()
@@ -89,9 +89,9 @@ BfixAdapterImports()
       Element xml = BumpClient.getBump().getLanguageData();
       Element fxml = IvyXml.getChild(xml,"FIXES");
       for (Element cxml : IvyXml.children(fxml,"IMPORT")) {
-	 if (IvyXml.getAttrBool(cxml,"IGNORE")) {
-	    ignore_patterns.add(new BfixErrorPattern(cxml));
-	  }
+         if (IvyXml.getAttrBool(cxml,"IGNORE")) {
+            ignore_patterns.add(new BfixErrorPattern(cxml));
+          }
          else if (IvyXml.getAttrBool(cxml,"UNUSED")) {
             unused_patterns.add(new BfixErrorPattern(cxml));
           }
@@ -102,9 +102,9 @@ BfixAdapterImports()
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Method Implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
@@ -137,9 +137,9 @@ BfixAdapterImports()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get candidate for import fix						*/
-/*										*/
+/*                                                                              */
+/*      Get candidate for import fix                                            */
+/*                                                                              */
 /********************************************************************************/
 
 String getImportCandidate(BfixCorrector corr,BumpProblem bp)
@@ -152,7 +152,7 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
          soff + " " + eoff);
    if (eoff == soff) {
       for (BfixErrorPattern pat : ignore_patterns) {
-	 if (pat.testMatch(bp.getMessage())) return null;
+         if (pat.testMatch(bp.getMessage())) return null;
        }
     }
 
@@ -202,9 +202,9 @@ private void handleImportNotUsed(BfixCorrector corr,BumpProblem bp,
          
 
 /********************************************************************************/
-/*										*/
-/*	Fixer to add imports							*/
-/*										*/
+/*                                                                              */
+/*      Fixer to add imports                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -221,7 +221,7 @@ private static class ImportFixer extends BfixFixer {
       initial_time = corr.getStartTime();
     }
 
-   @Override protected String getMemoId()	{ return for_identifier; }
+   @Override protected String getMemoId()       { return for_identifier; }
 
    @Override protected BfixRunnableFix findFix() {
       int soffset = for_document.mapOffsetToJava(for_problem.getStart());
@@ -291,15 +291,15 @@ private static class ImportFixer extends BfixFixer {
       return 0;
     }
 
-}	// end of class BfixAdapterSpelling
+}       // end of class BfixAdapterSpelling
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Import checker								*/
-/*										*/
+/*                                                                              */
+/*      Import checker                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static synchronized void updateImports()
@@ -433,16 +433,16 @@ private static class ImportChecker {
       return null;
    }
 
-}	// end of inner class ImportChecker
+}       // end of inner class ImportChecker
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Runnable to fix the imports						*/
-/*										*/
+/*                                                                              */
+/*      Runnable to fix the imports                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ImportDoer extends BfixFixDoer {
@@ -484,9 +484,9 @@ private static class ImportDoer extends BfixFixDoer {
       return fg;
     }
 
-   @Override public double getRegionOrder()		{ return 0; } 
+   @Override public double getRegionOrder()             { return 0; } 
 
-}	// end of inner class ImportDoer
+}       // end of inner class ImportDoer
 
 
 
@@ -601,7 +601,7 @@ private static class UnusedImportFixer extends BfixFixer {
       return new UnusedImportDoer(for_corrector,for_problem,off,eoff,initial_time);
     }
    
-}	// end of class BfixUnusedImportFixer
+}       // end of class BfixUnusedImportFixer
 
 
 
@@ -626,7 +626,7 @@ private static class UnusedImportDoer extends BfixFixDoer {
 }
 
 
-}	// end of class BfixAdapterImports
+}       // end of class BfixAdapterImports
 
 
 

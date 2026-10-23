@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardUpload.java						*/
-/*										*/
-/*	Bubbles log and working set uploader					*/
-/*										*/
+/*                                                                              */
+/*              BoardUpload.java                                                */
+/*                                                                              */
+/*      Bubbles log and working set uploader                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Alexander Hills		      */
+/*      Copyright 2009 Brown University -- Alexander Hills                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,8 +44,8 @@ import edu.brown.cs.ivy.file.IvyFile;
 
 
 /**
- *	This class provides support to upload a file to the current Bubbles
- *	web space.
+ *      This class provides support to upload a file to the current Bubbles
+ *      web space.
  **/
 
 public class BoardUpload implements BoardConstants {
@@ -53,16 +53,16 @@ public class BoardUpload implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/* Private storage								*/
-/*										*/
+/*                                                                              */
+/* Private storage                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private URLConnection url_connection;
 private OutputStream output_stream;
 private String file_url;
 private String boundary_string;
-private int	time_out;
+private int     time_out;
 
 
 private static File local_uploads;
@@ -85,9 +85,9 @@ static {
 }
 
 /********************************************************************************/
-/*										*/
-/* Constructors 								*/
-/*										*/
+/*                                                                              */
+/* Constructors                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -164,9 +164,9 @@ private boolean uploadLocal(File file,String user,String runid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Public method for retrieving the url of the posted file 		*/
-/*										*/
+/*                                                                              */
+/*      Public method for retrieving the url of the posted file                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -182,9 +182,9 @@ public String getFileURL()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling URLs						*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling URLs                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static String getSaveAddress()
@@ -215,9 +215,9 @@ public static String getUploadUrl()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for shared code in constructors 				*/
-/*										*/
+/*                                                                              */
+/*      Methods for shared code in constructors                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void setup(String url) throws IOException
@@ -231,12 +231,12 @@ private void setup(String url) throws IOException
     }
    catch (MalformedURLException | URISyntaxException e) {
       BoardLog.logE("BOARD",
-		       "Failed to connect to server while uploading", e);
+                       "Failed to connect to server while uploading", e);
       throw new IOException("Failed to connect to upload server", e);
     }
    catch (IOException e) {
       BoardLog.logE("BOARD",
-		       "Failed to connect to server while uploading", e);
+                       "Failed to connect to server while uploading", e);
       throw new IOException("Failed to connect to upload server", e);
     }
 
@@ -244,7 +244,7 @@ private void setup(String url) throws IOException
    url_connection.setReadTimeout(time_out);
    url_connection.setDoOutput(true);
    url_connection.setRequestProperty("Content-Type",
-					"multipart/form-data; boundary=" + boundary_string);
+                                        "multipart/form-data; boundary=" + boundary_string);
 }
 
 
@@ -280,9 +280,9 @@ private void postAndExit(String url) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Writing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Writing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void writeName(String name) throws IOException
@@ -302,8 +302,8 @@ private static int pipe(InputStream in, OutputStream out) throws IOException
    int total = 0;
    synchronized (in) {
       while ((nread = in.read(buf, 0, buf.length)) >= 0) {
-	 out.write(buf, 0, nread);
-	 total += nread;
+         out.write(buf, 0, nread);
+         total += nread;
        }
     }
    out.flush();
@@ -371,13 +371,13 @@ private void boundary() throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Information setters							*/
-/*										*/
+/*                                                                              */
+/*      Information setters                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setParameter(String name, String filename, InputStream is)
-	throws IOException
+        throws IOException
 {
    boundary();
    writeName(name);
@@ -438,7 +438,7 @@ private void post() throws IOException
 
 
 
-}	// end of class BoardUpload
+}       // end of class BoardUpload
 
 
 

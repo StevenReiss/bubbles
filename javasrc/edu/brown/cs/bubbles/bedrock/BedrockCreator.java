@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockCreator.java						*/
-/*										*/
-/*	Handle creation-related commands for Bubbles				*/
-/*										*/
+/*                                                                              */
+/*              BedrockCreator.java                                             */
+/*                                                                              */
+/*      Handle creation-related commands for Bubbles                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -48,19 +48,19 @@ class BedrockCreator implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BedrockPlugin	our_plugin;
+private BedrockPlugin   our_plugin;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockCreator(BedrockPlugin bp)
@@ -72,13 +72,13 @@ BedrockCreator(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Class creation methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handleNewClass(String proj,String name,boolean frc,String cnts,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    if (name == null) return;
 
@@ -115,9 +115,9 @@ void handleNewClass(String proj,String name,boolean frc,String cnts,IvyXmlWriter
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility routines							*/
-/*										*/
+/*                                                                              */
+/*      Utility routines                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 IJavaProject getJavaProject(String p) throws BedrockException
@@ -132,7 +132,7 @@ IJavaProject getJavaProject(String p) throws BedrockException
 
 
 
-}	// end of class BedrockCreator
+}       // end of class BedrockCreator
 
 
 

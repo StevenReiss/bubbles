@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleLineOffsets.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor ide-java line offset management	*/
-/*										*/
+/*                                                                              */
+/*              BaleLineOffsets.java                                            */
+/*                                                                              */
+/*      Bubble Annotated Language Editor ide-java line offset management        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -44,9 +44,9 @@ class BaleLineOffsetsNew implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private int [] java_offset;
@@ -58,9 +58,9 @@ private int max_ide;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleLineOffsetsNew(String newline,Segment src,Reader input)
@@ -68,7 +68,7 @@ BaleLineOffsetsNew(String newline,Segment src,Reader input)
    newline_adjust = newline.length() - 1;
    java_offset = new int[128];
    ide_offset = new int[128];
-   java_offset[0] = -1; 			     // dummy first element
+   java_offset[0] = -1;                              // dummy first element
    ide_offset[0] = -1;
    max_java = 1;
    max_ide = 1;
@@ -83,9 +83,9 @@ BaleLineOffsetsNew(String newline,Segment src,Reader input)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupSource(Segment sg)
@@ -114,17 +114,17 @@ private void setupIde(Reader r,String nl)
    boolean lastcr = false;
    try {
       for (int i = 0; ; ++i) {
-	 int ch = r.read();
-	 if (ch < 0) break;
-	 if (nl.equals("\r")) {
-	    if (ch == '\r') addIde(i+1);
-	  }
-	 else {
-	    if (ch == '\n') addIde(i+1);
-	    else if (lastcr)
-	       addIde(i);
-	    lastcr = (ch == '\r');
-	  }
+         int ch = r.read();
+         if (ch < 0) break;
+         if (nl.equals("\r")) {
+            if (ch == '\r') addIde(i+1);
+          }
+         else {
+            if (ch == '\n') addIde(i+1);
+            else if (lastcr)
+               addIde(i);
+            lastcr = (ch == '\r');
+          }
        }
       r.close();
     }
@@ -145,9 +145,9 @@ private void addIde(int i)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods after edits						*/
-/*										*/
+/*                                                                              */
+/*      Update methods after edits                                              */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void update(int soff,int eoff,String cnts)
@@ -167,17 +167,17 @@ synchronized void update(int soff,int eoff,String cnts)
    int xchar = ide_offset[idx1] - ide_offset[idx0] - (java_offset[idx1] - java_offset[idx0]);
    int idelta = delta - xchar + ct*newline_adjust;
 
-   grow(max_java + ct - oct);	     // ensure we fit
+   grow(max_java + ct - oct);        // ensure we fit
    if (ct > oct) {
       for (int i = max_java-1; i > idx1; --i) {
-	 java_offset[i+ct-oct] = java_offset[i] + delta;
-	 ide_offset[i+ct-oct] = ide_offset[i] + idelta;
+         java_offset[i+ct-oct] = java_offset[i] + delta;
+         ide_offset[i+ct-oct] = ide_offset[i] + idelta;
        }
     }
    else if (ct < oct || delta != 0) {
       for (int i = idx1+1; i < max_java; ++i) {
-	 java_offset[i+ct-oct] = java_offset[i] + delta;
-	 ide_offset[i+ct-oct] = ide_offset[i] + idelta;
+         java_offset[i+ct-oct] = java_offset[i] + delta;
+         ide_offset[i+ct-oct] = ide_offset[i] + idelta;
        }
     }
 
@@ -190,10 +190,10 @@ synchronized void update(int soff,int eoff,String cnts)
    if (cnts != null) {
       int lct = newline_adjust;
       for (int idx = cnts.indexOf('\n'); idx >= 0; idx = cnts.indexOf('\n',idx+1)) {
-	 java_offset[idx2] = soff + idx + 1;
-	 ide_offset[idx2] = ioff + idx + 1 + lct;
-	 ++idx2;
-	 lct += newline_adjust;
+         java_offset[idx2] = soff + idx + 1;
+         ide_offset[idx2] = ioff + idx + 1 + lct;
+         ++idx2;
+         lct += newline_adjust;
        }
     }
 }
@@ -201,9 +201,9 @@ synchronized void update(int soff,int eoff,String cnts)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to map between IDE and Java offsets				*/
-/*										*/
+/*                                                                              */
+/*      Methods to map between IDE and Java offsets                             */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized int findEclipseOffset(int off)
@@ -234,9 +234,9 @@ synchronized int findJavaOffset(int off)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find lines and line offsets for Java 			*/
-/*										*/
+/*                                                                              */
+/*      Methods to find lines and line offsets for Java                         */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized int findOffset(int line)
@@ -257,9 +257,9 @@ synchronized int findLine(int off)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods for maintaining the offset arrays			*/
-/*										*/
+/*                                                                              */
+/*      Helper methods for maintaining the offset arrays                        */
+/*                                                                              */
 /********************************************************************************/
 
 private int findIndex(int off)
@@ -285,7 +285,7 @@ private void grow(int max)
 
 
 
-}	// end of class BaleLineOffsets
+}       // end of class BaleLineOffsets
 
 
 

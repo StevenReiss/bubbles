@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconClassPanel.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer class or file panel			*/
-/*										*/
+/*                                                                              */
+/*              BconClassPanel.java                                             */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer class or file panel                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -102,62 +102,62 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 
 class BconClassPanel implements BconConstants, BconConstants.BconPanel,
-	BumpConstants.BumpFileHandler, BumpConstants.BumpChangeHandler,
-	BuenoConstants
+        BumpConstants.BumpFileHandler, BumpConstants.BumpChangeHandler,
+        BuenoConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String			for_project;
-private String			for_class;
-private File			for_file;
-private BaleFileOverview	bale_file;
-private BumpClient		bump_client;
-private Collection<BconRegion>	region_set;
-private Selector		cur_selector;
-private ClassListModel		list_model;
-private ClassList		class_list;
+private String                  for_project;
+private String                  for_class;
+private File                    for_file;
+private BaleFileOverview        bale_file;
+private BumpClient              bump_client;
+private Collection<BconRegion>  region_set;
+private Selector                cur_selector;
+private ClassListModel          list_model;
+private ClassList               class_list;
 private SwingEnumButton<Protections> protect_options;
-private boolean 		inner_class;
+private boolean                 inner_class;
 
-private SwingGridPanel		class_panel;
-private Point			popup_point;
+private SwingGridPanel          class_panel;
+private Point                   popup_point;
 
-private static BoardProperties	bcon_props = BoardProperties.getProperties("Bcon");
-
-
-private static final int	MIN_LINES = 2;
-private static final int	MAX_COMMENT_SIZE = 40;
-private static final int	MAX_INITIAL_WIDTH = 350;
+private static BoardProperties  bcon_props = BoardProperties.getProperties("Bcon");
 
 
-private static final int	MOD_PUBLIC = Modifier.PUBLIC;
-private static final int	MOD_PRIVATE = Modifier.PRIVATE;
-private static final int	MOD_PROTECTED = Modifier.PROTECTED;
-private static final int	MOD_PACKAGE = 0x10000;
+private static final int        MIN_LINES = 2;
+private static final int        MAX_COMMENT_SIZE = 40;
+private static final int        MAX_INITIAL_WIDTH = 350;
 
-private static final int	MOD_STATIC = Modifier.STATIC;
-private static final int	MOD_NONSTATIC = 0x200000;
-private static final int	MOD_ABSTRACT = Modifier.ABSTRACT;
-private static final int	MOD_NONABSTRACT = 0x400000;
 
-private static final int	MOD_FIELD = 0x20000;
-private static final int	MOD_METHOD = 0x40000;
-private static final int	MOD_INITIALIZER = 0x80000;
-private static final int	MOD_CLASS = 0x100000;
-private static final int	MOD_INTERFACE = Modifier.INTERFACE;
-private static final int	MOD_COMMENT = 0x800000;
-private static final int	MOD_PACKAGEDECL = 0x1000000;
-private static final int	MOD_IMPORT = 0x2000000;
-private static final int	MOD_TOPDECL = 0x4000000;
+private static final int        MOD_PUBLIC = Modifier.PUBLIC;
+private static final int        MOD_PRIVATE = Modifier.PRIVATE;
+private static final int        MOD_PROTECTED = Modifier.PROTECTED;
+private static final int        MOD_PACKAGE = 0x10000;
 
-private static final int	MOD_PROTECTION = MOD_PUBLIC | MOD_PRIVATE |
-						 MOD_PROTECTED | MOD_PACKAGE;
+private static final int        MOD_STATIC = Modifier.STATIC;
+private static final int        MOD_NONSTATIC = 0x200000;
+private static final int        MOD_ABSTRACT = Modifier.ABSTRACT;
+private static final int        MOD_NONABSTRACT = 0x400000;
+
+private static final int        MOD_FIELD = 0x20000;
+private static final int        MOD_METHOD = 0x40000;
+private static final int        MOD_INITIALIZER = 0x80000;
+private static final int        MOD_CLASS = 0x100000;
+private static final int        MOD_INTERFACE = Modifier.INTERFACE;
+private static final int        MOD_COMMENT = 0x800000;
+private static final int        MOD_PACKAGEDECL = 0x1000000;
+private static final int        MOD_IMPORT = 0x2000000;
+private static final int        MOD_TOPDECL = 0x4000000;
+
+private static final int        MOD_PROTECTION = MOD_PUBLIC | MOD_PRIVATE |
+                                                 MOD_PROTECTED | MOD_PACKAGE;
 
 
 private enum Protections {
@@ -169,12 +169,12 @@ private enum Protections {
 
 
 
-private static final int	ALL_MODS =
-	MOD_PUBLIC | MOD_PRIVATE | MOD_PROTECTED | MOD_PACKAGE |
-	MOD_STATIC | MOD_NONSTATIC | MOD_ABSTRACT | MOD_NONABSTRACT |
-	MOD_FIELD | MOD_METHOD | MOD_INITIALIZER | MOD_CLASS |
-	MOD_INTERFACE | MOD_COMMENT |
-	MOD_PACKAGEDECL | MOD_IMPORT | MOD_TOPDECL;
+private static final int        ALL_MODS =
+        MOD_PUBLIC | MOD_PRIVATE | MOD_PROTECTED | MOD_PACKAGE |
+        MOD_STATIC | MOD_NONSTATIC | MOD_ABSTRACT | MOD_NONABSTRACT |
+        MOD_FIELD | MOD_METHOD | MOD_INITIALIZER | MOD_CLASS |
+        MOD_INTERFACE | MOD_COMMENT |
+        MOD_PACKAGEDECL | MOD_IMPORT | MOD_TOPDECL;
 
 
 private static final DataFlavor REGION_FLAVOR = new DataFlavor(ListTransfer.class,"File Region Set");
@@ -183,9 +183,9 @@ private static final DataFlavor REGION_FLAVOR = new DataFlavor(ListTransfer.clas
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconClassPanel(String proj,File f,String cls,boolean inner)
@@ -221,12 +221,12 @@ BconClassPanel(String proj,File f,String cls,boolean inner)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public JComponent getComponent()		{ return class_panel; }
+@Override public JComponent getComponent()              { return class_panel; }
 
 boolean isValid()
 {
@@ -316,9 +316,9 @@ private String normalizeName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu methods								*/
-/*										*/
+/*                                                                              */
+/*      Menu methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -368,9 +368,9 @@ private String normalizeName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Panel setup methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -434,9 +434,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Button update methods							*/
-/*										*/
+/*                                                                              */
+/*      Button update methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void updateSelection(int off,int on)
@@ -456,24 +456,24 @@ private final class ProtectionUpdater implements ChangeListener {
 
       int on = 0;
       switch (p) {
-	 case PUBLIC :
-	    on = MOD_PUBLIC;
-	    break;
-	 case PACKAGE :
-	    on = MOD_PUBLIC | MOD_PACKAGE;
-	    break;
-	 case PROTECTED :
-	    on = MOD_PUBLIC | MOD_PACKAGE | MOD_PROTECTED;
-	    break;
-	 case PRIVATE :
-	    on = MOD_PUBLIC | MOD_PACKAGE | MOD_PROTECTED | MOD_PRIVATE;
-	    break;
+         case PUBLIC :
+            on = MOD_PUBLIC;
+            break;
+         case PACKAGE :
+            on = MOD_PUBLIC | MOD_PACKAGE;
+            break;
+         case PROTECTED :
+            on = MOD_PUBLIC | MOD_PACKAGE | MOD_PROTECTED;
+            break;
+         case PRIVATE :
+            on = MOD_PUBLIC | MOD_PACKAGE | MOD_PROTECTED | MOD_PRIVATE;
+            break;
        }
 
       updateSelection(off,on);
     }
 
-}	// end of inner class ProtectionUpdater
+}       // end of inner class ProtectionUpdater
 
 
 
@@ -488,21 +488,21 @@ private class OptionUpdater implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       JToggleButton btn = (JToggleButton) evt.getSource();
       if (btn.isSelected()) {
-	 updateSelection(using_flag,using_flag);
+         updateSelection(using_flag,using_flag);
        }
       else {
-	 updateSelection(using_flag,0);
+         updateSelection(using_flag,0);
        }
     }
 
-}	// end of inner class OptionUpdater
+}       // end of inner class OptionUpdater
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup class/file elements					*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup class/file elements                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupElements()
@@ -518,8 +518,8 @@ private void setupElements()
    List<BumpLocation> locs = bump_client.findAllDeclarations(for_project,null,cnm,false);
    if (locs != null) {
       for (BumpLocation bl : locs) {
-	 BconRegion br = new BconRegionLocation(bale_file,bl);
-	 if (br.getRegionType() != RegionType.REGION_UNKNOWN) region_set.add(br);
+         BconRegion br = new BconRegionLocation(bale_file,bl);
+         if (br.getRegionType() != RegionType.REGION_UNKNOWN) region_set.add(br);
        }
     }
 
@@ -528,9 +528,9 @@ private void setupElements()
    if (inner_class) {
       List<BumpLocation> loc1 = bump_client.findClassDefinition(for_project,for_class);
       if (loc1 != null && loc1.size() > 0) {
-	 BumpLocation loc0 = loc1.get(0);
-	 p0 = bale_file.mapOffsetToJava(loc0.getOffset());
-	 p1 = bale_file.mapOffsetToJava(loc0.getEndOffset());
+         BumpLocation loc0 = loc1.get(0);
+         p0 = bale_file.mapOffsetToJava(loc0.getOffset());
+         p1 = bale_file.mapOffsetToJava(loc0.getEndOffset());
        }
     }
 
@@ -553,89 +553,89 @@ private void setupElements()
 
 
 /********************************************************************************/
-/*										*/
-/*	Comment scanning methods						*/
-/*										*/
+/*                                                                              */
+/*      Comment scanning methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void commentScan(Segment s,int offset)
 {
    BconTokenizer btok = new BconTokenizer(s);
-   BconToken cmmtstart = null;		// current comment start
-   BconToken laststart = null;		// possible start of adjacent comments
+   BconToken cmmtstart = null;          // current comment start
+   BconToken laststart = null;          // possible start of adjacent comments
    BconToken lastblock = null;
    int numline = 0;
    int blockline = 0;
-   String cmmtname = null;		// label for current comment
-   boolean iscopyright = false; 	// current is copyright
-   boolean isjavadoc = false;		// current is javadoc
-   boolean lasteol = true;		// prior token was an eol
+   String cmmtname = null;              // label for current comment
+   boolean iscopyright = false;         // current is copyright
+   boolean isjavadoc = false;           // current is javadoc
+   boolean lasteol = true;              // prior token was an eol
    boolean forceout = false;
 
    for ( ; ; ) {
       BconToken tok = btok.getNextToken();
       if (tok == null) break;
       if (forceout && cmmtstart != null) {
-	 outputComment(offset,cmmtstart,tok,iscopyright,isjavadoc,cmmtname);
-	 cmmtstart = null;
-	 iscopyright = false;
-	 forceout = false;
+         outputComment(offset,cmmtstart,tok,iscopyright,isjavadoc,cmmtname);
+         cmmtstart = null;
+         iscopyright = false;
+         forceout = false;
        }
 
       switch (tok.getTokenType()) {
-	 case EOL :
-	    if (lasteol && iscopyright) forceout = true;
-	    if (cmmtstart != null) numline++;
-	    lasteol = true;
-	    break;
-	 case BLOCK_CMMT :
-	 case DOC_CMMT :
-	 case LINE_CMMT :
-	    String ctxt = getCommentText(s,tok);
-	    if (lasteol && cmmtstart == null) {
-	       cmmtstart = tok;
-	       laststart = null;
-	       cmmtname = ctxt;
-	       iscopyright = checkCopyright(ctxt);
-	       isjavadoc = (tok.getTokenType() == BconTokenType.DOC_CMMT);
-	       if (iscopyright) isjavadoc = false;
-	       numline = 0;
-	     }
-	    else if (lasteol) {
-	       if (cmmtname == null) {
-		  cmmtname = ctxt;
-		  iscopyright = checkCopyright(ctxt);
-		}
-	       else if (!iscopyright && lastblock != null && checkCopyright(ctxt)) {
-		  if (blockline >= MIN_LINES) {
-		     outputComment(offset,cmmtstart,lastblock,iscopyright,isjavadoc,cmmtname);
-		   }
-		  cmmtstart = lastblock;
-		  laststart = null;
-		  cmmtname = ctxt;
-		  iscopyright = true;
-		  isjavadoc = false;
-		  numline = numline-blockline;
-		}
-	       else if (ctxt == null) {
-		  lastblock = tok;
-		  blockline = numline;
-		}
-	       isjavadoc &= (tok.getTokenType() == BconTokenType.DOC_CMMT);
-	       laststart = tok;
-	     }
-	    lasteol = false;
-	    break;
-	 default:
-	 case OTHER :
-	    if (cmmtstart != null && numline >= MIN_LINES && cmmtname != null) {
-	       BconToken etok = (lasteol ? tok : laststart);
-	       outputComment(offset,cmmtstart,etok,iscopyright,isjavadoc,cmmtname);
-	     }
-	    cmmtstart = null;
-	    lasteol = false;
-	    iscopyright = false;
-	    break;
+         case EOL :
+            if (lasteol && iscopyright) forceout = true;
+            if (cmmtstart != null) numline++;
+            lasteol = true;
+            break;
+         case BLOCK_CMMT :
+         case DOC_CMMT :
+         case LINE_CMMT :
+            String ctxt = getCommentText(s,tok);
+            if (lasteol && cmmtstart == null) {
+               cmmtstart = tok;
+               laststart = null;
+               cmmtname = ctxt;
+               iscopyright = checkCopyright(ctxt);
+               isjavadoc = (tok.getTokenType() == BconTokenType.DOC_CMMT);
+               if (iscopyright) isjavadoc = false;
+               numline = 0;
+             }
+            else if (lasteol) {
+               if (cmmtname == null) {
+                  cmmtname = ctxt;
+                  iscopyright = checkCopyright(ctxt);
+                }
+               else if (!iscopyright && lastblock != null && checkCopyright(ctxt)) {
+                  if (blockline >= MIN_LINES) {
+                     outputComment(offset,cmmtstart,lastblock,iscopyright,isjavadoc,cmmtname);
+                   }
+                  cmmtstart = lastblock;
+                  laststart = null;
+                  cmmtname = ctxt;
+                  iscopyright = true;
+                  isjavadoc = false;
+                  numline = numline-blockline;
+                }
+               else if (ctxt == null) {
+                  lastblock = tok;
+                  blockline = numline;
+                }
+               isjavadoc &= (tok.getTokenType() == BconTokenType.DOC_CMMT);
+               laststart = tok;
+             }
+            lasteol = false;
+            break;
+         default:
+         case OTHER :
+            if (cmmtstart != null && numline >= MIN_LINES && cmmtname != null) {
+               BconToken etok = (lasteol ? tok : laststart);
+               outputComment(offset,cmmtstart,etok,iscopyright,isjavadoc,cmmtname);
+             }
+            cmmtstart = null;
+            lasteol = false;
+            iscopyright = false;
+            break;
        }
     }
 }
@@ -655,10 +655,10 @@ private String getCommentText(Segment seg,BconToken tok)
       char c = seg.charAt(tok.getStart() + i);
       if (!intext && (Character.isLetter(c) || START_CHARS.indexOf(c) >= 0)) intext = true;
       if (intext) {
-	 if (Character.isLetterOrDigit(c)) buf.append(c);
-	 else if (Character.isWhitespace(c)) buf.append(' ');
-	 else if (LEGAL_CHARS.indexOf(c) >= 0) buf.append(c);
-	 else break;
+         if (Character.isLetterOrDigit(c)) buf.append(c);
+         else if (Character.isWhitespace(c)) buf.append(' ');
+         else if (LEGAL_CHARS.indexOf(c) >= 0) buf.append(c);
+         else break;
        }
     }
 
@@ -682,9 +682,9 @@ private boolean checkCopyright(String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for creating comment regions					*/
-/*										*/
+/*                                                                              */
+/*      Methods for creating comment regions                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputComment(int offset,BconToken start,BconToken end,boolean cpy,boolean jdoc,String nm)
@@ -703,16 +703,16 @@ private void outputComment(int offset,BconToken start,BconToken end,boolean cpy,
 
    for (BconRegion br : region_set) {
       if (br.getStartOffset() < spos && br.getEndOffset() >= epos + end.getLength()) {
-	 return;
+         return;
       }
     }
 
    if (!jdoc) {
       for (BconRegion br : region_set) {
-	 if (br.getStartOffset() == spos && epos < br.getEndOffset()) {
-	    br.setPosition(epos,br.getEndOffset());
-	    break;
-	  }
+         if (br.getStartOffset() == spos && epos < br.getEndOffset()) {
+            br.setPosition(epos,br.getEndOffset());
+            break;
+          }
        }
     }
 
@@ -723,9 +723,9 @@ private void outputComment(int offset,BconToken start,BconToken end,boolean cpy,
 
 
 /********************************************************************************/
-/*										*/
-/*	Scan for header elements						*/
-/*										*/
+/*                                                                              */
+/*      Scan for header elements                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void headerScan(Segment s,int offset)
@@ -733,22 +733,22 @@ private void headerScan(Segment s,int offset)
    if (!inner_class) {
       List<BumpLocation> locs = bump_client.findClassHeader(for_project,for_file,for_class,true,false);
       if (locs != null) {
-	 for (BumpLocation bl : locs) {
-	    addHeaderRegion(bl,RegionType.REGION_PACKAGE,s,offset);
-	 }
+         for (BumpLocation bl : locs) {
+            addHeaderRegion(bl,RegionType.REGION_PACKAGE,s,offset);
+         }
       }
       locs = bump_client.findClassHeader(for_project,for_file,for_class,false,true);
       if (locs != null) {
-	 for (BumpLocation bl : locs) {
-	    addHeaderRegion(bl,RegionType.REGION_IMPORT,s,offset);
-	 }
+         for (BumpLocation bl : locs) {
+            addHeaderRegion(bl,RegionType.REGION_IMPORT,s,offset);
+         }
       }
     }
 
    List<BumpLocation> locs = bump_client.findClassHeader(for_project,for_file,for_class,false,false);
    if (locs != null) {
       for (BumpLocation bl : locs) {
-	 addHeaderRegion(bl,RegionType.REGION_CLASS_HEADER,s,offset);
+         addHeaderRegion(bl,RegionType.REGION_CLASS_HEADER,s,offset);
        }
     }
 }
@@ -763,9 +763,9 @@ void addHeaderRegion(BumpLocation bl,RegionType rt,Segment s,int offset)
 
    if (rt == RegionType.REGION_CLASS_HEADER) {
       for (BconRegion br : region_set) {
-	 if (br.getStartOffset() <= spos+offset && br.getEndOffset() > spos+offset) {
-	    spos = br.getStartOffset()-offset;
-	  }
+         if (br.getStartOffset() <= spos+offset && br.getEndOffset() > spos+offset) {
+            spos = br.getStartOffset()-offset;
+          }
        }
    }
 
@@ -788,8 +788,8 @@ void addHeaderRegion(BumpLocation bl,RegionType rt,Segment s,int offset)
    while (epos < s.length()) {
       char c = s.charAt(epos);
       if (c == '\n') {
-	 ++epos;
-	 break;
+         ++epos;
+         break;
        }
       else if (!Character.isWhitespace(c)) break;
       ++epos;
@@ -803,9 +803,9 @@ void addHeaderRegion(BumpLocation bl,RegionType rt,Segment s,int offset)
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparator for region sort order					*/
-/*										*/
+/*                                                                              */
+/*      Comparator for region sort order                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class RegionComparator implements Comparator<BconRegion> {
@@ -815,15 +815,15 @@ private static final class RegionComparator implements Comparator<BconRegion> {
       return v;
     }
 
-}	// end of inner class RegionComparator
+}       // end of inner class RegionComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	List widget for classes 						*/
-/*										*/
+/*                                                                              */
+/*      List widget for classes                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class ClassList extends JList<BconRegion> {
@@ -845,7 +845,7 @@ private class ClassList extends JList<BconRegion> {
       addMouseListener(new ClassMouser());
     }
 
-   @Override public boolean getScrollableTracksViewportWidth()		{ return true; }
+   @Override public boolean getScrollableTracksViewportWidth()          { return true; }
 
    @Override public String getToolTipText(MouseEvent evt) {
       int idx = locationToIndex(evt.getPoint());
@@ -855,7 +855,7 @@ private class ClassList extends JList<BconRegion> {
       return "<html><pre>" + txt + "</pre></html>";
     }
 
-}	// end of inner class ClassList
+}       // end of inner class ClassList
 
 
 
@@ -865,26 +865,26 @@ private final class ClassMouser extends MouseAdapter {
    @Override public void mouseClicked(MouseEvent e) {
       JList<?> lst = (JList<?>) e.getSource();
       if (e.getClickCount() == 2) {
-	 int idx = lst.locationToIndex(e.getPoint());
-	 BconRegion br = list_model.getElementAt(idx);
-	 if (br != null) br.createBubble(lst);
+         int idx = lst.locationToIndex(e.getPoint());
+         BconRegion br = list_model.getElementAt(idx);
+         if (br != null) br.createBubble(lst);
        }
     }
 
-}	// end of inner class ClassMouser
+}       // end of inner class ClassMouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Selector of what to show						*/
-/*										*/
+/*                                                                              */
+/*      Selector of what to show                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Selector {
 
-   private int	show_modifier;
+   private int  show_modifier;
 
    Selector(int show) {
       show_modifier = show;
@@ -897,55 +897,55 @@ private static class Selector {
 
    boolean approve(BconRegion br) {
       switch (br.getRegionType()) {
-	 case REGION_UNKNOWN :
-	    return false;
-	 case REGION_CLASS :
-	    if (!check(MOD_CLASS)) return false;
-	    break;
-	 case REGION_METHOD :
-	 case REGION_CONSTRUCTOR :
-	    if (!check(MOD_METHOD)) return false;
-	    break;
-	 case REGION_FIELD :
-	    if (!check(MOD_FIELD)) return false;
-	    break;
-	 case REGION_INITIALIZER :
-	    if (!check(MOD_INITIALIZER)) return false;
-	    break;
-	 case REGION_COMMENT :
-	 case REGION_COPYRIGHT :
-	    if (!check(MOD_COMMENT)) return false;
-	    break;
-	 case REGION_PACKAGE :
-	    if (!check(MOD_PACKAGEDECL)) return false;
-	    break;
-	 case REGION_IMPORT :
-	    if (!check(MOD_IMPORT)) return false;
-	    break;
-	 case REGION_CLASS_HEADER :
-	    if (!check(MOD_TOPDECL)) return false;
-	    break;
+         case REGION_UNKNOWN :
+            return false;
+         case REGION_CLASS :
+            if (!check(MOD_CLASS)) return false;
+            break;
+         case REGION_METHOD :
+         case REGION_CONSTRUCTOR :
+            if (!check(MOD_METHOD)) return false;
+            break;
+         case REGION_FIELD :
+            if (!check(MOD_FIELD)) return false;
+            break;
+         case REGION_INITIALIZER :
+            if (!check(MOD_INITIALIZER)) return false;
+            break;
+         case REGION_COMMENT :
+         case REGION_COPYRIGHT :
+            if (!check(MOD_COMMENT)) return false;
+            break;
+         case REGION_PACKAGE :
+            if (!check(MOD_PACKAGEDECL)) return false;
+            break;
+         case REGION_IMPORT :
+            if (!check(MOD_IMPORT)) return false;
+            break;
+         case REGION_CLASS_HEADER :
+            if (!check(MOD_TOPDECL)) return false;
+            break;
        }
       int mods = br.getModifiers();
       if (mods != BCON_MODIFIERS_UNDEFINED) {
-	 if (Modifier.isStatic(mods)) {
-	    if (!check(MOD_STATIC)) return false;
-	  }
-	 else if (!check(MOD_NONSTATIC)) return false;
-	 if (Modifier.isAbstract(mods)) {
-	    if (!check(MOD_ABSTRACT)) return false;
-	  }
-	 else if (!check(MOD_NONABSTRACT)) return false;
-	 if (Modifier.isPublic(mods)) {
-	    if (!check(MOD_PUBLIC)) return false;
-	  }
-	 else if (Modifier.isProtected(mods)) {
-	    if (!check(MOD_PROTECTED)) return false;
-	  }
-	 else if (Modifier.isPrivate(mods)) {
-	    if (!check(MOD_PRIVATE)) return false;
-	  }
-	 else if (!check(MOD_PACKAGE)) return false;
+         if (Modifier.isStatic(mods)) {
+            if (!check(MOD_STATIC)) return false;
+          }
+         else if (!check(MOD_NONSTATIC)) return false;
+         if (Modifier.isAbstract(mods)) {
+            if (!check(MOD_ABSTRACT)) return false;
+          }
+         else if (!check(MOD_NONABSTRACT)) return false;
+         if (Modifier.isPublic(mods)) {
+            if (!check(MOD_PUBLIC)) return false;
+          }
+         else if (Modifier.isProtected(mods)) {
+            if (!check(MOD_PROTECTED)) return false;
+          }
+         else if (Modifier.isPrivate(mods)) {
+            if (!check(MOD_PRIVATE)) return false;
+          }
+         else if (!check(MOD_PACKAGE)) return false;
        }
       return true;
     }
@@ -954,21 +954,21 @@ private static class Selector {
       return (show_modifier & fg) != 0;
     }
 
-}	// end of inner class Selector
+}       // end of inner class Selector
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing panel								*/
-/*										*/
+/*                                                                              */
+/*      Drawing panel                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClassPanel extends SwingGridPanel implements BudaConstants.BudaBubbleOutputer {
    
    private static final long serialVersionUID = 1;
    
-   @Override public String getConfigurator()		{ return "BCON"; }
+   @Override public String getConfigurator()            { return "BCON"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","CLASS");
       xw.field("PROJECT",for_project);
@@ -977,15 +977,15 @@ private final class ClassPanel extends SwingGridPanel implements BudaConstants.B
       xw.field("INNER",inner_class);
     }
 
-}	// end of inner class ClassPanel
+}       // end of inner class ClassPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	List model for selective display					*/
-/*										*/
+/*                                                                              */
+/*      List model for selective display                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClassListModel extends AbstractListModel<BconRegion> {
@@ -1025,7 +1025,7 @@ private final class ClassListModel extends AbstractListModel<BconRegion> {
       is_valid = true;
       use_regions.clear();
       for (BconRegion br : region_set) {
-	 if (cur_selector.approve(br)) use_regions.add(br);
+         if (cur_selector.approve(br)) use_regions.add(br);
        }
       cur_size = use_regions.size();
 
@@ -1033,14 +1033,14 @@ private final class ClassListModel extends AbstractListModel<BconRegion> {
       if (cur_size > 0) fireIntervalAdded(this,0,cur_size-1);
     }
 
-}	// end of inner class ClassListModel
+}       // end of inner class ClassListModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Cell renderer for BconRegions						*/
-/*										*/
+/*                                                                              */
+/*      Cell renderer for BconRegions                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class RegionRenderer extends DefaultListCellRenderer {
@@ -1134,14 +1134,14 @@ private static class RegionRenderer extends DefaultListCellRenderer {
       return comp;
     }
 
-}	// end of inner class RegionRenderer
+}       // end of inner class RegionRenderer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Transfer handler for drag and drop					*/
-/*										*/
+/*                                                                              */
+/*      Transfer handler for drag and drop                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ListMover extends TransferHandler {
@@ -1149,7 +1149,7 @@ private class ListMover extends TransferHandler {
    private static final long serialVersionUID = 1;
 
 
-   ListMover()				{ }
+   ListMover()                          { }
 
    @Override public boolean canImport(TransferHandler.TransferSupport sup) {
       if (sup.isDataFlavorSupported(REGION_FLAVOR)) return true;
@@ -1204,7 +1204,7 @@ private class ListMover extends TransferHandler {
       return true;
     }
 
-}	// end of inner class ListMover
+}       // end of inner class ListMover
 
 
 
@@ -1217,7 +1217,7 @@ private class ListTransfer implements Transferable, BudaConstants.BudaDragBubble
       can_delete = false;
       list_regions = new ArrayList<BconRegion>();
       for (Object o : lst.getSelectedValuesList()) {
-	 list_regions.add((BconRegion) o);
+         list_regions.add((BconRegion) o);
       }
     }
 
@@ -1249,8 +1249,8 @@ private class ListTransfer implements Transferable, BudaConstants.BudaDragBubble
    String getText(Component c) {
       StringBuffer buf = new StringBuffer();
       for (BconRegion br : list_regions) {
-	 String rtxt = br.getRegionText();
-	 if (rtxt != null) buf.append(rtxt);
+         String rtxt = br.getRegionText();
+         if (rtxt != null) buf.append(rtxt);
        }
       if (c == getComponent()) can_delete = true;
       return buf.toString();
@@ -1258,29 +1258,29 @@ private class ListTransfer implements Transferable, BudaConstants.BudaDragBubble
 
    void removeText() {
       if (can_delete) {
-	 for (BconRegion br : list_regions) {
-	    br.remove();
-	  }
+         for (BconRegion br : list_regions) {
+            br.remove();
+          }
        }
     }
 
    boolean sameRegion(BconRegion br) {
       for (BconRegion xbr : list_regions) {
-	 if (xbr == br) return true;
+         if (xbr == br) return true;
        }
       return false;
     }
 
 
-}	// end of inner class ListTransfer
+}       // end of inner class ListTransfer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation actions							*/
-/*										*/
+/*                                                                              */
+/*      Creation actions                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private String getButtonName(BconRegion br,BuenoType typ,boolean before)
@@ -1288,25 +1288,25 @@ private String getButtonName(BconRegion br,BuenoType typ,boolean before)
    String rslt = "Insert ";
    switch (typ) {
       case NEW_INNER_TYPE :
-	 rslt += "Class/Interface/Enum";
-	 break;
+         rslt += "Class/Interface/Enum";
+         break;
       case NEW_METHOD :
-	 rslt += "Method";
-	 break;
+         rslt += "Method";
+         break;
       case NEW_FIELD :
-	 rslt += "Field";
-	 break;
+         rslt += "Field";
+         break;
       case NEW_MARQUIS_COMMENT :
-	 rslt += "Marquis Comment";
-	 break;
+         rslt += "Marquis Comment";
+         break;
       case NEW_BLOCK_COMMENT :
-	 rslt += "Block Comment";
-	 break;
+         rslt += "Block Comment";
+         break;
       case NEW_JAVADOC_COMMENT :
-	 rslt += "JavaDoc Comment";
-	 break;
+         rslt += "JavaDoc Comment";
+         break;
       default:
-	 break;
+         break;
     }
    if (before) rslt += " before ";
    else rslt += " after ";
@@ -1371,7 +1371,7 @@ private class CommentCreator extends AbstractCreator {
       setupElements();
     }
 
-}	// end of inner class CommentCreator
+}       // end of inner class CommentCreator
 
 
 
@@ -1385,8 +1385,8 @@ private class MethodCreator extends AbstractCreator implements BuenoBubbleCreato
 
    @Override public void actionPerformed(ActionEvent e) {
       BuenoFactory.getFactory().createMethodDialog(getBubble(),popup_point,
-        					      property_set,getLocation(),null,
-        					      this);
+                                                      property_set,getLocation(),null,
+                                                      this);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
@@ -1395,7 +1395,7 @@ private class MethodCreator extends AbstractCreator implements BuenoBubbleCreato
       setupElements();
     }
 
-}	// end of inner class MethodCreator
+}       // end of inner class MethodCreator
 
 
 
@@ -1409,7 +1409,7 @@ private class FieldCreator extends AbstractCreator implements BuenoBubbleCreator
 
    @Override public void actionPerformed(ActionEvent e) {
       BuenoFieldDialog bfd = new BuenoFieldDialog(getBubble(),popup_point,
-						     property_set,getLocation(),this);
+                                                     property_set,getLocation(),this);
       bfd.showDialog();
     }
 
@@ -1417,7 +1417,7 @@ private class FieldCreator extends AbstractCreator implements BuenoBubbleCreator
       setupElements();
     }
 
-}	// end of inner class FieldCreator
+}       // end of inner class FieldCreator
 
 
 
@@ -1431,8 +1431,8 @@ private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator 
 
    @Override public void actionPerformed(ActionEvent e) {
       BuenoInnerClassDialog bcd = new BuenoInnerClassDialog(getBubble(),popup_point,
-							       new_type,
-							       property_set,getLocation(),this);
+                                                               new_type,
+                                                               property_set,getLocation(),this);
       bcd.showDialog();
     }
 
@@ -1442,17 +1442,17 @@ private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator 
       setupElements();
     }
 
-}	// end of inner class TypeCreator
+}       // end of inner class TypeCreator
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling updates						*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling updates                                            */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public void handleElisionData(File f,int id,Element data)	{ }
+@Override public void handleElisionData(File f,int id,Element data)     { }
 
 @Override public void handleRemoteEdit(File f,int len,int off,String txt)
 {
@@ -1482,9 +1482,9 @@ private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator 
 
 
 /********************************************************************************/
-/*										*/
-/*	Other Actions								*/
-/*										*/
+/*                                                                              */
+/*      Other Actions                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -1504,7 +1504,7 @@ private class ClassBubbleAction extends AbstractAction {
       if (bba != null && r != null) bba.addBubble(bb,r.x + r.width + 40, r.y);
     }
 
-}	// end of inner class ClassBubbleAction
+}       // end of inner class ClassBubbleAction
 
 
 
@@ -1523,7 +1523,7 @@ private static class DeleteAction extends AbstractAction {
       delete_region.remove();
     }
 
-}	// end of inner class DeleteAction
+}       // end of inner class DeleteAction
 
 
 
@@ -1539,7 +1539,7 @@ private class ResetAction extends AbstractAction {
       setupElements();
     }
 
-}	// end of inner class ResetAction
+}       // end of inner class ResetAction
 
 
 private static final class FilterAction implements ActionListener {
@@ -1552,7 +1552,7 @@ private static final class FilterAction implements ActionListener {
     }
 }
 
-}	// end of class BconClassPanel
+}       // end of class BconClassPanel
 
 
 

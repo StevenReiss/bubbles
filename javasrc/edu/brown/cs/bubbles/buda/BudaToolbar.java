@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaToolbar.java						*/
-/*										*/
-/*	BUblles Display Area tool bar display					*/
-/*										*/
+/*                                                                              */
+/*              BudaToolbar.java                                                */
+/*                                                                              */
+/*      BUblles Display Area tool bar display                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Alex Hills			      */
+/*      Copyright 2010 Brown University -- Alex Hills                         */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,9 +56,9 @@ class BudaToolbar implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static List<MenuButton> the_buttons = new ArrayList<MenuButton>();
@@ -69,9 +69,9 @@ private static final int TOOLBAR_Y_DELTA = 5;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -85,9 +85,9 @@ static void addToolbarButton(String name, ActionListener l, String tooltip, Imag
 
 
 /********************************************************************************/
-/*										*/
-/*	Addition methods							*/
-/*										*/
+/*                                                                              */
+/*      Addition methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -119,9 +119,9 @@ static Toolbar getToolbar(BudaBubbleArea bba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Nested classes for display						*/
-/*										*/
+/*                                                                              */
+/*      Nested classes for display                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Toolbar extends BudaBubble implements NoFreeze
@@ -197,7 +197,7 @@ private static class Toolbar extends BudaBubble implements NoFreeze
       super.paintComponent(g);
     }
 
-}	// end of inner class Toolbar
+}       // end of inner class Toolbar
 
 
 
@@ -214,18 +214,18 @@ private static class MenuPanel extends JPanel {
       setBackground(BoardColors.getColor("Buda.ToolbarMenuBackground"));
     }
 
-   @Override public String getName()		{ return menu_name; }
+   @Override public String getName()            { return menu_name; }
 
    private void addButton(JButton b) {
       GridBagConstraints c;
-      int i = 0;		// TODO: compute row here based on count
+      int i = 0;                // TODO: compute row here based on count
       c = new GridBagConstraints(GridBagConstraints.RELATIVE,i,
-				    1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-				    new Insets(3, 3, 3, 3), 2, 2);
+                                    1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                                    new Insets(3, 3, 3, 3), 2, 2);
       add(b,c);
     }
 
-}	// end of inner class MenuPanel
+}       // end of inner class MenuPanel
 
 
 
@@ -242,9 +242,9 @@ static Action getToolBarAction(BudaRoot r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handler for menu hotkey 						*/
-/*										*/
+/*                                                                              */
+/*      Handler for menu hotkey                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MenuListener extends AbstractAction implements ActionListener {
@@ -276,13 +276,13 @@ private static class MenuListener extends AbstractAction implements ActionListen
       pnl.revalidate();
       
       BudaConstraint bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
-        	  r.x, r.y + TOOLBAR_Y_DELTA);
+                  r.x, r.y + TOOLBAR_Y_DELTA);
       
       Rectangle pnlrect = new Rectangle(r.x, r.y, pnl.getPreferredSize().width, pnl.getPreferredSize().height);
       Collection<BudaBubble> bubbles = bba.getBubblesInRegion(pnlrect);
       if (bubbles.contains(for_root.getPackageExplorer(bba)))
          bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
-        	  r.x + r.width - pnl.getPreferredSize().width, r.y + TOOLBAR_Y_DELTA);
+                  r.x + r.width - pnl.getPreferredSize().width, r.y + TOOLBAR_Y_DELTA);
    
       pnl.setVisible(true);
       
@@ -297,7 +297,7 @@ private static class MenuListener extends AbstractAction implements ActionListen
       pnl.repaint();
    }
 
-}	// end of inner class MenuListener
+}       // end of inner class MenuListener
 
 
 
@@ -324,9 +324,9 @@ private static class BubbleAdder implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Information holder for mentu buttons					*/
-/*										*/
+/*                                                                              */
+/*      Information holder for mentu buttons                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class MenuButton
@@ -359,11 +359,11 @@ private static class MenuButton
       return the_image;
     }
 
-}	// end	of inner class MenuButton
+}       // end  of inner class MenuButton
 
 
 
-}	// end of class BudaToolbar
+}       // end of class BudaToolbar
 
 
 

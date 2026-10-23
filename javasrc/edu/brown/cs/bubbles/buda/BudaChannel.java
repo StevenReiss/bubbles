@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaChannel.java						*/
-/*										*/
-/*	BUblles Display Area channel with overview bar, display area, panel	*/
-/*										*/
+/*                                                                              */
+/*              BudaChannel.java                                                */
+/*                                                                              */
+/*      BUblles Display Area channel with overview bar, display area, panel     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -59,27 +59,27 @@ class BudaChannel extends SwingGridPanel implements BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot		for_root;
-private BudaBubbleArea		bubble_area;
-private BudaOverviewBar 	bubble_overview;
-private BudaViewport		bubble_view;
-private JLabel			date_label;
-private JTextField		name_label;
-private boolean 		full_size;
+private BudaRoot                for_root;
+private BudaBubbleArea          bubble_area;
+private BudaOverviewBar         bubble_overview;
+private BudaViewport            bubble_view;
+private JLabel                  date_label;
+private JTextField              name_label;
+private boolean                 full_size;
 
-private static final long	serialVersionUID = 1;
+private static final long       serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaChannel(BudaRoot br,Element e,BudaChannelSet cs,String label)
@@ -135,30 +135,30 @@ BudaChannel(BudaRoot br,Element e,BudaChannelSet cs,String label)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BudaBubbleArea getBubbleArea()		{ return bubble_area; }
+BudaBubbleArea getBubbleArea()          { return bubble_area; }
 
-BudaOverviewBar getOverviewBar()	{ return bubble_overview; }
+BudaOverviewBar getOverviewBar()        { return bubble_overview; }
 
 void setChannelName(String label) {
    name_label.setText(label);
    date_label.setText(new Date().toString());
 }
 
-BudaChannelSet getChannelSet()		{ return bubble_area.getChannelSet(); }
+BudaChannelSet getChannelSet()          { return bubble_area.getChannelSet(); }
 
-boolean isFullSize()			{ return full_size; }
+boolean isFullSize()                    { return full_size; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Viewport methods							*/
-/*										*/
+/*                                                                              */
+/*      Viewport methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void setViewport(int x,int y)
@@ -197,28 +197,28 @@ private final class ViewportHandler implements ChangeListener {
       bubble_overview.setViewPosition(vr);
     }
 
-}	// end of inner class ViewportHandler
+}       // end of inner class ViewportHandler
 
 
 
 private final class ViewportCallback implements BubbleAreaCallback {
 
-   @Override public void updateOverview()		{ }
+   @Override public void updateOverview()               { }
 
    @Override public void moveDelta(int dx,int dy) {
       Point p = bubble_view.getViewPosition();
       setViewport(p.x + dx,p.y + dy);
     }
 
-}	// end of inner class ViewportCallback
+}       // end of inner class ViewportCallback
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Input/Output methods							*/
-/*										*/
+/*                                                                              */
+/*      Input/Output methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -234,9 +234,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel actions								*/
-/*										*/
+/*                                                                              */
+/*      Panel actions                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class DeleteAction extends AbstractAction {
@@ -252,7 +252,7 @@ private class DeleteAction extends AbstractAction {
       getChannelSet().removeChannel(BudaChannel.this);
     }
 
-}	// end of inner class DeleteAction
+}       // end of inner class DeleteAction
 
 
 
@@ -270,11 +270,11 @@ private class ExpandAction extends AbstractAction {
       getChannelSet().resetSizes();
     }
 
-}	// end of inner class ExpandAction
+}       // end of inner class ExpandAction
 
 
 
-}	// end of class BudaChannel
+}       // end of class BudaChannel
 
 
 

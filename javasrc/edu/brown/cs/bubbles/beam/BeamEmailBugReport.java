@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamEmailBugReport.java 					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BeamEmailBugReport.java                                         */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -63,12 +63,12 @@ class BeamEmailBugReport implements BeamConstants, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot		for_root;
+private BudaRoot                for_root;
 private static boolean          use_github = false;
 
 private static final String     DESC_PROMPT = "Description";
@@ -86,9 +86,9 @@ private enum SEVERITY { SEVERE, BAD, ANNOYING, QUIRK, TRIVIAL, SUGGESTION, WOW }
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamEmailBugReport(BudaRoot br)
@@ -100,9 +100,9 @@ BeamEmailBugReport(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addPanel()
@@ -126,9 +126,9 @@ void addPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Set up the email reply panel						*/
-/*										*/
+/*                                                                              */
+/*      Set up the email reply panel                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private JPanel emailReportPanel()
@@ -202,15 +202,15 @@ private class EmailChecker implements ActionListener, UndoableEditListener {
       ok.setEnabled(valid);
     }
 
-}	// end of inner class EmailChecker
+}       // end of inner class EmailChecker
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to send the email						*/
-/*										*/
+/*                                                                              */
+/*      Methods to send the email                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void sendEmail(SwingGridPanel panel)
@@ -225,9 +225,9 @@ private void sendEmail(SwingGridPanel panel)
    if (cb.isSelected()) {
       File f = BoardMetrics.createScreenDump("png");
       if (f != null) {
-	 added = new ArrayList<>();
-	 added.add(f);
-	 f.deleteOnExit();
+         added = new ArrayList<>();
+         added.add(f);
+         f.deleteOnExit();
        }
     }
 
@@ -283,18 +283,18 @@ private void addToOutput(String pfx,Appendable buf,File f,int len)
    int ct = 0;
    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
       for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null) break;
-	 lns[ct%lns.length] = ln;
-	 ++ct;
+         String ln = br.readLine();
+         if (ln == null) break;
+         lns[ct%lns.length] = ln;
+         ++ct;
        }
       for (int i = 0; i < lns.length; ++i) {
-	 int idx = (ct+i)%lns.length;
-	 if (lns[idx] != null) {
-	    if (pfx != null) buf.append(pfx);
-	    buf.append(lns[idx]);
-	    buf.append("\n");
-	  }
+         int idx = (ct+i)%lns.length;
+         if (lns[idx] != null) {
+            if (pfx != null) buf.append(pfx);
+            buf.append(lns[idx]);
+            buf.append("\n");
+          }
        }
     }
    catch (IOException e) { }
@@ -327,9 +327,9 @@ private void sendReport(SwingGridPanel panel)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback to set up bug report dialog   				*/
-/*										*/
+/*                                                                              */
+/*      Callback to set up bug report dialog                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BugReportListener implements ActionListener {
@@ -342,12 +342,12 @@ private final class BugReportListener implements ActionListener {
       dlg.setVisible(true);
     }
 
-}	// end of inner class BugReportListener
+}       // end of inner class BugReportListener
 
 
 
 
-}	// end of class BeamEmailBugReport
+}       // end of class BeamEmailBugReport
 
 
 

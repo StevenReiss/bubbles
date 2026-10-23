@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassTreeModel.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies tree model generic definitions	*/
-/*										*/
+/*                                                                              */
+/*              BassTreeModel.java                                              */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies tree model generic definitions       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -45,9 +45,9 @@ interface BassTreeModel extends TreeModel, BassConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 int getLeafCount();
@@ -62,9 +62,9 @@ int [] getIndicesOfFirstMethod();
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void prune(String pat,boolean upd);
@@ -76,9 +76,9 @@ void globalUpdate();
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw);
@@ -89,9 +89,9 @@ void rebuild(BassRepository br);
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic tree node							*/
-/*										*/
+/*                                                                              */
+/*      Generic tree node                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 interface BassTreeNode {
@@ -99,7 +99,7 @@ interface BassTreeNode {
    BassName getBassName();
    String getLocalName();
   
-}	// end of inner interface BassTreeNode
+}       // end of inner interface BassTreeNode
 
 
 
@@ -114,7 +114,7 @@ interface BassTreeBase extends BassTreeNode {
    Icon getCollapseIcon();
    String getFullName();
 
-}	// end of inner interface BassTreeBse
+}       // end of inner interface BassTreeBse
 
 
 interface BassTreeUpdateEvent {
@@ -122,18 +122,18 @@ interface BassTreeUpdateEvent {
    Collection<BassName> getNamesRemoved();
    Collection<BassName> getNamesAdded();
 
-}	// end of inner interface BassTreeUpdateEvent
+}       // end of inner interface BassTreeUpdateEvent
 
 
 interface BassTreeUpdateListener extends EventListener {
 
    void handleTreeUpdated(BassTreeUpdateEvent evt);
 
-}	// end of inner interface BassTreeUpdateListener
+}       // end of inner interface BassTreeUpdateListener
 
 
 
-}	// end of interface BassTreeModel
+}       // end of interface BassTreeModel
 
 
 

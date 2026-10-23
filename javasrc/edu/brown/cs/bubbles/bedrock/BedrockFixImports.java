@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockFixImports.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BedrockFixImports.java                                          */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -57,18 +57,18 @@ class BedrockFixImports implements BedrockConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockFixImports()
@@ -77,9 +77,9 @@ BedrockFixImports()
 
 
 /********************************************************************************/
-/*										*/
-/*	Work methods								*/
-/*										*/
+/*                                                                              */
+/*      Work methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 Set<ITypeBinding> findImports(CompilationUnit cu)
@@ -102,9 +102,9 @@ Set<IBinding> findStaticImports(CompilationUnit cu)
 
 
 /********************************************************************************/
-/*										*/
-/*	Visitor to find type imports 						*/
-/*										*/
+/*                                                                              */
+/*      Visitor to find type imports                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class ImportFinder extends ASTVisitor {
@@ -224,14 +224,14 @@ private class ImportFinder extends ASTVisitor {
       import_types.add(t);
     }
 
-}	// end of inner class ImportFinder
+}       // end of inner class ImportFinder
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Visitor to find static imports 					*/
-/*										*/
+/*                                                                              */
+/*      Visitor to find static imports                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class StaticFinder extends ASTVisitor {
@@ -394,11 +394,11 @@ private class StaticFinder extends ASTVisitor {
       defined_types.add(t);
     }
    
-}	// end of inner class ImportFinder
+}       // end of inner class ImportFinder
 
 
 
-}	// end of class BedrockFixImports
+}       // end of class BedrockFixImports
 
 
 

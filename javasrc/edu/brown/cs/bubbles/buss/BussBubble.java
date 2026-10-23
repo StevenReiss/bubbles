@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BussBubble.java 						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack bubble				*/
-/*										*/
+/*                                                                              */
+/*              BussBubble.java                                                 */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack bubble                             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -63,7 +63,7 @@ import java.util.Collection;
 
 
 /**
- *	This class implements a bubble stack.
+ *      This class implements a bubble stack.
  **/
 
 public class BussBubble extends BudaBubble implements BussConstants {
@@ -71,13 +71,13 @@ public class BussBubble extends BudaBubble implements BussConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BussStackBox	stack_box;
-private BussTreeModel	tree_model;
+private BussStackBox    stack_box;
+private BussTreeModel   tree_model;
 
 private BussBubble our_self;
 private BudaBubble source_bubble;
@@ -99,9 +99,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BussBubble(Collection<BussEntry> ents, int contentWidth)
@@ -142,13 +142,13 @@ BussBubble(Collection<BussEntry> ents, int contentWidth)
 
 
 /********************************************************************************/
-/*										*/
-/*	Public access methods							*/
-/*										*/
+/*                                                                              */
+/*      Public access methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Set the preview bubble for the bubble stack
+ *      Set the preview bubble for the bubble stack
  **/
 
 public void setPreviewBubble(BudaBubble previewBubble)
@@ -159,7 +159,7 @@ public void setPreviewBubble(BudaBubble previewBubble)
 
 
 /**
- *	Remove the editor bubble from the bubble stack
+ *      Remove the editor bubble from the bubble stack
  **/
 
 public void removeEditorBubble()
@@ -178,7 +178,7 @@ public void removeEditorBubble()
 
 
 /**
- *	Return the current editor bubble for the bubble stack
+ *      Return the current editor bubble for the bubble stack
  **/
 
 public BudaBubble getEditorBubble()
@@ -189,7 +189,7 @@ public BudaBubble getEditorBubble()
 
 
 /**
- *	Set the style for links
+ *      Set the style for links
  **/
 public void setLinkStyle(BudaLinkStyle sty)
 {
@@ -199,7 +199,7 @@ public void setLinkStyle(BudaLinkStyle sty)
 
 
 /**
- *	Set the editor bubble for the bubble stack
+ *      Set the editor bubble for the bubble stack
  **/
 
 void setEditorBubble(BudaBubble editorbubble)
@@ -210,8 +210,8 @@ void setEditorBubble(BudaBubble editorbubble)
 
 
 /**
- *	Set the current selected entry in the bubble stack.  If the passed in
- *	entry is null, the current selection is removed.
+ *      Set the current selected entry in the bubble stack.  If the passed in
+ *      entry is null, the current selection is removed.
  **/
 
 void setSelectedEntry(BussEntry selectedentry)
@@ -226,9 +226,9 @@ void setSelectedEntry(BussEntry selectedentry)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 JLayeredPane getLayeredPane()
@@ -250,7 +250,7 @@ void setStackBoxSize(Dimension dim)
    stack_box.setPreferredSize(dim);
 
    Dimension dimension = new Dimension(Math.max(stack_box.getPreferredSize().width, our_self.getSize().width),
-				       Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
+                                       Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
 
    stack_box.setSize(dimension);
 }
@@ -272,7 +272,7 @@ BussEntry getSelectedEntry()
 
 
 /**
- *	Set the source for linking new bubbles
+ *      Set the source for linking new bubbles
  **/
 
 public void setSourceBubbleInfomation(BudaBubble sb, BudaConstants.LinkPort sl)
@@ -282,14 +282,14 @@ public void setSourceBubbleInfomation(BudaBubble sb, BudaConstants.LinkPort sl)
 }
 
 
-BudaBubble getSourceBubble()		{ return source_bubble; }
+BudaBubble getSourceBubble()            { return source_bubble; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle bubble movement					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle bubble movement                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble getActualBubble(int x, int y, boolean moved)
@@ -325,14 +325,14 @@ BudaBubble getSourceBubble()		{ return source_bubble; }
             width + " " + height + " " + locx + " " + locy + " " + moved);
 
       if (x >= locx && x <= (locx + width) && y >= locy && y <= (locy + height)){
-	 if (moved) {
+         if (moved) {
             tearOutEditorBubble();
           }
          else {
             BoardLog.logD("BUSS","Bubble not moved");
           }
 
-	 return getEditorBubble();
+         return getEditorBubble();
        }
     }
 
@@ -343,7 +343,7 @@ BudaBubble getSourceBubble()		{ return source_bubble; }
 
 
 /**
- *	Update the location of the current editor bubble associated with the bubble stack
+ *      Update the location of the current editor bubble associated with the bubble stack
  **/
 
 public void updateEditorBubbleLocation()
@@ -360,13 +360,13 @@ public void updateEditorBubbleLocation()
 
 
 /**
- *	Return the location of the current editor bubble associated with the bubble stack.
+ *      Return the location of the current editor bubble associated with the bubble stack.
  **/
 
 public Point getEditorBubbleLocation()
 {
    if (getEditorBubble() != null && stack_box.getSelectionRows() != null &&
-	  stack_box.getSelectionRows().length > 0) {
+          stack_box.getSelectionRows().length > 0) {
       int row = stack_box.getSelectionRows()[0];
 
       Point loc = getLocation();
@@ -377,7 +377,7 @@ public Point getEditorBubbleLocation()
       int diffy = Math.max(0, selecteditemrect.y - viewportrect.y);
 
       return new Point(diffx + loc.x + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1,
-				       diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1);
+                                       diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1);
     }
 
    return null;
@@ -386,13 +386,13 @@ public Point getEditorBubbleLocation()
 
 
 /**
- *	Update the size of the editor bubble associated witht he bubble stack.
+ *      Update the size of the editor bubble associated witht he bubble stack.
  **/
 
 void updateEditorBubbleSize()
 {
    if (getEditorBubble() != null && stack_box.getSelectionRows() != null &&
-	 stack_box.getSelectionRows().length > 0) {
+         stack_box.getSelectionRows().length > 0) {
       int row = stack_box.getSelectionRows()[0];
 
       Rectangle selecteditemrect = stack_box.getRowBounds(row);
@@ -400,11 +400,11 @@ void updateEditorBubbleSize()
 
       int startx = Math.max(selecteditemrect.x, viewportrect.x);
       int endx = Math.min(selecteditemrect.x + getEditorBubble().getPreferredSize().width,
-			     viewportrect.x + viewportrect.width);
+                             viewportrect.x + viewportrect.width);
 
       int starty = Math.max(selecteditemrect.y, viewportrect.y);
       int endy = Math.min(selecteditemrect.y + getEditorBubble().getPreferredSize().height,
-			     viewportrect.y + viewportrect.height);
+                             viewportrect.y + viewportrect.height);
 
       getEditorBubble().setSize(Math.max(0, endx - startx), Math.max(0, endy - starty));
     }
@@ -437,11 +437,11 @@ void tearOutEditorBubble()
    
    for (int i = 0; i < 3; ++i) {
       try {
-	 // this can fail when trying to sort bubbles on screen -- retry in that case
-	 bba.add(getEditorBubble(),
+         // this can fail when trying to sort bubbles on screen -- retry in that case
+         bba.add(getEditorBubble(),
                new BudaConstraint(BudaBubblePosition.FIXED,
                      locx, locy));
-	 break;
+         break;
        }
       catch (Throwable t) { 
          BoardLog.logD("BUSS","Failed to add editor bubble",t);
@@ -514,22 +514,22 @@ private final class BussResizeListener extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       Dimension dimension = new Dimension(
-	 Math.max(stack_box.getPreferredSize().width, our_self.getSize().width),
-	    Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
+         Math.max(stack_box.getPreferredSize().width, our_self.getSize().width),
+            Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
 
       stack_box.setSize(dimension);
     }
 
-}	// end of inner class BussMoveListener
+}       // end of inner class BussMoveListener
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hoverer :: Code added by Hsu-Sheng Ko					*/
-/*										*/
+/*                                                                              */
+/*      Hoverer :: Code added by Hsu-Sheng Ko                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setVisible(boolean isVisible){
@@ -549,8 +549,8 @@ private BudaBubble createHoverBubble(BussEntry entry, int xPos, int yPos)
    if (bubble == null) return null;
 
    bba.add(entry.getBubble(), new BudaConstraint(BudaBubblePosition.FIXED,
-						   loc.x + xPos + 50,
-						   loc.y + yPos));
+                                                   loc.x + xPos + 50,
+                                                   loc.y + yPos));
    bubble.setVisible(true);
    bba.setLayer(bubble,JLayeredPane.PALETTE_LAYER + 1);
 
@@ -576,21 +576,21 @@ private class Hoverer extends BudaHover implements ComponentListener {
       TreePath tp = stack_box.getPathForLocation(e.getX(), e.getY());
 
       if (tp != null) {
-	 BussTreeNode tn = (BussTreeNode) tp.getLastPathComponent();
-	 BussEntry entry = tn.getEntry();
+         BussTreeNode tn = (BussTreeNode) tp.getLastPathComponent();
+         BussEntry entry = tn.getEntry();
 
-	 if (entry != null) {
-	    preview_bubble = createHoverBubble(entry, e.getX() - view_port.getViewPosition().x,
-						  e.getY() - view_port.getViewPosition().y);
+         if (entry != null) {
+            preview_bubble = createHoverBubble(entry, e.getX() - view_port.getViewPosition().x,
+                                                  e.getY() - view_port.getViewPosition().y);
             noteEntryHovered(entry);
-	  }
+          }
        }
     }
 
    @Override public void endHover(MouseEvent e) {
       if (preview_bubble != null){
-	 preview_bubble.setVisible(false);
-	 preview_bubble = null;
+         preview_bubble.setVisible(false);
+         preview_bubble = null;
       }
     }
 
@@ -602,23 +602,23 @@ private class Hoverer extends BudaHover implements ComponentListener {
       super.clearHover(e);
    }
 
-   @Override public void componentHidden(ComponentEvent e)	{ }
+   @Override public void componentHidden(ComponentEvent e)      { }
 
-   @Override public void componentMoved(ComponentEvent e)	{ clearHover(null); }
+   @Override public void componentMoved(ComponentEvent e)       { clearHover(null); }
 
-   @Override public void componentResized(ComponentEvent e)	{ }
+   @Override public void componentResized(ComponentEvent e)     { }
 
-   @Override public void componentShown(ComponentEvent e)	{ }
+   @Override public void componentShown(ComponentEvent e)       { }
 
-}	// end of inner class Hoverer
+}       // end of inner class Hoverer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle clean up on removal						*/
-/*										*/
+/*                                                                              */
+/*      Handle clean up on removal                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void localDispose()
@@ -629,13 +629,13 @@ private class Hoverer extends BudaHover implements ComponentListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	BussViewport -- main bubble contents					*/
-/*										*/
+/*                                                                              */
+/*      BussViewport -- main bubble contents                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BussViewport extends JScrollPane implements BudaConstants.BudaBubbleOutputer,
-		MouseWheelListener
+                MouseWheelListener
 {
    private BussStackBox buss_stack;
 
@@ -647,9 +647,9 @@ private static class BussViewport extends JScrollPane implements BudaConstants.B
       JScrollBar jsb = new JScrollBar(Adjustable.VERTICAL);
 
       Dimension d1 = jsb.getPreferredSize();
-      int xtra = d1.width;	   // space for scroll bar
+      int xtra = d1.width;         // space for scroll bar
       Dimension d = buss_stack.getPreferredSize();
-      d.width += 4 + xtra;		// assume we will need a scroll bar
+      d.width += 4 + xtra;              // assume we will need a scroll bar
       d.height += 4;
 
       if (d.height >= BUSS_MAXIMUM_HEIGHT) d.height = BUSS_MAXIMUM_HEIGHT;
@@ -664,9 +664,9 @@ private static class BussViewport extends JScrollPane implements BudaConstants.B
       xjsb.setUnitIncrement(xjsb.getBlockIncrement());
     }
 
-   @Override public String getConfigurator()		 { return "BUSS"; }
+   @Override public String getConfigurator()             { return "BUSS"; }
 
-   @Override public void outputXml(BudaXmlWriter xw)	 { buss_stack.outputXml(xw); }
+   @Override public void outputXml(BudaXmlWriter xw)     { buss_stack.outputXml(xw); }
 
    @Override public void mouseWheelMoved(MouseWheelEvent e) {
       JScrollBar jsb = getVerticalScrollBar();
@@ -678,11 +678,11 @@ private static class BussViewport extends JScrollPane implements BudaConstants.B
       jsb.setValue(v);
     }
 
-}	// end of inner class BussViewport
+}       // end of inner class BussViewport
 
 
 
-}	// end of class BussBubble
+}       // end of class BussBubble
 
 
 

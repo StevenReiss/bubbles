@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconConfigurator.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer configurator for loading bubbles	*/
-/*										*/
+/*                                                                              */
+/*              BconConfigurator.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer configurator for loading bubbles     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -45,9 +45,9 @@ class BconConfigurator implements BconConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -109,7 +109,7 @@ class BconConfigurator implements BconConstants, BudaConstants.BubbleConfigurato
       
 
 
-}	// end of class BconConfigurator
+}       // end of class BconConfigurator
 
 
 

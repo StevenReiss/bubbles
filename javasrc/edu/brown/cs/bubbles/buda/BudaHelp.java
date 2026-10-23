@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*										*/
-/*		BudaHelp.java							*/
-/*										*/
-/*	BUblles Display Area help mechanism					*/
-/*										*/
+/*                                                                              */
+/*              BudaHelp.java                                                   */
+/*                                                                              */
+/*      BUblles Display Area help mechanism                                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
-/*	Copyright 2009 Brown University -- Izaak Baker			      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
+/*      Copyright 2009 Brown University -- Izaak Baker                        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,7 +70,7 @@ import java.util.regex.Pattern;
 
 
 /**
- *	This class provides a help bubble.
+ *      This class provides a help bubble.
  **/
 
 public class BudaHelp extends BudaHover implements BudaConstants {
@@ -78,28 +78,28 @@ public class BudaHelp extends BudaHover implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Component		for_component;
-private BudaHelpClient		help_client;
-private HelpArea		help_area;
-private JScrollPane		scroll_area;
-private boolean 		mouse_inside;
-private Element 		help_xml;
-private File			help_file;
-private long			help_time;
-private boolean 		force_help;
+private Component               for_component;
+private BudaHelpClient          help_client;
+private HelpArea                help_area;
+private JScrollPane             scroll_area;
+private boolean                 mouse_inside;
+private Element                 help_xml;
+private File                    help_file;
+private long                    help_time;
+private boolean                 force_help;
 
-private static final String	HELP_WIDTH = "Buda.help.width";
-private static final String	HELP_HEIGHT = "Buda.help.height";
-private static final String	HELP_FONT_PROP = "Buda.help.font";
-private static final Font	HELP_FONT = BoardFont.getFont(Font.SERIF,Font.PLAIN,12);
-private static final String	HELP_COLOR_PROP = "Buda.help.color";
-private static final String	HELP_BORDER_PROP = "Buda.help.border.color";
-private static final String	HELP_RESOURCE = "helpdoc.xml";
+private static final String     HELP_WIDTH = "Buda.help.width";
+private static final String     HELP_HEIGHT = "Buda.help.height";
+private static final String     HELP_FONT_PROP = "Buda.help.font";
+private static final Font       HELP_FONT = BoardFont.getFont(Font.SERIF,Font.PLAIN,12);
+private static final String     HELP_COLOR_PROP = "Buda.help.color";
+private static final String     HELP_BORDER_PROP = "Buda.help.border.color";
+private static final String     HELP_RESOURCE = "helpdoc.xml";
 
 
 private static final Map<String,String> HTML_COLOR_MAP;
@@ -116,9 +116,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaHelp(Component c,BudaHelpClient helper)
@@ -150,9 +150,9 @@ BudaHelp(Component c,BudaHelpClient helper)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hover callback methods							*/
-/*										*/
+/*                                                                              */
+/*      Hover callback methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -236,26 +236,26 @@ private String getHelpText(MouseEvent e)
    String lbl = help_client.getHelpLabel(e);
    if (lbl != null) {
       if (help_file != null && help_file.exists() && help_file.lastModified() > help_time) {
-	 help_time = help_file.lastModified();
-	 help_xml = IvyXml.loadXmlFromFile(help_file);
+         help_time = help_file.lastModified();
+         help_xml = IvyXml.loadXmlFromFile(help_file);
        }
       else if (help_xml == null) {
-	 help_xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile(HELP_RESOURCE));
+         help_xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile(HELP_RESOURCE));
        }
 
       //Style the window
       for (Element xml : IvyXml.children(help_xml,"STYLE")) {
-	 txt += IvyXml.getTextElement(xml,"TEXT");
+         txt += IvyXml.getTextElement(xml,"TEXT");
        }
 
       for (Element xml : IvyXml.children(help_xml,"HELP")) {
-	 String key = IvyXml.getAttrString(xml,"KEY");
-	 if (key.equals(lbl)) {
-	    txt += IvyXml.getTextElement(xml,"TEXT");
-	    if (txt != null && txt.length() > 0) {
-	       break;
-	    }
-	  }
+         String key = IvyXml.getAttrString(xml,"KEY");
+         if (key.equals(lbl)) {
+            txt += IvyXml.getTextElement(xml,"TEXT");
+            if (txt != null && txt.length() > 0) {
+               break;
+            }
+          }
        }
     }
 
@@ -283,9 +283,9 @@ private String getHelpText(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor component for help						*/
-/*										*/
+/*                                                                              */
+/*      Editor component for help                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class HelpArea extends JEditorPane {
@@ -309,15 +309,15 @@ private class HelpArea extends JEditorPane {
       setBorder(new LineBorder(bc));
     }
 
-}	// end of inner class HelpArea
+}       // end of inner class HelpArea
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hyper link listener							*/
-/*										*/
+/*                                                                              */
+/*      Hyper link listener                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class HyperListener implements HyperlinkListener {
@@ -346,7 +346,7 @@ private final class HyperListener implements HyperlinkListener {
        }
     }
 
-}	// end of inner class HyperListener
+}       // end of inner class HyperListener
 
 
 private final class Mouser extends MouseAdapter implements KeyListener {
@@ -371,19 +371,19 @@ private final class Mouser extends MouseAdapter implements KeyListener {
    @Override public void mousePressed(MouseEvent e) { }
    @Override public void mouseReleased(MouseEvent e) { }
 
-   @Override public void keyPressed(KeyEvent e) 		{ scroll_area.setVisible(false); }
-   @Override public void keyTyped(KeyEvent e)			{ scroll_area.setVisible(false); }
-   @Override public void keyReleased(KeyEvent e)		{ }
+   @Override public void keyPressed(KeyEvent e)                 { scroll_area.setVisible(false); }
+   @Override public void keyTyped(KeyEvent e)                   { scroll_area.setVisible(false); }
+   @Override public void keyReleased(KeyEvent e)                { }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program to generate a HTML To-Do page from the help file		*/
-/*										*/
+/*                                                                              */
+/*      Main program to generate a HTML To-Do page from the help file           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -396,9 +396,9 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Parser for help information						*/
-/*										*/
+/*                                                                              */
+/*      Parser for help information                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Parser2 {
@@ -464,13 +464,13 @@ private static class Parser2 {
 
       //Locate demos that happen during this when, and map to them
       for (String line : body.split("\n")) {
-	 Matcher m = p.matcher(line);
-	 if (m.matches()) {
-	    if (!when_map.containsKey(mapkey)) {
-	       when_map.put(mapkey, new ArrayList<String>());
-	     }
-	    when_map.get(mapkey).add(m.group(1) + "|" + m.group(2));
-	  }
+         Matcher m = p.matcher(line);
+         if (m.matches()) {
+            if (!when_map.containsKey(mapkey)) {
+               when_map.put(mapkey, new ArrayList<String>());
+             }
+            when_map.get(mapkey).add(m.group(1) + "|" + m.group(2));
+          }
        }
     }
 
@@ -486,44 +486,44 @@ private static class Parser2 {
       demo_block.add("<div class='demoblock'>");
 
       for (String key : when_map.keySet()) {
-	 //Retrieve necessary information
-	 int indexOfBar = key.indexOf("|");
-	 String id = key.substring(0, indexOfBar);
-	 String longid = key.substring(indexOfBar + 1);
+         //Retrieve necessary information
+         int indexOfBar = key.indexOf("|");
+         String id = key.substring(0, indexOfBar);
+         String longid = key.substring(indexOfBar + 1);
 
-	 //Put title for when section
-	 when_block.add("<div class='whenitem'>");
-	 when_block.add("<div class='whenitemtitle'>");
-	 when_block.add("<a href='#" + id + "'>" + longid + "</a>");
-	 when_block.add("</div>");
-	 when_block.add("<ul>");
+         //Put title for when section
+         when_block.add("<div class='whenitem'>");
+         when_block.add("<div class='whenitemtitle'>");
+         when_block.add("<a href='#" + id + "'>" + longid + "</a>");
+         when_block.add("</div>");
+         when_block.add("<ul>");
 
-	 //Put title for demo section
-	 demo_block.add("<div class='whendemoblock'>");
-	 demo_block.add("<a id='" + id + "'></a>");
-	 demo_block.add("<div class='wdb-title'>");
-	 demo_block.add("<h2>" + longid + "</h2>");
-	 demo_block.add("</div>");
+         //Put title for demo section
+         demo_block.add("<div class='whendemoblock'>");
+         demo_block.add("<a id='" + id + "'></a>");
+         demo_block.add("<div class='wdb-title'>");
+         demo_block.add("<h2>" + longid + "</h2>");
+         demo_block.add("</div>");
 
-	 //Put elements in the list under this block
-	 for (String demo : when_map.get(key)) {
-	    indexOfBar = demo.indexOf("|");
-	    String name = demo.substring(0, indexOfBar);
-	    String longname = demo.substring(indexOfBar + 1);
-	    when_block.add("<li> To <a href='#" + name + "'>" + longname + "</a></li>");
+         //Put elements in the list under this block
+         for (String demo : when_map.get(key)) {
+            indexOfBar = demo.indexOf("|");
+            String name = demo.substring(0, indexOfBar);
+            String longname = demo.substring(indexOfBar + 1);
+            when_block.add("<li> To <a href='#" + name + "'>" + longname + "</a></li>");
 
-	    demo_block.add("<div class='demoitem'>");
-	    if (demo_map.containsKey(name)) {
-	       demo_block.addAll(parseIndividualDemo(demo_map.get(name), longname, name));
-	     }
-	    else {
-	       //ERROR with names
-	     }
-	    demo_block.add("</div>");
-	  }
+            demo_block.add("<div class='demoitem'>");
+            if (demo_map.containsKey(name)) {
+               demo_block.addAll(parseIndividualDemo(demo_map.get(name), longname, name));
+             }
+            else {
+               //ERROR with names
+             }
+            demo_block.add("</div>");
+          }
 
-	 when_block.add("</ul></div>");
-	 demo_block.add("</div>");
+         when_block.add("</ul></div>");
+         demo_block.add("</div>");
        }
 
       when_block.add("</div>");
@@ -610,7 +610,7 @@ private static class Parser2 {
       catch (IOException e) {}
     }
 
-}	// end of inner class Parser2
+}       // end of inner class Parser2
 
 
 
@@ -623,7 +623,7 @@ private static class Parser2 {
 
 
 
-}	// end of class BudaHelp
+}       // end of class BudaHelp
 
 
 

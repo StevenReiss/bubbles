@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconPackagePanel.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer package information viewer		*/
-/*										*/
+/*                                                                              */
+/*              BconPackagePanel.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer package information viewer           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -60,14 +60,14 @@ class BconPackagePanel implements BconConstants, BconConstants.BconPanel, BanalC
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		for_project;
-private String		for_package;
-private SwingGridPanel	package_panel;
+private String          for_project;
+private String          for_package;
+private SwingGridPanel  package_panel;
 private BconPackageDisplay graph_panel;
 private BconPackageGraph package_graph;
 
@@ -75,9 +75,9 @@ private BconPackageGraph package_graph;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconPackagePanel(String proj,String pkg)
@@ -115,15 +115,15 @@ BconPackagePanel(String proj,String pkg)
 
 
 
-@Override public void dispose() 			{ }
+@Override public void dispose()                         { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to build the graph model using current settings 		*/
-/*										*/
+/*                                                                              */
+/*      Methods to build the graph model using current settings                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void resetGraph()
@@ -135,19 +135,19 @@ private void resetGraph()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public JComponent getComponent()		{ return package_panel; }
+@Override public JComponent getComponent()              { return package_panel; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu methods								*/
-/*										*/
+/*                                                                              */
+/*      Menu methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -157,9 +157,9 @@ private void resetGraph()
 
 
 /********************************************************************************/
-/*										*/
-/*	Sizing methods								*/
-/*										*/
+/*                                                                              */
+/*      Sizing methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Sizer extends ComponentAdapter {
@@ -168,14 +168,14 @@ private final class Sizer extends ComponentAdapter {
       resetGraph();
     }
 
-}	// end of inner class Sizer
+}       // end of inner class Sizer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tab for node options							*/
-/*										*/
+/*                                                                              */
+/*      Tab for node options                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class NodeTab extends JPanel implements ActionListener {
@@ -210,8 +210,8 @@ private class NodeTab extends JPanel implements ActionListener {
       btn.addActionListener(new ClassAction(cty));
       btn.setToolTipText("Show " + nm.toLowerCase() + " types");
       if (nty != null) {
-	 Color c = BconPackageDisplay.getNodeColor(nty);
-	 if (c != null) btn.setForeground(c);
+         Color c = BconPackageDisplay.getNodeColor(nty);
+         if (c != null) btn.setForeground(c);
        }
       add(btn);
     }
@@ -222,11 +222,11 @@ private class NodeTab extends JPanel implements ActionListener {
 
       if (btn == null) ;
       else if (btn.equals("Show Labels")) {
-	 graph_panel.setShowLabels(ab.isSelected());
+         graph_panel.setShowLabels(ab.isSelected());
        }
     }
 
-}	// end of inner class NodeTab
+}       // end of inner class NodeTab
 
 
 
@@ -245,7 +245,7 @@ private class ClassAction implements ActionListener {
       resetGraph();
    }
 
-}	// end of inner class ClassAction
+}       // end of inner class ClassAction
 
 
 
@@ -253,9 +253,9 @@ private class ClassAction implements ActionListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Tab for edge options							*/
-/*										*/
+/*                                                                              */
+/*      Tab for edge options                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class EdgeTab extends JPanel implements ActionListener {
@@ -302,11 +302,11 @@ private class EdgeTab extends JPanel implements ActionListener {
 
       if (btn == null) ;
       else if (btn.equals("Show Labels")) {
-	 graph_panel.setShowArcLabels(ab.isSelected());
+         graph_panel.setShowArcLabels(ab.isSelected());
        }
     }
 
-}	// end of inner class EdgeTab
+}       // end of inner class EdgeTab
 
 
 
@@ -330,9 +330,9 @@ private class RelationAction implements ActionListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Tab for layout options							*/
-/*										*/
+/*                                                                              */
+/*      Tab for layout options                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class LayoutTab extends JPanel implements ActionListener {
@@ -367,7 +367,7 @@ private class LayoutTab extends JPanel implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
     }
 
-}	// end of inner class LayoutTab
+}       // end of inner class LayoutTab
 
 
 
@@ -383,21 +383,21 @@ private class LayoutAction implements ActionListener {
     @Override public void actionPerformed(ActionEvent e) {
        AbstractButton cbx = (AbstractButton) e.getSource();
        if (cbx.isSelected() && graph_panel.getLayoutType() != for_type) {
-	  graph_panel.setLayoutType(for_type);
-	  resetGraph();
-	}
+          graph_panel.setLayoutType(for_type);
+          resetGraph();
+        }
      }
 
-}	// end of inner class LayoutAction
+}       // end of inner class LayoutAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle typein filtering 							 */
-/*										*/
+/*                                                                              */
+/*      Handle typein filtering                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class FilterAction implements ActionListener {
@@ -410,21 +410,21 @@ private final class FilterAction implements ActionListener {
       if (args.length == 0) return;
       graph_panel.removeSelections();
       for (BconGraphNode gn : package_graph.getNodes()) {
-	 String nm = gn.getFullName();
-	 boolean fnd = true;
-	 for (String s : args) {
-	    if (nm.contains(s)) fnd = false;
-	  }
-	 if (fnd) graph_panel.addSelection(gn);
+         String nm = gn.getFullName();
+         boolean fnd = true;
+         for (String s : args) {
+            if (nm.contains(s)) fnd = false;
+          }
+         if (fnd) graph_panel.addSelection(gn);
        }
     }
 
 }
 
 /********************************************************************************/
-/*										*/
-/*     Class for bubble contents						*/
-/*										*/
+/*                                                                              */
+/*     Class for bubble contents                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private final class PackagePanel extends SwingGridPanel
@@ -432,7 +432,7 @@ private final class PackagePanel extends SwingGridPanel
    
    private static final long serialVersionUID = 1;
    
-   @Override public String getConfigurator()		{ return "BCON"; }
+   @Override public String getConfigurator()            { return "BCON"; }
 
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","PACKAGE");
@@ -446,7 +446,7 @@ private final class PackagePanel extends SwingGridPanel
 
 
 
-}	// end of class BconPackagePanel
+}       // end of class BconPackagePanel
 
 
 

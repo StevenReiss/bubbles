@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentDeadlock.java					*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data deadlock checking		*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentDeadlock.java                                       */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data deadlock checking            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,26 +44,26 @@ class BandaidAgentDeadlock extends BandaidAgent implements BandaidConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<LockNode,ThreadInfo>	thread_locks;
-private Map<ThreadInfo,LockNode>	thread_blocks;
-private List<Deadlock>			dead_locks;
-private Map<Long,Deadlock>		locked_threads;
-private int				check_counter;
+private Map<LockNode,ThreadInfo>        thread_locks;
+private Map<ThreadInfo,LockNode>        thread_blocks;
+private List<Deadlock>                  dead_locks;
+private Map<Long,Deadlock>              locked_threads;
+private int                             check_counter;
 
-private static int			check_every = 10;
+private static int                      check_every = 10;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentDeadlock(BandaidController bc) 
@@ -81,9 +81,9 @@ BandaidAgentDeadlock(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void handleThreadStack(long now,ThreadInfo ti,StackTraceElement [] trc)
@@ -100,14 +100,14 @@ BandaidAgentDeadlock(BandaidController bc)
 
    switch (ti.getThreadState()) {
       case BLOCKED :
-	 LockInfo ll = ti.getLockInfo();
-	 if (ll != null) {
-	    LockNode ln = new LockNode(ll);
-	    thread_blocks.put(ti,ln);
-	  }
-	 break;
+         LockInfo ll = ti.getLockInfo();
+         if (ll != null) {
+            LockNode ln = new LockNode(ll);
+            thread_blocks.put(ti,ln);
+          }
+         break;
       default:
-	 break;
+         break;
     }
 }
 
@@ -126,9 +126,9 @@ BandaidAgentDeadlock(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Analysis methods							*/
-/*										*/
+/*                                                                              */
+/*      Analysis methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void analyzeLocks()
@@ -145,20 +145,20 @@ private void analyzeLocks()
       cur.add(ti);
       LockNode ln = ent.getValue();
       while (ln != null) {
-	 ThreadInfo nti = thread_locks.get(ln);
-	 if (nti == null) break;
-	 if (cur.contains(nti)) {
-	    Deadlock dl = new Deadlock(cur);
-	    dead_locks.add(dl);
-	    for (ThreadInfo xi : cur) {
-	       locked_threads.put(xi.getThreadId(),dl);
-	     }
-	  }
-	 else {
-	    done.add(nti);
-	    cur.add(nti);
-	    ln = thread_blocks.get(nti);
-	  }
+         ThreadInfo nti = thread_locks.get(ln);
+         if (nti == null) break;
+         if (cur.contains(nti)) {
+            Deadlock dl = new Deadlock(cur);
+            dead_locks.add(dl);
+            for (ThreadInfo xi : cur) {
+               locked_threads.put(xi.getThreadId(),dl);
+             }
+          }
+         else {
+            done.add(nti);
+            cur.add(nti);
+            ln = thread_blocks.get(nti);
+          }
        }
     }
 }
@@ -167,9 +167,9 @@ private void analyzeLocks()
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void generateReport(BandaidXmlWriter xw,long now)
@@ -186,9 +186,9 @@ private void analyzeLocks()
 
 
 /********************************************************************************/
-/*										*/
-/*	Lock graph								*/
-/*										*/
+/*                                                                              */
+/*      Lock graph                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LockNode {
@@ -199,16 +199,16 @@ private static class LockNode {
       for_lock = li;
     }
 
-   @Override public int hashCode()		{ return for_lock.getIdentityHashCode(); }
+   @Override public int hashCode()              { return for_lock.getIdentityHashCode(); }
    @Override public boolean equals(Object o) {
       if (o instanceof LockNode) {
-	 LockNode ln = (LockNode) o;
-	 return ln.for_lock.getIdentityHashCode() == for_lock.getIdentityHashCode();
+         LockNode ln = (LockNode) o;
+         return ln.for_lock.getIdentityHashCode() == for_lock.getIdentityHashCode();
        }
       return false;
     }
 
-}	// end of inner class LockNode
+}       // end of inner class LockNode
 
 
 
@@ -219,27 +219,27 @@ private static class Deadlock {
    Deadlock(Set<ThreadInfo> cur) {
       lock_set = new LinkedHashMap<ThreadInfo,String>();
       for (ThreadInfo ti : cur) {
-	 lock_set.put(ti,ti.getLockName());
+         lock_set.put(ti,ti.getLockName());
        }
     }
 
    void outputXml(BandaidXmlWriter xw) {
       xw.begin("DEADLOCK");
       for (Map.Entry<ThreadInfo,String> ent : lock_set.entrySet()) {
-	 xw.begin("THREAD");
-	 xw.field("NAME",ent.getKey().getThreadName());
-	 xw.field("ID",ent.getKey().getThreadId());
-	 xw.field("LOCK",ent.getValue());
-	 xw.end();
+         xw.begin("THREAD");
+         xw.field("NAME",ent.getKey().getThreadName());
+         xw.field("ID",ent.getKey().getThreadId());
+         xw.field("LOCK",ent.getValue());
+         xw.end();
        }
       xw.end();
     }
 
-}	// end of inner class Deadlock
+}       // end of inner class Deadlock
 
 
 
-}	// end of class BandaidAgentDeadlock
+}       // end of class BandaidAgentDeadlock
 
 
 

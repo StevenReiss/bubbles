@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaLoginBubble.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaLoginBubble.java                                            */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -68,22 +68,22 @@ public class BgtaLoginBubble extends BudaBubble implements BgtaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Vector<BgtaManager>	       manager_list;
-private JButton 		       sub_button;
-private JButton 		       logout_button;
-private JTextField		       user_field;
-private JPasswordField		       pass_field;
-private JLabel			       server_field;
-private JLabel			       error_label;
-private BgtaRepository		       my_repository;
-private BgtaLoginName		       my_name;
-private ChatServer		       selected_server;
-private boolean 		       rem_user;
+private Vector<BgtaManager>            manager_list;
+private JButton                        sub_button;
+private JButton                        logout_button;
+private JTextField                     user_field;
+private JPasswordField                 pass_field;
+private JLabel                         server_field;
+private JLabel                         error_label;
+private BgtaRepository                 my_repository;
+private BgtaLoginName                  my_name;
+private ChatServer                     selected_server;
+private boolean                        rem_user;
 private static Collection<BgtaManager> all_managers;
 
 private static final long   serialVersionUID = 1L;
@@ -93,9 +93,9 @@ static {
 }
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaLoginBubble(Vector<BgtaManager> mans,BgtaRepository repo,BgtaLoginName name)
@@ -104,8 +104,8 @@ BgtaLoginBubble(Vector<BgtaManager> mans,BgtaRepository repo,BgtaLoginName name)
    manager_list = mans;
    if (!all_managers.containsAll(mans)) {
       for (BgtaManager man : mans) {
-	 if (!all_managers.contains(man))
-	    all_managers.add(man);
+         if (!all_managers.contains(man))
+            all_managers.add(man);
        }
     }
    my_repository = repo;
@@ -141,7 +141,7 @@ BgtaLoginBubble(Vector<BgtaManager> mans,BgtaRepository repo,BgtaLoginName name)
    String[] serverStrings = new String[servers];
    servers = 0;
    for (ChatServer server : ChatServer.values()) {
-	serverStrings[servers++] = server.selector();
+        serverStrings[servers++] = server.selector();
    }
    JComboBox<String> serverchoice = new JComboBox<String>(serverStrings);
    serverchoice.setFont(BoardFont.getFont(serverchoice.getFont().getFontName(),Font.PLAIN,10));
@@ -225,9 +225,9 @@ public void setErrorMessage(String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble management methods						*/
-/*										*/
+/*                                                                              */
+/*      Bubble management methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void removeBubble()
@@ -262,28 +262,28 @@ void removeBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Interaction Listeners							*/
-/*										*/
+/*                                                                              */
+/*      Interaction Listeners                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private final class LogoutListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
-	  // attempt to log out of the chosen server
+          // attempt to log out of the chosen server
       String username = user_field.getText();
       String servername = selected_server.server();
       if (selected_server.hasEnding() && !username.contains(selected_server.ending()))
-	username += selected_server.ending();
+        username += selected_server.ending();
       if (BgtaFactory.logoutAccount(username,servername)) removeBubble();
       // if not logged in in the first place, display a message saying so
       else {
-	 error_label.setText("You weren't logged in yet.");
-	 error_label.setVisible(true);
+         error_label.setText("You weren't logged in yet.");
+         error_label.setVisible(true);
        }
     }
 
-}	// end of inner class LogoutListener
+}       // end of inner class LogoutListener
 
 
 private final class RememberListener implements ItemListener {
@@ -292,7 +292,7 @@ private final class RememberListener implements ItemListener {
       rem_user = !rem_user;
     }
 
-}	// end of inner class RememberListener
+}       // end of inner class RememberListener
 
 
 private final class LoginListener implements ActionListener {
@@ -312,7 +312,7 @@ private final class LoginListener implements ActionListener {
                username += selected_server.ending();
             for (BgtaManager man : all_managers) {
                if (man.propertiesMatch(username,selected_server.server()) &&
-        	  man.getPassword().equals(password)) {
+                  man.getPassword().equals(password)) {
                   newman = man;
                   putin = false;
                 }
@@ -353,7 +353,7 @@ private final class LoginListener implements ActionListener {
        }
     }
 
-}	// end of inner class LoginListener
+}       // end of inner class LoginListener
 
 
 private final class EnterListener implements ActionListener {
@@ -366,14 +366,14 @@ private final class EnterListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (next_field != null) {
-	 next_field.requestFocusInWindow();
+         next_field.requestFocusInWindow();
        }
       else {
-	 sub_button.doClick();
+         sub_button.doClick();
        }
     }
 
-}	// end of inner class EnterListener
+}       // end of inner class EnterListener
 
 
 private static final class FocusSelectionListener extends FocusAdapter {
@@ -392,9 +392,9 @@ private static final class FocusSelectionListener extends FocusAdapter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Login panel implementation						*/
-/*										*/
+/*                                                                              */
+/*      Login panel implementation                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LoginPanel extends JPanel implements BgtaConstants {
@@ -419,14 +419,14 @@ private static class LoginPanel extends JPanel implements BgtaConstants {
       super.paintComponent(g);
     }
 
-}	// end of inner class LoginPanel
+}       // end of inner class LoginPanel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Server listener 							*/
-/*										*/
+/*                                                                              */
+/*      Server listener                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ServerListener implements ActionListener {
@@ -458,7 +458,7 @@ private final class ServerListener implements ActionListener {
 
 
 
-}	// end of class BgtaLoginBubble
+}       // end of class BgtaLoginBubble
 
 
 

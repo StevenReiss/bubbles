@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocConfigurator.java						*/
-/*										*/
-/*	Bubbles Environment Documentation configurator for creating bubbles	*/
-/*										*/
+/*                                                                              */
+/*              BdocConfigurator.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Documentation configurator for creating bubbles     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -46,9 +46,9 @@ class BdocConfigurator implements BdocConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -84,7 +84,7 @@ class BdocConfigurator implements BdocConstants, BudaConstants.BubbleConfigurato
 
 
 
-}	// end of class BdocConfigurator
+}       // end of class BdocConfigurator
 
 
 

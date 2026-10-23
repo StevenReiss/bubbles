@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugCommand.java 					*/
-/*										*/
-/*	Command to send to the debugger 					*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugCommand.java                                         */
+/*                                                                              */
+/*      Command to send to the debugger                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -35,20 +35,20 @@ abstract class NobaseDebugCommand implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private int	sequence_number;
-private String	wire_name;
+private int     sequence_number;
+private String  wire_name;
 private NobaseDebugResponse response_object;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected NobaseDebugCommand(NobaseDebugTarget tgt,String cmd)
@@ -61,12 +61,12 @@ protected NobaseDebugCommand(NobaseDebugTarget tgt,String cmd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-int getSequence()			{ return sequence_number; }
+int getSequence()                       { return sequence_number; }
 
 String getOutgoing()
 {
@@ -111,10 +111,10 @@ NobaseDebugResponse getResponse()
 {
    synchronized (this) {
       while (response_object == null) {
-	 try {
-	    wait(1000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(1000);
+          }
+         catch (InterruptedException e) { }
        }
     }
    return response_object;
@@ -123,9 +123,9 @@ NobaseDebugResponse getResponse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								 */
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static JSONObject createLocation(String file,int line)
@@ -153,15 +153,15 @@ private static JSONObject createValue(String val)
 
 
 /********************************************************************************/
-/*										*/
-/*	V8 Chrome Debug Commands						*/
-/*										*/
+/*                                                                              */
+/*      V8 Chrome Debug Commands                                                */
+/*                                                                              */
 /********************************************************************************/
 
 
 //
-//	CONTINUE TO LOCATION
-//		Continues execution until specific lcoaiton is reached
+//      CONTINUE TO LOCATION
+//              Continues execution until specific lcoaiton is reached
 //
 
 static class ContinueToLocation extends NobaseDebugCommand {
@@ -184,13 +184,13 @@ static class ContinueToLocation extends NobaseDebugCommand {
       return rslt;
     }
 
-}	// end of inner class ContinueToLocation
+}       // end of inner class ContinueToLocation
 
 
 
 //
-//	DISABLE
-//		Disables debugger for given page
+//      DISABLE
+//              Disables debugger for given page
 //
 
 static class Disable extends NobaseDebugCommand {
@@ -199,15 +199,15 @@ static class Disable extends NobaseDebugCommand {
       super(tgt,"disable");
     }
 
-}	// end of inner class Disable
+}       // end of inner class Disable
 
 
 
 //
-//	ENABLE
-//		Enables debugger for the given page. Clients should not assume that
-//		the debugging has been enabled until the result for this command
-//		is received
+//      ENABLE
+//              Enables debugger for the given page. Clients should not assume that
+//              the debugging has been enabled until the result for this command
+//              is received
 //
 
 static class Enable extends NobaseDebugCommand {
@@ -216,13 +216,13 @@ static class Enable extends NobaseDebugCommand {
       super(tgt,"enable");
     }
 
-}	// end of inner class Enable
+}       // end of inner class Enable
 
 
 
 //
-//	EVALUATE ON CALL FRAME
-//		Evaluates expression on a given call frame
+//      EVALUATE ON CALL FRAME
+//              Evaluates expression on a given call frame
 //
 
 static class EvaluateOnCallFrame extends NobaseDebugCommand {
@@ -232,7 +232,7 @@ static class EvaluateOnCallFrame extends NobaseDebugCommand {
    private long eval_timeout;
 
    EvaluateOnCallFrame(NobaseDebugTarget tgt,int frameid,String expr,boolean silent,
-	 long timeout) {
+         long timeout) {
       super(tgt,"evaluateOnCallFrame");
       frame_id = frameid;
       eval_expression = expr;
@@ -246,19 +246,19 @@ static class EvaluateOnCallFrame extends NobaseDebugCommand {
       rslt.put("expression",eval_expression);
       rslt.put("silent",is_silent);
       if (eval_timeout > 0) {
-	 rslt.put("timeout",eval_timeout);
+         rslt.put("timeout",eval_timeout);
        }
       return rslt;
     }
 
-}	// end of inner class EvaluateOnCallFrame
+}       // end of inner class EvaluateOnCallFrame
 
 
 
 //
 // GET POSSIBLE BREAKPOINTS
-//		Returns possible locaions for breakpoint. sciprtId in start and
-//		end range locations should be the same
+//              Returns possible locaions for breakpoint. sciprtId in start and
+//              end range locations should be the same
 //
 
 static class GetPossibleBreakpoints extends NobaseDebugCommand {
@@ -279,13 +279,13 @@ static class GetPossibleBreakpoints extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class GetPossibleBreakpoints
+}       // end of inner class GetPossibleBreakpoints
 
 
 
 //
-//	GET SCRIPT SOURCE
-//		Returns source for the script given id
+//      GET SCRIPT SOURCE
+//              Returns source for the script given id
 //
 
 static class GetScriptSource extends NobaseDebugCommand {
@@ -303,13 +303,13 @@ static class GetScriptSource extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class GetScriptSources
+}       // end of inner class GetScriptSources
 
 
 
 //
-//	GET STACK TRACE
-//		Returns stack trace with given stackFrameId
+//      GET STACK TRACE
+//              Returns stack trace with given stackFrameId
 //
 
 static class GetStackTrace extends NobaseDebugCommand {
@@ -327,13 +327,13 @@ static class GetStackTrace extends NobaseDebugCommand {
       return rslt;
     }
 
-}	// end of inner class GetStackTrace
+}       // end of inner class GetStackTrace
 
 
 
 //
-//	PAUSE
-//		Stops on the next JavaScript statement
+//      PAUSE
+//              Stops on the next JavaScript statement
 //
 
 static class Pause extends NobaseDebugCommand {
@@ -342,13 +342,13 @@ static class Pause extends NobaseDebugCommand {
       super(tgt,"pause");
     }
 
-}	// end of inner class Pause
+}       // end of inner class Pause
 
 
 
 //
-//	REMOVE BREAKPOINT
-//		Removes JavaScript breakpoint
+//      REMOVE BREAKPOINT
+//              Removes JavaScript breakpoint
 //
 
 static class RemoveBreakpoint extends NobaseDebugCommand {
@@ -366,13 +366,13 @@ static class RemoveBreakpoint extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RemoveBreakpoint
+}       // end of inner class RemoveBreakpoint
 
 
 
 //
-//	RESTART FRAME
-//		Restarts particular call frame from the beginning
+//      RESTART FRAME
+//              Restarts particular call frame from the beginning
 //
 
 static class RestartFrame extends NobaseDebugCommand {
@@ -390,13 +390,13 @@ static class RestartFrame extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RestartFrame
+}       // end of inner class RestartFrame
 
 
 
 //
-//	RESUME
-//		Resumes JavaScript execution
+//      RESUME
+//              Resumes JavaScript execution
 //
 
 static class Resume extends NobaseDebugCommand {
@@ -405,13 +405,13 @@ static class Resume extends NobaseDebugCommand {
       super(tgt,"resume");
     }
 
-}	// end of inner class Resume
+}       // end of inner class Resume
 
 
 
 //
-//	SEARCH IN CONTENT
-//		Searches for given string in script content
+//      SEARCH IN CONTENT
+//              Searches for given string in script content
 //
 
 static class SearchInContent extends NobaseDebugCommand {
@@ -438,13 +438,13 @@ static class SearchInContent extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SearchInContent
+}       // end of inner class SearchInContent
 
 
 
 //
-//	SET ASYNC CALL STACK DEPTH
-//		Enables or disables async call stacks tracking
+//      SET ASYNC CALL STACK DEPTH
+//              Enables or disables async call stacks tracking
 //
 
 static class SetAsyncCallStackDepth extends NobaseDebugCommand {
@@ -462,13 +462,13 @@ static class SetAsyncCallStackDepth extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetAsyncCallStackDepth
+}       // end of inner class SetAsyncCallStackDepth
 
 
 
 //
-//	SET BREAKPOINTS ACTIVE
-//		Activates / deactivates all breakpoints on the page
+//      SET BREAKPOINTS ACTIVE
+//              Activates / deactivates all breakpoints on the page
 //
 
 static class SetBreakpointsActive extends NobaseDebugCommand {
@@ -486,14 +486,14 @@ static class SetBreakpointsActive extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetBreakpointsActive
+}       // end of inner class SetBreakpointsActive
 
 
 
 
 //
-//	SET LINE BREAKPOINT
-//		Sets JavaScript breakpoint at a given location
+//      SET LINE BREAKPOINT
+//              Sets JavaScript breakpoint at a given location
 //
 
 static class SetLineBreakpoint extends NobaseDebugCommand {
@@ -513,18 +513,18 @@ static class SetLineBreakpoint extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetLineBreakpoint
+}       // end of inner class SetLineBreakpoint
 
 
 
 //
-//	SET URL BREAKPOINT
-//		Sets JavaScript breakpoint at given location specified by URL or
-//		URL REGEX.  Once this command is issued, all existing parsed scripts
-//		will have breakpoints resolved and returned in `locations` property.
-//		Further matching script parsing will result in subsequent
-//		`breakpointResolved` events issued.  This logical breakpoint will
-//		survive page reloads.
+//      SET URL BREAKPOINT
+//              Sets JavaScript breakpoint at given location specified by URL or
+//              URL REGEX.  Once this command is issued, all existing parsed scripts
+//              will have breakpoints resolved and returned in `locations` property.
+//              Further matching script parsing will result in subsequent
+//              `breakpointResolved` events issued.  This logical breakpoint will
+//              survive page reloads.
 //
 
 static class SetUrlBreakpoint extends NobaseDebugCommand {
@@ -545,15 +545,15 @@ static class SetUrlBreakpoint extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetUrlBreakpoint
+}       // end of inner class SetUrlBreakpoint
 
 
 
 //
-//	SET PAUSE ON EXCEPTIONS
-//		Defines pause on exceptions state.  Can be set to stop on all
-//		exceptions, uncaught exceptions, or no exceptions.  Initial puase
-//		on exceptions state is `none`.
+//      SET PAUSE ON EXCEPTIONS
+//              Defines pause on exceptions state.  Can be set to stop on all
+//              exceptions, uncaught exceptions, or no exceptions.  Initial puase
+//              on exceptions state is `none`.
 //
 
 static class SetPauseOnExceptions extends NobaseDebugCommand {
@@ -573,13 +573,13 @@ static class SetPauseOnExceptions extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetPauseOnExceptions
+}       // end of inner class SetPauseOnExceptions
 
 
 
 //
-//	SET SCRIPT SOURCE
-//		Edits JavaScript source live
+//      SET SCRIPT SOURCE
+//              Edits JavaScript source live
 //
 
 static class SetScriptSource extends NobaseDebugCommand {
@@ -600,14 +600,14 @@ static class SetScriptSource extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetScriptSource
+}       // end of inner class SetScriptSource
 
 
 
 //
-//	SET SKIP ALL PAUSES
-//		Makes page not interrupt on any pauses (breakpoint, exception, dom
-//		exception, etc.
+//      SET SKIP ALL PAUSES
+//              Makes page not interrupt on any pauses (breakpoint, exception, dom
+//              exception, etc.
 //
 
 static class SetSkipAllPauses extends NobaseDebugCommand {
@@ -616,14 +616,14 @@ static class SetSkipAllPauses extends NobaseDebugCommand {
       super(tgt,"setSkipAllPauses");
     }
 
-}	// end of inner class SetSkipAllPauses
+}       // end of inner class SetSkipAllPauses
 
 
 
 //
-//	SET VARIABLE VALUE
-//		Changes value of a variable in a callframe.  Object-based scopes are
-//		not supported and must be mutated manually
+//      SET VARIABLE VALUE
+//              Changes value of a variable in a callframe.  Object-based scopes are
+//              not supported and must be mutated manually
 //
 
 static class SetVariableValue extends NobaseDebugCommand {
@@ -650,14 +650,14 @@ static class SetVariableValue extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class SetVariableValue
+}       // end of inner class SetVariableValue
 
 
 
 
 //
-//	STEP INTO
-//		Steps into the function call
+//      STEP INTO
+//              Steps into the function call
 //
 
 static class StepInto extends NobaseDebugCommand {
@@ -666,13 +666,13 @@ static class StepInto extends NobaseDebugCommand {
       super(tgt,"stepInto");
     }
 
-}	// end of inner class StepInto
+}       // end of inner class StepInto
 
 
 
 //
-//	STEP OUT
-//		Steps out of the function call
+//      STEP OUT
+//              Steps out of the function call
 //
 
 static class StepOut extends NobaseDebugCommand {
@@ -681,13 +681,13 @@ static class StepOut extends NobaseDebugCommand {
       super(tgt,"stepOut");
     }
 
-}	// end of inner class StepOut
+}       // end of inner class StepOut
 
 
 
 //
-//	STEP OVER
-//		Steps over the statement
+//      STEP OVER
+//              Steps over the statement
 //
 
 static class StepOver extends NobaseDebugCommand {
@@ -696,19 +696,19 @@ static class StepOver extends NobaseDebugCommand {
       super(tgt,"stepOver");
     }
 
-}	// end of inner class StepOver
+}       // end of inner class StepOver
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Profiler commands							*/
-/*										*/
+/*                                                                              */
+/*      Profiler commands                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 //
-//	DISABLE
+//      DISABLE
 //
 
 static class ProfilerDisable extends NobaseDebugCommand {
@@ -717,12 +717,12 @@ static class ProfilerDisable extends NobaseDebugCommand {
       super(tgt,"Profiler.disable");
     }
 
-}	// end of inner class ProfilerDisable
+}       // end of inner class ProfilerDisable
 
 
 
 //
-//	ENABLE
+//      ENABLE
 //
 
 static class ProfilerEnable extends NobaseDebugCommand {
@@ -731,20 +731,20 @@ static class ProfilerEnable extends NobaseDebugCommand {
       super(tgt,"Profiler.enable");
     }
 
-}	// end of inner class ProfilerEnable
+}       // end of inner class ProfilerEnable
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Runtime commands							*/
-/*										*/
+/*                                                                              */
+/*      Runtime commands                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 //
-//	RuntimeCallFunctionOn
-//		Calls functions with given declaration ont he given object.  Object
-//		group of the result is inherite from the target object
+//      RuntimeCallFunctionOn
+//              Calls functions with given declaration ont he given object.  Object
+//              group of the result is inherite from the target object
 //
 
 static class RuntimeCallFunctionOn extends NobaseDebugCommand {
@@ -755,7 +755,7 @@ static class RuntimeCallFunctionOn extends NobaseDebugCommand {
    private boolean is_silent;
 
    RuntimeCallFunctionOn(NobaseDebugTarget tgt,String fct,String objid,
-	 List<String> args,boolean silent) {
+         List<String> args,boolean silent) {
       super(tgt,"Runtime.callFunctionOn");
       function_name = fct;
       object_id = objid;
@@ -770,20 +770,20 @@ static class RuntimeCallFunctionOn extends NobaseDebugCommand {
       if (object_id != null) obj.put("objectId",object_id);
       JSONArray args = new JSONArray();
       for (int i = 0; i < arg_values.size(); ++i) {
-	 args.put(i,createValue(arg_values.get(i)));
+         args.put(i,createValue(arg_values.get(i)));
        }
       obj.put("arguments",args);
       obj.put("silent",is_silent);
       return obj;
     }
 
-}	// end of inner class RuntimeCallFunctionOn
+}       // end of inner class RuntimeCallFunctionOn
 
 
 
 //
-//	COMPILE SCRIPT
-//		Compiles expression
+//      COMPILE SCRIPT
+//              Compiles expression
 //
 
 static class RuntimeCompileScript extends NobaseDebugCommand {
@@ -807,13 +807,13 @@ static class RuntimeCompileScript extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RuntimeCompileScript
+}       // end of inner class RuntimeCompileScript
 
 
 
 //
-//	RUNTIME DISABLE
-//		Disables reporting of execution contexts creation
+//      RUNTIME DISABLE
+//              Disables reporting of execution contexts creation
 //
 
 static class RuntimeDisable extends NobaseDebugCommand {
@@ -822,13 +822,13 @@ static class RuntimeDisable extends NobaseDebugCommand {
       super(tgt,"Runtime.disable");
     }
 
-}	// end of inner class RuntimeDisable
+}       // end of inner class RuntimeDisable
 
 
 
 //
-//	RUNTIME DISCARD CONSOLE ENTRIES
-//		Discards collected exceptions and console API calls
+//      RUNTIME DISCARD CONSOLE ENTRIES
+//              Discards collected exceptions and console API calls
 //
 
 static class RuntimeDiscardConsoleEntries extends NobaseDebugCommand {
@@ -837,14 +837,14 @@ static class RuntimeDiscardConsoleEntries extends NobaseDebugCommand {
       super(tgt,"Runtime.discardConsoleEntries");
     }
 
-}	// end of inner class RuntimeDiscardConsolEntries
+}       // end of inner class RuntimeDiscardConsolEntries
 
 
 
 //
-//	RUNTIME ENABLE
-//		Enables eporting of execution contexts creation by means of
-//		`executionContexCreated` events
+//      RUNTIME ENABLE
+//              Enables eporting of execution contexts creation by means of
+//              `executionContexCreated` events
 //
 
 static class RuntimeEnable extends NobaseDebugCommand {
@@ -853,13 +853,13 @@ static class RuntimeEnable extends NobaseDebugCommand {
       super(tgt,"Runtime.enable");
     }
 
-}	// end of inner class RuntimeEnable
+}       // end of inner class RuntimeEnable
 
 
 
 //
-//	RUNTIME EVALUATE
-//		Evaluates expression on global object
+//      RUNTIME EVALUATE
+//              Evaluates expression on global object
 //
 
 static class RuntimeEvaluate extends NobaseDebugCommand {
@@ -883,14 +883,14 @@ static class RuntimeEvaluate extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RuntimeEvaluate
+}       // end of inner class RuntimeEvaluate
 
 
 
 //
-//	RUNTIME GET PROPERTIES
-//		Returns properties of a given object.  Object group of the result is
-//		inherited from the target
+//      RUNTIME GET PROPERTIES
+//              Returns properties of a given object.  Object group of the result is
+//              inherited from the target
 //
 
 static class RuntimeGetProperties extends NobaseDebugCommand {
@@ -911,13 +911,13 @@ static class RuntimeGetProperties extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RuntimeGetProperties
+}       // end of inner class RuntimeGetProperties
 
 
 
 //
-//	RUNTIME GLOBAL LEXCIAL SCOPE NAMES
-//		Returns all let, const and class varialbles from global scope
+//      RUNTIME GLOBAL LEXCIAL SCOPE NAMES
+//              Returns all let, const and class varialbles from global scope
 //
 
 static class RuntimeGlobalLexicalScopeNames extends NobaseDebugCommand {
@@ -926,13 +926,13 @@ static class RuntimeGlobalLexicalScopeNames extends NobaseDebugCommand {
       super(tgt,"Runtime.globalLexicalScopeNames");
     }
 
-}	// end of inner class RuntimeGlobalLexicalScopeNames
+}       // end of inner class RuntimeGlobalLexicalScopeNames
 
 
 
 
 //
-//	RUNTIME QUERY OBJECTS
+//      RUNTIME QUERY OBJECTS
 //
 
 static class RuntimeQueryObjects extends NobaseDebugCommand {
@@ -950,12 +950,12 @@ static class RuntimeQueryObjects extends NobaseDebugCommand {
       return obj;
     }
 
-}	// end of inner class RuntimeQueryObjects
+}       // end of inner class RuntimeQueryObjects
 
 
 
 //
-//	RUNTIME RUN IF WAITING FOR DEBUGGER
+//      RUNTIME RUN IF WAITING FOR DEBUGGER
 //
 
 static class RuntimeRunIfWaitingForDebugger extends NobaseDebugCommand {
@@ -964,12 +964,12 @@ static class RuntimeRunIfWaitingForDebugger extends NobaseDebugCommand {
       super(tgt,"Runtime.runIfWaitingForDebugger");
     }
 
-}	// end of inner class RuntimeRunIfWaitingForDebugger
+}       // end of inner class RuntimeRunIfWaitingForDebugger
 
 
 
 
-}	// end of class NobaseDebugCommand
+}       // end of class NobaseDebugCommand
 
 
 

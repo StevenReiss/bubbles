@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BeamConfigurator.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items bubble configurator	*/
-/*										*/
+/*                                                                              */
+/*              BeamConfigurator.java                                           */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items bubble configurator       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -48,9 +48,9 @@ class BeamConfigurator implements BeamConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -66,8 +66,8 @@ class BeamConfigurator implements BeamConstants, BudaConstants.BubbleConfigurato
       BeamNoteAnnotation annot = null;
       Element anx = IvyXml.getChild(cnt,"ANNOT");
       if (anx != null) {
-	 annot = new BeamNoteAnnotation(anx);
-	 if (annot.getDocumentOffset() < 0) annot = null;
+         annot = new BeamNoteAnnotation(anx);
+         if (annot.getDocumentOffset() < 0) annot = null;
        }
       BeamNoteBubble nbb = new BeamNoteBubble(name,cnts,annot);
       bb = nbb;
@@ -116,7 +116,7 @@ class BeamConfigurator implements BeamConstants, BudaConstants.BubbleConfigurato
 
 
 
-}	// end of class BeamConfigurator
+}       // end of class BeamConfigurator
 
 
 

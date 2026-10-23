@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynEventTrace.java						*/
-/*										*/
-/*	Hold event trace for current run					*/
-/*										*/
+/*                                                                              */
+/*              BdynEventTrace.java                                             */
+/*                                                                              */
+/*      Hold event trace for current run                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -51,26 +51,26 @@ class BdynEventTrace implements BdynConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpProcess	for_process;
-private ThreadData	current_thread;
+private BumpProcess     for_process;
+private ThreadData      current_thread;
 private PriorityQueue<TraceEntry> pending_entries;
 private List<TraceEntry> thread_entries;
 private Map<Integer,ThreadData> thread_map;
-private long		next_time;
-private Boolean 	cpu_time;
-private int		thread_counter;
-private int		task_counter;
-private BdynFactory	bdyn_factory;
+private long            next_time;
+private Boolean         cpu_time;
+private int             thread_counter;
+private int             task_counter;
+private BdynFactory     bdyn_factory;
 private Map<Integer,OutputTask> object_tasks;
-private OutputTask	dummy_task;
+private OutputTask      dummy_task;
 private SortedSet<OutputEntry> output_set;
-private long		end_time;
-private long		max_delta;
+private long            end_time;
+private long            max_delta;
 private SortedSet<ThreadData> active_threads;
 private SwingEventListenerList<BdynEventUpdater> update_listeners;
 private SortedSet<Long> time_marks;
@@ -88,9 +88,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdynEventTrace(BumpProcess bp)
@@ -118,9 +118,9 @@ BdynEventTrace(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addUpdateListener(BdynEventUpdater up)
@@ -159,7 +159,7 @@ List<BdynEntryThread> getActiveThreads()
 }
 
 
-BumpProcess getProcess()		{ return for_process; }
+BumpProcess getProcess()                { return for_process; }
 
 
 Set<Long> getTimeMarks()
@@ -193,14 +193,14 @@ void addTimeMark(long when)
 }
 
 
-Iterator<Long> getTimeMarkIterator()		{ return time_marks.iterator(); }
+Iterator<Long> getTimeMarkIterator()            { return time_marks.iterator(); }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Trace creation methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void addEntry(String s)
@@ -211,78 +211,78 @@ void addEntry(String s)
    char s0 = s.charAt(0);
    if (s0 == 'T') {                             // THREAD
       if (thread_entries != null) {
-	 for (TraceEntry te : thread_entries) pending_entries.add(te);
-	 thread_entries = null;
+         for (TraceEntry te : thread_entries) pending_entries.add(te);
+         thread_entries = null;
        }
       StringTokenizer tok = new StringTokenizer(s);
       tok.nextToken();
       int id = Integer.parseInt(tok.nextToken());
       current_thread = thread_map.get(id);
       if (current_thread == null) {
-	 int tid = Integer.parseInt(tok.nextToken());
-	 String tnm = tok.nextToken("\n");
-	 current_thread = new ThreadData(++thread_counter,tid,tnm);
-	 thread_map.put(id,current_thread);
+         int tid = Integer.parseInt(tok.nextToken());
+         String tnm = tok.nextToken("\n");
+         current_thread = new ThreadData(++thread_counter,tid,tnm);
+         thread_map.put(id,current_thread);
        }
       thread_entries = new ArrayList<TraceEntry>();
     }
    else if (s0 == 'D') {                        // DONE
       if (trace_writer != null) trace_writer.flush();
       if (thread_entries != null) {
-	 for (TraceEntry te : thread_entries) pending_entries.add(te);
-	 thread_entries = null;
+         for (TraceEntry te : thread_entries) pending_entries.add(te);
+         thread_entries = null;
        }
       StringTokenizer tok = new StringTokenizer(s);
       tok.nextToken();
       long time = Long.parseLong(tok.nextToken());
       if (next_time != 0) {
-	 int ct = 0;
-	 // System.err.println("TRACE: Pending size = " + pending_entries.size());
-	 while (!pending_entries.isEmpty() && pending_entries.peek().getTime() < next_time) {
-	    TraceEntry te = pending_entries.remove();
-	    ++ct;
-	    outputEntry(te);
-	  }
-	 if (ct > 0) {
-	    for (BdynEventUpdater eu : update_listeners) {
-	       eu.eventsAdded();
-	     }
-	  }
-	 end_time = Math.max(next_time,end_time);
+         int ct = 0;
+         // System.err.println("TRACE: Pending size = " + pending_entries.size());
+         while (!pending_entries.isEmpty() && pending_entries.peek().getTime() < next_time) {
+            TraceEntry te = pending_entries.remove();
+            ++ct;
+            outputEntry(te);
+          }
+         if (ct > 0) {
+            for (BdynEventUpdater eu : update_listeners) {
+               eu.eventsAdded();
+             }
+          }
+         end_time = Math.max(next_time,end_time);
        }
       next_time = time;
     }
    else if (s0 == 'S') {
       if (cpu_time == null) {
-	 StringTokenizer tok = new StringTokenizer(s);
-	 tok.nextToken();
-	 cpu_time = Boolean.parseBoolean(tok.nextToken());
+         StringTokenizer tok = new StringTokenizer(s);
+         tok.nextToken();
+         cpu_time = Boolean.parseBoolean(tok.nextToken());
        }
     }
    else if (cpu_time != null) {
       TraceEntry te = new TraceEntry(s,current_thread,cpu_time);
       if (thread_entries == null) pending_entries.add(te);
       else {
-	 thread_entries.add(te);
-	 if (te.isExit()) {
-	    int sz = thread_entries.size();
-	    int loc = te.getEntryLocation();
-	    if (sz >= 4) {
-	       TraceEntry t3 = thread_entries.get(sz-2);
-	       if (!t3.isExit() && t3.getEntryLocation() == loc) {
-		  TraceEntry t2 = thread_entries.get(sz-3);
-		  if (t2.isExit() && t2.getEntryLocation() == loc) {
-		     TraceEntry t1 = thread_entries.get(sz-4);
-		     if (!t1.isExit() && t1.getEntryLocation() == loc &&
-			   (te.getTime() - t1.getTime()) < MERGE_TIME) {
-			t1.merge(t2.getTime(),t3.getTime(),te.getTime());
-			thread_entries.remove(sz-2);
-			thread_entries.remove(sz-3);
-		      }
-		   }
-		}
-	     }
-	  }
+         thread_entries.add(te);
+         if (te.isExit()) {
+            int sz = thread_entries.size();
+            int loc = te.getEntryLocation();
+            if (sz >= 4) {
+               TraceEntry t3 = thread_entries.get(sz-2);
+               if (!t3.isExit() && t3.getEntryLocation() == loc) {
+                  TraceEntry t2 = thread_entries.get(sz-3);
+                  if (t2.isExit() && t2.getEntryLocation() == loc) {
+                     TraceEntry t1 = thread_entries.get(sz-4);
+                     if (!t1.isExit() && t1.getEntryLocation() == loc &&
+                           (te.getTime() - t1.getTime()) < MERGE_TIME) {
+                        t1.merge(t2.getTime(),t3.getTime(),te.getTime());
+                        thread_entries.remove(sz-2);
+                        thread_entries.remove(sz-3);
+                      }
+                   }
+                }
+             }
+          }
        }
     }
 }
@@ -305,10 +305,10 @@ private void outputEntry(TraceEntry te)
       if (ot.isMainTask() && !BdynFactory.getOptions().useMainTask()) return;
       int i0 = te.getObject1();
       if (i0 != 0) {
-	 // System.err.println("ASSOC TASK " + i0 + " " + te.getObject2() + " " + ot.getTaskRoot().getDisplayName());
-	 OutputTask ot1 = object_tasks.get(i0);
-	 if (ot1 == null) object_tasks.put(i0,ot);
-	 else if (ot1 != dummy_task && ot1 != ot) object_tasks.put(i0,dummy_task);
+         // System.err.println("ASSOC TASK " + i0 + " " + te.getObject2() + " " + ot.getTaskRoot().getDisplayName());
+         OutputTask ot1 = object_tasks.get(i0);
+         if (ot1 == null) object_tasks.put(i0,ot);
+         else if (ot1 != dummy_task && ot1 != ot) object_tasks.put(i0,dummy_task);
        }
       return;
     }
@@ -320,9 +320,9 @@ private void outputEntry(TraceEntry te)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for accessing output data					*/
-/*										*/
+/*                                                                              */
+/*      Methods for accessing output data                                       */
+/*                                                                              */
 /********************************************************************************/
 
 BdynRangeSet getRange(long t0,long t1)
@@ -350,10 +350,10 @@ private BdynRangeSet pruneRange(BdynRangeSet rslt,long t0,long t1)
       Set<BdynEntry> vals = it.next();
       int ct = 0;
       for (Iterator<BdynEntry> it1 = vals.iterator(); it1.hasNext(); ) {
-	 BdynEntry oe = it1.next();
-	 if (oe.getEndTime(t1) < t0) 
-	    it1.remove();
-	 else ++ct;
+         BdynEntry oe = it1.next();
+         if (oe.getEndTime(t1) < t0) 
+            it1.remove();
+         else ++ct;
        }
       if (ct == 0) it.remove();
     }
@@ -372,14 +372,14 @@ private BdynRangeSet addToRange(long start,long t0,long t1,BdynRangeSet rslt)
    for (OutputEntry e1 : ss) {
       if (e1.getStartTime() > t1) break;
       if (e1.getEndTime(t1) >= t0) {
-	 ThreadData td = e1.getThread();
-	 if (rslt == null) rslt = new BdynRangeSet();
-	 Set<BdynEntry> r1 = rslt.get(td);
-	 if (r1 == null) {
-	    r1 = new HashSet<>();
-	    rslt.put(td,r1);
-	  }
-	 r1.add(e1);
+         ThreadData td = e1.getThread();
+         if (rslt == null) rslt = new BdynRangeSet();
+         Set<BdynEntry> r1 = rslt.get(td);
+         if (r1 == null) {
+            r1 = new HashSet<>();
+            rslt.put(td,r1);
+          }
+         r1.add(e1);
        }
     }
 
@@ -390,17 +390,17 @@ private BdynRangeSet addToRange(long start,long t0,long t1,BdynRangeSet rslt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread information							*/
-/*										*/
+/*                                                                              */
+/*      Thread information                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
 
-   private int	output_id;
+   private int  output_id;
    private String thread_name;
    private OutputTask current_transaction;
-   private int	nest_level;
+   private int  nest_level;
    private Stack<OutputEntry> output_stack;
    private OutputEntry last_entry;
 
@@ -414,8 +414,8 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
     }
 
    @Override public String getThreadName() { return thread_name; }
-   int getOutputId()			{ return output_id; }
-   OutputTask getCurrentTransaction()	{ return current_transaction; }
+   int getOutputId()                    { return output_id; }
+   OutputTask getCurrentTransaction()   { return current_transaction; }
 
    void beginTask(TraceEntry te) {
       BdynCallback cb = bdyn_factory.getCallback(te.getEntryLocation());
@@ -455,13 +455,13 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
             for (int i = output_stack.size()-1; i >= 0; --i) {
                OutputEntry poe = output_stack.get(i);
                if (poe != null) {
-        	  poe.finishAt(te.getTime());
-        	  if (trace_writer != null) {
+                  poe.finishAt(te.getTime());
+                  if (trace_writer != null) {
                      trace_writer.println("FINISHINT " + poe.getEntryTask().getId() + " " + 
                            nest_level + " " + poe.getTotalTime(0) + " " + poe.hashCode());
                    }
-        	  break;
-        	}
+                  break;
+                }
              }
             oe = createOutputEntry(te);
           }
@@ -524,19 +524,19 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
             for (int i = output_stack.size()-1; i >= 0; --i) {
                OutputEntry poe = output_stack.get(i);
                if (poe != null) {
-        	  if (!poe.isSignificant()) {
-        	     output_set.remove(poe);
-        	   }
-        	  if (trace_writer != null) {
+                  if (!poe.isSignificant()) {
+                     output_set.remove(poe);
+                   }
+                  if (trace_writer != null) {
                      trace_writer.println("NEST KEY " + poe.getEntryTask().getId() + " " + 
                            nest_level + " " + poe.isSignificant());
                    }
-        	  oe = new OutputEntry(te.getTime(),0,this,current_transaction,poe.getEntryTask());
-        	  oe.setDeletable();
-        	  output_set.add(oe);
-        	  output_stack.set(i,oe);
-        	  break;
-        	}
+                  oe = new OutputEntry(te.getTime(),0,this,current_transaction,poe.getEntryTask());
+                  oe.setDeletable();
+                  output_set.add(oe);
+                  output_stack.set(i,oe);
+                  break;
+                }
              }
           }
        }
@@ -569,26 +569,26 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
       return thread_name + "@" + nest_level;
     }
 
-}	// end of inner class ThreadData
+}       // end of inner class ThreadData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace Entry								*/
-/*										*/
+/*                                                                              */
+/*      Trace Entry                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class TraceEntry {
 
-   private long 	entry_time;
-   private ThreadData	entry_thread;
-   private int		entry_loc;
-   private int		entry_o1;
-   private int		entry_o2;
-   private boolean	is_exit;
-   private int		use_count;
-   private double	fraction_used;
+   private long         entry_time;
+   private ThreadData   entry_thread;
+   private int          entry_loc;
+   private int          entry_o1;
+   private int          entry_o2;
+   private boolean      is_exit;
+   private int          use_count;
+   private double       fraction_used;
 
    TraceEntry(String s,ThreadData td,boolean cputime) {
       String [] args = s.split(" ");
@@ -596,8 +596,8 @@ private static class TraceEntry {
       int ct = 0;
       entry_loc = Integer.parseInt(args[ct++]);
       if (entry_loc < 0) {
-	 is_exit = true;
-	 entry_loc = -entry_loc;
+         is_exit = true;
+         entry_loc = -entry_loc;
        }
       entry_time = Long.parseLong(args[ct++]);
       if (cputime && ct < args.length) Long.parseLong(args[ct++]);
@@ -610,21 +610,21 @@ private static class TraceEntry {
       fraction_used = 1;
     }
 
-   long getTime()			{ return entry_time; }
-   ThreadData getThread()		{ return entry_thread; }
-   int getEntryLocation()		{ return entry_loc; }
-   int getObject1()			{ return entry_o1; }
-   int getObject2()			{ return entry_o2; }
-   boolean isExit()			{ return is_exit; }
-   int getUseCount()			{ return use_count; }
-   double getFractionUsed()		{ return fraction_used; }
+   long getTime()                       { return entry_time; }
+   ThreadData getThread()               { return entry_thread; }
+   int getEntryLocation()               { return entry_loc; }
+   int getObject1()                     { return entry_o1; }
+   int getObject2()                     { return entry_o2; }
+   boolean isExit()                     { return is_exit; }
+   int getUseCount()                    { return use_count; }
+   double getFractionUsed()             { return fraction_used; }
 
 
    void merge(long et0,long st1,long et1) {
       double tot = et1 - st1;
       if (use_count <= 1) tot += et0 - entry_time;
       else {
-	 tot += (et0 - entry_time) * fraction_used;
+         tot += (et0 - entry_time) * fraction_used;
        }
       ++use_count;
       fraction_used = tot / (et1 - entry_time);
@@ -645,7 +645,7 @@ private static class TraceEntry {
       return buf.toString();
    }
 
-}	// end of inner class TraceEntry
+}       // end of inner class TraceEntry
 
 
 private static final class EntryComparator implements Comparator<TraceEntry>
@@ -658,13 +658,13 @@ private static final class EntryComparator implements Comparator<TraceEntry>
       return 0;
     }
 
-}	// end of inner class EntryComparator
+}       // end of inner class EntryComparator
 
 
 /********************************************************************************/
-/*										*/
-/*	OutputEntry -- entry to actually visualize				*/
-/*										*/
+/*                                                                              */
+/*      OutputEntry -- entry to actually visualize                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OutputEntry implements Comparable<OutputEntry>, BdynEntry {
@@ -700,7 +700,7 @@ private static class OutputEntry implements Comparable<OutputEntry>, BdynEntry {
       can_delete = true;
     }
 
-   @Override public long getStartTime() 	{ return start_time; }
+   @Override public long getStartTime()         { return start_time; }
    @Override public long getEndTime(long max) {
       if (max == 0) {
          if (finish_time == MAX_TIME) return 0;
@@ -725,10 +725,10 @@ private static class OutputEntry implements Comparable<OutputEntry>, BdynEntry {
       trace_fraction = (float) fract;
     }
 
-   ThreadData getThread()				{ return entry_thread; }
-   @Override public BdynEntryThread getEntryThread()	{ return entry_thread; }
-   @Override public BdynCallback getEntryTask() 	{ return entry_task; }
-   @Override public BdynCallback getEntryTransaction()	{ return entry_transaction.getTaskRoot(); }
+   ThreadData getThread()                               { return entry_thread; }
+   @Override public BdynEntryThread getEntryThread()    { return entry_thread; }
+   @Override public BdynCallback getEntryTask()         { return entry_task; }
+   @Override public BdynCallback getEntryTransaction()  { return entry_transaction.getTaskRoot(); }
    
    void setDeletable()                                  { can_delete = true; }
 
@@ -768,22 +768,22 @@ private static class OutputEntry implements Comparable<OutputEntry>, BdynEntry {
    @Override public String toString() {
       StringBuffer buf = new StringBuffer();
       if (entry_transaction != null && getEntryTransaction() != entry_task) {
-	 buf.append(getEntryTransaction().toString());
-	 buf.append("::");
+         buf.append(getEntryTransaction().toString());
+         buf.append("::");
        }
       if (entry_task != null) {
-	 buf.append(entry_task.toString());
+         buf.append(entry_task.toString());
        }
       buf.append("@");
       buf.append(start_time);
       if (finish_time != 0 && finish_time != MAX_TIME) {
-	 buf.append("-");
-	 buf.append(finish_time);
+         buf.append("-");
+         buf.append(finish_time);
        }
       return buf.toString();
     }
 
-}	// end of inner class OutputEntry
+}       // end of inner class OutputEntry
 
 
 
@@ -795,7 +795,7 @@ private static class OutputTask implements BdynEntryTask {
       task_root = root;
     }
 
-   @Override public BdynCallback getTaskRoot()	{ return task_root; }
+   @Override public BdynCallback getTaskRoot()  { return task_root; }
    
    boolean isMainTask() {
       if (task_root == null) return true;
@@ -807,7 +807,7 @@ private static class OutputTask implements BdynEntryTask {
 
 
 
-}	// end of class BdynEventTrace
+}       // end of class BdynEventTrace
 
 
 

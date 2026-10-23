@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleOpenEditorHandler.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor factory for creating new methods	*/
-/*										*/
+/*                                                                              */
+/*              BaleOpenEditorHandler.java                                      */
+/*                                                                              */
+/*      Bubble Annotated Language Editor factory for creating new methods       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Hsu-Sheng Ko 	      */
+/*      Copyright 2009 Brown University -- Hsu-Sheng Ko               */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -45,9 +45,9 @@ class BaleOpenEditorHandler implements BumpConstants.BumpOpenEditorBubbleHandler
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaRoot buda_root;
@@ -56,9 +56,9 @@ private BudaRoot buda_root;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleOpenEditorHandler(BudaRoot budaRoot)
@@ -69,9 +69,9 @@ BaleOpenEditorHandler(BudaRoot budaRoot)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods							*/
-/*										*/
+/*                                                                              */
+/*      Callback methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleOpenEditorBubble(String projname, String resourcepath, String type)
@@ -111,6 +111,6 @@ BaleOpenEditorHandler(BudaRoot budaRoot)
 
 
 
-}	// end of class BaleOpenEditorHandler
+}       // end of class BaleOpenEditorHandler
 
 /* end of BaleOpenEditorHandler.java */

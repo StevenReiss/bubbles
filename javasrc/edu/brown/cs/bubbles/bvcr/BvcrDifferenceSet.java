@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrDifferenceSet.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository set of file differences 	*/
-/*										*/
+/*                                                                              */
+/*              BvcrDifferenceSet.java                                          */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository set of file differences         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,31 +43,31 @@ class BvcrDifferenceSet implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<File,FileData>	file_set;
-private BvcrMain		bvcr_main;
-private BvcrProject		for_project;
+private Map<File,FileData>      file_set;
+private BvcrMain                bvcr_main;
+private BvcrProject             for_project;
 
-private BvcrDifferenceFile	file_diffs;
-private int			source_start;
-private int			target_start;
-private List<String>		del_lines;
-private List<String>		add_lines;
-private Set<File>		files_todo;
-private String			start_version;
-private String			end_version;
+private BvcrDifferenceFile      file_diffs;
+private int                     source_start;
+private int                     target_start;
+private List<String>            del_lines;
+private List<String>            add_lines;
+private Set<File>               files_todo;
+private String                  start_version;
+private String                  end_version;
 private boolean                 bad_verison;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrDifferenceSet(BvcrMain bm,BvcrProject proj)
@@ -89,16 +89,16 @@ BvcrDifferenceSet(BvcrMain bm,BvcrProject proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for managing files						*/
-/*										*/
+/*                                                                              */
+/*      Methods for managing files                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void handleFileChanged(File f)
 {
    IvyLog.logD("BVCR","Note file changed " + f + " " + (files_todo == null));
    
-   if (files_todo == null) return;	// will do everything
+   if (files_todo == null) return;      // will do everything
    files_todo.add(f);
 }
 
@@ -112,7 +112,7 @@ boolean computationNeeded()
 
 List<File> getFilesToCompute()
 {
-   if (files_todo == null) return null; 	// indicate all
+   if (files_todo == null) return null;         // indicate all
 
    ArrayList<File> rslt = new ArrayList<File>(files_todo);
    return rslt;
@@ -121,9 +121,9 @@ List<File> getFilesToCompute()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle specific version for specific file				*/
-/*										*/
+/*                                                                              */
+/*      Handle specific version for specific file                               */
+/*                                                                              */
 /********************************************************************************/
 
 void setForFileDifference(File f,String v0,String v1)
@@ -135,17 +135,17 @@ void setForFileDifference(File f,String v0,String v1)
 }
 
 
-String getStartVersion()			{ return start_version; }
-String getEndVersion()				{ return end_version; }
+String getStartVersion()                        { return start_version; }
+String getEndVersion()                          { return end_version; }
 
 boolean isBadVersion()                          { return bad_verison; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for setting up a difference set 				*/
-/*										*/
+/*                                                                              */
+/*      Methods for setting up a difference set                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void beginFile(String file,String ver,String idxver)
@@ -235,9 +235,9 @@ void noteBadVersion()
 
 
 /********************************************************************************/
-/*										*/
-/*	File methods								*/
-/*										*/
+/*                                                                              */
+/*      File methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 String getRelativePath(File f)
@@ -260,9 +260,9 @@ String getRelativePath(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -289,9 +289,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	File information							*/
-/*										*/
+/*                                                                              */
+/*      File information                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class FileData {
@@ -306,8 +306,8 @@ private class FileData {
       data_diffs = new BvcrDifferenceFile(version,idxver);
     }
 
-   // long getLastChecked()			{ return last_check; }
-   BvcrDifferenceFile getDifferences()		{ return data_diffs; }
+   // long getLastChecked()                     { return last_check; }
+   BvcrDifferenceFile getDifferences()          { return data_diffs; }
    
    boolean reportFile() {
       String fnm = for_file.getName();
@@ -329,11 +329,11 @@ private class FileData {
       xw.end("FILE");
     }
 
-}	// end of inner class FileData
+}       // end of inner class FileData
 
 
 
-}	// end of class BvcrDifferenceSet
+}       // end of class BvcrDifferenceSet
 
 
 

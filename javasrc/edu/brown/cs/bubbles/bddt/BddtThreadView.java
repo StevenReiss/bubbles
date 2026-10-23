@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtThreadView.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool process thread bubble 	*/
-/*										*/
+/*                                                                              */
+/*              BddtThreadView.java                                             */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool process thread bubble         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -84,9 +84,9 @@ class BddtThreadView extends BudaBubble implements BddtConstants, BumpConstants 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BddtLaunchControl launch_control;
@@ -131,9 +131,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtThreadView(BddtLaunchControl ctrl)
@@ -147,7 +147,7 @@ BddtThreadView(BddtLaunchControl ctrl)
    thread_set = new ConcurrentSkipListSet<>(new ThreadComparator());
    if (bump_process != null) {
       for (BumpThread bt : bump_process.getThreads()) {
-	 thread_set.add(bt);
+         thread_set.add(bt);
       }
    }
    bump_threads = new ArrayList<>(thread_set);
@@ -168,9 +168,9 @@ BddtThreadView(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 Point getPosition(BumpThread t)
@@ -181,9 +181,9 @@ Point getPosition(BumpThread t)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -197,8 +197,8 @@ Point getPosition(BumpThread t)
    if (thread != null) {
       popup.add(new ValuesAction(thread));
       if (thread.getThreadState().isRunning()) {
-	 popup.add(new ThreadAction(thread,"Pause"));
-	 popup.add(new ProcessAction(thread.getProcess(),"Pause"));
+         popup.add(new ThreadAction(thread,"Pause"));
+         popup.add(new ProcessAction(thread.getProcess(),"Pause"));
        }
       else if (thread.getThreadState().isStopped()) {
          BumpThreadStack stk = thread.getStack();
@@ -216,7 +216,7 @@ Point getPosition(BumpThread t)
           }
        }
       if (thread.getThreadState().isException()) {
-	 popup.add(new ExceptionAction(thread));
+         popup.add(new ExceptionAction(thread));
          if (thread.getBreakpoint() != null &&             
                thread.getBreakpoint().getProperty("TYPE").equals("EXCEPTION")) {
             popup.add(new IgnoreExceptionAction(thread));
@@ -227,10 +227,10 @@ Point getPosition(BumpThread t)
 
       BumpThreadStack stk = thread.getStack();
       if (stk != null && stk.getNumFrames() > 0) {
-	 BumpStackFrame frm = stk.getFrame(0);
-	 if (launch_control.frameFileExists(frm)) {
-	    popup.add(new SourceAction(frm));
-	  }
+         BumpStackFrame frm = stk.getFrame(0);
+         if (launch_control.frameFileExists(frm)) {
+            popup.add(new SourceAction(frm));
+          }
        }
     }
 
@@ -240,9 +240,9 @@ Point getPosition(BumpThread t)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling methods							*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ClickHandler extends BoardMouser {
@@ -260,14 +260,14 @@ private final class ClickHandler extends BoardMouser {
        }
     }
 
-}	// end of inner class ClickHandler
+}       // end of inner class ClickHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handling classes						*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handling classes                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProcessAction extends AbstractAction {
@@ -290,7 +290,7 @@ private class ProcessAction extends AbstractAction {
       else if (action_name.equals("Resume")) bump_client.resume(the_launch);
     }
 
-}	// end of inner class ProcessAction
+}       // end of inner class ProcessAction
 
 
 
@@ -324,7 +324,7 @@ private class ThreadAction extends AbstractAction {
       else BoardLog.logE("BDDT","Unknown thread action " + action_name);
     }
 
-}	// end of inner class ThreadAction
+}       // end of inner class ThreadAction
 
 
 
@@ -345,12 +345,12 @@ private class ValuesAction extends AbstractAction {
       BddtStackView sv = new BddtStackView(launch_control,for_thread);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
       if (bba != null) {
-	 bba.addBubble(sv,BddtThreadView.this,null,
-			  PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+         bba.addBubble(sv,BddtThreadView.this,null,
+                          PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class ValuesAction
+}       // end of inner class ValuesAction
 
 
 
@@ -368,21 +368,21 @@ private class SourceAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BudaBubble bb = null;
       if (launch_control.frameFileExists(for_frame)) {
-	 String proj = for_frame.getThread().getLaunch().getConfiguration().getProject();
-	 String mid = for_frame.getMethod() + for_frame.getSignature();
-	 bb = BaleFactory.getFactory().createMethodBubble(proj,mid);
+         String proj = for_frame.getThread().getLaunch().getConfiguration().getProject();
+         String mid = for_frame.getMethod() + for_frame.getSignature();
+         bb = BaleFactory.getFactory().createMethodBubble(proj,mid);
        }
       if (bb != null) {
-	 BoardMetrics.noteCommand("BDDT","ThreadSource");
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
-	 if (bba != null) {
-	    bba.addBubble(bb,BddtThreadView.this,null,
-			     PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
-	  }
+         BoardMetrics.noteCommand("BDDT","ThreadSource");
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
+         if (bba != null) {
+            bba.addBubble(bb,BddtThreadView.this,null,
+                             PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+          }
        }
     }
 
-}	// end of inner class SourceAction
+}       // end of inner class SourceAction
 
 
 
@@ -402,19 +402,19 @@ private class ExceptionAction extends AbstractAction {
       String typ = for_thread.getExceptionType();
       bb = BaleFactory.getFactory().createClassBubble(null,typ);
       if (bb == null) {
-	 bb = BudaRoot.createDocumentationBubble(typ);
+         bb = BudaRoot.createDocumentationBubble(typ);
        }
       if (bb != null) {
-	 BoardMetrics.noteCommand("BDDT","ThreadSource");
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
-	 if (bba != null) {
-	    bba.addBubble(bb,BddtThreadView.this,null,
-			     PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
-	  }
+         BoardMetrics.noteCommand("BDDT","ThreadSource");
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
+         if (bba != null) {
+            bba.addBubble(bb,BddtThreadView.this,null,
+                             PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+          }
        }
     }
 
-}	// end of inner class ExceptionAction
+}       // end of inner class ExceptionAction
 
 
 
@@ -465,20 +465,20 @@ private class HistoryAction extends AbstractAction {
       BudaBubble bb = new BddtStopTraceBubble(launch_control,for_thread);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtThreadView.this);
       if (bba != null) {
-	 bba.addBubble(bb,BddtThreadView.this,null,
-			  PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BddtThreadView.this,null,
+                          PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class HistoryAction
+}       // end of inner class HistoryAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ThreadHandler implements BumpRunEventHandler
@@ -504,7 +504,7 @@ private final class ThreadHandler implements BumpRunEventHandler
         }
     }
 
-}	// end of inner class ThreadHandler
+}       // end of inner class ThreadHandler
 
 
 
@@ -562,14 +562,14 @@ private class TableUpdater implements Runnable {
       threads_model.fireTableDataChanged();
    }
 
-}	// end of inner class TableUpdater
+}       // end of inner class TableUpdater
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Method to decode table sorting						*/
-/*										*/
+/*                                                                              */
+/*      Method to decode table sorting                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpThread getActualThread(int idx)
@@ -578,8 +578,8 @@ private BumpThread getActualThread(int idx)
 
    synchronized (bump_threads) {
       if (threads_table != null) {
-	 RowSorter<?> rs = threads_table.getRowSorter();
-	 if (rs != null) idx = rs.convertRowIndexToModel(idx);
+         RowSorter<?> rs = threads_table.getRowSorter();
+         if (rs != null) idx = rs.convertRowIndexToModel(idx);
        }
 
       return bump_threads.get(idx);
@@ -589,16 +589,16 @@ private BumpThread getActualThread(int idx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread comparator							*/
-/*										*/
+/*                                                                              */
+/*      Thread comparator                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ThreadComparator implements Comparator<BumpThread> {
 
    @Override public int compare(BumpThread t1,BumpThread t2) {
       if (t1.getThreadType() != t2.getThreadType()) {
-	 return t2.getThreadType().ordinal() - t1.getThreadType().ordinal();
+         return t2.getThreadType().ordinal() - t1.getThreadType().ordinal();
        }
       if (t1.getName() == null && t2.getName() == null) return 0;
       else if (t1.getName() == null) return -1;
@@ -608,15 +608,15 @@ private static final class ThreadComparator implements Comparator<BumpThread> {
       return t1.getId().compareTo(t2.getId());
     }
 
-}	// end of inner class ThreadComparator
+}       // end of inner class ThreadComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuation table model						*/
-/*										*/
+/*                                                                              */
+/*      Configuation table model                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadsModel extends AbstractTableModel {
@@ -625,42 +625,42 @@ private class ThreadsModel extends AbstractTableModel {
 
    ThreadsModel() { }
 
-   @Override public int getColumnCount()		{ return col_names.length; }
-   @Override public String getColumnName(int idx)	{ return col_names[idx]; }
-   @Override public Class<?> getColumnClass(int idx)	{ return col_types[idx]; }
+   @Override public int getColumnCount()                { return col_names.length; }
+   @Override public String getColumnName(int idx)       { return col_names[idx]; }
+   @Override public Class<?> getColumnClass(int idx)    { return col_types[idx]; }
    @Override public boolean isCellEditable(int r,int c) { return false;  }
-   @Override public int getRowCount()			{ return bump_threads.size(); }
+   @Override public int getRowCount()                   { return bump_threads.size(); }
 
    @Override public Object getValueAt(int r,int c) {
       BumpThread bt;
       synchronized (bump_threads) {
-	 if (r < 0 || r >= bump_threads.size()) return null;
-	 bt = bump_threads.get(r);
+         if (r < 0 || r >= bump_threads.size()) return null;
+         bt = bump_threads.get(r);
        }
       switch (c) {
-	 case 0 :
-	    return bt.getName();
-	 case 1 :
-	    return bt.getThreadState();
-	 case 2 :
-	    return bt.isDaemonThread();
-	 case 3 :
-	    return bt.getThreadType();
-	 case -1:
-	    return bt;
+         case 0 :
+            return bt.getName();
+         case 1 :
+            return bt.getThreadState();
+         case 2 :
+            return bt.isDaemonThread();
+         case 3 :
+            return bt.getThreadType();
+         case -1:
+            return bt;
        }
 
       return null;
     }
 
-}	// end of inner class ThreadsModel
+}       // end of inner class ThreadsModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Threads table implementation						*/
-/*										*/
+/*                                                                              */
+/*      Threads table implementation                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOutputer
@@ -684,15 +684,15 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
       BoardColors.setColors(this,BDDT_THREADS_TOP_COLOR_PROP);
       setOpaque(false);
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
       cell_drawer = new CellDrawer[col_names.length];
     }
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
        }
       return cell_drawer[c];
     }
@@ -700,35 +700,35 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
    private void fixColumnSizes() {
       TableColumnModel tcm = getColumnModel();
       for (int i = 0; i < col_sizes.length; ++i) {
-	 TableColumn tc = tcm.getColumn(i);
-	 tc.setPreferredWidth(col_sizes[i]);
-	 if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
-	 if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
+         TableColumn tc = tcm.getColumn(i);
+         tc.setPreferredWidth(col_sizes[i]);
+         if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
+         if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
        }
     }
 
    @Override protected void paintComponent(Graphics g) {
       synchronized (bump_threads) {
-	 Dimension sz = getSize();
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 Graphics2D g2 = (Graphics2D) g.create();
+         Dimension sz = getSize();
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         Graphics2D g2 = (Graphics2D) g.create();
          Color tc = BoardColors.getColor(BDDT_THREADS_TOP_COLOR_PROP);
          Color bc = BoardColors.getColor(BDDT_THREADS_BOTTOM_COLOR_PROP);
-	 if (tc.getRGB() != bc.getRGB()) {
-	    Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
-	    g2.setPaint(p);
-	  }
-	 else {
-	    g2.setColor(tc);
-	  }
-	 g2.fill(r);
-	 super.paintComponent(g);
+         if (tc.getRGB() != bc.getRGB()) {
+            Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
+            g2.setPaint(p);
+          }
+         else {
+            g2.setColor(tc);
+          }
+         g2.fill(r);
+         super.paintComponent(g);
        }
     }
 
-   @Override public String getConfigurator()		{ return "BDDT"; }
+   @Override public String getConfigurator()            { return "BDDT"; }
 
-   @Override public void outputXml(BudaXmlWriter xw)	{ }
+   @Override public void outputXml(BudaXmlWriter xw)    { }
 
    @Override public String getToolTipText(MouseEvent e)  {
       int row = rowAtPoint(e.getPoint());
@@ -817,7 +817,7 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
       buf.append("</td></tr>");
     }
 
-}	// end of inner class ThreadsTable
+}       // end of inner class ThreadsTable
 
 
 
@@ -825,9 +825,9 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
 
 
 /********************************************************************************/
-/*										*/
-/*	Table renderers 							*/
-/*										*/
+/*                                                                              */
+/*      Table renderers                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderDrawer implements TableCellRenderer {
@@ -841,18 +841,18 @@ private static class HeaderDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (bold_font == null) {
-	 bold_font = cmp.getFont();
-	 bold_font = bold_font.deriveFont(Font.BOLD);
+         bold_font = cmp.getFont();
+         bold_font = bold_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class HeaderRenderer
+}       // end of inner class HeaderRenderer
 
 
 
@@ -892,14 +892,14 @@ private class CellDrawer implements TableCellRenderer {
       return cmp;
    }
 
-}	// end of innerclass ErrorRenderer
+}       // end of innerclass ErrorRenderer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to pull out a stack bubble					*/
-/*										*/
+/*                                                                              */
+/*      Methods to pull out a stack bubble                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Transferer extends TransferHandler {
@@ -909,10 +909,10 @@ private final class Transferer extends TransferHandler {
    @Override protected Transferable createTransferable(JComponent c) {
       ThreadsTable tbl = null;
       for (Component jc = c; jc != null; jc = jc.getParent()) {
-	 if (jc instanceof ThreadsTable) {
-	    tbl = (ThreadsTable) jc;
-	    break;
-	  }
+         if (jc instanceof ThreadsTable) {
+            tbl = (ThreadsTable) jc;
+            break;
+          }
        }
       if (tbl == null) return null;
 
@@ -928,7 +928,7 @@ private final class Transferer extends TransferHandler {
       return COPY;
     }
 
-}	// end of inner class Transferer
+}       // end of inner class Transferer
 
 
 
@@ -944,7 +944,7 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
        }
     }
 
-   boolean isValid()				{ return thread_entries.size() > 0; }
+   boolean isValid()                            { return thread_entries.size() > 0; }
 
    @Override public Object getTransferData(DataFlavor df) {
       if (df == BudaRoot.getBubbleTransferFlavor()) return this;
@@ -969,13 +969,13 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
       return rslt;
     }
 
-}	// end of inner class TransferBubble
+}       // end of inner class TransferBubble
 
 
 
 
 
-}	// end of class BddtThreadView
+}       // end of class BddtThreadView
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaRouter.java 						*/
-/*										*/
-/*	BUblles Display Area bubble link routing algorithms			*/
-/*										*/
+/*                                                                              */
+/*              BudaRouter.java                                                 */
+/*                                                                              */
+/*      BUblles Display Area bubble link routing algorithms                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,9 +40,9 @@ class BudaRouter implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private List<BudaBubbleLink> work_links;
@@ -59,9 +59,9 @@ private static final double CHANNEL_SIZE = 5;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaRouter(BudaBubbleArea bba)
@@ -75,9 +75,9 @@ BudaRouter(BudaBubbleArea bba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Computation methods for all links					*/
-/*										*/
+/*                                                                              */
+/*      Computation methods for all links                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void computeRoutes()
@@ -88,7 +88,7 @@ void computeRoutes()
 
    for (BudaBubbleLink bbl : work_links) {
       if (bbl.isRectilinear()) {
-	 computeRoute(bbl);
+         computeRoute(bbl);
        }
     }
 }
@@ -96,9 +96,9 @@ void computeRoutes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Computation method for a single rectilinear link			*/
-/*										*/
+/*                                                                              */
+/*      Computation method for a single rectilinear link                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void computeRoute(BudaBubbleLink bbl)
@@ -131,93 +131,93 @@ private void computeRoute(BudaBubbleLink bbl)
    for (int i = 0; i < 6; ++i) {
       // first check if we actually need more pivots
       if (y0 == tgt.getY()) {
-	 if (x0 < tgt.getX() && validright && tgtright) break;
-	 if (x0 > tgt.getX() && validleft && tgtleft) break;
+         if (x0 < tgt.getX() && validright && tgtright) break;
+         if (x0 > tgt.getX() && validleft && tgtleft) break;
        }
       if (x0 == tgt.getX()) {
-	 if (y0 > tgt.getY() && validup && tgtup) break;
-	 if (y0 < tgt.getY() && validdown && tgtdown) break;
+         if (y0 > tgt.getY() && validup && tgtup) break;
+         if (y0 < tgt.getY() && validdown && tgtdown) break;
        }
 
       // then, if we have multiple options, determine actual direction
       if (validleft && validright) {
-	 if (tgt.getX() > x0) validleft = false;
-	 else if (tgt.getX() == x0 && tgtleft) validleft = false;
-	 else if (tgt.getX() == x0 && tgtright) validright = false;
-	 else validright = false;
+         if (tgt.getX() > x0) validleft = false;
+         else if (tgt.getX() == x0 && tgtleft) validleft = false;
+         else if (tgt.getX() == x0 && tgtright) validright = false;
+         else validright = false;
        }
       if (validup && validdown) {
-	 if (tgt.getY() >= y0) validup = false;
-	 else validdown = false;
+         if (tgt.getY() >= y0) validup = false;
+         else validdown = false;
        }
 
       if (validleft) {
-	 double x1;
-	 if (tgt.getX() < x0) {
-	    if (tgtup || tgtdown) x1 = tgt.getX();
-	    else if (tgtleft) {
-	       x1 = (x0 + tgt.getX())/2;
-	       if (x1 < x0 - TARGET_DELTA) x1 = x0 - TARGET_DELTA;
-	     }
-	    else x1 = tgt.getX() - TARGET_DELTA;
-	  }
-	 else x1 = x0 - TARGET_DELTA;
-	 x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
-	 validleft = false;
-	 validright = false;
-	 validup = true;
-	 validdown = true;
+         double x1;
+         if (tgt.getX() < x0) {
+            if (tgtup || tgtdown) x1 = tgt.getX();
+            else if (tgtleft) {
+               x1 = (x0 + tgt.getX())/2;
+               if (x1 < x0 - TARGET_DELTA) x1 = x0 - TARGET_DELTA;
+             }
+            else x1 = tgt.getX() - TARGET_DELTA;
+          }
+         else x1 = x0 - TARGET_DELTA;
+         x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
+         validleft = false;
+         validright = false;
+         validup = true;
+         validdown = true;
        }
       else if (validright) {
-	 double x1;
-	 if (tgt.getX() > x0) {
-	    if (tgtup || tgtdown) x1 = tgt.getX();
-	    else if (tgtright) {
-	       x1 = (x0 + tgt.getX())/2;
-	       if (x1 > x0 + TARGET_DELTA) x1 = x0 + TARGET_DELTA;
-	     }
-	    else x1 = tgt.getX() + TARGET_DELTA;
-	  }
-	 else x1 = x0 + TARGET_DELTA;
-	 x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
-	 validleft = false;
-	 validright = false;
-	 validup = true;
-	 validdown = true;
+         double x1;
+         if (tgt.getX() > x0) {
+            if (tgtup || tgtdown) x1 = tgt.getX();
+            else if (tgtright) {
+               x1 = (x0 + tgt.getX())/2;
+               if (x1 > x0 + TARGET_DELTA) x1 = x0 + TARGET_DELTA;
+             }
+            else x1 = tgt.getX() + TARGET_DELTA;
+          }
+         else x1 = x0 + TARGET_DELTA;
+         x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
+         validleft = false;
+         validright = false;
+         validup = true;
+         validdown = true;
        }
       else if (validup) {
-	 double y1;
-	 if (tgt.getY() < y0) {
-	    if (tgtleft || tgtright) y1 = tgt.getY();
-	    else if (tgtup) {
-	       y1 = (y0 + tgt.getY())/2;
-	       if (y1 < y0 - TARGET_DELTA) y1 = y0 - TARGET_DELTA;
-	     }
-	    else y1 = tgt.getY() - TARGET_DELTA;
-	  }
-	 else y1 = y0 - TARGET_DELTA;
-	 y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
-	 validleft = true;
-	 validright = true;
-	 validup = false;
-	 validdown = false;
+         double y1;
+         if (tgt.getY() < y0) {
+            if (tgtleft || tgtright) y1 = tgt.getY();
+            else if (tgtup) {
+               y1 = (y0 + tgt.getY())/2;
+               if (y1 < y0 - TARGET_DELTA) y1 = y0 - TARGET_DELTA;
+             }
+            else y1 = tgt.getY() - TARGET_DELTA;
+          }
+         else y1 = y0 - TARGET_DELTA;
+         y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
+         validleft = true;
+         validright = true;
+         validup = false;
+         validdown = false;
        }
       else if (validdown) {
-	 double y1;
-	 if (tgt.getY() > y0) {
-	    if (tgtleft || tgtright) y1 = tgt.getY();
-	    else if (tgtdown) {
-	       y1 = (y0 + tgt.getY())/2;
-	       if (y0 > y0 + TARGET_DELTA) y1 = y0 + TARGET_DELTA;
-	     }
-	    else y1 = tgt.getY() + TARGET_DELTA;
-	  }
-	 else y1 = y0 + TARGET_DELTA;
-	 y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
-	 validleft = true;
-	 validright = true;
-	 validup = false;
-	 validdown = false;
+         double y1;
+         if (tgt.getY() > y0) {
+            if (tgtleft || tgtright) y1 = tgt.getY();
+            else if (tgtdown) {
+               y1 = (y0 + tgt.getY())/2;
+               if (y0 > y0 + TARGET_DELTA) y1 = y0 + TARGET_DELTA;
+             }
+            else y1 = tgt.getY() + TARGET_DELTA;
+          }
+         else y1 = y0 + TARGET_DELTA;
+         y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
+         validleft = true;
+         validright = true;
+         validup = false;
+         validdown = false;
        }
     }
 
@@ -237,15 +237,15 @@ private double addHPivot(BudaBubbleLink bbl,double x0,double y0,double x1,double
 
    for (int i = 0; ; ++i) {
       if ((x0 < x1 && x2 > x0) || (x0 > x1 && x2 < x0)) {
-	 SortedMap<Double,VPath> vmap = v_paths.subMap(x2-CHANNEL_SIZE/2,x2+CHANNEL_SIZE/2);
-	 if (vmap.isEmpty()) break;
-	 boolean ovlap = false;
-	 for (VPath vp : vmap.values()) {
-	    if (vp.overlaps(y0,yt)) {
-	       ovlap = true;
-	    }
-	 }
-	 if (!ovlap) break;
+         SortedMap<Double,VPath> vmap = v_paths.subMap(x2-CHANNEL_SIZE/2,x2+CHANNEL_SIZE/2);
+         if (vmap.isEmpty()) break;
+         boolean ovlap = false;
+         for (VPath vp : vmap.values()) {
+            if (vp.overlaps(y0,yt)) {
+               ovlap = true;
+            }
+         }
+         if (!ovlap) break;
        }
       if ((i&1) == 0) x2 = x1 + (i/2+1)*CHANNEL_SIZE;
       else x2 = x1 - (i/2+1)*CHANNEL_SIZE;
@@ -272,14 +272,14 @@ private double addVPivot(BudaBubbleLink bbl,double x0,double y0,double y1,double
 
    for (int i = 0; ; ++i) {
       if ((y0 < y1 && y2 > y0) || (y0 > y1 && y2 < y0)) {
-	 SortedMap<Double,HPath> hmap = h_paths.subMap(y2-CHANNEL_SIZE/2,y2+CHANNEL_SIZE/2);
-	 boolean ovlap = false;
-	 for (HPath hp : hmap.values()) {
-	    if (hp.overlaps(x0,xt)) {
-	      ovlap = true; 
-	    }
-	  }
-	 if (!ovlap) break;
+         SortedMap<Double,HPath> hmap = h_paths.subMap(y2-CHANNEL_SIZE/2,y2+CHANNEL_SIZE/2);
+         boolean ovlap = false;
+         for (HPath hp : hmap.values()) {
+            if (hp.overlaps(x0,xt)) {
+              ovlap = true; 
+            }
+          }
+         if (!ovlap) break;
        }
 
       if ((i&1) == 0) y2 = y1 + (i/2+1)*CHANNEL_SIZE;
@@ -302,9 +302,9 @@ private double addVPivot(BudaBubbleLink bbl,double x0,double y0,double y1,double
 
 
 /********************************************************************************/
-/*										*/
-/*	Holder for occupied paths						*/
-/*										*/
+/*                                                                              */
+/*      Holder for occupied paths                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class VPath {
@@ -324,7 +324,7 @@ private static class VPath {
       y_to = Math.max(y_to,Math.max(y0,y1));
     }
 
-   double getPosition() 		{ return x_pos; }
+   double getPosition()                 { return x_pos; }
    
    boolean overlaps(double y0,double y1) {
       double ymin = Math.min(y0,y1);
@@ -332,7 +332,7 @@ private static class VPath {
       if (ymin >= y_to || ymax <= y_from) return false;
       return true;
     }
-}	// end of inner class VPath
+}       // end of inner class VPath
 
 
 
@@ -354,7 +354,7 @@ private static class HPath {
       x_to = Math.max(x_to,Math.max(x0,x1));
     }
 
-   double getPosition() 		{ return y_pos; }
+   double getPosition()                 { return y_pos; }
    
    boolean overlaps(double x0,double x1) {
       double xmin = Math.min(x0,x1);
@@ -363,12 +363,12 @@ private static class HPath {
       return true;
     }
 
-}	// end of inner class HPath
+}       // end of inner class HPath
 
 
 
 
-}	// end of class BudaRouter
+}       // end of class BudaRouter
 
 
 

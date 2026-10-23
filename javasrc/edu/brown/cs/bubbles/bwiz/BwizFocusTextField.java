@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizFocusTextField.java 					*/
-/*										*/
-/*	Text field that selects all of contents when focused			*/
-/*										*/
+/*                                                                              */
+/*              BwizFocusTextField.java                                         */
+/*                                                                              */
+/*      Text field that selects all of contents when focused                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -38,22 +38,22 @@ class BwizFocusTextField extends SwingTextField
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	showing_hint;
-private String		hint_text;
+private boolean         showing_hint;
+private String          hint_text;
 
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 //Creates a BwizFocusTextField with the default styling and the parameter text as the tooltip
@@ -81,9 +81,9 @@ static BwizFocusTextField getStyledField(String text, String tooltip)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizFocusTextField()
@@ -127,9 +127,9 @@ BwizFocusTextField(String text,String hint)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void addListener()
@@ -146,9 +146,9 @@ private void focusSelection()
 
 
 /********************************************************************************/
-/*										*/
-/*	Hint methods								*/
-/*										*/
+/*                                                                              */
+/*      Hint methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getText()
@@ -162,9 +162,9 @@ private void focusSelection()
 
 
 /********************************************************************************/
-/*										*/
-/*	Focus manager								*/
-/*										*/
+/*                                                                              */
+/*      Focus manager                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Focuser extends FocusAdapter {
@@ -192,12 +192,12 @@ private final class Focuser extends FocusAdapter {
       else showing_hint = false;
     }
 
-}	// end of inner class Focuser
+}       // end of inner class Focuser
 
 
 
 
-}	// end of class BwizFocusTextField
+}       // end of class BwizFocusTextField
 
 
 

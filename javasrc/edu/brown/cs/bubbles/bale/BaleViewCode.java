@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewCode.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor view for code				*/
-/*										*/
+/*                                                                              */
+/*              BaleViewCode.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor view for code                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -39,9 +39,9 @@ class BaleViewCode extends BaleViewLineRegion implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewCode(BaleElement elem)
@@ -51,7 +51,7 @@ BaleViewCode(BaleElement elem)
 
 
 
-}	// end of class BaleViewCode
+}       // end of class BaleViewCode
 
 
 

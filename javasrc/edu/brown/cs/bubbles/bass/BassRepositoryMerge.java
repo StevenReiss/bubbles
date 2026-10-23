@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassRepositoryMerge.java					*/
-/*										*/
-/*	Bubble Augmented Search Strategies store for all possible names 	*/
-/*										*/
+/*                                                                              */
+/*              BassRepositoryMerge.java                                        */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies store for all possible names         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -35,18 +35,18 @@ import java.util.ArrayList;
 
 
 /**
- *	Provide a repository that merges two other Bass repositories.
+ *      Provide a repository that merges two other Bass repositories.
  **/
 
 public class BassRepositoryMerge implements BassConstants.BassRepository,
-	BassConstants.BassUpdatingRepository, BassConstants
+        BassConstants.BassUpdatingRepository, BassConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BassRepository first_repository;
@@ -55,14 +55,14 @@ private BassRepository second_repository;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new repository that contains all the elements of the first
- *	followed by all the elements of the second.
+ *      Create a new repository that contains all the elements of the first
+ *      followed by all the elements of the second.
  **/
 
 public BassRepositoryMerge(BassRepository p1,BassRepository p2)
@@ -74,9 +74,9 @@ public BassRepositoryMerge(BassRepository p1,BassRepository p2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Iterable<BassName> getAllNames()
@@ -114,9 +114,9 @@ public BassRepositoryMerge(BassRepository p1,BassRepository p2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Updating methods							*/
-/*										*/
+/*                                                                              */
+/*      Updating methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addUpdateRepository(BassUpdatableRepository br)
@@ -147,7 +147,7 @@ public BassRepositoryMerge(BassRepository p1,BassRepository p2)
 
 
 
-}	// end of class BassRepositoryMerge
+}       // end of class BassRepositoryMerge
 
 
 

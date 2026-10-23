@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalFactory.java						*/
-/*										*/
-/*	Bubbles ANALysis package factory for use within bubbles 		*/
-/*										*/
+/*                                                                              */
+/*              BanalFactory.java                                               */
+/*                                                                              */
+/*      Bubbles ANALysis package factory for use within bubbles                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,15 +52,15 @@ public final class BanalFactory implements BanalConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Boolean 		server_running;
+private Boolean                 server_running;
 private boolean                 server_starting;
 
-private static BanalFactory	the_factory;
+private static BanalFactory     the_factory;
 
 
 static {
@@ -70,9 +70,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BanalFactory()
@@ -82,14 +82,14 @@ private BanalFactory()
 }
 
 
-public static BanalFactory getFactory() 	{ return the_factory; }
+public static BanalFactory getFactory()         { return the_factory; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -131,14 +131,14 @@ public void ensureRunning()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public Collection<BanalPackageNode> computePackageGraph(String proj,String pkg,
-							   boolean usemethods,
-							   boolean sameclass)
+                                                           boolean usemethods,
+                                                           boolean sameclass)
 {
    BanalPackageGraph pg = null;
 
@@ -156,8 +156,8 @@ public Collection<BanalPackageNode> computePackageGraph(String proj,String pkg,
       mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
       Element e = rply.waitForXml();
       if (IvyXml.isElement(e,"RESULT")) {
-	 BoardLog.logD("BANAL","Graph reply: " + IvyXml.convertXmlToString(e));
-	 pg = new BanalPackageGraph(IvyXml.getChild(e,"GRAPH"));
+         BoardLog.logD("BANAL","Graph reply: " + IvyXml.convertXmlToString(e));
+         pg = new BanalPackageGraph(IvyXml.getChild(e,"GRAPH"));
        }
     }
 
@@ -185,9 +185,9 @@ public Map<String,BanalHierarchyNode> computePackageHierarchy(String proj)
       mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
       Element e = rply.waitForXml();
       if (IvyXml.isElement(e,"RESULT")) {
-	 BoardLog.logD("BANAL","Hierarchy reply: " + IvyXml.convertXmlToString(e));
-	 ph = new BanalPackageHierarchy(IvyXml.getChild(e,"HIERARCHY"));
-	 rslt = ph.getHierarchy();
+         BoardLog.logD("BANAL","Hierarchy reply: " + IvyXml.convertXmlToString(e));
+         ph = new BanalPackageHierarchy(IvyXml.getChild(e,"HIERARCHY"));
+         rslt = ph.getHierarchy();
        }
     }
    
@@ -198,9 +198,9 @@ public Map<String,BanalHierarchyNode> computePackageHierarchy(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Server methods								*/
-/*										*/
+/*                                                                              */
+/*      Server methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void startBanalServer()
@@ -232,41 +232,41 @@ void startBanalServer()
       args.add("-D");
 
       for (int i = 0; i < 100; ++i) {
-	 MintDefaultReply rply = new MintDefaultReply();
-	 mc.send("<BANAL DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
-	 String rslt = rply.waitForString(1000);
-	 if (rslt != null) {
-	    server_running = true;
-	    break;
-	  }
-	 if (i == 0) {
-	    try {
-	       exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
-	       BoardLog.logD("BANAL","Run " + exec.getCommand());
-	     }
-	    catch (IOException e) {
-	       break;
-	     }
-	  }
-	 else {
-	    try {
-	       if (exec != null) {
-		  // check if process exited (nothing to do)
-		  exec.exitValue();
-		  break;
-		}
-	     }
-	    catch (IllegalThreadStateException e) { }
-	  }
+         MintDefaultReply rply = new MintDefaultReply();
+         mc.send("<BANAL DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
+         String rslt = rply.waitForString(1000);
+         if (rslt != null) {
+            server_running = true;
+            break;
+          }
+         if (i == 0) {
+            try {
+               exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
+               BoardLog.logD("BANAL","Run " + exec.getCommand());
+             }
+            catch (IOException e) {
+               break;
+             }
+          }
+         else {
+            try {
+               if (exec != null) {
+                  // check if process exited (nothing to do)
+                  exec.exitValue();
+                  break;
+                }
+             }
+            catch (IllegalThreadStateException e) { }
+          }
 
-	 try {
-	    wait(2000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(2000);
+          }
+         catch (InterruptedException e) { }
        }
       if (!server_running) {
-	 BoardLog.logE("BANAL","Unable to start banal server");
-	 server_running = true; 	// don't try again
+         BoardLog.logE("BANAL","Unable to start banal server");
+         server_running = true;         // don't try again
        }
       synchronized (this) {
          server_starting = false;
@@ -307,7 +307,7 @@ private static class BanalStarter extends Thread {
 
 
 
-}	// end of class BanalFactory
+}       // end of class BanalFactory
 
 
 

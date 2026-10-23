@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgent.java						*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data generic agent		*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgent.java                                               */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data generic agent                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -33,24 +33,24 @@ abstract class BandaidAgent implements BandaidConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected BandaidController the_control;
 
-private String		agent_name;
-private long		mon_total;
-private long		mon_start;
+private String          agent_name;
+private long            mon_total;
+private long            mon_start;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BandaidAgent(BandaidController dc,String name)
@@ -65,19 +65,19 @@ protected BandaidAgent(BandaidController dc,String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public String getName() 		{ return agent_name; }
+public String getName()                 { return agent_name; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Monitoring and timing methods						*/
-/*										*/
+/*                                                                              */
+/*      Monitoring and timing methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void enableMonitoring(boolean fg,long now)
@@ -106,9 +106,9 @@ long getMonitoredTime(long now)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void generateReport(BandaidXmlWriter xw,long now)      { }
@@ -117,25 +117,25 @@ void generateReport(BandaidXmlWriter xw,long now)      { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void handleThreadStack(long now,ThreadInfo ti,StackTraceElement [] trc) { }
 
-void handleDoneStacks(long now) 					{ }
+void handleDoneStacks(long now)                                         { }
 
-protected void handleMonitorStart(long now)				{ }
+protected void handleMonitorStart(long now)                             { }
 
-protected void handleMonitorStop(long now)				{ }
+protected void handleMonitorStop(long now)                              { }
 
-void handleCommand(String cmd,String args)				{ }
+void handleCommand(String cmd,String args)                              { }
 
-ClassFileTransformer getTransformer()					{ return null; }
+ClassFileTransformer getTransformer()                                   { return null; }
 
 
-}	// end of abstract class BandaidAgent
+}       // end of abstract class BandaidAgent
 
 
 

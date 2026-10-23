@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdocRepository.java						*/
-/*										*/
-/*	Bubbles Environment Documentation repository of available javadocs	*/
-/*										*/
+/*                                                                              */
+/*              BdocRepository.java                                             */
+/*                                                                              */
+/*      Bubbles Environment Documentation repository of available javadocs      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -75,25 +75,25 @@ class BdocRepository implements BassRepository, BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,BdocReference> all_items;
 private Set<String>             ref_names;
 private Collection<BdocInheritedReference> inherited_items;
-private int			ready_count;
-private boolean 		cache_repository;
-private List<String>		bdoc_props;
+private int                     ready_count;
+private boolean                 cache_repository;
+private List<String>            bdoc_props;
 private boolean                 have_javase;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocRepository()
@@ -114,18 +114,18 @@ BdocRepository()
       String nm = IvyXml.getAttrString(pe,"NAME");
       Element e1 = bc.getProjectData(nm,false,true,false,false,false);
       if (e1 != null) {
-	 Element e2 = IvyXml.getChild(e1, "CLASSPATH");
-	 for (Element e3 : IvyXml.children(e2,"PATH")) {
-	    String jd = IvyXml.getTextElement(e3,"JAVADOC");
-	    if (jd != null) {
-	       BoardLog.logD("BDOC", "Eclipse javadoc: " + jd);
-	       libdocs.add(jd);
-	     }
-	 }
+         Element e2 = IvyXml.getChild(e1, "CLASSPATH");
+         for (Element e3 : IvyXml.children(e2,"PATH")) {
+            String jd = IvyXml.getTextElement(e3,"JAVADOC");
+            if (jd != null) {
+               BoardLog.logD("BDOC", "Eclipse javadoc: " + jd);
+               libdocs.add(jd);
+             }
+         }
       }
       if (nm != null) {
-	 nm = nm.replace(" ","_");
-	 plist.add("Bdoc." + nm + ".javadoc.");
+         nm = nm.replace(" ","_");
+         plist.add("Bdoc." + nm + ".javadoc.");
        }
     }
    // should get javadocs eclipse knows for project at this point
@@ -134,14 +134,14 @@ BdocRepository()
    for (String s : bp.stringPropertyNames()) {
       boolean use = false;
       for (String ns : plist) {
-	 if (s.startsWith(ns)) {
-	    use = true;
-	    break;
-	  }
+         if (s.startsWith(ns)) {
+            use = true;
+            break;
+          }
        }
       if (use) {
-	 String nm = bp.getProperty(s);
-	 if (nm != null) bdoc_props.add(s);
+         String nm = bp.getProperty(s);
+         if (nm != null) bdoc_props.add(s);
        }
     }
 
@@ -164,25 +164,25 @@ BdocRepository()
    for (String s : bdoc_props) {
       String nm = bp.getProperty(s);
       if (nm != null) {
-	 BoardLog.logD("BDOC", "Property Javadoc " + s + ":" + nm);
-	 addJavadoc(nm,false);
+         BoardLog.logD("BDOC", "Property Javadoc " + s + ":" + nm);
+         addJavadoc(nm,false);
       }
     }
    waitForSearches();
 
    for (String s : libdocs) {
       if (!s.startsWith("http") && !s.startsWith("file:")) {
-	 if (s.startsWith("/")) {
-	    s = "file://" + s;
-	  }
-	 else continue;
+         if (s.startsWith("/")) {
+            s = "file://" + s;
+          }
+         else continue;
        }
       else if (s.startsWith("file:")) {
-	 if (s.startsWith("file:/") && !s.startsWith("file:///")) {
-	    s = s.substring(5);
-	    s = "file://" + s;
-	 }
-	 if (!s.endsWith(".jar") && !s.endsWith("/")) s = s + "/";
+         if (s.startsWith("file:/") && !s.startsWith("file:///")) {
+            s = s.substring(5);
+            s = "file://" + s;
+         }
+         if (!s.endsWith(".jar") && !s.endsWith("/")) s = s + "/";
       }
       addJavadoc(s,true);
     }
@@ -197,9 +197,9 @@ BdocRepository()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addJavadoc(String url,boolean optional)
@@ -220,7 +220,7 @@ void addJavadoc(String url,boolean optional)
 
 
 
-void addJavadoc(URI u)			{ addJavadoc(u,null,false); }
+void addJavadoc(URI u)                  { addJavadoc(u,null,false); }
 
 
 synchronized void addJavadoc(URI u,String proj,boolean optional)
@@ -256,7 +256,7 @@ private synchronized void waitForSearches()
 {
    while (ready_count > 2) {
       try {
-	 wait();
+         wait();
       }
       catch (InterruptedException e) { }
    }
@@ -264,9 +264,9 @@ private synchronized void waitForSearches()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public synchronized Iterable<BassName> getAllNames()
@@ -288,7 +288,7 @@ private synchronized void waitForSearches()
 }
 
 
-@Override public boolean includesRepository(BassRepository br)	{ return br == this; }
+@Override public boolean includesRepository(BassRepository br)  { return br == this; }
 
 
 
@@ -323,7 +323,7 @@ synchronized void waitForReady()
 {
    while (ready_count > 0) {
       try {
-	 wait();
+         wait();
        }
       catch (InterruptedException e) { }
     }
@@ -333,9 +333,9 @@ synchronized void waitForReady()
 
 
 /********************************************************************************/
-/*										*/
-/*	Loading methods 							*/
-/*										*/
+/*                                                                              */
+/*      Loading methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadJavadoc(URI u,String p,boolean optional)
@@ -353,9 +353,9 @@ private void loadJavadoc(URI u,String p,boolean optional)
 
    for (int i = 1; i <= 27; ++i) {
       try {
-	 u1 = new URI(u.getScheme(),u.getAuthority(),
+         u1 = new URI(u.getScheme(),u.getAuthority(),
                u.getPath() + "/index-files/index-" + i + ".html",null,null); 
-	 loadJavadocFile(u1,p,optional);
+         loadJavadocFile(u1,p,optional);
        }
       catch (URISyntaxException e) { }
     }
@@ -419,9 +419,9 @@ private synchronized boolean checkReference(BdocReference br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle hierarchical links					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle hierarchical links                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void addHierarchyLinks()
@@ -431,17 +431,17 @@ private void addHierarchyLinks()
 
    for (BdocReference br : all_items.values()) {
       switch (br.getNameType()) {
-	 case PACKAGE :
-	    pkgs.add(br.getDigestedName());
-	    break;
-	 case CLASS :
-	 case INTERFACE :
-	 case ANNOTATION :
-	 // case ENUM :
-	    clss.add(br.getDigestedName());
-	    break;
-	 default :
-	    break;
+         case PACKAGE :
+            pkgs.add(br.getDigestedName());
+            break;
+         case CLASS :
+         case INTERFACE :
+         case ANNOTATION :
+         // case ENUM :
+            clss.add(br.getDigestedName());
+            break;
+         default :
+            break;
        }
     }
 
@@ -462,16 +462,16 @@ private void addHierarchyLinks()
       if (!clss.contains(cls)) continue;
       Set<String> done = new HashSet<String>();
       for (String scls : hier.getSupers(cls)) {
-	 if (scls.equals("java.lang.Object")) continue;
-	 for (String mthd : mif.getMethods(scls)) {
-	    if (!done.contains(mthd) && mif.getReferences(cls,mthd) == null) {
-	       done.add(mthd);
-	       for (BdocReference base : mif.getReferences(scls,mthd)) {
-		  BdocInheritedReference bir = new BdocInheritedReference(base,cls);
-		  inherited_items.add(bir);
-		}
-	     }
-	  }
+         if (scls.equals("java.lang.Object")) continue;
+         for (String mthd : mif.getMethods(scls)) {
+            if (!done.contains(mthd) && mif.getReferences(cls,mthd) == null) {
+               done.add(mthd);
+               for (BdocReference base : mif.getReferences(scls,mthd)) {
+                  BdocInheritedReference bir = new BdocInheritedReference(base,cls);
+                  inherited_items.add(bir);
+                }
+             }
+          }
        }
     }
 }
@@ -481,15 +481,15 @@ private void addHierarchyLinks()
 
 private static class Hierarchy {
 
-   private Map<String,Set<String>>	class_hierarchy;
+   private Map<String,Set<String>>      class_hierarchy;
 
    Hierarchy() {
       class_hierarchy = new HashMap<>();
     }
 
-   Collection<String> getClasses()		{ return class_hierarchy.keySet(); }
+   Collection<String> getClasses()              { return class_hierarchy.keySet(); }
 
-   Collection<String> getSupers(String cls)	{ return class_hierarchy.get(cls); }
+   Collection<String> getSupers(String cls)     { return class_hierarchy.get(cls); }
 
    void loadRelations(Element xml) {
       for (Element ce : IvyXml.children(xml,"TYPE")) {
@@ -514,7 +514,7 @@ private static class Hierarchy {
        }
     }
 
-}	// end of inner class Hierarchy
+}       // end of inner class Hierarchy
 
 
 
@@ -545,14 +545,14 @@ private static class MemberInfo {
             break;
          case FIELDS :
          case VARIABLES :
-            return;				// might want to do inherited fields
+            return;                             // might want to do inherited fields
          case CONSTRUCTOR :
             return;
          default :
             return;
        }
    
-      String nm = br.getDigestedName(); 	// without parameters
+      String nm = br.getDigestedName();         // without parameters
       int idx = nm.lastIndexOf(".");
       if (idx < 0) return;
       String cls = nm.substring(0,idx);
@@ -570,15 +570,15 @@ private static class MemberInfo {
       refs.add(br);
     }
 
-}	// end of inner class MemberInfo
+}       // end of inner class MemberInfo
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Input/Output methods							*/
-/*										*/
+/*                                                                              */
+/*      Input/Output methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputXml(File f)
@@ -593,16 +593,16 @@ private void outputXml(File f)
 
       BoardProperties bp = BoardProperties.getProperties("Bdoc");
       for (String s : bdoc_props) {
-	 String nm = bp.getProperty(s);
-	 if (nm != null) xw.textElement("SOURCE",nm);
+         String nm = bp.getProperty(s);
+         if (nm != null) xw.textElement("SOURCE",nm);
        }
 
       for (BdocReference br : all_items.values()) {
-	 br.outputXml(xw);
+         br.outputXml(xw);
        }
 
       for (BdocInheritedReference ibr : inherited_items) {
-	 ibr.outputXml(xw);
+         ibr.outputXml(xw);
        }
 
       xw.end("JAVADOC");
@@ -612,9 +612,9 @@ private void outputXml(File f)
    catch (IOException e) {
       BoardProperties bpx = BoardProperties.getProperties("System");
       BoardLog.logE("BDOC","Problem outputing repository: " + f + " " +
-		       BoardSetup.getPropertyBase() + " " +
-		       bpx.getProperty("edu.brown.cs.bubbles.workspace") + " " +
-		       bpx.getProperty("edu.brown.cs.bubbles.install"),e);
+                       BoardSetup.getPropertyBase() + " " +
+                       bpx.getProperty("edu.brown.cs.bubbles.workspace") + " " +
+                       bpx.getProperty("edu.brown.cs.bubbles.install"),e);
     }
 }
 
@@ -632,44 +632,44 @@ private boolean loadXml(File f)
    for (String pnm : bdoc_props) {
       String nm = bp.getProperty(pnm);
       if (nm != null) {
-	 sources.add(nm);
-	 try {
-	    URI u = new URI(nm);
-	    if (u.getScheme().equals("file")) {
-	       File f0 = new File(u.getPath());
-	       if (!f0.exists() || (check && f0.lastModified() > dlm)) {
-		  BoardLog.logD("BDOC","Update doc because of " + f0);
-		  return false;
-		}
-	     }
-	    else if (u.getScheme().equals("http") || u.getScheme().equals("https")) {
-	       try {
-		  URL url = u.toURL();
-		  HttpURLConnection c = (HttpURLConnection) url.openConnection();
-		  c.setIfModifiedSince(dlm);
-		  c.setInstanceFollowRedirects(true);
-		  int cd = c.getResponseCode();
-		  if (cd == HttpURLConnection.HTTP_OK) {
-		     long ndlm = c.getLastModified();
-		     if (check && ndlm > dlm) {
-			BoardLog.logD("BDOC","Update doc because of " + u);
-			return false;
-		      }
-		   }
-		  else if (cd >= 400) {
-		     BoardLog.logD("BDOC","Update doc because of error " + cd + " on " + u);
-		     return false;
-		   }
-		}
-	       catch (IOException e) {
-		  // ignore bad connection -- use cached value
-		}
-	     }
-	  }
-	 catch (URISyntaxException e) {
-	    BoardLog.logD("BDOC","Update doc because of uri syntax error " + e);
-	    return false;
-	  }
+         sources.add(nm);
+         try {
+            URI u = new URI(nm);
+            if (u.getScheme().equals("file")) {
+               File f0 = new File(u.getPath());
+               if (!f0.exists() || (check && f0.lastModified() > dlm)) {
+                  BoardLog.logD("BDOC","Update doc because of " + f0);
+                  return false;
+                }
+             }
+            else if (u.getScheme().equals("http") || u.getScheme().equals("https")) {
+               try {
+                  URL url = u.toURL();
+                  HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                  c.setIfModifiedSince(dlm);
+                  c.setInstanceFollowRedirects(true);
+                  int cd = c.getResponseCode();
+                  if (cd == HttpURLConnection.HTTP_OK) {
+                     long ndlm = c.getLastModified();
+                     if (check && ndlm > dlm) {
+                        BoardLog.logD("BDOC","Update doc because of " + u);
+                        return false;
+                      }
+                   }
+                  else if (cd >= 400) {
+                     BoardLog.logD("BDOC","Update doc because of error " + cd + " on " + u);
+                     return false;
+                   }
+                }
+               catch (IOException e) {
+                  // ignore bad connection -- use cached value
+                }
+             }
+          }
+         catch (URISyntaxException e) {
+            BoardLog.logD("BDOC","Update doc because of uri syntax error " + e);
+            return false;
+          }
        }
      }
 
@@ -708,9 +708,9 @@ private boolean loadXml(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle remote access of documentation file				*/
-/*										*/
+/*                                                                              */
+/*      Handle remote access of documentation file                              */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleRemoteAccess()
@@ -719,14 +719,14 @@ private void handleRemoteAccess()
 
    switch (bs.getRunMode()) {
       case CLIENT :
-	 BumpClient bc = BumpClient.getBump();
-	 File f = BoardSetup.getDocumentationFile();
-	 if (f.exists()) break;
-	 bc.getRemoteFile(f,"BDOC",null);
-	 // ignore failures -- we'll just load the doc ourselves
-	 break;
+         BumpClient bc = BumpClient.getBump();
+         File f = BoardSetup.getDocumentationFile();
+         if (f.exists()) break;
+         bc.getRemoteFile(f,"BDOC",null);
+         // ignore failures -- we'll just load the doc ourselves
+         break;
       default:
-	 break;
+         break;
     }
 }
 
@@ -735,9 +735,9 @@ private void handleRemoteAccess()
 
 
 /********************************************************************************/
-/*										*/
-/*	Searcher thread 							*/
-/*										*/
+/*                                                                              */
+/*      Searcher thread                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class Searcher implements Runnable {
@@ -761,14 +761,14 @@ private class Searcher implements Runnable {
       return "BDOC_Searcher_" + base_url;
     }
 
-}	// end of inner class Searcher
+}       // end of inner class Searcher
 
 
 
 /********************************************************************************/
-/*										*/
-/*	BdocLoader class to handle XML parsing					*/
-/*										*/
+/*                                                                              */
+/*      BdocLoader class to handle XML parsing                                  */
+/*                                                                              */
 /********************************************************************************/
 
 enum TextItem {
@@ -805,83 +805,83 @@ private class BdocLoader extends DefaultHandler {
 
    @Override public void startElement(String uri,String lnm,String qnm,Attributes attrs) {
       if (qnm.equals("SOURCE")) {
-	 cur_text = TextItem.SOURCE;
+         cur_text = TextItem.SOURCE;
        }
       else if (qnm.equals("BDOC")) {
-	 if (is_valid == null) {
-	    is_valid = Boolean.valueOf(source_list.isEmpty());
-	  }
-	 if (is_valid) {
-	    doc_type = attrs.getValue("TYPE");
-	    doc_name = attrs.getValue("NAME");
-	    doc_params = attrs.getValue("PARAMS");
-	    doc_project = attrs.getValue("PROJECT");
-	  }
+         if (is_valid == null) {
+            is_valid = Boolean.valueOf(source_list.isEmpty());
+          }
+         if (is_valid) {
+            doc_type = attrs.getValue("TYPE");
+            doc_name = attrs.getValue("NAME");
+            doc_params = attrs.getValue("PARAMS");
+            doc_project = attrs.getValue("PROJECT");
+          }
        }
       else if (is_valid == Boolean.TRUE) {
-	 if (qnm.equals("INHERIT")) {
-	    String nm = attrs.getValue("NAME");
-	    String prms = attrs.getValue("PARAMS");
-	    String base = attrs.getValue("BASE");
-	    String k = base;
-	    if (prms != null) k += prms;
-	    BdocReference br = base_map.get(k);
-	    int idx = nm.lastIndexOf(".");
-	    if (idx >= 0 && br != null) {
-	       String cls = nm.substring(0,idx);
-	       BdocInheritedReference bir = new BdocInheritedReference(br,cls);
-	       inherited_items.add(bir);
-	     }
-	  }
-	 else if (qnm.equals("URL")) cur_text = TextItem.URL;
-	 else if (qnm.equals("DESCRIPTION")) cur_text = TextItem.DESCRIPTION;
+         if (qnm.equals("INHERIT")) {
+            String nm = attrs.getValue("NAME");
+            String prms = attrs.getValue("PARAMS");
+            String base = attrs.getValue("BASE");
+            String k = base;
+            if (prms != null) k += prms;
+            BdocReference br = base_map.get(k);
+            int idx = nm.lastIndexOf(".");
+            if (idx >= 0 && br != null) {
+               String cls = nm.substring(0,idx);
+               BdocInheritedReference bir = new BdocInheritedReference(br,cls);
+               inherited_items.add(bir);
+             }
+          }
+         else if (qnm.equals("URL")) cur_text = TextItem.URL;
+         else if (qnm.equals("DESCRIPTION")) cur_text = TextItem.DESCRIPTION;
        }
     }
 
    @Override public void endElement(String uri,String lnm,String qnm) {
       switch (cur_text) {
-	 case NONE :
-	    break;
-	 case SOURCE :
-	    if (cur_buffer != null) {
-	       String src = cur_buffer.toString();
-	       if (!source_list.remove(src)) is_valid = false;
-	     }
-	    break;
-	 case URL :
-	    if (cur_buffer != null) doc_url = cur_buffer.toString();
-	    break;
-	 case DESCRIPTION :
-	    if (cur_buffer != null) doc_description = cur_buffer.toString();
-	    break;
+         case NONE :
+            break;
+         case SOURCE :
+            if (cur_buffer != null) {
+               String src = cur_buffer.toString();
+               if (!source_list.remove(src)) is_valid = false;
+             }
+            break;
+         case URL :
+            if (cur_buffer != null) doc_url = cur_buffer.toString();
+            break;
+         case DESCRIPTION :
+            if (cur_buffer != null) doc_description = cur_buffer.toString();
+            break;
        }
       cur_text = TextItem.NONE;
       cur_buffer = null;
       if (qnm.equals("BDOC")) {
-	 if (is_valid) {
-	    BdocReference br = new BdocReference(BdocRepository.this,
-						    doc_type,doc_name,doc_params,
-						    doc_description,doc_project,doc_url);
-	    addReference(br);
-	    String k = br.getDigestedName();
-	    if (br.getParameters() != null) k += br.getParameters();
-	    base_map.put(k,br);
-	  }
+         if (is_valid) {
+            BdocReference br = new BdocReference(BdocRepository.this,
+                                                    doc_type,doc_name,doc_params,
+                                                    doc_description,doc_project,doc_url);
+            addReference(br);
+            String k = br.getDigestedName();
+            if (br.getParameters() != null) k += br.getParameters();
+            base_map.put(k,br);
+          }
        }
     }
 
    @Override public void characters(char [] ch,int start,int len) {
       if (cur_text != TextItem.NONE) {
-	 if (cur_buffer == null) cur_buffer = new StringBuffer();
-	 cur_buffer.append(ch,start,len);
+         if (cur_buffer == null) cur_buffer = new StringBuffer();
+         cur_buffer.append(ch,start,len);
        }
     }
 
-}	// end of inner class BdocLoader
+}       // end of inner class BdocLoader
 
 
 
-}	// end of class BdocRepository
+}       // end of class BdocRepository
 
 
 

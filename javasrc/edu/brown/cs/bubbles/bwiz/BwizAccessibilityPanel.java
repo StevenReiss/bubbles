@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizAccessibilityPanel.java					*/
-/*										*/
-/*	Panel with accessibiliy options 					*/
-/*										*/
+/*                                                                              */
+/*              BwizAccessibilityPanel.java                                     */
+/*                                                                              */
+/*      Panel with accessibiliy options                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -47,9 +47,9 @@ class BwizAccessibilityPanel extends JPanel implements BwizConstants
 {
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JRadioButton public_button;
@@ -73,9 +73,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizAccessibilityPanel(int fgs)
@@ -89,9 +89,9 @@ BwizAccessibilityPanel(int fgs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /* sets up the public and default options on the accessibility panel */
@@ -245,26 +245,26 @@ protected void setup(int fgs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Selection management							*/
-/*										*/
+/*                                                                              */
+/*      Selection management                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 public void setSelected(Accessibility a)
 {
    switch (a) {
       case PRIVATE :
-	 private_button.setSelected(true);
-	 break;
+         private_button.setSelected(true);
+         break;
       case PROTECTED :
-	 protected_button.setSelected(true);
-	 break;
+         protected_button.setSelected(true);
+         break;
       case PUBLIC :
-	 public_button.setSelected(true);
-	 break;
+         public_button.setSelected(true);
+         break;
       case DEFAULT :
-	 default_button.setSelected(true);
-	 break;
+         default_button.setSelected(true);
+         break;
     }
 }
 
@@ -285,9 +285,9 @@ public void clearSelection()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action management							*/
-/*										*/
+/*                                                                              */
+/*      Action management                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public void addAccessibilityActionListener(ActionListener listener)
@@ -331,7 +331,7 @@ private final class TypeListener implements ActionListener {
 }
 
 
-}	// end of class BwizAccessibilityPanel
+}       // end of class BwizAccessibilityPanel
 
 
 

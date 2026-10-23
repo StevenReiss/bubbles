@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtPerfViewTable.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool performance bubble		*/
-/*										*/
+/*                                                                              */
+/*              BddtPerfViewTable.java                                          */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool performance bubble            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -92,21 +92,21 @@ class BddtPerfViewTable implements BddtConstants, BumpConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BddtLaunchControl	launch_control;
-private PerfModel		perf_model;
-private PerfEventHandler	event_handler;
-private double			base_samples;
-private double			total_samples;
-private double			base_time;
+private BddtLaunchControl       launch_control;
+private PerfModel               perf_model;
+private PerfEventHandler        event_handler;
+private double                  base_samples;
+private double                  total_samples;
+private double                  base_time;
 private double                  reset_samples;
 private double                  reset_totals;
 private double                  reset_time;
-private Map<String,PerfNode>	node_map;
+private Map<String,PerfNode>    node_map;
 
 private static final String [] COLUMN_NAME = new String[] {
    "Package", "Class", "Method", "Line", "Base Time", "Base %", "Total Time", "Total %"
@@ -124,9 +124,9 @@ private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.000");
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtPerfViewTable(BddtLaunchControl ctrl)
@@ -146,9 +146,9 @@ BddtPerfViewTable(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble createBubble()
@@ -264,9 +264,9 @@ class PerfBubble extends BudaBubble {
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu and mouse handlers						*/
-/*										*/
+/*                                                                              */
+/*      Popup menu and mouse handlers                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class ClickHandler extends BoardMouser {
@@ -328,15 +328,15 @@ private class ClickHandler extends BoardMouser {
        }
    }
 
-}	// end of inner class ClickHandler
+}       // end of inner class ClickHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Run Event Handler							*/
-/*										*/
+/*                                                                              */
+/*      Run Event Handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class PerfEventHandler implements BumpRunEventHandler {
@@ -347,7 +347,7 @@ private final class PerfEventHandler implements BumpRunEventHandler {
              evt.getProcess() != launch_control.getProcess())
          return;
       else if (evt.getProcess() == null &&
-        	  evt.getEventType() != BumpRunEventType.PROCESS_ADD)
+                  evt.getEventType() != BumpRunEventType.PROCESS_ADD)
          return;
    
       switch (evt.getEventType()) {
@@ -374,15 +374,15 @@ private final class PerfEventHandler implements BumpRunEventHandler {
        }
     }
 
-}	// end of inner class PerfEventHandler
+}       // end of inner class PerfEventHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Table implementation							*/
-/*										*/
+/*                                                                              */
+/*      Table implementation                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutputer {
@@ -407,7 +407,7 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
        }
       return cell_drawer[c];
     }
@@ -434,9 +434,9 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
       finally { perf_model.unlock(); }
     }
 
-   @Override public String getConfigurator()		{ return "BDDT"; }
+   @Override public String getConfigurator()            { return "BDDT"; }
 
-   @Override public void outputXml(BudaXmlWriter xw)	{ }
+   @Override public void outputXml(BudaXmlWriter xw)    { }
 
    PerfNode getActualNode(int row) {
       RowSorter<?> rs = getRowSorter();
@@ -452,7 +452,7 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
       return pn.getToolTip();
    }
 
-}	// end of inner class PerfTable
+}       // end of inner class PerfTable
 
 
 private class PerfDoubleRenderer extends DefaultTableCellRenderer.UIResource {
@@ -472,9 +472,9 @@ private class PerfDoubleRenderer extends DefaultTableCellRenderer.UIResource {
 }
 
 /********************************************************************************/
-/*										*/
-/*	Renderers								*/
-/*										*/
+/*                                                                              */
+/*      Renderers                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderDrawer implements TableCellRenderer {
@@ -488,18 +488,18 @@ private static class HeaderDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (bold_font == null) {
-	 bold_font = cmp.getFont();
-	 bold_font = bold_font.deriveFont(Font.BOLD);
+         bold_font = cmp.getFont();
+         bold_font = bold_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class HeaderRenderer
+}       // end of inner class HeaderRenderer
 
 
 
@@ -513,7 +513,7 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-        						       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       Class<?> cc = COLUMN_CLASS[c];
       if (v != null && !cc.isAssignableFrom(v.getClass())) {
          BoardLog.logX("BDDT","Wrong data type for column " + c + " " + cc + " " +
@@ -526,19 +526,19 @@ private static class CellDrawer implements TableCellRenderer {
       return cmp;
     }
 
-}	// end of inner class ErrorRenderer
+}       // end of inner class ErrorRenderer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree model								*/
-/*										*/
+/*                                                                              */
+/*      Tree model                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class PerfModel extends AbstractTableModel {
 
-   private Lock 	model_lock;
+   private Lock         model_lock;
    private List<PerfNode> node_set;
    private Map<PerfNode,Integer> index_set;
    private static final long serialVersionUID = 1;
@@ -558,14 +558,14 @@ private class PerfModel extends AbstractTableModel {
       if (ln > 0) fireTableRowsDeleted(0,ln-1);
     }
 
-   void lock()					{ model_lock.lock(); }
-   void unlock()				{ model_lock.unlock(); }
+   void lock()                                  { model_lock.lock(); }
+   void unlock()                                { model_lock.unlock(); }
 
    @Override public int getColumnCount() {
       return COLUMN_NAME.length;
     }
 
-   @Override public int getRowCount()		{ return node_set.size(); }
+   @Override public int getRowCount()           { return node_set.size(); }
 
 
    @Override public String getColumnName(int col) {
@@ -580,13 +580,13 @@ private class PerfModel extends AbstractTableModel {
       PerfNode pn = getNode(row);
       if (pn == null) return null;
       switch (col) {
-         case 0 :			// package
+         case 0 :                       // package
             return pn.getPackage();
-         case 1 :			// class
+         case 1 :                       // class
             return pn.getClassName();
-         case 2 :			// method
+         case 2 :                       // method
             return pn.getMethodName();
-         case 3 :			// line
+         case 3 :                       // line
             return pn.getLineNumber();
          case 4 :
             return pn.getBaseCount()* getBaseTime()/getBaseSamples();
@@ -621,15 +621,15 @@ private class PerfModel extends AbstractTableModel {
    // System.err.println("HANDLE UPDATE " + iv);
     }
 
-}	// end of inner class PerfModel
+}       // end of inner class PerfModel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Performance nodes							*/
-/*										*/
+/*                                                                              */
+/*      Performance nodes                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private PerfNode findNode(String nm)
@@ -637,9 +637,9 @@ private PerfNode findNode(String nm)
    synchronized (node_map) {
       PerfNode pn = node_map.get(nm);
       if (pn == null) {
-	 pn = new PerfNode(nm);
-	 node_map.put(nm,pn);
-	 SwingUtilities.invokeLater(new NodeAdder(pn));
+         pn = new PerfNode(nm);
+         node_map.put(nm,pn);
+         SwingUtilities.invokeLater(new NodeAdder(pn));
        }
       return pn;
     }
@@ -659,7 +659,7 @@ private class NodeAdder implements Runnable {
       perf_model.addNode(perf_node);
     }
 
-}	// end of inner class NodeAdder
+}       // end of inner class NodeAdder
 
 
 
@@ -681,16 +681,16 @@ private class PerfNode implements Comparable<PerfNode> {
       String [] data = nm.split("@");
       int idx = data[0].lastIndexOf(".");
       if (idx >= 0) {
-	 package_name = data[0].substring(0,idx);
-	 class_name = data[0].substring(idx+1);
+         package_name = data[0].substring(0,idx);
+         class_name = data[0].substring(idx+1);
        }
       else {
-	 package_name = null;
-	 class_name = data[0];
+         package_name = null;
+         class_name = data[0];
        }
       method_name = data[1];
       if (data[2].length() > 0) {
-	 line_number = Integer.parseInt(data[2]);
+         line_number = Integer.parseInt(data[2]);
        }
       if (data.length >= 4) file_name = data[3];
       else file_name = null;
@@ -701,11 +701,11 @@ private class PerfNode implements Comparable<PerfNode> {
       reset_total = 0;
     }
 
-   String getPackage()				{ return package_name; }
-   String getClassName()			{ return class_name; }
-   String getMethodName()			{ return method_name; }
-   int getLineNumber()				{ return line_number; }
-   String getFileName() 			{ return file_name; }
+   String getPackage()                          { return package_name; }
+   String getClassName()                        { return class_name; }
+   String getMethodName()                       { return method_name; }
+   int getLineNumber()                          { return line_number; }
+   String getFileName()                         { return file_name; }
 
    void update(Element xml) {
       int bc = IvyXml.getAttrInt(xml,"BASE",0);
@@ -722,8 +722,8 @@ private class PerfNode implements Comparable<PerfNode> {
       reset_total = total_count;
     }
 
-   int getBaseCount()			{ return base_count - reset_count; }
-   int getTotalCount()			{ return total_count - reset_total; }
+   int getBaseCount()                   { return base_count - reset_count; }
+   int getTotalCount()                  { return total_count - reset_total; }
 
    @Override public int compareTo(PerfNode pn) {
        return full_name.compareTo(pn.full_name);
@@ -792,7 +792,7 @@ private class PerfNode implements Comparable<PerfNode> {
       return buf.toString();
    }
 
-}	// end of inner class PerfNode
+}       // end of inner class PerfNode
 
 
 
@@ -808,7 +808,7 @@ private class ChangeHandler implements Runnable {
       perf_model.handleChange(for_node);
     }
 
-}	// en dof inner class ChangeHandler
+}       // en dof inner class ChangeHandler
 
 
 
@@ -839,7 +839,7 @@ private class ResetAction extends AbstractAction {
    
 }       // end of inner class ResetAction
 
-}	// end of class BddtPerfViewTable
+}       // end of class BddtPerfViewTable
 
 
 

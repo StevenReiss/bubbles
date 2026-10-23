@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardMetricAnalyzer.java					*/
-/*										*/
-/*	Stand alone program to do analysis of recorded metrics			*/
-/*										*/
+/*                                                                              */
+/*              BoardMetricAnalyzer.java                                        */
+/*                                                                              */
+/*      Stand alone program to do analysis of recorded metrics                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,9 +49,9 @@ public final class BoardMetricAnalyzer implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -66,23 +66,23 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /***
 *
-*	We want to issue a find command on conifer2 to find and dump the appropriate
-*	log files.  Then we only need to read standard out to get all the relevant
-*	entries.
+*       We want to issue a find command on conifer2 to find and dump the appropriate
+*       log files.  Then we only need to read standard out to get all the relevant
+*       entries.
 *
-*	Let the user use find arguments such as -mtime <# days> to specify which
-*	files are relevant.  In addition, we should add find arguments to select
-*	just command files or files for a particular user.  These should  be gathered
-*	from the command line and passed onto find.
+*       Let the user use find arguments such as -mtime <# days> to specify which
+*       files are relevant.  In addition, we should add find arguments to select
+*       just command files or files for a particular user.  These should  be gathered
+*       from the command line and passed onto find.
 *
-*	find /vol/web/html/bubbles/uploads -type f -name '*COMMANDS*' -mtime 24 -print -exec cat {} \;
+*       find /vol/web/html/bubbles/uploads -type f -name '*COMMANDS*' -mtime 24 -print -exec cat {} \;
 *
 ****/
 
@@ -95,21 +95,21 @@ private static final String CFG_MATCH = "-name '*CONFIG*'";
 private static final String FILEARGS = "-print";
 
 
-private List<String>	find_args;
-private boolean 	use_commands;
-private boolean 	use_config;
-private List<Analyzer>	analyzer_set;
-private String		data_file;
-private String		output_data;
-private String		output_file;
-private PrintStream	output_writer;
+private List<String>    find_args;
+private boolean         use_commands;
+private boolean         use_config;
+private List<Analyzer>  analyzer_set;
+private String          data_file;
+private String          output_data;
+private String          output_file;
+private PrintStream     output_writer;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardMetricAnalyzer(String [] args)
@@ -128,9 +128,9 @@ private BoardMetricAnalyzer(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning							*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
@@ -139,15 +139,15 @@ private void scanArgs(String [] args)
 
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("--anal") && i+1 < args.length) {
-	 switch (args[++i]) {
-	    case "AUTOFIX" :
-	       use_commands = true;
-	       use_config = false;
-	       analyzer_set.add(new EditRegionAnalysis());
-	       analyzer_set.add(new UserCorrectionAnalysis());
-	       analyzer_set.add(new AutoCorrectionAnalysis());
+         switch (args[++i]) {
+            case "AUTOFIX" :
+               use_commands = true;
+               use_config = false;
+               analyzer_set.add(new EditRegionAnalysis());
+               analyzer_set.add(new UserCorrectionAnalysis());
+               analyzer_set.add(new AutoCorrectionAnalysis());
                analyzer_set.add(new TotalTimeAnalysis());
-	       break;
+               break;
             case "SEEDE" :
                use_commands = true;
                analyzer_set.add(new SeedeAnalysis());
@@ -158,22 +158,22 @@ private void scanArgs(String [] args)
                use_config = false;
                analyzer_set.add(new CommandUsageAnalysis());
                break;
-	    default :
-	       badArgs();
-	       break;
-	  }
+            default :
+               badArgs();
+               break;
+          }
        }
       else if (args[i].startsWith("--data") && i+1 < args.length) {
-	 data_file = args[++i];
+         data_file = args[++i];
        }
       else if (args[i].startsWith("--out") && i+1 < args.length) {
-	 output_file = args[++i];
+         output_file = args[++i];
        }
       else if (args[i].startsWith("--save") && i+1 < args.length) {
-	 output_data = args[++i];
+         output_data = args[++i];
        }
       else {
-	 find_args.add(args[i]);
+         find_args.add(args[i]);
        }
     }
 }
@@ -189,9 +189,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -277,7 +277,7 @@ private void process()
           }
        }
       for (Analyzer anal : analyzer_set) {
-	 anal.finish();
+         anal.finish();
        }
     }
    catch (IOException ex) {
@@ -333,9 +333,9 @@ private BufferedReader getReader() throws IOException
       IvyExec catex = new IvyExec(catstr,IvyExec.READ_OUTPUT);
       br = new BufferedReader(new InputStreamReader(catex.getInputStream()));
       for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null) break;
-	 pw.println(ln);
+         String ln = br.readLine();
+         if (ln == null) break;
+         pw.println(ln);
        }
       br.close();
     }
@@ -392,30 +392,30 @@ private static final class FileSorter implements Comparator<String> {
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic Analyzer								*/
-/*										*/
+/*                                                                              */
+/*      Basic Analyzer                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Analyzer {
 
-   public void startSession(String sess,String id)		{ }
+   public void startSession(String sess,String id)              { }
 
-   public void processLine(String src,String [] cmd,long time)	{ }
+   public void processLine(String src,String [] cmd,long time)  { }
 
-   public void inactive(long delta,long endtime)		{ }
+   public void inactive(long delta,long endtime)                { }
 
-   public void finish() 					{ }
+   public void finish()                                         { }
 
-}	// end of inner class Analyzer
+}       // end of inner class Analyzer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Total Time Analyzer							*/
-/*										*/
+/*                                                                              */
+/*      Total Time Analyzer                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class TotalTimeAnalysis extends Analyzer {
@@ -458,26 +458,26 @@ private class TotalTimeAnalysis extends Analyzer {
       if (cur_session == null) return;
       long time = last_time - start_time - inactive_time;
       if (time < 0) {
-	 System.err.println("NEGATIVE SESSION TIME");
+         System.err.println("NEGATIVE SESSION TIME");
        }
       output_writer.println("SESSION," + cur_session + "," + time);
     }
 
-}	// end of inner class TotalTimeAnalysis
+}       // end of inner class TotalTimeAnalysis
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit Region Analysis							*/
-/*										*/
+/*                                                                              */
+/*      Edit Region Analysis                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class EditRegionAnalysis extends Analyzer {
 
    private Map<String,EditRegion> active_regions;
-   private EditRegion		  current_region;
+   private EditRegion             current_region;
    private Map<EditRegion,Long>   last_active;
 
    EditRegionAnalysis() {
@@ -584,15 +584,15 @@ private class EditRegionAnalysis extends Analyzer {
 
    private void setActive(EditRegion rgn,long time) {
       if (rgn != current_region) {
-	 Long prev = last_active.get(rgn);
-	 if (prev != null) rgn.inactive(time - prev);
+         Long prev = last_active.get(rgn);
+         if (prev != null) rgn.inactive(time - prev);
        }
       else {
-	 Long prev = last_active.get(rgn);
-	 long delta = time-prev;
-	 if (delta > IDLE_TIME) {
-	    rgn.inactive(delta);
-	  }
+         Long prev = last_active.get(rgn);
+         long delta = time-prev;
+         if (delta > IDLE_TIME) {
+            rgn.inactive(delta);
+          }
        }
       last_active.put(rgn,time);
       current_region = rgn;
@@ -600,32 +600,32 @@ private class EditRegionAnalysis extends Analyzer {
 
    private void finishAll() {
       for (EditRegion rgn : active_regions.values()) {
-	 rgn.finish();
+         rgn.finish();
        }
       active_regions.clear();
     }
 
-}	// end of inner class EditRegionAnalysis
+}       // end of inner class EditRegionAnalysis
 
 
 
-private static final int	BEFORE_DELTA = 4;
-private static final int	AFTER_DELTA = 10;
-private static final int	MIN_OPERATIONS = 10;
-private static final int	MIN_SIZE = 10;
-private static final int	IDLE_TIME = 10000;
+private static final int        BEFORE_DELTA = 4;
+private static final int        AFTER_DELTA = 10;
+private static final int        MIN_OPERATIONS = 10;
+private static final int        MIN_SIZE = 10;
+private static final int        IDLE_TIME = 10000;
 
 private class EditRegion {
 
-   private int	  start_pos;
-   private int	  end_pos;
-   private int	  cur_pos;
+   private int    start_pos;
+   private int    end_pos;
+   private int    cur_pos;
    private long   start_time;
    private long   end_time;
    private long   inactive_time;
    private long   pending_inactive;
-   private int	  num_operations;
-   private int	  dot_pos;
+   private int    num_operations;
+   private int    dot_pos;
 
    EditRegion(String eid,long time) {
       start_time = time;
@@ -656,26 +656,26 @@ private class EditRegion {
    void operation(int pos,int len,int dir,long time) {
       if (start_pos < 0) begin(pos,time);
       else if (pos < start_pos) {
-	 if (start_pos - pos > BEFORE_DELTA) {
-	    finish();
-	    begin(pos,time);
-	  }
-	 else start_pos = pos;
+         if (start_pos - pos > BEFORE_DELTA) {
+            finish();
+            begin(pos,time);
+          }
+         else start_pos = pos;
        }
       if (pos > end_pos) {
-	 if (pos - end_pos > AFTER_DELTA) {
-	    finish();
-	    begin(pos,time);
-	  }
-	 else end_pos = pos;
+         if (pos - end_pos > AFTER_DELTA) {
+            finish();
+            begin(pos,time);
+          }
+         else end_pos = pos;
        }
       inactive_time += pending_inactive;
       pending_inactive = 0;
       if (dot_pos > 0) {
-	 cur_pos = dot_pos;
+         cur_pos = dot_pos;
        }
       else {
-	 cur_pos = pos + len*dir;
+         cur_pos = pos + len*dir;
        }
       if (cur_pos < start_pos) start_pos = cur_pos;
       if (cur_pos > end_pos) end_pos = cur_pos;
@@ -696,25 +696,25 @@ private class EditRegion {
    void finish() {
       if (start_pos < 0) return;
       if ((end_time - start_time) < inactive_time) {
-	 System.err.println("TOO MUCH INACTIVE TIME");
+         System.err.println("TOO MUCH INACTIVE TIME");
        }
       if (num_operations >= MIN_OPERATIONS && end_pos - start_pos >= MIN_SIZE) {
-	 output_writer.println("EDITREGION," + start_pos + "," + end_pos + "," +
-				  (end_pos - start_pos) + "," + num_operations + "," +
-				  (end_time - start_time - inactive_time));
+         output_writer.println("EDITREGION," + start_pos + "," + end_pos + "," +
+                                  (end_pos - start_pos) + "," + num_operations + "," +
+                                  (end_time - start_time - inactive_time));
        }
       initialize();
     }
 
-}	// end of inner class EditRegion
+}       // end of inner class EditRegion
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	User Correction Analyzer						*/
-/*										*/
+/*                                                                              */
+/*      User Correction Analyzer                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class UserCorrectionAnalysis extends Analyzer {
@@ -737,55 +737,55 @@ private class UserCorrectionAnalysis extends Analyzer {
 
    @Override public void inactive(long delta,long time) {
       for (CorrectionRegion rgn : active_regions.values()) {
-	 rgn.inactive(delta);
+         rgn.inactive(delta);
        }
     }
 
    @Override public void processLine(String src,String [] cmd,long time) {
       if (src.equals("BURP") && cmd.length == 5 && cmd[0].equals("edit")) {
-	 String what = cmd[1];
-	 int dir = 0;
-	 switch (what) {
-	    case "addition" :
-	       dir = 1;
-	       break;
-	    case "deletion" :
-	       dir = -1;
-	       break;
-	    default :
-	       return;
-	  }
-	 String id = cmd[2];
-	 int len = Integer.parseInt(cmd[3]);
-	 int pos = Integer.parseInt(cmd[4]);
-	 CorrectionRegion rgn = active_regions.get(id);
-	 if (rgn == null) {
-	    rgn = new CorrectionRegion();
-	    active_regions.put(id,rgn);
-	  }
-	 if (!auto_correction) rgn.operation(pos,len,dir,time);
+         String what = cmd[1];
+         int dir = 0;
+         switch (what) {
+            case "addition" :
+               dir = 1;
+               break;
+            case "deletion" :
+               dir = -1;
+               break;
+            default :
+               return;
+          }
+         String id = cmd[2];
+         int len = Integer.parseInt(cmd[3]);
+         int pos = Integer.parseInt(cmd[4]);
+         CorrectionRegion rgn = active_regions.get(id);
+         if (rgn == null) {
+            rgn = new CorrectionRegion();
+            active_regions.put(id,rgn);
+          }
+         if (!auto_correction) rgn.operation(pos,len,dir,time);
        }
       else if (src.equals("BUDA") && cmd[0].equals("removeBubble")) {
-	 if (cmd.length > 1) {
-	    String id = cmd[1];
-	    active_regions.remove(id);
-	  }
+         if (cmd.length > 1) {
+            String id = cmd[1];
+            active_regions.remove(id);
+          }
        }
       else if (src.equals("BFIX")) {
-	 switch (cmd[0]) {
-	    case "SpellingCorrection" :
-	    case "SyntaxCorrection" :
-	    case "QuoteCorrection" :
-	    case "AddImport" :
-	       auto_correction = true;
-	       break;
-	    case "DoneSpellingCorrection" :
-	    case "DoneSyntaxCorrection" :
-	    case "DoneQuoteCorrection" :
-	    case "DoneAddImport" :
-	       auto_correction = false;
-	       break;
-	  }
+         switch (cmd[0]) {
+            case "SpellingCorrection" :
+            case "SyntaxCorrection" :
+            case "QuoteCorrection" :
+            case "AddImport" :
+               auto_correction = true;
+               break;
+            case "DoneSpellingCorrection" :
+            case "DoneSyntaxCorrection" :
+            case "DoneQuoteCorrection" :
+            case "DoneAddImport" :
+               auto_correction = false;
+               break;
+          }
        }
     }
 
@@ -794,7 +794,7 @@ private class UserCorrectionAnalysis extends Analyzer {
       auto_correction = false;
     }
 
-}	// end of inner class UserCorrectionAnalysis
+}       // end of inner class UserCorrectionAnalysis
 
 
 
@@ -834,70 +834,70 @@ private class CorrectionRegion {
 
    void inactive(long delta) {
       if (edit_start_time > 0)
-	 edit_inactive_time += delta;
+         edit_inactive_time += delta;
     }
 
    void operation(int pos,int len,int dir,long time) {
       switch (cur_state) {
-	 case NONE :
-	    reset(pos);
-	    break;
-	 case ACTIVE :
-	    if (pos < start_pos - START_DELTA || pos > end_pos + END_DELTA) {
-	       reset(pos);
-	       ++active_ops;
-	     }
-	    else if (Math.abs(pos - end_pos) < ACTIVE_DELTA) {
-	       // still editing at the end
-	       ++active_ops;
-	     }
-	    else if (active_ops > MIN_ACTIVE) {
-	       resetEdit(pos,time);
-	       ++edit_ops;
-	     }
-	    else {
-	       cur_state = CorrectionState.OTHER;
-	     }
-	    updatePos(pos,len,dir);
-	    break;
-	 case EDIT :
-	    if (pos < edit_start_pos - START_DELTA || pos > edit_end_pos + len + START_DELTA) {
-	       if (Math.abs(pos - end_pos) < ACTIVE_DELTA) {
-		  finish(time);
-		  cur_state = CorrectionState.ACTIVE;
-		  updatePos(pos,len,dir);
-		}
-	     }
-	    else if (pos >= end_pos) {
-	       active_ops += edit_ops;
-	       cur_state = CorrectionState.ACTIVE;
-	       updatePos(pos,len,dir);
-	     }
-	    else {
-	       ++edit_ops;
-	       updatePos(pos,len,dir);
-	     }
-	    break;
-	 case OTHER :
-	    if (pos < start_pos - START_DELTA || pos > end_pos + END_DELTA) {
-	       reset(pos);
-	       ++active_ops;
-	     }
-	    else if (pos >= end_pos) {
-	       active_ops = 0;
-	       cur_state = CorrectionState.ACTIVE;
-	     }
-	    updatePos(pos,len,dir);
-	    break;
+         case NONE :
+            reset(pos);
+            break;
+         case ACTIVE :
+            if (pos < start_pos - START_DELTA || pos > end_pos + END_DELTA) {
+               reset(pos);
+               ++active_ops;
+             }
+            else if (Math.abs(pos - end_pos) < ACTIVE_DELTA) {
+               // still editing at the end
+               ++active_ops;
+             }
+            else if (active_ops > MIN_ACTIVE) {
+               resetEdit(pos,time);
+               ++edit_ops;
+             }
+            else {
+               cur_state = CorrectionState.OTHER;
+             }
+            updatePos(pos,len,dir);
+            break;
+         case EDIT :
+            if (pos < edit_start_pos - START_DELTA || pos > edit_end_pos + len + START_DELTA) {
+               if (Math.abs(pos - end_pos) < ACTIVE_DELTA) {
+                  finish(time);
+                  cur_state = CorrectionState.ACTIVE;
+                  updatePos(pos,len,dir);
+                }
+             }
+            else if (pos >= end_pos) {
+               active_ops += edit_ops;
+               cur_state = CorrectionState.ACTIVE;
+               updatePos(pos,len,dir);
+             }
+            else {
+               ++edit_ops;
+               updatePos(pos,len,dir);
+             }
+            break;
+         case OTHER :
+            if (pos < start_pos - START_DELTA || pos > end_pos + END_DELTA) {
+               reset(pos);
+               ++active_ops;
+             }
+            else if (pos >= end_pos) {
+               active_ops = 0;
+               cur_state = CorrectionState.ACTIVE;
+             }
+            updatePos(pos,len,dir);
+            break;
        }
     }
 
    private void finish(long time) {
       long delta = time - edit_start_time - edit_inactive_time;
       if (delta >= 1000 && delta <= 30000 && edit_ops >= MIN_EDIT) {
-	 output_writer.println("CORRECTION," + start_pos + "," + end_pos + "," +
-				  edit_start_pos + "," + edit_end_pos + "," + active_ops + "," +
-				  edit_ops + "," + (time - edit_start_time - edit_inactive_time));
+         output_writer.println("CORRECTION," + start_pos + "," + end_pos + "," +
+                                  edit_start_pos + "," + edit_end_pos + "," + active_ops + "," +
+                                  edit_ops + "," + (time - edit_start_time - edit_inactive_time));
        }
 
       resetEdit(-1,0);
@@ -910,12 +910,12 @@ private class CorrectionRegion {
       if (end_pos < pos) end_pos = pos;
 
       if (cur_state == CorrectionState.ACTIVE) {
-	 end_pos = pos;
+         end_pos = pos;
        }
 
       if (edit_start_pos > 0) {
-	 if (edit_start_pos > pos) edit_start_pos = pos;
-	 if (edit_end_pos < pos) edit_end_pos = pos;
+         if (edit_start_pos > pos) edit_start_pos = pos;
+         if (edit_end_pos < pos) edit_end_pos = pos;
        }
     }
 
@@ -940,25 +940,25 @@ private class CorrectionRegion {
       cur_state = CorrectionState.EDIT;
     }
 
-}	// end of inner class CorrectionRegion
+}       // end of inner class CorrectionRegion
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Auto Correciotn analysis						*/
-/*										*/
+/*                                                                              */
+/*      Auto Correciotn analysis                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class AutoCorrectionAnalysis extends Analyzer {
 
-   private Map<String,int []>		item_counts;
-   private Map<String,int []>		explicit_counts;
-   private AutoCorrectStatData			spell_stats;
-   private AutoCorrectStatData			import_stats;
-   private boolean			in_explicit;
-   private boolean			have_data;
+   private Map<String,int []>           item_counts;
+   private Map<String,int []>           explicit_counts;
+   private AutoCorrectStatData                  spell_stats;
+   private AutoCorrectStatData                  import_stats;
+   private boolean                      in_explicit;
+   private boolean                      have_data;
 
    AutoCorrectionAnalysis() {
       in_explicit = false;
@@ -985,7 +985,7 @@ private class AutoCorrectionAnalysis extends Analyzer {
       import_stats = new AutoCorrectStatData();
     }
 
-   @Override public void startSession(String sess,String id)	{ finish(false); }
+   @Override public void startSession(String sess,String id)    { finish(false); }
    @Override public void inactive(long delta,long time) { }
    @Override public void processLine(String src,String [] cmd,long time) {
       if (cmd.length == 0) return;
@@ -1021,32 +1021,32 @@ private class AutoCorrectionAnalysis extends Analyzer {
       if (!have_data) return;
       output_writer.print("BFIX");
       for (Map.Entry<String,int []> ent : item_counts.entrySet()) {
-	 int [] ctr = ent.getValue();
-	 output_writer.print("," + ctr[0]);
-	 ctr[0] = 0;
+         int [] ctr = ent.getValue();
+         output_writer.print("," + ctr[0]);
+         ctr[0] = 0;
        }
       for (Map.Entry<String,int []> ent : explicit_counts.entrySet()) {
-	 int [] ctr = ent.getValue();
-	 output_writer.print("," + ctr[0]);
-	 ctr[0] = 0;
+         int [] ctr = ent.getValue();
+         output_writer.print("," + ctr[0]);
+         ctr[0] = 0;
        }
       output_writer.println();
 
       if (fg) {
-	 spell_stats.output(output_writer,"SPELL");
-	 import_stats.output(output_writer,"IMPORT");
+         spell_stats.output(output_writer,"SPELL");
+         import_stats.output(output_writer,"IMPORT");
        }
 
       have_data = false;
     }
 
-}	// end of inner class AutoCorrectionAnalysis
+}       // end of inner class AutoCorrectionAnalysis
 
 
 
 private static class AutoCorrectStatData {
 
-   private Map<Integer,int []>	data_set;
+   private Map<Integer,int []>  data_set;
 
    AutoCorrectStatData() {
       data_set = new HashMap<Integer,int []>();
@@ -1055,8 +1055,8 @@ private static class AutoCorrectStatData {
    void add(int v) {
       int [] ct = data_set.get(v);
       if (ct == null) {
-	 ct = new int[] { 0 };
-	 data_set.put(v,ct);
+         ct = new int[] { 0 };
+         data_set.put(v,ct);
        }
       ct[0] += 1;
     }
@@ -1064,7 +1064,7 @@ private static class AutoCorrectStatData {
 
    void add(String s) {
       try {
-	 add(Integer.parseInt(s));
+         add(Integer.parseInt(s));
        }
       catch (NumberFormatException e) { }
     }
@@ -1076,16 +1076,16 @@ private static class AutoCorrectStatData {
       List<Integer> mode = new ArrayList<Integer>();
       int modect = 0;
       for (Map.Entry<Integer,int []> ent : data_set.entrySet()) {
-	 int ct = ent.getValue()[0];
-	 int v = ent.getKey();
-	 tot += v*ct;
-	 tot2 += (v*v)*ct;
-	 cnt += ct;
-	 if (ct > modect) {
-	    mode = new ArrayList<Integer>();
-	    modect = ct;
-	  }
-	 if (ct == modect) mode.add(v);
+         int ct = ent.getValue()[0];
+         int v = ent.getKey();
+         tot += v*ct;
+         tot2 += (v*v)*ct;
+         cnt += ct;
+         if (ct > modect) {
+            mode = new ArrayList<Integer>();
+            modect = ct;
+          }
+         if (ct == modect) mode.add(v);
        }
       if (cnt == 0) return;
 
@@ -1098,7 +1098,7 @@ private static class AutoCorrectStatData {
       out.print("," + intval(Math.sqrt(var)));
       out.print("," + modect);
       for (Integer v : mode) {
-	 out.print("," + v);
+         out.print("," + v);
        }
       out.println();
     }
@@ -1108,7 +1108,7 @@ private static class AutoCorrectStatData {
       return (int) (v*1000);
     }
 
-}	// end of inner class StatData
+}       // end of inner class StatData
 
 
 
@@ -1333,7 +1333,7 @@ private final class CommandUsageStats {
 }       // end of inner class CommandUsageStats
 
 
-}	// end of class BoardMetrixAnalyzer
+}       // end of class BoardMetrixAnalyzer
 
 
 

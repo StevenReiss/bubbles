@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocException.java						*/
-/*										*/
-/*	Generic exception for use with BDOC javadoc interface			*/
-/*										*/
+/*                                                                              */
+/*              BdocException.java                                              */
+/*                                                                              */
+/*      Generic exception for use with BDOC javadoc interface                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2007 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2007 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,9 +42,9 @@ class BdocException extends Exception {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -53,9 +53,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocException(String msg)
@@ -72,7 +72,7 @@ BdocException(String msg,Throwable cause)
 
 
 
-}	// end of class BdocException
+}       // end of class BdocException
 
 
 

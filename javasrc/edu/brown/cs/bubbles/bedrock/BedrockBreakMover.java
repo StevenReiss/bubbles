@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockBreakMover.java						*/
-/*										*/
-/*	Handle resetting breakpoints that disappear on a commit 		*/
-/*										*/
+/*                                                                              */
+/*              BedrockBreakMover.java                                          */
+/*                                                                              */
+/*      Handle resetting breakpoints that disappear on a commit                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,22 +43,22 @@ class BedrockBreakMover implements BedrockConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private IBreakpointManager	break_manager;
-private List<BreakPos>		saved_breaks;
-private String			for_file;
-private String			for_project;
+private IBreakpointManager      break_manager;
+private List<BreakPos>          saved_breaks;
+private String                  for_file;
+private String                  for_project;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockBreakMover(String proj,String file)
@@ -71,19 +71,19 @@ BedrockBreakMover(String proj,String file)
    saved_breaks = new ArrayList<>();
    for (IBreakpoint bp : bps) {
       if (bp instanceof IJavaLineBreakpoint) {
-	 IJavaLineBreakpoint lbp = (IJavaLineBreakpoint) bp;
-	 if (lbp.getMarker() == null) continue;
-	 try {
-	    String cls = lbp.getTypeName();
-	    if (cls != null) {
-	       String fnm = BedrockUtil.findFileForClass(cls);
-	       if (fnm != null && fnm.equals(file)) {
-		  saved_breaks.add(new BreakPos(lbp,for_file));
-		}
-	     }
-	  }
-	 catch (CoreException _ex) {
-	  }
+         IJavaLineBreakpoint lbp = (IJavaLineBreakpoint) bp;
+         if (lbp.getMarker() == null) continue;
+         try {
+            String cls = lbp.getTypeName();
+            if (cls != null) {
+               String fnm = BedrockUtil.findFileForClass(cls);
+               if (fnm != null && fnm.equals(file)) {
+                  saved_breaks.add(new BreakPos(lbp,for_file));
+                }
+             }
+          }
+         catch (CoreException _ex) {
+          }
        }
     }
 }
@@ -91,9 +91,9 @@ BedrockBreakMover(String proj,String file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Fixup methods								*/
-/*										*/
+/*                                                                              */
+/*      Fixup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void restoreBreakpoints()
@@ -109,24 +109,24 @@ void restoreBreakpoints()
    for (BreakPos bp : saved_breaks) {
       IJavaLineBreakpoint lbp = bp.getBreakpoint();
       if (lbp.getMarker() != null && lbp.getMarker().exists()) {
-	 for (IBreakpoint ibp : bps) {
-	    if (ibp == lbp) continue loop;
-	  }
+         for (IBreakpoint ibp : bps) {
+            if (ibp == lbp) continue loop;
+          }
        }
       BedrockPlugin.logD("NEED TO REINSERT " + lbp +  " " +
-			    bp.getLineNumber() + " " + lbp.getMarker().exists());
+                            bp.getLineNumber() + " " + lbp.getMarker().exists());
 
       bp.update();
       int line = bp.getLineNumber();
       if (line <= 0) continue;
 
       try {
-	 BedrockBreakpoint bpmgr = BedrockPlugin.getPlugin().getBreakManager();
-	 bpmgr.setLineBreakpoint(for_project,null,for_file,null,bp.getLineNumber(),
-				    bp.isSuspendVM(),bp.isTracepoint());
+         BedrockBreakpoint bpmgr = BedrockPlugin.getPlugin().getBreakManager();
+         bpmgr.setLineBreakpoint(for_project,null,for_file,null,bp.getLineNumber(),
+                                    bp.isSuspendVM(),bp.isTracepoint());
        }
       catch (BedrockException e) {
-	 BedrockPlugin.logE("Problem reinserting breakpoint",e);
+         BedrockPlugin.logE("Problem reinserting breakpoint",e);
        }
     }
 }
@@ -135,9 +135,9 @@ void restoreBreakpoints()
 
 
 /********************************************************************************/
-/*										*/
-/*	Represent a breakpoint position 					*/
-/*										*/
+/*                                                                              */
+/*      Represent a breakpoint position                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BreakPos {
@@ -162,7 +162,7 @@ private static class BreakPos {
          line_number = bp.getLineNumber();
          limbo_line = LimboFactory.createLine(file,line_number);
          BedrockPlugin.logD("SAVE BREAKPOINT " + bp + " " + line_number + " " +
-        		       bp.getCharStart() + " " + bp.getCharEnd());
+                               bp.getCharStart() + " " + bp.getCharEnd());
        }
       catch (CoreException e) {
          BedrockPlugin.logI("Problem getting break pos: " + e);
@@ -172,23 +172,23 @@ private static class BreakPos {
 
    void update() {
       if (limbo_line != null) {
-	 limbo_line.revalidate();
-	 int newline = limbo_line.getLine();
-	 BedrockPlugin.logD("Move BREAKPOINT " + line_number + " " + newline);
-	 line_number = newline;
+         limbo_line.revalidate();
+         int newline = limbo_line.getLine();
+         BedrockPlugin.logD("Move BREAKPOINT " + line_number + " " + newline);
+         line_number = newline;
        }
     }
 
-   IJavaLineBreakpoint getBreakpoint()		{ return break_point; }
-   int getLineNumber()				{ return line_number; }
-   boolean isTracepoint()			{ return is_trace; }
-   boolean isSuspendVM()			{ return suspend_vm; }
+   IJavaLineBreakpoint getBreakpoint()          { return break_point; }
+   int getLineNumber()                          { return line_number; }
+   boolean isTracepoint()                       { return is_trace; }
+   boolean isSuspendVM()                        { return suspend_vm; }
 
-}	// end of inner class BreakPos
+}       // end of inner class BreakPos
 
 
 
-}	// end of class BedrockBreakMover
+}       // end of class BedrockBreakMover
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BassName.java							*/
-/*										*/
-/*	Bubble Augmented Search Strategies basic name for search		*/
-/*										*/
+/*                                                                              */
+/*              BassName.java                                                   */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies basic name for search                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,17 +42,17 @@ import javax.swing.Icon;
 
 
 /**
- *	This interface represents a searchable name.  It needs to be implemented by
- *	any of the repositories that are searchable.  Names provide all the necessary
- *	information for displaying as part of a tree and for creating bubbles when
- *	they are selected.
+ *      This interface represents a searchable name.  It needs to be implemented by
+ *      any of the repositories that are searchable.  Names provide all the necessary
+ *      information for displaying as part of a tree and for creating bubbles when
+ *      they are selected.
  **/
 
 public interface BassName {
 
 /**
- *	Create a bubble corresponding to this name.  This might be a code bubble, a
- *	documentation bubble, or something else.
+ *      Create a bubble corresponding to this name.  This might be a code bubble, a
+ *      documentation bubble, or something else.
  **/
 BudaBubble createBubble();
 
@@ -68,22 +68,22 @@ default BudaBubbleGroup createBubbleGroup(BudaBubbleArea bba)    { return null; 
 
 
 /**
- *	Create a preview bubble corresponding to this name.  This might be a code bubble, a
- *	documentation bubble, or something else.
+ *      Create a preview bubble corresponding to this name.  This might be a code bubble, a
+ *      documentation bubble, or something else.
  **/
 BudaBubble createPreviewBubble();
 
 
 /**
- *	Create the string to display for preview purposes.
+ *      Create the string to display for preview purposes.
  **/
 String createPreviewString();
 
 
 
 /**
- *	Return the project (if any) associated with the name.  Returning null implies
- *	there is no associated project.
+ *      Return the project (if any) associated with the name.  Returning null implies
+ *      there is no associated project.
  **/
 String getProject();
 
@@ -100,76 +100,76 @@ default String getSubProject()
 
 
 /**
- *	Return the package associated with this name.
+ *      Return the package associated with this name.
  **/
 String getPackageName();
 
 
 /**
- *	Return the class associated with this name.
+ *      Return the class associated with this name.
  **/
 String getClassName();
 
 
 /**
- *	Return the local name for this name.
+ *      Return the local name for this name.
  **/
 String getName();
 
 
 /**
- *	Return the fully qualified name.
+ *      Return the fully qualified name.
  **/
 String getFullName();
 
 
 /**
- *	Return the fully qualified name and include the parameter types if the name is
- *	a method or constructor.
+ *      Return the fully qualified name and include the parameter types if the name is
+ *      a method or constructor.
  **/
 String getNameWithParameters();
 
 
 /**
- *	Return the components comprising the name.  This is used to create name trees.	For
- *	example for a.b.c.field, this would return { "a", "b", "c", "field" }.
+ *      Return the components comprising the name.  This is used to create name trees.  For
+ *      example for a.b.c.field, this would return { "a", "b", "c", "field" }.
  **/
 String [] getNameComponents();
 
 
 /**
- *	Return the symbol type of this name.
+ *      Return the symbol type of this name.
  **/
 BassNameType getNameType();
 
 
 /**
- *	Return the Java modifiers associated with this name.
+ *      Return the Java modifiers associated with this name.
  **/
 int getModifiers();
 
 
 /**
- *	Return the sort priority.  Lower values are inserted before higher ones
+ *      Return the sort priority.  Lower values are inserted before higher ones
  **/
 int getSortPriority();
 
 
 /**
- *	Return the icon if any to be displayed with this name.	This can return null
- *	if the name should be displayed without an icon.
+ *      Return the icon if any to be displayed with this name.  This can return null
+ *      if the name should be displayed without an icon.
  **/
 Icon getDisplayIcon();
 
 
 /**
- *	Return the text to be displayed in the tree for this name.
+ *      Return the text to be displayed in the tree for this name.
  **/
 String getDisplayName();
 
 
 /**
- *	Return the bump location associated with the name if there is one
+ *      Return the bump location associated with the name if there is one
  **/
 BumpLocation getLocation();
 
@@ -181,12 +181,12 @@ BumpLocation getLocation();
 Collection<BumpLocation> getLocations();
 
 /**
- *	Return the prefix for the name.
+ *      Return the prefix for the name.
  **/
 String getNameHead();
 
 
-}	// end of interface BassName
+}       // end of interface BassName
 
 
 

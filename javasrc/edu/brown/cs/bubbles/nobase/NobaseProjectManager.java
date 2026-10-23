@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseProjectManager.java					*/
-/*										*/
-/*	Project manager for nodebubbles 					*/
-/*										*/
+/*                                                                              */
+/*              NobaseProjectManager.java                                       */
+/*                                                                              */
+/*      Project manager for nodebubbles                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -55,13 +55,13 @@ class NobaseProjectManager implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseMain	nobase_main;
-private File		work_space;
+private NobaseMain      nobase_main;
+private File            work_space;
 private Map<String,NobaseProject> all_projects;
 
 private static final String PROJECTS_FILE = ".projects";
@@ -70,9 +70,9 @@ private static final String PROJECTS_FILE = ".projects";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseProjectManager(NobaseMain nm,File ws) throws NobaseException
@@ -90,12 +90,12 @@ NobaseProjectManager(NobaseMain nm,File ws) throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-NobasePathSpec createPathSpec(Element xml)		{ return new NobasePathSpec(xml); }
+NobasePathSpec createPathSpec(Element xml)              { return new NobasePathSpec(xml); }
 
 NobasePathSpec createPathSpec(File src,boolean user,boolean exclude,boolean nest) {
    return new NobasePathSpec(src,user,exclude,nest);
@@ -104,9 +104,9 @@ NobasePathSpec createPathSpec(File src,boolean user,boolean exclude,boolean nest
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseProject findProject(String proj) throws NobaseException
@@ -137,7 +137,7 @@ List<ISemanticData> getAllSemanticData(String proj) throws NobaseException
     }
    else {
       for (NobaseProject pp : all_projects.values()) {
-	 addSemanticData(pp,rslt);
+         addSemanticData(pp,rslt);
        }
     }
 
@@ -152,9 +152,9 @@ Collection<NobaseProject> getAllProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	LIST PROJECTS command							*/
-/*										*/
+/*                                                                              */
+/*      LIST PROJECTS command                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void handleListProjects(IvyXmlWriter xw)
@@ -172,9 +172,9 @@ void handleListProjects(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	CREATE PROJECT command							*/
-/*										*/
+/*                                                                              */
+/*      CREATE PROJECT command                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handleCreateProject(String name,String dir,IvyXmlWriter xw) throws NobaseException
@@ -200,9 +200,9 @@ void handleCreateProject(String name,String dir,IvyXmlWriter xw) throws NobaseEx
 
 
 /********************************************************************************/
-/*										*/
-/*	EDITPROJECT command							*/
-/*										*/
+/*                                                                              */
+/*      EDITPROJECT command                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void handleEditProject(String name,Element pxml,IvyXmlWriter xw) throws NobaseException
@@ -216,9 +216,9 @@ void handleEditProject(String name,Element pxml,IvyXmlWriter xw) throws NobaseEx
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle CREATEPACKAGE/CREATEDIRECTORY command			        */
-/*										*/
+/*                                                                              */
+/*      Handle CREATEPACKAGE/CREATEDIRECTORY command                            */
+/*                                                                              */
 /********************************************************************************/
 
 void handleCreatePackage(String proj,String name,boolean force,IvyXmlWriter xw)
@@ -233,9 +233,9 @@ throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle FINDPACKAGE							*/
-/*										*/
+/*                                                                              */
+/*      Handle FINDPACKAGE                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void handleFindPackage(String proj,String name,IvyXmlWriter xw)
@@ -250,9 +250,9 @@ throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle CREATECLASS/CREATEFILE (new module) 				*/
-/*										*/
+/*                                                                              */
+/*      Handle CREATECLASS/CREATEFILE (new module)                              */
+/*                                                                              */
 /********************************************************************************/
 
 void handleNewModule(String proj,String name,boolean force,String cnts,IvyXmlWriter xw)
@@ -268,9 +268,9 @@ throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	OPEN PROJECT command							*/
-/*										*/
+/*                                                                              */
+/*      OPEN PROJECT command                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void handleOpenProject(String proj,boolean files,boolean paths,boolean classes,boolean opts,
@@ -287,9 +287,9 @@ void handleOpenProject(String proj,boolean files,boolean paths,boolean classes,b
 
 
 /********************************************************************************/
-/*										*/
-/*	BUILD PROJECT command							*/
-/*										*/
+/*                                                                              */
+/*      BUILD PROJECT command                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void handleBuildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlWriter xw)
@@ -304,9 +304,9 @@ throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	GET ALL NAMES command							*/
-/*										*/
+/*                                                                              */
+/*      GET ALL NAMES command                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void handleGetAllNames(String proj,String bid,Set<String> files,String bkg,IvyXmlWriter xw)
@@ -321,7 +321,7 @@ throws NobaseException
     }
    else {
       for (NobaseProject pp : new ArrayList<NobaseProject>(all_projects.values())) {
-	 handleAllNames(pp,files,nt,xw);
+         handleAllNames(pp,files,nt,xw);
        }
     }
 
@@ -338,8 +338,8 @@ private void handleAllNames(NobaseProject pp,Set<String> files,NameThread nt,Ivy
       if (files != null && !files.contains(ifd.getFile().getPath())) continue;
       ISemanticData sd = pp.getParseData(ifd);
       if (sd != null) {
-	 if (nt != null) nt.addRoot(ifd,pp,sd);
-	 else outputTreeNames(pp,ifd,sd,xw);
+         if (nt != null) nt.addRoot(ifd,pp,sd);
+         else outputTreeNames(pp,ifd,sd,xw);
        }
       ++ctr;
     }
@@ -381,7 +381,7 @@ private static class NameWalker extends DefaultASTVisitor {
       // if (nnm != null) NobaseUtil.outputName(nnm,xml_writer);
       NobaseSymbol nsym = NobaseAst.getDefinition(n);
       if (nsym != null && nsym.getDefNode() == n) {
-	 NobaseUtil.outputName(nsym,xml_writer);
+         NobaseUtil.outputName(nsym,xml_writer);
        }
     }
 
@@ -414,7 +414,7 @@ private static class NameWalker extends DefaultASTVisitor {
       return true;
     }
 
-}	// end of inner class NameWalker
+}       // end of inner class NameWalker
 
 
 
@@ -450,31 +450,31 @@ private class NameThread extends Thread {
       IvyXmlWriter xw = null;
 
       for (Map.Entry<NobaseFile,NobaseProject> ent : ifile_project.entrySet()) {
-	 if (xw == null) {
-	    xw = nobase_main.beginMessage("NAMES",bump_id);
-	    xw.field("NID",name_id);
-	  }
-	 NobaseFile ifd = ent.getKey();
-	 NobaseProject pp = ent.getValue();
-	 ISemanticData sd = ifile_data.get(ifd);
-	 outputTreeNames(pp,ifd,sd,xw);
-	 if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
-	    nobase_main.finishMessageWait(xw,15000);
-	    NobaseMain.logD("OUTPUT NAMES: " + xw.toString());
-	    xw = null;
-	  }
+         if (xw == null) {
+            xw = nobase_main.beginMessage("NAMES",bump_id);
+            xw.field("NID",name_id);
+          }
+         NobaseFile ifd = ent.getKey();
+         NobaseProject pp = ent.getValue();
+         ISemanticData sd = ifile_data.get(ifd);
+         outputTreeNames(pp,ifd,sd,xw);
+         if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
+            nobase_main.finishMessageWait(xw,15000);
+            NobaseMain.logD("OUTPUT NAMES: " + xw.toString());
+            xw = null;
+          }
        }
 
       for (NobaseProject pp : project_names) {
-	 if (xw == null) {
-	    xw = nobase_main.beginMessage("NAMES",bump_id);
-	    xw.field("NID",name_id);
-	  }
-	 NobaseUtil.outputProjectSymbol(pp,xw);
+         if (xw == null) {
+            xw = nobase_main.beginMessage("NAMES",bump_id);
+            xw.field("NID",name_id);
+          }
+         NobaseUtil.outputProjectSymbol(pp,xw);
        }
 
       if (xw != null) {
-	 nobase_main.finishMessageWait(xw);
+         nobase_main.finishMessageWait(xw);
        }
 
       NobaseMain.logD("FINISH NAMES FOR " + name_id);
@@ -483,21 +483,21 @@ private class NameThread extends Thread {
       nobase_main.finishMessage(xw);
     }
 
-}	// end of inner class NameThread
+}       // end of inner class NameThread
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle search commadns							*/
-/*										*/
+/*                                                                              */
+/*      Handle search commadns                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handlePatternSearch(String proj,String pat,String sf,
       boolean defs,boolean refs,boolean sys,IvyXmlWriter xw)
-	throws NobaseException
+        throws NobaseException
 {
    if (proj != null) {
       NobaseProject np = findProject(proj);
@@ -505,14 +505,14 @@ void handlePatternSearch(String proj,String pat,String sf,
     }
    else {
       for (NobaseProject np : new ArrayList<NobaseProject>(all_projects.values())) {
-	 np.patternSearch(pat,sf,defs,refs,sys,xw);
+         np.patternSearch(pat,sf,defs,refs,sys,xw);
        }
     }
 }
 
 
 void handleKeySearch(String proj,String file,String key,IvyXmlWriter xw)
-	throws NobaseException
+        throws NobaseException
 {
    String what = "Field";
    if (key.endsWith("()")) what = "Method";
@@ -533,7 +533,7 @@ void handleFindAll(String proj,String file,int soffset,int eoffset,boolean defs,
     }
    else if (proj == null) {
       for (NobaseProject rp0 : new ArrayList<NobaseProject>(all_projects.values())) {
-	 rp0.findAll(file,soffset,eoffset,defs,refs,imps,type,ronly,wonly,xw);
+         rp0.findAll(file,soffset,eoffset,defs,refs,imps,type,ronly,wonly,xw);
        }
     }
 }
@@ -561,13 +561,13 @@ void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle get completions command						*/
-/*										*/
+/*                                                                              */
+/*      Handle get completions command                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void getCompletions(String proj,String bid,String file,int offset,IvyXmlWriter xw)
-	throws NobaseException
+        throws NobaseException
 {
    NobaseProject rp = getProject(proj,file);
    if (rp != null) {
@@ -578,9 +578,9 @@ void getCompletions(String proj,String bid,String file,int offset,IvyXmlWriter x
 
 
 /********************************************************************************/
-/*										*/
-/*	Preferences commands							*/
-/*										*/
+/*                                                                              */
+/*      Preferences commands                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void handleGetPreferences(String proj,IvyXmlWriter xw)
@@ -601,7 +601,7 @@ void handleSetPreferences(String proj,Element xml)
    if (proj == null) {
       nobase_main.getSystemPreferences().setPreferences(xml);
       for (NobaseProject np0 : new ArrayList<NobaseProject>(all_projects.values())) {
-	 np0.getPreferences().setPreferences(xml);
+         np0.getPreferences().setPreferences(xml);
        }
     }
    else {
@@ -614,9 +614,9 @@ void handleSetPreferences(String proj,Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility methods 							*/
-/*										*/
+/*                                                                              */
+/*      Utility methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private NobaseProject getProject(String proj,String file)
@@ -640,9 +640,9 @@ private NobaseProject getProject(String proj,String file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle loading projects 						*/
-/*										*/
+/*                                                                              */
+/*      Handle loading projects                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void loadProjects()
@@ -651,22 +651,22 @@ void loadProjects()
    if (f.exists()) {
       Element xml = IvyXml.loadXmlFromFile(f);
       if (xml != null) {
-	 for (Element pelt : IvyXml.children(xml,"PROJECT")) {
-	    String nm = IvyXml.getAttrString(pelt,"NAME");
-	    String pnm = IvyXml.getAttrString(pelt,"PATH");
-	    File pf = new File(pnm);
-	    if (pf.exists()) loadProject(nm,pf);
-	  }
-	 return;
+         for (Element pelt : IvyXml.children(xml,"PROJECT")) {
+            String nm = IvyXml.getAttrString(pelt,"NAME");
+            String pnm = IvyXml.getAttrString(pelt,"PATH");
+            File pf = new File(pnm);
+            if (pf.exists()) loadProject(nm,pf);
+          }
+         return;
        }
     }
 
    for (File df : work_space.listFiles()) {
       if (!df.getName().startsWith(".") && df.isDirectory()) {
-	 File pf = new File(df,".jsproject");
-	 if (pf.exists()) {
-	    loadProject(df.getName(),df);
-	  }
+         File pf = new File(df,".jsproject");
+         if (pf.exists()) {
+            loadProject(df.getName(),df);
+          }
        }
     }
 
@@ -681,10 +681,10 @@ void saveProjects()
       IvyXmlWriter xw = new IvyXmlWriter(f);
       xw.begin("PROJECTS");
       for (NobaseProject pp : all_projects.values()) {
-	 xw.begin("PROJECT");
-	 xw.field("NAME",pp.getName());
-	 xw.field("PATH",pp.getBasePath().getPath());
-	 xw.end("PROJECT");
+         xw.begin("PROJECT");
+         xw.field("NAME",pp.getName());
+         xw.field("PATH",pp.getBasePath().getPath());
+         xw.end("PROJECT");
        }
       xw.end("PROJECTS");
       xw.close();
@@ -709,9 +709,9 @@ private void loadProject(String nm,File pf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper routines 							*/
-/*										*/
+/*                                                                              */
+/*      Helper routines                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void addSemanticData(NobaseProject pp,List<ISemanticData> rslt)
@@ -725,7 +725,7 @@ private void addSemanticData(NobaseProject pp,List<ISemanticData> rslt)
 
 
 
-}	// end of class NobaseProjectManager
+}       // end of class NobaseProjectManager
 
 
 

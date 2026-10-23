@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobasePreferences.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              NobasePreferences.java                                          */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,9 +39,9 @@ class NobasePreferences implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,String> pref_props;
@@ -50,9 +50,9 @@ private File base_file;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobasePreferences(File preffile)
@@ -79,9 +79,9 @@ private NobasePreferences()
 
 
 /********************************************************************************/
-/*										*/
-/*	General property methods						*/
-/*										*/
+/*                                                                              */
+/*      General property methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 public String getProperty(String prop,String dflt)
@@ -102,9 +102,9 @@ public void setProperty(String prop,String value)
 
 
 /********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
+/*                                                                              */
+/*      I/O methods                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -170,19 +170,19 @@ public void flush()
 {
    if (base_file != null) {
       try {
-	 IvyXmlWriter xw = new IvyXmlWriter(base_file);
-	 dumpPreferences(xw);
-	 xw.close();
+         IvyXmlWriter xw = new IvyXmlWriter(base_file);
+         dumpPreferences(xw);
+         xw.close();
        }
       catch (IOException e) {
-	 NobaseMain.logE("Problem saving preferences file " + base_file,e);
+         NobaseMain.logE("Problem saving preferences file " + base_file,e);
        }
     }
 }
 
 
 
-}	// end of class NobasePreferences
+}       // end of class NobasePreferences
 
 
 

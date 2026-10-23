@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrVersionCVS.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository interface to CVS		*/
-/*										*/
+/*                                                                              */
+/*              BvcrVersionCVS.java                                             */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository interface to CVS                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,13 +43,13 @@ class BvcrVersionCVS extends BvcrVersionManager implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File		cvs_root;
-private String		cvs_command;
+private File            cvs_root;
+private String          cvs_command;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
@@ -58,9 +58,9 @@ private static final SimpleDateFormat CVS_DATE = new SimpleDateFormat("yyyy-MM-d
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrVersionCVS(BvcrProject bp)
@@ -74,9 +74,9 @@ BvcrVersionCVS(BvcrProject bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
@@ -95,12 +95,12 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override File getRootDirectory() 		{ return cvs_root; }
+@Override File getRootDirectory()               { return cvs_root; }
 
 @Override String getRepositoryName()
 {
@@ -132,7 +132,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    else if (diffs.size() == 0) return;
    else {
       for (File f : diffs) {
-	 cmd += " " + getRelativePath(f);
+         cmd += " " + getRelativePath(f);
        }
     }
 
@@ -143,9 +143,9 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Find the top of the CVS repository					*/
-/*										*/
+/*                                                                              */
+/*      Find the top of the CVS repository                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void findCvsRoot()
@@ -163,9 +163,9 @@ private void findCvsRoot()
 
 
 /********************************************************************************/
-/*										*/
-/*	History gathering for a file						*/
-/*										*/
+/*                                                                              */
+/*      History gathering for a file                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void findHistory(File f,IvyXmlWriter xw)
@@ -185,48 +185,48 @@ private void findCvsRoot()
    while (tok.hasMoreTokens()) {
       String ln = tok.nextToken();
       if (rev == null) {
-	 if (ln.startsWith("revision ")) rev = ln.substring(9).trim();
-	 else if (ln.startsWith("head: ")) {
-	    headversion = ln.substring(6);
-	  }
+         if (ln.startsWith("revision ")) rev = ln.substring(9).trim();
+         else if (ln.startsWith("head: ")) {
+            headversion = ln.substring(6);
+          }
        }
       else {
-	 if (ln.startsWith("date: ")) {
-	    StringTokenizer ltok = new StringTokenizer(ln,";");
-	    while (ltok.hasMoreTokens()) {
-	       String itm = ltok.nextToken();
-	       int idx = itm.indexOf(":");
-	       if (idx >= 0) {
-		  String what = itm.substring(0,idx).trim();
-		  String cnts = itm.substring(idx+1).trim();
-		  if (what.equals("date")) {
-		     try {
-			d = CVS_DATE.parse(cnts);
-		      }
-		     catch (ParseException e) { }
-		   }
-		  else if (what.equals("author")) auth = cnts;
-		}
-	     }
-	  }
-	 else if (ln.startsWith("----------------------------") ||
-		     ln.startsWith("===================================================")) {
-	    if (auth != null && d != null) {
-	       BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
-	       if (headversion != null && headversion.equals(rev)) {
-		  fv.addAlternativeName("HEAD");
-		}
-	       if (prior != null) prior.addPriorVersion(fv);
-	       prior = fv;
-	       fvs.add(fv);
-	     }
-	    rev = null;
-	    d = null;
-	    msg = null;
-	    auth = null;
-	  }
-	 else if (msg == null) msg = ln;
-	 else msg = msg + "\n" + ln;
+         if (ln.startsWith("date: ")) {
+            StringTokenizer ltok = new StringTokenizer(ln,";");
+            while (ltok.hasMoreTokens()) {
+               String itm = ltok.nextToken();
+               int idx = itm.indexOf(":");
+               if (idx >= 0) {
+                  String what = itm.substring(0,idx).trim();
+                  String cnts = itm.substring(idx+1).trim();
+                  if (what.equals("date")) {
+                     try {
+                        d = CVS_DATE.parse(cnts);
+                      }
+                     catch (ParseException e) { }
+                   }
+                  else if (what.equals("author")) auth = cnts;
+                }
+             }
+          }
+         else if (ln.startsWith("----------------------------") ||
+                     ln.startsWith("===================================================")) {
+            if (auth != null && d != null) {
+               BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
+               if (headversion != null && headversion.equals(rev)) {
+                  fv.addAlternativeName("HEAD");
+                }
+               if (prior != null) prior.addPriorVersion(fv);
+               prior = fv;
+               fvs.add(fv);
+             }
+            rev = null;
+            d = null;
+            msg = null;
+            auth = null;
+          }
+         else if (msg == null) msg = ln;
+         else msg = msg + "\n" + ln;
        }
     }
 
@@ -289,9 +289,9 @@ private void findCvsRoot()
 
 
 /********************************************************************************/
-/*										*/
-/*	CVS diff analyzer							*/
-/*										*/
+/*                                                                              */
+/*      CVS diff analyzer                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 protected static class CvsDiffAnalyzer implements CommandCallback {
@@ -342,15 +342,15 @@ protected static class CvsDiffAnalyzer implements CommandCallback {
             while (tok.hasMoreTokens()) {
                String t = tok.nextToken();
                if (t.equals(",")) {
-        	  String n = tok.nextToken();
-        	  if (op == null) ln1 = Integer.parseInt(n);
-        	}
+                  String n = tok.nextToken();
+                  if (op == null) ln1 = Integer.parseInt(n);
+                }
                else if (Character.isDigit(t.charAt(0))) {
-        	  if (op == null) {
+                  if (op == null) {
                      ln0 = Integer.parseInt(t);
                      ln1 = ln0;
                    }
-        	}
+                }
                else op = t;
              }
             source_line = ln0;
@@ -377,13 +377,13 @@ protected static class CvsDiffAnalyzer implements CommandCallback {
       diff_set.finish();
     }
 
-}	// end of inner class CvsDiffAnalyzer
+}       // end of inner class CvsDiffAnalyzer
 
 
 
 
 
-}	// end of class BvcrVersionCVS
+}       // end of class BvcrVersionCVS
 
 
 

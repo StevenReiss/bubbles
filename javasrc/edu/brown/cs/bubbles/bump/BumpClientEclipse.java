@@ -43,7 +43,7 @@ class BumpClientEclipse extends BumpClientJava
 /********************************************************************************/
 
 
-private boolean 	eclipse_starting;
+private boolean         eclipse_starting;
 
 private static final String [] MAC_BINARY = new String [] {
       "Contents/MacOS/eclipse", "Contents/Eclipse/eclipse"
@@ -71,9 +71,9 @@ BumpClientEclipse()
 /********************************************************************************/
 
 
-@Override public String getName()		{ return "Eclipse"; }
+@Override public String getName()               { return "Eclipse"; }
 
-@Override public String getServerName() 	{ return "BEDROCK"; }
+@Override public String getServerName()         { return "BEDROCK"; }
 
 
 
@@ -112,11 +112,11 @@ private void ensureRunning()
     }
    if (ef1 != null && ef1.isDirectory()) {
       for (String s : MAC_BINARY) {
-	 File ef2 = new File(ef1,s);
-	 if (ef2.exists() && ef2.canExecute()) {
-	    ef1 = ef2;
-	    break;
-	  }
+         File ef2 = new File(ef1,s);
+         if (ef2.exists() && ef2.canExecute()) {
+            ef1 = ef2;
+            break;
+          }
        }
     }
    
@@ -146,8 +146,8 @@ private void ensureRunning()
       File wf = new File(ws);
       File cf = new File(wf,".clean");
       if (cf.exists()) {
-	 clean = true;
-	 cf.delete();
+         clean = true;
+         cf.delete();
        }
     }
    
@@ -155,7 +155,7 @@ private void ensureRunning()
       if (!cmd.contains("-clean")) cmd += " -clean";
       system_properties.remove(BOARD_PROP_ECLIPSE_CLEAN);
       try {
-	 system_properties.save();
+         system_properties.save();
        }
       catch (IOException e) { }
     }
@@ -167,33 +167,33 @@ private void ensureRunning()
    if (eopt != null) {
       int idx = eopt.indexOf("-Xrunjdwp");
       if (idx >= 0) {
-	 int idx1 = eopt.indexOf("address=",idx);
-	 if (idx1 >= 0) {
-	    int idx2 = idx1+8;
-	    int idx3 = idx2;
-	    while (idx3 < eopt.length()) {
-	       char c = eopt.charAt(idx3);
-	       if (!Character.isDigit(c)) break;
-	       ++idx3;
-	     }
-	    String port = eopt.substring(idx2,idx3);
-	    try {
-	       int portno = Integer.parseInt(port);
-	       for ( ; ; ) {
-		  try {
-		     Socket s = new Socket((String) null,portno);
-		     s.close();
-		     ++portno;
-		     continue;
-		   }
-		  catch (IOException e) {
-		     break;
-		   }
-		}
-	       eopt = eopt.substring(0,idx2) + (portno) + eopt.substring(idx3);
-	     }
-	    catch (NumberFormatException e) { }
-	  }
+         int idx1 = eopt.indexOf("address=",idx);
+         if (idx1 >= 0) {
+            int idx2 = idx1+8;
+            int idx3 = idx2;
+            while (idx3 < eopt.length()) {
+               char c = eopt.charAt(idx3);
+               if (!Character.isDigit(c)) break;
+               ++idx3;
+             }
+            String port = eopt.substring(idx2,idx3);
+            try {
+               int portno = Integer.parseInt(port);
+               for ( ; ; ) {
+                  try {
+                     Socket s = new Socket((String) null,portno);
+                     s.close();
+                     ++portno;
+                     continue;
+                   }
+                  catch (IOException e) {
+                     break;
+                   }
+                }
+               eopt = eopt.substring(0,idx2) + (portno) + eopt.substring(idx3);
+             }
+            catch (NumberFormatException e) { }
+          }
        }
       cmd += " " + eopt;
     }
@@ -212,30 +212,30 @@ private void ensureRunning()
       IvyExec ex = new IvyExec(cmd);
       boolean eok = false;
       for (int i = 0; i < 700; ++i) {
-	 synchronized (this) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (tryPing()) {
-	    BoardLog.logI("BUMP","Eclipse started successfully");
-	    eok = true;
-	    break;
-	  }
-	 if (!ex.isRunning()) {
-	    BoardLog.logE("BUMP","Problem starting eclipse");
-	    if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
-	       JOptionPane.showMessageDialog(null,
-		     "Eclipse could not be started. Check the eclipse log",
-		     "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	     }
-	    System.exit(1);
-	  }
+         synchronized (this) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
+         if (tryPing()) {
+            BoardLog.logI("BUMP","Eclipse started successfully");
+            eok = true;
+            break;
+          }
+         if (!ex.isRunning()) {
+            BoardLog.logE("BUMP","Problem starting eclipse");
+            if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
+               JOptionPane.showMessageDialog(null,
+                     "Eclipse could not be started. Check the eclipse log",
+                     "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+             }
+            System.exit(1);
+          }
        }
       if (!eok) {
-	 BoardLog.logE("BUMP","Eclipse doesn't seem to start");
-	 System.exit(1);
+         BoardLog.logE("BUMP","Eclipse doesn't seem to start");
+         System.exit(1);
        }
     }
    catch (IOException e) {

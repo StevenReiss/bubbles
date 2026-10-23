@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaHover.java							*/
-/*										*/
-/*	BUblles Display Area abstract class for handling hovers 		*/
-/*										*/
+/*                                                                              */
+/*              BudaHover.java                                                  */
+/*                                                                              */
+/*      BUblles Display Area abstract class for handling hovers                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,12 +55,12 @@ import java.util.WeakHashMap;
 
 
 /**
- *	This class provides extended support for hovering.  Whereas tool tips
- *	restrict you to a JToolTip class being popped up, this class provides
- *	a more general mechanism.
+ *      This class provides extended support for hovering.  Whereas tool tips
+ *      restrict you to a JToolTip class being popped up, this class provides
+ *      a more general mechanism.
  *
- *	It is used by implementing a subclass and providing the underlying
- *	component for which hover will occur in the constructor.
+ *      It is used by implementing a subclass and providing the underlying
+ *      component for which hover will occur in the constructor.
  *
  **/
 
@@ -70,22 +70,22 @@ public abstract class BudaHover implements ActionListener, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private MouseEvent	last_mouse;
-private Timer		delay_timer;
-private int		hover_time;
-private JViewport	use_viewport;
-private Point		view_point;
-private boolean 	doing_hover;
+private MouseEvent      last_mouse;
+private Timer           delay_timer;
+private int             hover_time;
+private JViewport       use_viewport;
+private Point           view_point;
+private boolean         doing_hover;
 
 
 private static Map<BudaHover,Boolean> all_hovers = new WeakHashMap<BudaHover,Boolean>();
-private static int	num_hover = 0;
-private static boolean	hovers_enabled = true;
+private static int      num_hover = 0;
+private static boolean  hovers_enabled = true;
 
 private static final int HOVER_TIME = 500;
 
@@ -93,13 +93,13 @@ private static final int HOVER_TIME = 500;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Start a hovering mechanism for the given component.
+ *      Start a hovering mechanism for the given component.
  **/
 
 protected BudaHover(Component c)
@@ -125,8 +125,8 @@ protected BudaHover(Component c)
    for (Component p = c; p != null; p = p.getParent()) {
       if (p instanceof JViewport) use_viewport = (JViewport) p;
       else if (p instanceof JScrollPane) {
-	 havescroll = true;
-	 break;
+         havescroll = true;
+         break;
        }
     }
 
@@ -139,44 +139,44 @@ protected BudaHover(Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Set the time (in ms) before hover should occur.
+ *      Set the time (in ms) before hover should occur.
  **/
 
-public void setHoverTime(int t) 		{ hover_time = t; }
+public void setHoverTime(int t)                 { hover_time = t; }
 
 
 
 /**
- *	Return the time (in ms) before hover should occur.
+ *      Return the time (in ms) before hover should occur.
  **/
 
-public int getHoverTime()			{ return hover_time; }
+public int getHoverTime()                       { return hover_time; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	User callbacks								*/
-/*										*/
+/*                                                                              */
+/*      User callbacks                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This routine is invoked when the user has hovered for the designated
- *	amount of time over the given component.  The passed in event is the
- *	last mouse event that occurred.
+ *      This routine is invoked when the user has hovered for the designated
+ *      amount of time over the given component.  The passed in event is the
+ *      last mouse event that occurred.
  **/
 
 public abstract void handleHover(MouseEvent e);
 
 
-/**	This routine is invoked when the user moves the mouse again after a hover.
+/**     This routine is invoked when the user moves the mouse again after a hover.
  *
  **/
 
@@ -185,9 +185,9 @@ public abstract void endHover(MouseEvent e);
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle callback from the timer						*/
-/*										*/
+/*                                                                              */
+/*      Handle callback from the timer                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void simulateHover(MouseEvent e)
@@ -219,10 +219,10 @@ void simulateHover(MouseEvent e)
 
    if (now - last_mouse.getWhen() >= hover_time) {
       try {
-	 handleHover(last_mouse);
+         handleHover(last_mouse);
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUDA","Problem handling hover",t);
+         BoardLog.logE("BUDA","Problem handling hover",t);
        }
       ++num_hover;
       doing_hover = true;
@@ -256,9 +256,9 @@ protected void clearHover(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle mouse events							*/
-/*										*/
+/*                                                                              */
+/*      Handle mouse events                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Mouser extends MouseAdapter {
@@ -283,11 +283,11 @@ private final class Mouser extends MouseAdapter {
       clearHover(e);
       last_mouse = e;
       if (!delay_timer.isRunning()) {
-	 delay_timer.setInitialDelay(hover_time);
-	 delay_timer.start();
+         delay_timer.setInitialDelay(hover_time);
+         delay_timer.start();
        }
       if (use_viewport != null) {
-	 view_point = use_viewport.getViewPosition();
+         view_point = use_viewport.getViewPosition();
        }
     }
 
@@ -303,7 +303,7 @@ private final class Mouser extends MouseAdapter {
       clearHover(e);
     }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
@@ -313,7 +313,7 @@ private final class Keyer extends KeyAdapter {
       clearHover(null);
     }
 
-}	// end of inner class Keyer
+}       // end of inner class Keyer
 
 
 
@@ -325,17 +325,17 @@ private final class Comper extends ComponentAdapter implements HierarchyListener
 
    @Override public void hierarchyChanged(HierarchyEvent e) {
       if (!e.getComponent().isShowing() && doing_hover)
-	 clearHover(null);
+         clearHover(null);
    }
 
-}	// end of inner class Comper
+}       // end of inner class Comper
 
 
 public static void removeHovers()
 {
    if (num_hover > 0) {
       for (BudaHover bh : all_hovers.keySet()) {
-	 bh.clearHover(null);
+         bh.clearHover(null);
        }
     }
 }
@@ -349,7 +349,7 @@ public static void enableHovers(boolean fg)
 
 
 
-}	// end of class BudaHover
+}       // end of class BudaHover
 
 
 

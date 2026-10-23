@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidController.java						*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data system controller		*/
-/*										*/
+/*                                                                              */
+/*              BandaidController.java                                          */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data system controller            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,9 +57,9 @@ public final class BandaidController implements BandaidConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Agent entry points							*/
-/*										*/
+/*                                                                              */
+/*      Agent entry points                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public static void premain(String args,Instrumentation inst)
@@ -77,56 +77,56 @@ public static void agentmain(String args,Instrumentation inst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String			host_name;
-private int			port_number;
-private SocketClient		socket_client;
+private String                  host_name;
+private int                     port_number;
+private SocketClient            socket_client;
 
-private String			process_id;
-private long			start_time;
-private Thread			monitor_thread;
-private BitSet			ignore_thread;
-private BitSet			use_thread;
-private boolean 		thread_default;
-private String			base_directory;
+private String                  process_id;
+private long                    start_time;
+private Thread                  monitor_thread;
+private BitSet                  ignore_thread;
+private BitSet                  use_thread;
+private boolean                 thread_default;
+private String                  base_directory;
 
-private Map<String,ClassType>	class_map;
-private Map<String,ClassType>	package_map;
+private Map<String,ClassType>   class_map;
+private Map<String,ClassType>   package_map;
 
-private Set<BandaidAgent>	active_agents;
+private Set<BandaidAgent>       active_agents;
 
-private ThreadMXBean	thread_bean;
-private long		delay_time;
-private long		disable_time;
-private long		report_time;
-private long		last_report;
-private long		last_monitor;
-private long		last_nano;
-private boolean 	monitor_enabled;
-private boolean 	reports_enabled;	// only used if monitoring disabled
-private boolean 	need_report;
+private ThreadMXBean    thread_bean;
+private long            delay_time;
+private long            disable_time;
+private long            report_time;
+private long            last_report;
+private long            last_monitor;
+private long            last_nano;
+private boolean         monitor_enabled;
+private boolean         reports_enabled;        // only used if monitoring disabled
+private boolean         need_report;
 
-private double		report_total;
-private long		num_reports;
-private double		check_total;
-private double		delay_total;
-private long		num_checks;
-private int		max_depth;
-private double		last_check;
+private double          report_total;
+private long            num_reports;
+private double          check_total;
+private double          delay_total;
+private long            num_checks;
+private int             max_depth;
+private double          last_check;
 
 private static Method  thread_id_method;
 
 private Map<String,BandaidAgent> agent_names;
 
-private Instrumentation 	class_inst;
+private Instrumentation         class_inst;
 
 
-private static final double	CHECK_OVERHEAD = 1.000; 	// 1 ms for timer checks
-private static final double	REPORT_OVERHEAD = 1.000;	// 1 ms for timer checks
+private static final double     CHECK_OVERHEAD = 1.000;         // 1 ms for timer checks
+private static final double     REPORT_OVERHEAD = 1.000;        // 1 ms for timer checks
 
 private static boolean do_debug = false;
 
@@ -148,9 +148,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BandaidController(String args,Instrumentation inst)
@@ -194,7 +194,7 @@ private BandaidController(String args,Instrumentation inst)
    defineAgent(new BandaidAgentHistory(this));
    defineAgent(new BandaidAgentSwing(this));
    defineAgent(new BandaidAgentTrie(this));
-   defineAgent(new BandaidAgentTracer(this));	
+   defineAgent(new BandaidAgentTracer(this));   
 
    scanArgs(args);
 
@@ -202,28 +202,28 @@ private BandaidController(String args,Instrumentation inst)
       RuntimeMXBean rmx = ManagementFactory.getRuntimeMXBean();
       process_id = rmx.getName();
       for (String s : rmx.getInputArguments()) {
-	 if (s.startsWith("-agentlib:jdwp=transport")) {
-	    int idx = s.indexOf("address=");
-	    if (idx >= 0) {
-	       s = s.substring(idx+8);
-	       idx = s.indexOf(",");
-	       if (idx >= 0) s = s.substring(0,idx);
-	       idx = s.indexOf(":");
-	       if (idx > 0) {
-		  String h = s.substring(0,idx);
-		  String p = s.substring(idx+1);
-		  if (h.equals("localhost") || h.equals("127.0.0.1") || h.equals("0.0.0.0")) {
-		     try {
-			h = InetAddress.getLocalHost().getHostName();
-		      }
-		     catch (UnknownHostException e) {
-			h = "localhost";
-		      }
-		   }
-		  process_id = p + "@" + h;
-		}
-	     }
-	  }
+         if (s.startsWith("-agentlib:jdwp=transport")) {
+            int idx = s.indexOf("address=");
+            if (idx >= 0) {
+               s = s.substring(idx+8);
+               idx = s.indexOf(",");
+               if (idx >= 0) s = s.substring(0,idx);
+               idx = s.indexOf(":");
+               if (idx > 0) {
+                  String h = s.substring(0,idx);
+                  String p = s.substring(idx+1);
+                  if (h.equals("localhost") || h.equals("127.0.0.1") || h.equals("0.0.0.0")) {
+                     try {
+                        h = InetAddress.getLocalHost().getHostName();
+                      }
+                     catch (UnknownHostException e) {
+                        h = "localhost";
+                      }
+                   }
+                  process_id = p + "@" + h;
+                }
+             }
+          }
        }
     }
 
@@ -231,7 +231,7 @@ private BandaidController(String args,Instrumentation inst)
 
    ignore_thread = new BitSet(BANDAID_MAX_THREADS);
    use_thread = new BitSet(BANDAID_MAX_THREADS);
-   thread_default = true;				// use all unless otherwise stated
+   thread_default = true;                               // use all unless otherwise stated
 
    socket_client = new SocketClient();
    if (socket_client.isValid()) socket_client.sendMessage("CONNECT " + process_id);
@@ -242,10 +242,10 @@ private BandaidController(String args,Instrumentation inst)
 
    if (class_inst != null) {
       for (BandaidAgent ba : active_agents) {
-	 ClassFileTransformer cft = ba.getTransformer();
-	 if (cft != null) {
-	    class_inst.addTransformer(cft,true);
-	  }
+         ClassFileTransformer cft = ba.getTransformer();
+         if (cft != null) {
+            class_inst.addTransformer(cft,true);
+          }
        }
     }
    if (do_debug) {
@@ -257,9 +257,9 @@ private BandaidController(String args,Instrumentation inst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning							*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String args)
@@ -272,42 +272,42 @@ private void scanArgs(String args)
       String val = null;
       int idx = arg.indexOf('=');
       if (idx >= 0) {
-	 val = arg.substring(idx+1);
-	 arg = arg.substring(0,idx);
+         val = arg.substring(idx+1);
+         arg = arg.substring(0,idx);
        }
 
       if (arg.equals("id") && val != null) {
-	 process_id = val;
+         process_id = val;
        }
       else if (arg.equals("enable")) {
-	 enableMonitoring(true);
+         enableMonitoring(true);
        }
       else if (arg.equals("disable")) {
-	 enableMonitoring(false);
+         enableMonitoring(false);
        }
       else if (arg.equals("host")) {
-	 setHost(val);
+         setHost(val);
        }
       else if (arg.equals("port")) {
-	 try {
-	    if (val != null) port_number = Integer.parseInt(val);
-	  }
-	 catch (NumberFormatException e) { }
+         try {
+            if (val != null) port_number = Integer.parseInt(val);
+          }
+         catch (NumberFormatException e) { }
        }
       else if (arg.equals("base")) {
-	 base_directory = val;
+         base_directory = val;
        }
       else if (arg.equals("remote")) {
-	 report_time *= 10;		// send fewer reports to remote process
+         report_time *= 10;             // send fewer reports to remote process
        }
       else if (arg.equalsIgnoreCase("All")) {
-	 addAllAgents();
+         addAllAgents();
        }
       else if (agent_names.containsKey(arg.toUpperCase())) {
-	 active_agents.add(agent_names.get(arg.toUpperCase()));
+         active_agents.add(agent_names.get(arg.toUpperCase()));
        }
       else {
-	 System.err.println("BANDAID: Unknown argument: " + arg);
+         System.err.println("BANDAID: Unknown argument: " + arg);
        }
     }
 }
@@ -347,9 +347,9 @@ private void defineAgent(BandaidAgent agt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class/package setup							*/
-/*										*/
+/*                                                                              */
+/*      Class/package setup                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupClassTypes()
@@ -370,7 +370,7 @@ private void setupClassTypes()
    package_map.put("org.postgresql.",ClassType.SYSTEM);
    package_map.put("jrockit.",ClassType.SYSTEM);
    package_map.put("com.jogamp.",ClassType.SYSTEM);
-												
+                                                                                                
    package_map.put("edu.brown.cs.dyvise.dyper.",ClassType.SYSTEM);
    package_map.put("edu.brown.cs.bubbles.bandaid.",ClassType.SYSTEM);
    package_map.put("org.eclipse.",ClassType.SYSTEM);
@@ -388,9 +388,9 @@ private void setupClassTypes()
 
 
 /********************************************************************************/;
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 long getMonitorThreadId()
@@ -426,7 +426,7 @@ boolean useThread()
 }
 
 
-String getBaseDirectory()		{ return base_directory; }
+String getBaseDirectory()               { return base_directory; }
 
 
 
@@ -446,9 +446,9 @@ static long getThreadId(Thread th)
 
 
 /********************************************************************************/
-/*										*/
-/*	Communications methods							*/
-/*										*/
+/*                                                                              */
+/*      Communications methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void handleRequests(boolean wait)
@@ -482,8 +482,8 @@ private void processRequest(String rqst)
       cmd = rqst.substring(idx+1).trim();
       idx = cmd.indexOf(" ");
       if (idx > 0) {
-	 args = cmd.substring(idx+1).trim();
-	 cmd = cmd.substring(0,idx);
+         args = cmd.substring(idx+1).trim();
+         cmd = cmd.substring(0,idx);
        }
     }
 
@@ -501,9 +501,9 @@ private void processRequest(String rqst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 long sendReport(long now)
@@ -528,24 +528,24 @@ long sendReport(long now)
 
 
 /********************************************************************************/
-/*										*/
-/*	Variable access methods 						*/
-/*										*/
+/*                                                                              */
+/*      Variable access methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
-long getStartTime()			{ return start_time; }
+long getStartTime()                     { return start_time; }
 
-String getProcessId()			{ return process_id; }
+String getProcessId()                   { return process_id; }
 
-long getThreadCpuTime(long id)		{ return thread_bean.getThreadCpuTime(id); }
-long getThreadUserTime(long id) 	{ return thread_bean.getThreadUserTime(id); }
+long getThreadCpuTime(long id)          { return thread_bean.getThreadCpuTime(id); }
+long getThreadUserTime(long id)         { return thread_bean.getThreadUserTime(id); }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class type methods							*/
-/*										*/
+/*                                                                              */
+/*      Class type methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 boolean isIOClass(String nm)
@@ -579,11 +579,11 @@ private ClassType getClassType(String nm)
       ct = ClassType.NORMAL;
       int len = 0;
       for (Map.Entry<String,ClassType> ent : package_map.entrySet()) {
-	 String k = ent.getKey();
-	 if (k.length() > len && nm.startsWith(k)) {
-	    ct = ent.getValue();
-	    len = k.length();
-	  }
+         String k = ent.getKey();
+         if (k.length() > len && nm.startsWith(k)) {
+            ct = ent.getValue();
+            len = k.length();
+          }
        }
       class_map.put(nm,ct);
     }
@@ -594,9 +594,9 @@ private ClassType getClassType(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Monitoring access methods						*/
-/*										*/
+/*                                                                              */
+/*      Monitoring access methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void enableMonitoring(boolean fg)
@@ -617,9 +617,9 @@ private void enableMonitoring(boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Time methods								*/
-/*										*/
+/*                                                                              */
+/*      Time methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private long  getNextDelayTime()
@@ -635,9 +635,9 @@ private long  getNextDelayTime()
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void generateReport(BandaidXmlWriter xw)
@@ -655,11 +655,11 @@ void generateReport(BandaidXmlWriter xw)
 
    for (BandaidAgent agt : active_agents) {
       try {
-	 agt.generateReport(xw,last_monitor);
+         agt.generateReport(xw,last_monitor);
        }
       catch (Throwable t) {
-	 // System.err.println("BANDAID: Problem generating report: " + t);
-	 // t.printStackTrace();
+         // System.err.println("BANDAID: Problem generating report: " + t);
+         // t.printStackTrace();
        }
     }
 
@@ -669,9 +669,9 @@ void generateReport(BandaidXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle Stack monitoring					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle Stack monitoring                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void monitorStacks(long now,ThreadInfo [] tinfo)
@@ -685,7 +685,7 @@ private void monitorStacks(long now,ThreadInfo [] tinfo)
 
       StackTraceElement [] trc = ti.getStackTrace();
       for (BandaidAgent agt : active_agents) {
-	 agt.handleThreadStack(now,ti,trc);
+         agt.handleThreadStack(now,ti,trc);
        }
     }
 
@@ -698,9 +698,9 @@ private void monitorStacks(long now,ThreadInfo [] tinfo)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle state dumps						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle state dumps                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void generateStackDump(BandaidXmlWriter xw)
@@ -757,9 +757,9 @@ private void dumpThreadInfo(ThreadInfo tinfo,StackTraceElement [] trc,BandaidXml
 
 
 /********************************************************************************/
-/*										*/
-/*	Communication methods							*/
-/*										*/
+/*                                                                              */
+/*      Communication methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class SocketClient {
@@ -787,7 +787,7 @@ private class SocketClient {
        }
     }
 
-   boolean isValid()			{ return output_stream != null; }
+   boolean isValid()                    { return output_stream != null; }
 
    String readCommand(boolean wait) {
       if (input_reader == null) return null;
@@ -845,16 +845,16 @@ private class SocketClient {
        }
     }
 
-}	// end of subclass SocketClient
+}       // end of subclass SocketClient
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling stack checking					*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling stack checking                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class ClassMonitor extends Thread {
@@ -868,70 +868,70 @@ private class ClassMonitor extends Thread {
       long nextcheck = 0;
 
       for ( ; ; ) {
-	 long delay = getNextDelayTime();
-	 while (delay < 0) {
-	    handleRequests(true);
-	    delay = getNextDelayTime();
-	  }
+         long delay = getNextDelayTime();
+         while (delay < 0) {
+            handleRequests(true);
+            delay = getNextDelayTime();
+          }
 
-	 if (delay > BANDAID_MAX_DELAY) {
-	    if (monitor_enabled && nextcheck == 0) nextcheck = delay;
-	    delay = BANDAID_MAX_DELAY;
-	  }
+         if (delay > BANDAID_MAX_DELAY) {
+            if (monitor_enabled && nextcheck == 0) nextcheck = delay;
+            delay = BANDAID_MAX_DELAY;
+          }
 
-	 if (delay != 0) {
-	    synchronized (this) {
-	       try {
-		  wait(delay);
-		}
-	       catch (InterruptedException e) { }
-	     }
-	  }
+         if (delay != 0) {
+            synchronized (this) {
+               try {
+                  wait(delay);
+                }
+               catch (InterruptedException e) { }
+             }
+          }
 
-	 long now = System.currentTimeMillis();
-	 long nnow = System.nanoTime();
-	 long tnow = nnow;
+         long now = System.currentTimeMillis();
+         long nnow = System.nanoTime();
+         long tnow = nnow;
 
-	 if (monitor_enabled) {
-	    if (nextcheck == 0 || now - last_monitor >= nextcheck) {
-	       last_monitor = now;
-	       last_nano = nnow;
-	       try {
-		  monitorThreads();
-		}
-	       catch (Throwable t) {
-		  System.err.println("BANDAID: Problem monitoring threads: " + t);
-		  t.printStackTrace();
-		}
-	       tnow = System.nanoTime();
-	       last_check = (tnow - nnow) / 1000000.0;
-	       check_total += last_check;
-	       delay_total += delay;
-	       num_checks++;
-	       nextcheck = 0;
-	       need_report = true;
-	     }
-	  }
+         if (monitor_enabled) {
+            if (nextcheck == 0 || now - last_monitor >= nextcheck) {
+               last_monitor = now;
+               last_nano = nnow;
+               try {
+                  monitorThreads();
+                }
+               catch (Throwable t) {
+                  System.err.println("BANDAID: Problem monitoring threads: " + t);
+                  t.printStackTrace();
+                }
+               tnow = System.nanoTime();
+               last_check = (tnow - nnow) / 1000000.0;
+               check_total += last_check;
+               delay_total += delay;
+               num_checks++;
+               nextcheck = 0;
+               need_report = true;
+             }
+          }
 
-	 if (report_time > 0 && (monitor_enabled || reports_enabled || need_report)) {
-	    try {
-	       if (now - last_report >= report_time) {
-		  tnow = System.nanoTime();
-		  long rnow = tnow;
-		  if (last_report != 0) rnow = sendReport(now);
-		  last_report = now;
-		  report_total += (rnow - tnow) / 1000000.0;
-		  num_reports++;
-		  need_report = false;
-		}
-	     }
-	    catch (Throwable t) {
-	       System.err.println("BANDAID: Problem generating report: " + t);
-	       t.printStackTrace();
-	     }
-	  }
+         if (report_time > 0 && (monitor_enabled || reports_enabled || need_report)) {
+            try {
+               if (now - last_report >= report_time) {
+                  tnow = System.nanoTime();
+                  long rnow = tnow;
+                  if (last_report != 0) rnow = sendReport(now);
+                  last_report = now;
+                  report_total += (rnow - tnow) / 1000000.0;
+                  num_reports++;
+                  need_report = false;
+                }
+             }
+            catch (Throwable t) {
+               System.err.println("BANDAID: Problem generating report: " + t);
+               t.printStackTrace();
+             }
+          }
 
-	 handleRequests(false);
+         handleRequests(false);
        }
     }
 
@@ -939,17 +939,17 @@ private class ClassMonitor extends Thread {
       long [] tids = thread_bean.getAllThreadIds();
       ThreadInfo [] tinfo = thread_bean.getThreadInfo(tids,max_depth);
       try {
-	 if (monitor_enabled) {
-	    monitorStacks(last_monitor,tinfo);
-	  }
+         if (monitor_enabled) {
+            monitorStacks(last_monitor,tinfo);
+          }
        }
       catch (Throwable t) {
-	 System.err.println("BANDAID: Problem during monitoring: " + t);
-	 t.printStackTrace();
+         System.err.println("BANDAID: Problem during monitoring: " + t);
+         t.printStackTrace();
        }
     }
 
-}	// end of subclass ClassMonitor
+}       // end of subclass ClassMonitor
 
 
 
@@ -986,7 +986,7 @@ private static class DebugOutput implements ClassFileTransformer {
 
 
 
-}	// end of class BandaidController
+}       // end of class BandaidController
 
 
 

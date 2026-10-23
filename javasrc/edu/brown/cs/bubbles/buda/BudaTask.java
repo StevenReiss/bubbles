@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaTask.java							*/
-/*										*/
-/*	BUblles Display Area task (saved working set)				*/
-/*										*/
+/*                                                                              */
+/*              BudaTask.java                                                   */
+/*                                                                              */
+/*      BUblles Display Area task (saved working set)                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,9 +52,9 @@ class BudaTask implements BudaConstants, BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String task_name;
@@ -65,9 +65,9 @@ private String task_text;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaTask(Element xml)
@@ -90,12 +90,12 @@ BudaTask(String nm,String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()			{ return task_name; }
+String getName()                        { return task_name; }
 
 String getText()
 {
@@ -125,9 +125,9 @@ Date getDate()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -138,9 +138,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Loading methods 							*/
-/*										*/
+/*                                                                              */
+/*      Loading methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 BudaWorkingSetImpl loadTask(BudaBubbleArea bba,int offset)
@@ -161,8 +161,8 @@ BudaWorkingSetImpl loadTask(BudaBubbleArea bba,int offset)
    Element rgn = IvyXml.getChild(wse,"REGION");
    int x0 = (int) IvyXml.getAttrDouble(rgn,"X",0);
    Rectangle r = new Rectangle(x0,(int) IvyXml.getAttrDouble(rgn,"Y",0),
-				  (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),
-				  (int) IvyXml.getAttrDouble(rgn,"HEIGHT",0));
+                                  (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),
+                                  (int) IvyXml.getAttrDouble(rgn,"HEIGHT",0));
    r.x = offset - r.width/2;
    if (r.x < 0) r.x = 0;
    if (r.x + r.width >= arearect.width) r.x = arearect.width - r.width;
@@ -186,19 +186,19 @@ BudaWorkingSetImpl loadTask(BudaBubbleArea bba,int offset)
    for (Element egrp : IvyXml.children(grps,"GROUP")) {
       BudaBubbleGroup grp = null;
       for (Element ebbl : IvyXml.children(egrp,"BUBBLE")) {
-	 String id = IvyXml.getAttrString(ebbl,"ID");
-	 BudaBubble bbl = bubblemap.get(id);
-	 if (bbl != null) {
-	    grp = bbl.getGroup();
-	    if (grp != null) break;
-	  }
+         String id = IvyXml.getAttrString(ebbl,"ID");
+         BudaBubble bbl = bubblemap.get(id);
+         if (bbl != null) {
+            grp = bbl.getGroup();
+            if (grp != null) break;
+          }
        }
       if (grp != null) {
-	 Color lc = IvyXml.getAttrColor(egrp,"LEFTCOLOR");
-	 Color rc = IvyXml.getAttrColor(egrp,"RIGHTCOLOR");
-	 grp.setColor(lc,rc);
-	 String ttl = IvyXml.getTextElement(egrp,"TITLE");
-	 grp.setTitle(ttl);
+         Color lc = IvyXml.getAttrColor(egrp,"LEFTCOLOR");
+         Color rc = IvyXml.getAttrColor(egrp,"RIGHTCOLOR");
+         grp.setColor(lc,rc);
+         String ttl = IvyXml.getTextElement(egrp,"TITLE");
+         grp.setTitle(ttl);
        }
     }
 
@@ -213,8 +213,8 @@ BudaWorkingSetImpl loadTask(BudaBubbleArea bba,int offset)
       LinkPort tprt = root.createPort(tbbl,IvyXml.getChild(tlnk,"PORT"));
       BudaLinkStyle sty = IvyXml.getAttrEnum(lnk,"STYLE",BudaLinkStyle.STYLE_SOLID);
       if (fbbl != null && tbbl != null && fprt != null && tprt != null) {
-	 BudaBubbleLink blnk = new BudaBubbleLink(fbbl,fprt,tbbl,tprt,rect,sty);
-	 root.addLink(blnk);
+         BudaBubbleLink blnk = new BudaBubbleLink(fbbl,fprt,tbbl,tprt,rect,sty);
+         root.addLink(blnk);
        }
     }
 
@@ -239,14 +239,14 @@ boolean updateTask(BudaWorkingSetImpl ws)
     }
    if (ws.getLabel() == null || !ws.getLabel().equals(task_name)) {
       if (task_name != null) {
-	 ws.setLabel(task_name);
-	 chng = true;
+         ws.setLabel(task_name);
+         chng = true;
        }
     }
 
    int x0 = (int) IvyXml.getAttrDouble(rgn,"X",0);
    Rectangle r = new Rectangle(arearect.x,(int) IvyXml.getAttrDouble(rgn,"Y",0),
-	 (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),arearect.height);
+         (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),arearect.height);
    int dx = r.x - x0;
 
    Collection<BudaBubble> bbs = bba.getBubblesInRegion(ws.getRegion());
@@ -256,26 +256,26 @@ boolean updateTask(BudaWorkingSetImpl ws)
       String id = IvyXml.getAttrString(bbl,"ID");
       BudaBubble bb = bubblemap.get(id);
       if (bb == null) {
-	 bb = br.createBubble(bba,bbl,null,dx);
-	 if (bb != null) {
-	    chng = true;
-	    bubblemap.put(id,bb);
-	    bba.fixupGroups(bb);
-	 }
+         bb = br.createBubble(bba,bbl,null,dx);
+         if (bb != null) {
+            chng = true;
+            bubblemap.put(id,bb);
+            bba.fixupGroups(bb);
+         }
        }
       else {
-	 Rectangle r0 = BudaRoot.findBudaLocation(bb);
-	 if (r0 != null) {
-	    int x = IvyXml.getAttrInt(bbl,"X") + dx;
-	    int y = IvyXml.getAttrInt(bbl,"Y");
-	    int w = IvyXml.getAttrInt(bbl,"W");
-	    int h = IvyXml.getAttrInt(bbl,"H");
-	    if (x != r0.x || y != r0.y || w != r0.width || h != r0.height) {
-	       bb.setBounds(x,y,w,h);
-	       bba.fixupGroups(bb);
+         Rectangle r0 = BudaRoot.findBudaLocation(bb);
+         if (r0 != null) {
+            int x = IvyXml.getAttrInt(bbl,"X") + dx;
+            int y = IvyXml.getAttrInt(bbl,"Y");
+            int w = IvyXml.getAttrInt(bbl,"W");
+            int h = IvyXml.getAttrInt(bbl,"H");
+            if (x != r0.x || y != r0.y || w != r0.width || h != r0.height) {
+               bb.setBounds(x,y,w,h);
+               bba.fixupGroups(bb);
                chng = true;
-	     }
-	  }
+             }
+          }
        }
     }
    for (BudaBubble bb : bbs) {
@@ -288,16 +288,16 @@ boolean updateTask(BudaWorkingSetImpl ws)
    for (Element egrp : IvyXml.children(grps,"GROUP")) {
       BudaBubbleGroup grp = null;
       for (Element ebbl : IvyXml.children(egrp,"BUBBLE")) {
-	 String id = IvyXml.getAttrString(ebbl,"ID");
-	 BudaBubble bbl = bubblemap.get(id);
-	 if (bbl != null) {
-	    grp = bbl.getGroup();
-	    if (grp != null) break;
-	  }
+         String id = IvyXml.getAttrString(ebbl,"ID");
+         BudaBubble bbl = bubblemap.get(id);
+         if (bbl != null) {
+            grp = bbl.getGroup();
+            if (grp != null) break;
+          }
        }
       if (grp != null) {
          String gttl = grp.getTitle();
-	 String ttl = IvyXml.getTextElement(egrp,"TITLE");
+         String ttl = IvyXml.getTextElement(egrp,"TITLE");
          if (gttl == null && ttl == null) ;
          else if (ttl == null || !ttl.equals(gttl)) {
             grp.setTitle(ttl);
@@ -348,23 +348,23 @@ private Map<String,BudaBubble> setupBubbleMap(BudaRoot br,Element bbls,Collectio
 
    for (int i = MAX_SCORE; i > 0; --i) {
       for (Element bbl : IvyXml.children(bbls,"BUBBLE")) {
-	 if (done.contains(bbl)) continue;
-	 String key = IvyXml.getAttrString(bbl,"CONFIG");
-	 if (key == null) {
-	    done.add(bbl);
-	    continue;
-	  }
-	 for (BudaBubble bb : bbs) {
-	    if (done.contains(bb)) continue;
-	    int s = compare(br,bb,bbl);
-	    if (s == i) {
-	       String id = IvyXml.getAttrString(bbl,"ID");
-	       bubblemap.put(id,bb);
-	       done.add(bbl);
-	       done.add(bb);
-	       break;
-	     }
-	  }
+         if (done.contains(bbl)) continue;
+         String key = IvyXml.getAttrString(bbl,"CONFIG");
+         if (key == null) {
+            done.add(bbl);
+            continue;
+          }
+         for (BudaBubble bb : bbs) {
+            if (done.contains(bb)) continue;
+            int s = compare(br,bb,bbl);
+            if (s == i) {
+               String id = IvyXml.getAttrString(bbl,"ID");
+               bubblemap.put(id,bb);
+               done.add(bbl);
+               done.add(bb);
+               break;
+             }
+          }
        }
     }
 
@@ -400,9 +400,9 @@ private int compare(BudaRoot br,BudaBubble bb,Element e)
 
 
 /********************************************************************************/
-/*										*/
-/*	String methods for menu display 					*/
-/*										*/
+/*                                                                              */
+/*      String methods for menu display                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -416,7 +416,7 @@ private int compare(BudaRoot br,BudaBubble bb,Element e)
 
 
 
-}	// end of class BudaTask
+}       // end of class BudaTask
 
 
 

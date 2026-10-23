@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewLine.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor view for lines 			*/
-/*										*/
+/*                                                                              */
+/*              BaleViewLine.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor view for lines                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -38,13 +38,13 @@ class BaleViewLine extends BaleViewLineRegion implements BaleConstants.BaleView,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private float		last_width;
-private float		last_height;
+private float           last_width;
+private float           last_height;
 
 private static BreakElement [] break_table = new BreakElement[] {
 
@@ -92,9 +92,9 @@ private static final int MAX_LINE_ELEMENTS = 50;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewLine(BaleElement e)
@@ -108,9 +108,9 @@ BaleViewLine(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic methods for View							*/
-/*										*/
+/*                                                                              */
+/*      Basic methods for View                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public float getPreferredSpan(int axis)
@@ -123,9 +123,9 @@ BaleViewLine(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void setSize(float w,float h)
@@ -134,9 +134,9 @@ BaleViewLine(BaleElement e)
 
    if (w != 0) {
       if (w != last_width || h != last_height) {
-	 last_width = w;
-	 last_height = h;
-	 invalidateLayout();
+         last_width = w;
+         last_height = h;
+         invalidateLayout();
        }
     }
 }
@@ -145,9 +145,9 @@ BaleViewLine(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	BaleView methods							*/
-/*										*/
+/*                                                                              */
+/*      BaleView methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public float getHeightAtPriority(double p,float w)
@@ -202,13 +202,13 @@ private float computeBestLineSplit(double p,float w)
 
    switch (getBaleElement().getBaleDocument().getSplitMode()) {
       case SPLIT_NEVER :
-	 break;
+         break;
       case SPLIT_NORMAL :
-	 spl = splitLine(w,spl0,100,true);
-	 break;
+         spl = splitLine(w,spl0,100,true);
+         break;
       case SPLIT_QUICK :
-	 spl = splitLine(w,spl0,100,false);
-	 break;
+         spl = splitLine(w,spl0,100,false);
+         break;
     }
 
    if (spl == null) spl = spl0;
@@ -236,9 +236,9 @@ private float computeBestLineSplit(double p,float w)
 
 
 /********************************************************************************/
-/*										*/
-/*	Searching implementation						*/
-/*										*/
+/*                                                                              */
+/*      Searching implementation                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private SplitLine splitLine(float w,SplitLine spl,int maxlines,boolean opt)
@@ -250,7 +250,7 @@ private SplitLine splitLine(float w,SplitLine spl,int maxlines,boolean opt)
    
    BaleDocument bd = (BaleDocument) getDocument();
 
-   if (spl.getTotalWidth() <= w) return spl;	// current split works
+   if (spl.getTotalWidth() <= w) return spl;    // current split works
 
    int lastok = -1;
    float totwd = spl.getStartPosition();
@@ -276,15 +276,15 @@ private SplitLine splitLine(float w,SplitLine spl,int maxlines,boolean opt)
       View v = getView(0);
       BaleElement be = getBaleElement(v);
       if (be.isEmpty()) {
-	 float wd = view_data[0].preferredWidth();
-	 float mxwd = BALE_MAX_INITIAL_REFLOW_INDENT * space;
-	 if (wd > mxwd) {
-	    spl.setInitialSpace(mxwd);
-	    SplitLine nspl = splitLine(w,spl,maxlines,opt);
-	    if (nspl == null) nspl = spl;
-	    return nspl;
-	  }
-	 else if (lastok == 0) lastok = -1;
+         float wd = view_data[0].preferredWidth();
+         float mxwd = BALE_MAX_INITIAL_REFLOW_INDENT * space;
+         if (wd > mxwd) {
+            spl.setInitialSpace(mxwd);
+            SplitLine nspl = splitLine(w,spl,maxlines,opt);
+            if (nspl == null) nspl = spl;
+            return nspl;
+          }
+         else if (lastok == 0) lastok = -1;
        }
     }
 
@@ -307,27 +307,27 @@ private SplitLine splitLine(float w,SplitLine spl,int maxlines,boolean opt)
       BaleElement be = getBaleElement(v);
 
       if (!be.isEmpty()) {
-	 int soff = be.getStartOffset();
-	 if (soff < 0) continue;
-	 int ind = bd.getSplitIndent(soff);
-	 if (ind > BALE_MAX_REFLOW_INDENT) ind = BALE_MAX_REFLOW_INDENT;
-	 float wd = ind * space;
-	 SplitLine nspl = new SplitLine(spl,i,wd);
-	 nspl = splitLine(w,nspl,maxlines,opt);      // find best split of the rest of line
-	 if (nspl == null) break;	   // too far to left -- better splits to the right
-	 if (nspl.getTotalWidth() > spl.getTotalWidth()) {
-	    // earlier break moves things further to the right -- might want to reset indentation
-	    continue;
-	  }
-	 maxlines = Math.min(maxlines,nspl.getLineCount());
-	 if (nspl.isBetterThan(bestsplit)) bestsplit = nspl;
-	 if (!opt) break;
+         int soff = be.getStartOffset();
+         if (soff < 0) continue;
+         int ind = bd.getSplitIndent(soff);
+         if (ind > BALE_MAX_REFLOW_INDENT) ind = BALE_MAX_REFLOW_INDENT;
+         float wd = ind * space;
+         SplitLine nspl = new SplitLine(spl,i,wd);
+         nspl = splitLine(w,nspl,maxlines,opt);      // find best split of the rest of line
+         if (nspl == null) break;          // too far to left -- better splits to the right
+         if (nspl.getTotalWidth() > spl.getTotalWidth()) {
+            // earlier break moves things further to the right -- might want to reset indentation
+            continue;
+          }
+         maxlines = Math.min(maxlines,nspl.getLineCount());
+         if (nspl.isBetterThan(bestsplit)) bestsplit = nspl;
+         if (!opt) break;
        }
     }
 
    // if (bestsplit == null) {
-   //	 // nothing found
-   //	 return spl;
+   //    // nothing found
+   //    return spl;
    //  }
 
    return bestsplit;
@@ -336,9 +336,9 @@ private SplitLine splitLine(float w,SplitLine spl,int maxlines,boolean opt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Utilitiy methods							*/
-/*										*/
+/*                                                                              */
+/*      Utilitiy methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private float computeWidth(int sidx,int eidx)
@@ -352,11 +352,11 @@ private float computeWidth(int sidx,int eidx)
       View v = getView(i);
       BaleElement be = getBaleElement(v);
       if (be.isEmpty()) {
-	 xwid += view_data[i].preferredWidth();
+         xwid += view_data[i].preferredWidth();
        }
       else {
-	 totwd += xwid + view_data[i].preferredWidth();
-	 xwid = 0;
+         totwd += xwid + view_data[i].preferredWidth();
+         xwid = 0;
        }
     }
 
@@ -392,9 +392,9 @@ private float setPositions(float y0,float x0,int sidx,int eidx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reflow cost computation 						*/
-/*										*/
+/*                                                                              */
+/*      Reflow cost computation                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private double computeCost(int sidx)
@@ -415,8 +415,8 @@ private double computeCost(int sidx)
    while (nbe != null && nbe.isEmpty()) {
       havespace = true;
       if (nbe.isEndOfLine()) {
-	 nbe = null;
-	 break;
+         nbe = null;
+         break;
        }
       else nbe = nbe.getNextCharacterElement();
     }
@@ -424,8 +424,8 @@ private double computeCost(int sidx)
    while (pbe != null && pbe.isEmpty()) {
       havespace = true;
       if (pbe.isEndOfLine()) {
-	 pbe = null;
-	 break;
+         pbe = null;
+         break;
        }
       else pbe = pbe.getPreviousCharacterElement();
     }
@@ -444,25 +444,25 @@ private double computeCost(int sidx)
       case EQUAL :
       case LANGLE :
       case RANGLE :
-	 if (!havespace) {
-	    switch (nbe.getTokenType()) {
-	       case OP :
-	       case EQUAL :
-	       case LANGLE :
-	       case RANGLE :
-		  return 1;
-	       default:
-		  break;
-	     }
-	  }
-	 break;
+         if (!havespace) {
+            switch (nbe.getTokenType()) {
+               case OP :
+               case EQUAL :
+               case LANGLE :
+               case RANGLE :
+                  return 1;
+               default:
+                  break;
+             }
+          }
+         break;
       default:
-	 break;
+         break;
     }
 
    for (BreakElement be : break_table) {
       if (be.match(pbe.getTokenType(),nbe.getTokenType(),havespace))
-	 return be.getValue();
+         return be.getValue();
     }
 
    return 0.5;
@@ -516,17 +516,17 @@ private int getAstDelta(BaleAstNode ast0,BaleAstNode ast1)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for representing a split line					*/
-/*										*/
+/*                                                                              */
+/*      Class for representing a split line                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class SplitLine {
 
-   private int start_index;			// index of starting view
-   private float start_position;		// starting indentation
-   private float line_width;			// width of rest of views on this line
-   private List<SplitData> line_splits; 	// prior splits
+   private int start_index;                     // index of starting view
+   private float start_position;                // starting indentation
+   private float line_width;                    // width of rest of views on this line
+   private List<SplitData> line_splits;         // prior splits
    private double view_cost;
    private double balance_cost;
 
@@ -550,17 +550,17 @@ private class SplitLine {
       computeBalanceCost();
     }
 
-   float getTotalWidth()		{ return start_position + line_width; }
-   int getStartIndex()			{ return start_index; }
-   float getStartPosition()		{ return start_position; }
-   int getLineCount()			{ return 1+line_splits.size(); }
+   float getTotalWidth()                { return start_position + line_width; }
+   int getStartIndex()                  { return start_index; }
+   float getStartPosition()             { return start_position; }
+   int getLineCount()                   { return 1+line_splits.size(); }
 
    private void computeBalanceCost() {
       double w = line_width + start_position;
       balance_cost = w*w;
       for (SplitData sd : line_splits) {
-	 w = sd.getWidth() + sd.getStartIndent();
-	 balance_cost += w*w;
+         w = sd.getWidth() + sd.getStartIndent();
+         balance_cost += w*w;
        }
     }
 
@@ -579,7 +579,7 @@ private class SplitLine {
    float assignPositions() {
       float y = 0;
       for (SplitData sd : line_splits) {
-	 y += setPositions(y,sd.getStartIndent(),sd.getIndex(),sd.getEndIndex());
+         y += setPositions(y,sd.getStartIndent(),sd.getIndex(),sd.getEndIndex());
        }
       y += setPositions(y,start_position,start_index,-1);
 
@@ -591,16 +591,16 @@ private class SplitLine {
       start_position = w;
     }
 
-}	// end of subclass SplitLine
+}       // end of subclass SplitLine
 
 
 
 private class SplitData {
 
-   private int split_start;		// index for split
-   private int split_end;		// index after end of split
-   private float start_position;	// indented start for line
-   private float line_width;		// width of the tokens used in this line
+   private int split_start;             // index for split
+   private int split_end;               // index after end of split
+   private float start_position;        // indented start for line
+   private float line_width;            // width of the tokens used in this line
 
    SplitData(int idx,int eidx,float spos) {
       split_start = idx;
@@ -609,19 +609,19 @@ private class SplitData {
       line_width = computeWidth(idx,eidx);
     }
 
-   int getIndex()			{ return split_start; }
-   int getEndIndex()			{ return split_end; }
-   float getWidth()			{ return line_width; }
-   float getStartIndent()		{ return start_position; }
+   int getIndex()                       { return split_start; }
+   int getEndIndex()                    { return split_end; }
+   float getWidth()                     { return line_width; }
+   float getStartIndent()               { return start_position; }
 
-}	// end of inner class SplitData
+}       // end of inner class SplitData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Element for break tables						*/
-/*										*/
+/*                                                                              */
+/*      Element for break tables                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BreakElement {
@@ -645,11 +645,11 @@ private static class BreakElement {
       return true;
     }
 
-   double getValue()			{ return break_value; }
+   double getValue()                    { return break_value; }
 
    private BaleTokenType getToken(String nm) {
       try {
-	 if (nm != null && !nm.equals("*")) return BaleTokenType.valueOf(nm);
+         if (nm != null && !nm.equals("*")) return BaleTokenType.valueOf(nm);
        }
       catch (IllegalArgumentException e) { }
       return null;
@@ -661,10 +661,10 @@ private static class BreakElement {
       return Boolean.FALSE;
     }
 
-}	// end of inner class BreakElement
+}       // end of inner class BreakElement
 
 
-}	// end of class BaleViewLine
+}       // end of class BaleViewLine
 
 
 

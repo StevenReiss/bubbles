@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentThreadState.java					*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data thread state agent		*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentThreadState.java                                    */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data thread state agent           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,15 +39,15 @@ class BandaidAgentThreadState extends BandaidAgent implements BandaidConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<Long,ThreadData>	thread_data;
-private int			current_count;
-private int			last_report;
-private long			last_sample;
+private Map<Long,ThreadData>    thread_data;
+private int                     current_count;
+private int                     last_report;
+private long                    last_sample;
 
 enum State {
    NONE,
@@ -75,9 +75,9 @@ enum State {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentThreadState(BandaidController bc)
@@ -94,9 +94,9 @@ BandaidAgentThreadState(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void generateReport(BandaidXmlWriter xw,long now)
@@ -105,7 +105,7 @@ BandaidAgentThreadState(BandaidController bc)
    for (Iterator<ThreadData> it = thread_data.values().iterator(); it.hasNext(); ) {
       ThreadData td = it.next();
       if (!td.output(xw)) {
-	 it.remove();
+         it.remove();
        }
     }
    xw.end();
@@ -117,9 +117,9 @@ BandaidAgentThreadState(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void handleThreadStack(long now,ThreadInfo ti,StackTraceElement [] trc)
@@ -143,9 +143,9 @@ BandaidAgentThreadState(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread state Data holder						*/
-/*										*/
+/*                                                                              */
+/*      Thread state Data holder                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadData {
@@ -209,8 +209,8 @@ private class ThreadData {
             switch (cnm) {
                case "java.util.concurrent.locks.LockSupport" :
                case "jdk.internal.misc.Unsafe" :
-        	  st = State.IDLE;
-        	  break;
+                  st = State.IDLE;
+                  break;
              }
           }
          else if (mnm.startsWith("waitFor")) {
@@ -292,12 +292,12 @@ private class ThreadData {
    
       return true;
     }
-}	// end of inner class ThreadData
+}       // end of inner class ThreadData
 
 
 
 
-}	// end of class BandaidAgentThreadState
+}       // end of class BandaidAgentThreadState
 
 
 

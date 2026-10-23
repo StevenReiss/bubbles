@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconConstants.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer constants				*/
-/*										*/
+/*                                                                              */
+/*              BconConstants.java                                              */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer constants                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -38,13 +38,13 @@ public interface BconConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Region types								*/
-/*										*/
+/*                                                                              */
+/*      Region types                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Specify the different types of regions that can exist in a file.
+ *      Specify the different types of regions that can exist in a file.
  **/
 
 enum RegionType {
@@ -64,14 +64,14 @@ enum RegionType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Line Types								*/
-/*										*/
+/*                                                                              */
+/*      Line Types                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Specify the different types that lines may have.  These are used for
- *	drawing the line appropriately.
+ *      Specify the different types that lines may have.  These are used for
+ *      drawing the line appropriately.
  **/
 
 enum LineType {
@@ -83,32 +83,32 @@ enum LineType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Scaling types								*/
-/*										*/
+/*                                                                              */
+/*      Scaling types                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The different types of scalings that the context viewer provides.  These
- *	affect how different file sizes are shown.
+ *      The different types of scalings that the context viewer provides.  These
+ *      affect how different file sizes are shown.
  **/
 
 enum ScaleType {
-   SCALE_EXPAND,			// expand to fill region
-   SCALE_LINEAR,			// linear sizing
-   SCALE_SQRT,				// square root sizing
-   SCALE_LOG				// log sizing
+   SCALE_EXPAND,                        // expand to fill region
+   SCALE_LINEAR,                        // linear sizing
+   SCALE_SQRT,                          // square root sizing
+   SCALE_LOG                            // log sizing
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Layout types								*/
-/*										*/
+/*                                                                              */
+/*      Layout types                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The different types of layouts that we support
+ *      The different types of layouts that we support
  **/
 
 enum LayoutType {
@@ -127,115 +127,115 @@ enum LayoutType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing Constants							*/
-/*										*/
+/*                                                                              */
+/*      Drawing Constants                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The space between file regions
+ *      The space between file regions
  **/
-double	SEPARATION_SPACE = 5;		// space between file regions
+double  SEPARATION_SPACE = 5;           // space between file regions
 
 
 /**
- *	The left and right margin space
+ *      The left and right margin space
  **/
-double	LR_MARGIN_SPACE = 3;		// left, right margins
+double  LR_MARGIN_SPACE = 3;            // left, right margins
 
 
 /**
- *	The top and bottom margin space
+ *      The top and bottom margin space
  **/
 
-double	TB_MARGIN_SPACE = 3;		// top, bottom margins
+double  TB_MARGIN_SPACE = 3;            // top, bottom margins
 
 
 /**
- *	The space (X) reserved for the class/file names
+ *      The space (X) reserved for the class/file names
  **/
 
-double	NAME_SPACE = 12;		// space for class name
+double  NAME_SPACE = 12;                // space for class name
 
 
 
 
 /**
- *	The color for drawing code lines.
+ *      The color for drawing code lines.
  **/
-String	BCON_CODE_COLOR_PROP = "Bcon.code.color";
+String  BCON_CODE_COLOR_PROP = "Bcon.code.color";
 
 
 /**
- *	The color for drawing comment lines.
+ *      The color for drawing comment lines.
  **/
-String	BCON_COMMENT_COLOR_PROP = "Bcon.comment.color";
+String  BCON_COMMENT_COLOR_PROP = "Bcon.comment.color";
 
 
 /**
- *	The color for the rectangle outlining the region whose bubble has the focus.
+ *      The color for the rectangle outlining the region whose bubble has the focus.
  **/
-String	BCON_FOCUS_COLOR_PROP = "Bcon.focus.color";
+String  BCON_FOCUS_COLOR_PROP = "Bcon.focus.color";
 
 
 /**
- *	The color for drawing a rectangle around a region for which there is a bubble.
+ *      The color for drawing a rectangle around a region for which there is a bubble.
  **/
-String	BCON_EXISTS_COLOR_PROP = "Bcon.exists.color";
+String  BCON_EXISTS_COLOR_PROP = "Bcon.exists.color";
 
 
 /**
- *	The color for drawing a rectangle around a region where there is no current bubble.
+ *      The color for drawing a rectangle around a region where there is no current bubble.
  **/
-String	BCON_NOTEXISTS_COLOR_PROP = "Bcon.notexists.color";
+String  BCON_NOTEXISTS_COLOR_PROP = "Bcon.notexists.color";
 
 
 /**
- *	The color for labeling a file which doesn't have the focus.
+ *      The color for labeling a file which doesn't have the focus.
  **/
 String  LABEL_COLOR_PROP = "Bcon.LabelColor";
 
 
 /**
- *	The color for labeling a file that does have the focus.
+ *      The color for labeling a file that does have the focus.
  **/
 String  LABEL_FOCUS_COLOR_PROP = "Bcon.LabelFocusColor";
 
 
 
 /**
- *	Color for classes
+ *      Color for classes
  **/
 
-String	BCON_CLASS_CLASS_COLOR_PROP = "Bcon.class.class.color";
+String  BCON_CLASS_CLASS_COLOR_PROP = "Bcon.class.class.color";
 
 
 /**
- *	Color for methods
+ *      Color for methods
  **/
 
-String	BCON_CLASS_METHOD_COLOR_PROP = "Bcon.class.method.color";
+String  BCON_CLASS_METHOD_COLOR_PROP = "Bcon.class.method.color";
 
 
 /**
- *	Color for fields
+ *      Color for fields
  **/
 
-String	BCON_CLASS_FIELD_COLOR_PROP = "Bcon.class.field.color";
+String  BCON_CLASS_FIELD_COLOR_PROP = "Bcon.class.field.color";
 
 
 /**
- *	Color for static initializers
+ *      Color for static initializers
  **/
 
-String	BCON_CLASS_INITIALIZER_COLOR_PROP = "Bcon.class.initializer.color";
+String  BCON_CLASS_INITIALIZER_COLOR_PROP = "Bcon.class.initializer.color";
 
 
 /**
- *	Color for comments
+ *      Color for comments
  **/
 
-String	BCON_CLASS_COMMENT_COLOR_PROP = "Bcon.class.comment.color";
+String  BCON_CLASS_COMMENT_COLOR_PROP = "Bcon.class.comment.color";
 
 
 /**
@@ -247,29 +247,29 @@ String  BCON_CLASS_IMPORT_COLOR_PROP = "Bcon.class.import.color";
 
 
 /**
- *	Color for header fileds
+ *      Color for header fileds
  **/
 
-String	BCON_CLASS_HEADER_COLOR_PROP = "Bcon.class.header.color";
+String  BCON_CLASS_HEADER_COLOR_PROP = "Bcon.class.header.color";
 
 
 
 /**
- *	Font for class panel
+ *      Font for class panel
  **/
 
-String	BCON_CLASS_FONT_SIZE = "Bcon.class.font.size";
+String  BCON_CLASS_FONT_SIZE = "Bcon.class.font.size";
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble constants							*/
-/*										*/
+/*                                                                              */
+/*      Bubble constants                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The name of the context overview button in the root menu.
+ *      The name of the context overview button in the root menu.
  **/
 
 String BCON_BUTTON = "Bubble.Create File Overview";
@@ -277,9 +277,9 @@ String BCON_BUTTON = "Bubble.Create File Overview";
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic panel type							*/
-/*										*/
+/*                                                                              */
+/*      Generic panel type                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 interface BconPanel {
@@ -288,19 +288,19 @@ interface BconPanel {
    JComponent getComponent();
    void handlePopupMenu(MouseEvent e);
 
-}	// end of interface BconPanel
+}       // end of interface BconPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access constants							*/
-/*										*/
+/*                                                                              */
+/*      Access constants                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return from getModifiers() for a symbol without modifiers (e.g. comment)
+ *      Return from getModifiers() for a symbol without modifiers (e.g. comment)
  **/
 
 int BCON_MODIFIERS_UNDEFINED = -1;
@@ -309,17 +309,17 @@ int BCON_MODIFIERS_UNDEFINED = -1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Tokenizer constants and interfaces					*/
-/*										*/
+/*                                                                              */
+/*      Tokenizer constants and interfaces                                      */
+/*                                                                              */
 /********************************************************************************/
 
 enum BconTokenType {
-   EOL, 			// end of line
-   BLOCK_CMMT,			// /* ... */ comment; may only be part of a comment if split
-   DOC_CMMT,			// /** ... comment for documentation
-   LINE_CMMT,			// // comment
-   OTHER,			// any other token
+   EOL,                         // end of line
+   BLOCK_CMMT,                  // /* ... */ comment; may only be part of a comment if split
+   DOC_CMMT,                    // /** ... comment for documentation
+   LINE_CMMT,                   // // comment
+   OTHER,                       // any other token
 }
 
 
@@ -335,9 +335,9 @@ interface BconToken {
 
 
 /********************************************************************************/
-/*										*/
-/*	Package graph definitions						*/
-/*										*/
+/*                                                                              */
+/*      Package graph definitions                                               */
+/*                                                                              */
 /********************************************************************************/
 
 enum NodeType {
@@ -353,21 +353,21 @@ enum NodeType {
 
 
 enum ArcType {
-   NONE,			// no relation
-   SUBCLASS,			// X is a subclass of Y
-   IMPLEMENTED_BY,		// X is an instance of Y
-   EXTENDED_BY, 		// X is an instance of Y
-   INNERCLASS,			// X contains inner class Y
-   ALLOCATES,			// allocates an instance of
-   CALLS,			// calls a method in
-   CATCHES,			// catches an exeception of
-   ACCESSES,			// accesses a field of
-   WRITES,			// writes a field of
-   CONSTANT,			// access a constant from (enum or final static)
-   FIELD,			// has a field of
-   LOCAL,			// has a local of
-   PACKAGE,			// in package
-   MEMBER_OF			// is a member of
+   NONE,                        // no relation
+   SUBCLASS,                    // X is a subclass of Y
+   IMPLEMENTED_BY,              // X is an instance of Y
+   EXTENDED_BY,                 // X is an instance of Y
+   INNERCLASS,                  // X contains inner class Y
+   ALLOCATES,                   // allocates an instance of
+   CALLS,                       // calls a method in
+   CATCHES,                     // catches an exeception of
+   ACCESSES,                    // accesses a field of
+   WRITES,                      // writes a field of
+   CONSTANT,                    // access a constant from (enum or final static)
+   FIELD,                       // has a field of
+   LOCAL,                       // has a local of
+   PACKAGE,                     // in package
+   MEMBER_OF                    // is a member of
 }
 
 
@@ -376,7 +376,7 @@ interface BconRelationData {
 
    ArcType getPrimaryRelationship();
    int getRelationshipCount();
-}	// end of interface BconRelationData
+}       // end of interface BconRelationData
 
 
 
@@ -422,7 +422,7 @@ interface BconGraphArc {
 
 
 
-}	// end of interface BconConstants
+}       // end of interface BconConstants
 
 
 

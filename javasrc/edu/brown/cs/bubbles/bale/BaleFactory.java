@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleFactory.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor factory for creating editors		*/
-/*										*/
+/*                                                                              */
+/*              BaleFactory.java                                                */
+/*                                                                              */
+/*      Bubble Annotated Language Editor factory for creating editors           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -91,46 +91,46 @@ import java.util.TreeMap;
 
 
 /**
- *	This class provides access to bubbles and editor components for code
- *	fragments.
+ *      This class provides access to bubbles and editor components for code
+ *      fragments.
  **/
 
 public final class BaleFactory implements BaleConstants, BudaConstants, BuenoConstants,
-		BudaConstants.BudaFileHandler, BumpConstants.BumpChangeHandler
+                BudaConstants.BudaFileHandler, BumpConstants.BumpChangeHandler
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<File,BaleDocumentIde>	file_documents;
-private StyleContext			style_context;
-private BoardAttributes 		bale_attributes;
-private BaleHighlightContext		global_highlights;
+private Map<File,BaleDocumentIde>       file_documents;
+private StyleContext                    style_context;
+private BoardAttributes                 bale_attributes;
+private BaleHighlightContext            global_highlights;
 private SwingEventListenerList<BaleAnnotationListener> annot_listeners;
-private Set<BaleAnnotation>		active_annotations;
+private Set<BaleAnnotation>             active_annotations;
 private SwingEventListenerList<BaleContextListener> context_listeners;
-private BudaRoot			buda_root;
+private BudaRoot                        buda_root;
 private String                          fields_name;
 private boolean                         slashslash_comments;
 
-private static BaleFactory	the_factory;
+private static BaleFactory      the_factory;
 
-private static BumpClient	bump_client = null;
-private static long		format_time = 0;
+private static BumpClient       bump_client = null;
+private static long             format_time = 0;
 
-private static boolean		is_setup = false;
+private static boolean          is_setup = false;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleFactory()
@@ -160,7 +160,7 @@ private BaleFactory()
 
 
 /**
- *	Return the singular instance of the BaleFactory object.
+ *      Return the singular instance of the BaleFactory object.
  **/
 
 public static synchronized BaleFactory getFactory()
@@ -172,7 +172,7 @@ public static synchronized BaleFactory getFactory()
 
 
 /**
- *	This routine initializes the Bale package.  It is called automatically at startup.
+ *      This routine initializes the Bale package.  It is called automatically at startup.
  **/
 
 public static void setup()
@@ -187,10 +187,10 @@ public static void setup()
    BudaRoot.registerMenuButton("Admin.Admin.Import Java Formats",new FormatImporter());
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
-	 BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
-	 break;
+         BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
+         break;
       default :
-	 break;
+         break;
     }
 
    BuenoFactory.getFactory().addInsertionHandler(new BaleInserter());
@@ -199,7 +199,7 @@ public static void setup()
 
 
 /**
- *	Called to initialize once BudaRoot is setup
+ *      Called to initialize once BudaRoot is setup
  **/
 
 public static void initialize(BudaRoot br)
@@ -218,9 +218,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for method editors					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for method editors                                      */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentEditor createMethodFragmentEditor(String proj,String method)
@@ -246,9 +246,9 @@ BaleFragmentEditor createMethodFragmentEditor(BumpLocation loc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for field editors					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for field editors                                       */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentEditor createFieldFragmentEditor(String proj,File file,String cls)
@@ -263,9 +263,9 @@ BaleFragmentEditor createFieldFragmentEditor(String proj,File file,String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for class editors					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for class editors                                       */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentEditor createStaticsFragmentEditor(String proj,String cls,File file)
@@ -304,9 +304,9 @@ BaleFragmentEditor createClassFragmentEditor(String proj,String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for file editors					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for file editors                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public BaleFragmentEditor createFileEditor(String proj,File fil,String cls)
@@ -328,9 +328,9 @@ public BaleFragmentEditor createFileEditor(String proj,File fil,String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for local file editors					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for local file editors                                  */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentEditor createLocalFileEditor(String proj,File file,String cnm,String fnm,int lno)
@@ -348,8 +348,8 @@ BaleFragmentEditor createLocalFileEditor(String proj,File file,String cnm,String
 
       Element me = findMethodElement(ed,off);
       if (me != null) {
-	 spos = IvyXml.getAttrInt(me,"START");
-	 epos = IvyXml.getAttrInt(me,"LENGTH") + spos + 1;
+         spos = IvyXml.getAttrInt(me,"START");
+         epos = IvyXml.getAttrInt(me,"LENGTH") + spos + 1;
        }
    }
 
@@ -414,39 +414,39 @@ public BaleContextConfig getEditConfig(ActionEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic methods for editors						*/
-/*										*/
+/*                                                                              */
+/*      Generic methods for editors                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a code bubble corresponding to the current location.  The bubble
- *	should be for the same bubble area as the given src component.	If uselnk
- *	is true, then a link will be created from the bubble associated with the
- *	source component.  If the position p is given, this link will be associated
- *	with the line containing p, otherwise it will be a general link from the source
- *	bubble.  The at point if non-null specifies where to locate the bubble.  If it
- *	is null, the bubble will be located near the source bubble, close enough to be
- *	in the same group if the near flag is set, a little further away otherwise.
- *	Finally, if the add flag is set, the bubble will be added to the bubble area
- *	and displayed.
- *	@param src component identifying the source bubble
- *	@param p optional location in the source for creating a link
- *	@param at optional display location for the new bubble
- *	@param near flag indicating whether the new bubble should be close (same group) or
- *	further away from the src bubble if not specific point is given
- *	@param bl location identifying the code fragment to create a bubble for
- *	@param uselnk if true, then a link will be created between the source bubble and the
- *	new bubble
- *	@param add if true, then the bubble will be added to the bubble area and displayed
- *	@param marknew if true, then the bubble will be marked as new
+ *      Create a code bubble corresponding to the current location.  The bubble
+ *      should be for the same bubble area as the given src component.  If uselnk
+ *      is true, then a link will be created from the bubble associated with the
+ *      source component.  If the position p is given, this link will be associated
+ *      with the line containing p, otherwise it will be a general link from the source
+ *      bubble.  The at point if non-null specifies where to locate the bubble.  If it
+ *      is null, the bubble will be located near the source bubble, close enough to be
+ *      in the same group if the near flag is set, a little further away otherwise.
+ *      Finally, if the add flag is set, the bubble will be added to the bubble area
+ *      and displayed.
+ *      @param src component identifying the source bubble
+ *      @param p optional location in the source for creating a link
+ *      @param at optional display location for the new bubble
+ *      @param near flag indicating whether the new bubble should be close (same group) or
+ *      further away from the src bubble if not specific point is given
+ *      @param bl location identifying the code fragment to create a bubble for
+ *      @param uselnk if true, then a link will be created between the source bubble and the
+ *      new bubble
+ *      @param add if true, then the bubble will be added to the bubble area and displayed
+ *      @param marknew if true, then the bubble will be marked as new
  **/
 // Modified By Hsu-Sheng Ko
 
 BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
-						      boolean near,
-						      BumpLocation bl,
-						      boolean uselnk,boolean add, boolean marknew)
+                                                      boolean near,
+                                                      BumpLocation bl,
+                                                      boolean uselnk,boolean add, boolean marknew)
 {
    if (bl == null) return null;
 
@@ -457,45 +457,45 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
    switch (bl.getSymbolType()) {
       case FUNCTION :
       case CONSTRUCTOR :
-	 fed = createMethodFragmentEditor(bl);
-	 break;
+         fed = createMethodFragmentEditor(bl);
+         break;
       case FIELD :
       case ENUM_CONSTANT :
       case GLOBAL :
-	 String fnm = bl.getSymbolName();
-	 int idx = fnm.lastIndexOf(".");
-	 if (idx > 0) {
-	    String cnm = fnm.substring(0,idx);
-	    fed = createFieldFragmentEditor(bl.getSymbolProject(),bl.getFile(),cnm);
-	  }
-	 break;
+         String fnm = bl.getSymbolName();
+         int idx = fnm.lastIndexOf(".");
+         if (idx > 0) {
+            String cnm = fnm.substring(0,idx);
+            fed = createFieldFragmentEditor(bl.getSymbolProject(),bl.getFile(),cnm);
+          }
+         break;
       case CLASS :
       case INTERFACE :
       case ENUM :
       case THROWABLE :
-	 fed = createClassFragmentEditor(bl.getSymbolProject(),bl.getSymbolName());
-	 break;
+         fed = createClassFragmentEditor(bl.getSymbolProject(),bl.getSymbolName());
+         break;
       case STATIC_INITIALIZER :
-	 fnm = bl.getSymbolName();
-	 idx = fnm.lastIndexOf(".");
-	 if (idx > 0) {
-	    String cnm = fnm.substring(0,idx);
-	    fed = createStaticsFragmentEditor(bl.getSymbolProject(),cnm,bl.getFile());
-	  }
-	 break;
+         fnm = bl.getSymbolName();
+         idx = fnm.lastIndexOf(".");
+         if (idx > 0) {
+            String cnm = fnm.substring(0,idx);
+            fed = createStaticsFragmentEditor(bl.getSymbolProject(),cnm,bl.getFile());
+          }
+         break;
       case MODULE :
-	 fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
-	 break;
+         fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
+         break;
       case EXPORT :
       case IMPORT :
       case PROGRAM :
-	 // fed = create...
-	 break;
+         // fed = create...
+         break;
       case UNKNOWN :
-	 fed = createFileEditor(bl.getProject(),bl.getFile(),null);
-	 break;
+         fed = createFileEditor(bl.getProject(),bl.getFile(),null);
+         break;
       default:
-	 break;
+         break;
     }
 
    if (fed == null) return null;
@@ -511,29 +511,29 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
       // int offset = (near ? BUBBLE_CREATION_NEAR_SPACE : BUBBLE_CREATION_SPACE);
       Point lp = null;
       if (uselnk && obbl != null) {
-	 BudaConstants.LinkPort port0;
-	 if (p == null) port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
-	 else {
-	    port0 = new BaleLinePort(src,p,null);
-	    lp = port0.getLinkPoint(obbl,obbl.getLocation());
-	 }
-	 if (at == null) {
-	    bba.addBubble(bb,src,lp,place);
-	    // Rectangle loc = BudaRoot.findBudaLocation(src);
-	    // if (lp != null) loc.y = lp.y;
-	    // root.add(bb,new BudaConstraint(loc.x+loc.width+offset,loc.y));
-	  }
-	 BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
-	 BudaBubbleLink lnk = new BudaBubbleLink(obbl,port0,bb,port1);
-	 bba.addLink(lnk);
+         BudaConstants.LinkPort port0;
+         if (p == null) port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
+         else {
+            port0 = new BaleLinePort(src,p,null);
+            lp = port0.getLinkPoint(obbl,obbl.getLocation());
+         }
+         if (at == null) {
+            bba.addBubble(bb,src,lp,place);
+            // Rectangle loc = BudaRoot.findBudaLocation(src);
+            // if (lp != null) loc.y = lp.y;
+            // root.add(bb,new BudaConstraint(loc.x+loc.width+offset,loc.y));
+          }
+         BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
+         BudaBubbleLink lnk = new BudaBubbleLink(obbl,port0,bb,port1);
+         bba.addLink(lnk);
        }
       else if (at != null) {
-	 bba.addBubble(bb,null,at,PLACEMENT_MOVETO);
-	 // root.add(bb,new BudaConstraint(at));
+         bba.addBubble(bb,null,at,PLACEMENT_MOVETO);
+         // root.add(bb,new BudaConstraint(at));
        }
       else {
-	 bba.addBubble(bb,src,null,place);
-	 // root.add(bb,new BudaConstraint(loc.x+loc.width+offset,loc.y));
+         bba.addBubble(bb,src,null,place);
+         // root.add(bb,new BudaConstraint(loc.x+loc.width+offset,loc.y));
        }
     }
 
@@ -544,22 +544,22 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic methods for creating bubbles/bubble stack from locations	*/
-/*										*/
+/*                                                                              */
+/*      Generic methods for creating bubbles/bubble stack from locations        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Creates an appropriate bubble for the given set of locations.  If the set
- *	is small (i.e. 1 or 2 elements), the explicit bubbles are created.  Otherwise
- *	a bubble stack is created.  The stack/bubbles are linked to the given source
- *	bubble at the given position if the link flag is set.  The position of the
- *	new bubbles is either at the explicit point or close to the source bubble, with
- *	the closeness dependent on the near flag.
+ *      Creates an appropriate bubble for the given set of locations.  If the set
+ *      is small (i.e. 1 or 2 elements), the explicit bubbles are created.  Otherwise
+ *      a bubble stack is created.  The stack/bubbles are linked to the given source
+ *      bubble at the given position if the link flag is set.  The position of the
+ *      new bubbles is either at the explicit point or close to the source bubble, with
+ *      the closeness dependent on the near flag.
  **/
 
 public void createBubbleStack(Component src,Position p,Point pt,boolean near,
-			     Collection<BumpLocation> locs,BudaLinkStyle link)
+                             Collection<BumpLocation> locs,BudaLinkStyle link)
 {
    BaleBubbleStack.createBubbles(src,p,pt,near,BaleStackType.NORMAL,locs,link);
 }
@@ -575,16 +575,16 @@ public BussBubble createBubbleStackForced(Component src,Position p,Point pt,bool
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for creating bubbles for code fragments 			*/
-/*										*/
+/*                                                                              */
+/*      Methods for creating bubbles for code fragments                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the code bubble for a method code fragment.   The fragment is
- *	given by its fully qualified name (including parameter types).	If the
- *	method is ambiguous, the corresponding editor will contain code fragments
- *	for all instances separated by budding lines.
+ *      Return the code bubble for a method code fragment.   The fragment is
+ *      given by its fully qualified name (including parameter types).  If the
+ *      method is ambiguous, the corresponding editor will contain code fragments
+ *      for all instances separated by budding lines.
  **/
 
 public BudaBubble createMethodBubble(String proj,String fct)
@@ -607,9 +607,9 @@ public BudaBubble createMethodBubble(String proj,String fct)
 
 
 /**
- *	Return the code bubble for a system code fragment.   The fragment is
- *	given by its fully qualified name (including parameter types).	The source
- *	file to be used is passed in.
+ *      Return the code bubble for a system code fragment.   The fragment is
+ *      given by its fully qualified name (including parameter types).  The source
+ *      file to be used is passed in.
  **/
 
 public BudaBubble createSystemMethodBubble(String proj,String fct,File src,int lno)
@@ -629,7 +629,7 @@ public BudaBubble createSystemMethodBubble(String proj,String fct,File src,int l
 
 
 /**
- *	Return the code bubble for all the fields of the given class.
+ *      Return the code bubble for all the fields of the given class.
  **/
 
 public BudaBubble createFieldsBubble(String proj,File file,String cls)
@@ -644,7 +644,7 @@ public BudaBubble createFieldsBubble(String proj,File file,String cls)
 
 
 /**
- *	Return the code bubble for all static initializers of the given class.
+ *      Return the code bubble for all static initializers of the given class.
  **/
 
 public BudaBubble createStaticsBubble(String proj,String cls,File file)
@@ -668,8 +668,8 @@ public BudaBubble createMainProgramBubble(String proj,String cls,File file)
 
 
 /**
- *	Return the code bubble for the class prefix of the given class.  This includes
- *	the header information (e.g. package, imports) as well as the class declaration.
+ *      Return the code bubble for the class prefix of the given class.  This includes
+ *      the header information (e.g. package, imports) as well as the class declaration.
  **/
 
 public BudaBubble createClassPrefixBubble(String proj,File file,String cls)
@@ -684,7 +684,7 @@ public BudaBubble createClassPrefixBubble(String proj,File file,String cls)
 
 
 /**
- *	Return the class code bubble for the given class.
+ *      Return the class code bubble for the given class.
  **/
 
 public BudaBubble createClassBubble(String proj,String cls)
@@ -700,7 +700,7 @@ public BudaBubble createClassBubble(String proj,String cls)
 
 
 /**
- *	Return the file code bubble for the given class.
+ *      Return the file code bubble for the given class.
  **/
 
 public BudaBubble createFileBubble(String proj,File fil,String cls)
@@ -726,14 +726,14 @@ public BudaBubble createFileBubble(String proj,File file,String cnm,String fnm,i
 
 
 /********************************************************************************/
-/*										*/
-/*	Factory methods for file access 					*/
-/*										*/
+/*                                                                              */
+/*      Factory methods for file access                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return a handle to the internal representation of an open file based on
- *	the project and file name.
+ *      Return a handle to the internal representation of an open file based on
+ *      the project and file name.
  **/
 
 public BaleFileOverview getFileOverview(String proj,File file)
@@ -749,41 +749,41 @@ public BaleFileOverview getFileOverview(String proj,File file,boolean lcl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Calls for creating new methods						*/
-/*										*/
+/*                                                                              */
+/*      Calls for creating new methods                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new method and a bubble displaying that method.  The bubble is
- *	added to the display
+ *      Create a new method and a bubble displaying that method.  The bubble is
+ *      added to the display
  *
- *	@param proj project containing the class
- *	@param name fully qualified name of the new method
- *	@param params list of parameter types (and names if desired)
- *	@param returns return type
- *	@param modifiers modifier flags (in Java reflection format)
- *	@param comment insert a comment before the method if true
- *	@param after element in the source that the new method should follow. If null, then
- *	the new method is inserted at the end of the class.
- *	@param source component identifying the source bubble and bubble area
- *	@param pos the optional position in the source component to be used for linking
- *	@param link if true, then a link is created between the source bubble and the newly
- *	created bubble.
+ *      @param proj project containing the class
+ *      @param name fully qualified name of the new method
+ *      @param params list of parameter types (and names if desired)
+ *      @param returns return type
+ *      @param modifiers modifier flags (in Java reflection format)
+ *      @param comment insert a comment before the method if true
+ *      @param after element in the source that the new method should follow. If null, then
+ *      the new method is inserted at the end of the class.
+ *      @param source component identifying the source bubble and bubble area
+ *      @param pos the optional position in the source component to be used for linking
+ *      @param link if true, then a link is created between the source bubble and the newly
+ *      created bubble.
  **/
 
 // CHECKSTYLE:OFF
 public BudaBubble createNewMethod(String proj,
-					   String name,
-					   String params,
-					   String returns,
-					   int modifiers,
-					   boolean comment,
-					   String after,
-					   Component source,
-					   Position pos,
-					   boolean link,
-					   boolean add)
+                                           String name,
+                                           String params,
+                                           String returns,
+                                           int modifiers,
+                                           boolean comment,
+                                           String after,
+                                           Component source,
+                                           Position pos,
+                                           boolean link,
+                                           boolean add)
 // CHECKSTYLE:ON   
 {
    String clsnm; 
@@ -820,8 +820,8 @@ public BudaBubble createNewMethod(String proj,
       int rs = rgn.getStart();
       int re = rgn.getEnd();
       if (bl.getInsertionOffset() < re && bl.getInsertionOffset() + bl.getInsertionLength() > rs) {
-	 loc = bloc;
-	 break;
+         loc = bloc;
+         break;
       }
    }
 
@@ -843,13 +843,13 @@ BudaRoot getBudaRoot()                  { return buda_root; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for creating links						*/
-/*										*/
+/*                                                                              */
+/*      Methods for creating links                                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a link for a bale bubble given at the given line
+ *      Create a link for a bale bubble given at the given line
  **/
 
 public BudaConstants.LinkPort findPortForLine(BudaBubble bb,int line)
@@ -874,19 +874,19 @@ public BudaConstants.LinkPort findPortForLine(BudaBubble bb,int line)
 
 
 /********************************************************************************/
-/*										*/
-/*	Style methods								*/
-/*										*/
+/*                                                                              */
+/*      Style methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-StyleContext getStyleContext()			{ return style_context; }
+StyleContext getStyleContext()                  { return style_context; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Attribute methods							*/
-/*										*/
+/*                                                                              */
+/*      Attribute methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 AttributeSet getAttributes(String id)
@@ -895,13 +895,13 @@ AttributeSet getAttributes(String id)
 }
 
 
-static long getFormatTime()	{ return format_time; }
+static long getFormatTime()     { return format_time; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Highlighting methods							*/
-/*										*/
+/*                                                                              */
+/*      Highlighting methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized BaleHighlightContext getGlobalHighlightContext()
@@ -917,9 +917,9 @@ synchronized BaleHighlightContext getGlobalHighlightContext()
 
 
 /********************************************************************************/
-/*										*/
-/*	IDE File Document methods						*/
-/*										*/
+/*                                                                              */
+/*      IDE File Document methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocumentIde getDocument(String proj,File f)
@@ -939,8 +939,8 @@ BaleDocumentIde getDocument(String proj,File f,boolean lcl)
    synchronized (file_documents) {
       fdoc = file_documents.get(f);
       if (fdoc == null) {
-	 fdoc = new BaleDocumentIde(proj,f,lcl);
-	 file_documents.put(f,fdoc);
+         fdoc = new BaleDocumentIde(proj,f,lcl);
+         file_documents.put(f,fdoc);
        }
     }
 
@@ -964,7 +964,7 @@ BaleDocumentIde getDocument(String proj,File f,boolean lcl)
 }
 
 
-@Override public void handleSaveDone()				{ }
+@Override public void handleSaveDone()                          { }
 
 
 
@@ -1027,7 +1027,7 @@ BaleDocumentIde getDocument(String proj,File f,boolean lcl)
    synchronized (file_documents) {
       BaleDocumentIde fdoc = file_documents.remove(f);
       if (fdoc != null) {
-	 fdoc.dispose();
+         fdoc.dispose();
        }
     }
 }
@@ -1035,9 +1035,9 @@ BaleDocumentIde getDocument(String proj,File f,boolean lcl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Annotation methods							*/
-/*										*/
+/*                                                                              */
+/*      Annotation methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void addAnnotationListener(BaleAnnotationListener bal)
@@ -1057,8 +1057,8 @@ List<BaleAnnotation> getAnnotations(BaleDocument bd)
    List<BaleAnnotation> rslt = new ArrayList<BaleAnnotation>();
    synchronized (active_annotations) {
       for (BaleAnnotation ba : active_annotations) {
-	 if (ba.getFile() == null) continue;
-	 if (bd == null || ba.getFile().equals(bd.getFile())) rslt.add(ba);
+         if (ba.getFile() == null) continue;
+         if (bd == null || ba.getFile().equals(bd.getFile())) rslt.add(ba);
        }
     }
 
@@ -1068,16 +1068,16 @@ List<BaleAnnotation> getAnnotations(BaleDocument bd)
 
 
 /**
- *	Add a new annotation
+ *      Add a new annotation
  **/
 
 public void addAnnotation(BaleAnnotation ba)
 {
    synchronized (active_annotations) {
       if (active_annotations.add(ba)) {
-	 for (BaleAnnotationListener bal : annot_listeners) {
-	    bal.annotationAdded(ba);
-	  }
+         for (BaleAnnotationListener bal : annot_listeners) {
+            bal.annotationAdded(ba);
+          }
        }
     }
 }
@@ -1085,16 +1085,16 @@ public void addAnnotation(BaleAnnotation ba)
 
 
 /**
- *	Remove an annotation
+ *      Remove an annotation
  **/
 
 public void removeAnnotation(BaleAnnotation ba)
 {
    synchronized (active_annotations) {
       if (active_annotations.remove(ba)) {
-	 for (BaleAnnotationListener bal : annot_listeners) {
-	    bal.annotationRemoved(ba);
-	  }
+         for (BaleAnnotationListener bal : annot_listeners) {
+            bal.annotationRemoved(ba);
+          }
        }
     }
 }
@@ -1102,13 +1102,13 @@ public void removeAnnotation(BaleAnnotation ba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup/Hover context methods						*/
-/*										*/
+/*                                                                              */
+/*      Popup/Hover context methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Add a context listener for popup and hover events
+ *      Add a context listener for popup and hover events
  **/
 
 public void addContextListener(BaleContextListener bcl)
@@ -1118,7 +1118,7 @@ public void addContextListener(BaleContextListener bcl)
 
 
 /**
- *	Remove a context listener for popup and hover events
+ *      Remove a context listener for popup and hover events
  **/
 
 public void removeContextListener(BaleContextListener bcl)
@@ -1160,12 +1160,12 @@ String getContextToolTip(BaleContextConfig cfg)
    for (BaleContextListener bcl : context_listeners) {
       String t = bcl.getToolTipHtml(cfg);
       if (t != null) {
-	 if (buf == null) {
-	    buf = new StringBuffer();
-	    buf.append("<html><body>");
-	  }
-	 else buf.append("<br>");
-	 buf.append(t);
+         if (buf == null) {
+            buf = new StringBuffer();
+            buf.append("<html><body>");
+          }
+         else buf.append("<br>");
+         buf.append(t);
        }
     }
 
@@ -1195,9 +1195,9 @@ void noteEditorRemoved(BaleWindow win)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle refactoring edit application					*/
-/*										*/
+/*                                                                              */
+/*      Handle refactoring edit application                                     */
+/*                                                                              */
 /********************************************************************************/
 
 public void applyEdits(Element edits)
@@ -1234,12 +1234,12 @@ JTextComponent getTextComponent(BaleDocument doc)
       Document d = bb.getContentDocument();
       if (d == null) continue;
       if (d == doc) {
-	 use = bb;
-	 break;
+         use = bb;
+         break;
        }
       else if (d instanceof BaleDocument) {
-	 BaleDocument bd = (BaleDocument) d;
-	 if (bd.getBaseEditDocument() == doc) use = bb;
+         BaleDocument bd = (BaleDocument) d;
+         if (bd.getBaseEditDocument() == doc) use = bb;
        }
     }
    if (use == null) return null;
@@ -1254,9 +1254,9 @@ JTextComponent getTextComponent(BaleDocument doc)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle reset 						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle reset                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 List<BaleRegion> getFragmentRegions(BaleDocument doc)
@@ -1273,29 +1273,29 @@ List<BaleRegion> getFragmentRegions(BaleDocument doc)
 
    switch (doc.getFragmentType()) {
       case METHOD :
-	 locs = bump_client.findMethod(proj,nam,false);
-	 break;
+         locs = bump_client.findMethod(proj,nam,false);
+         break;
       case CLASS :
-	 locs = bump_client.findClassDefinition(proj,nam);
-	 break;
+         locs = bump_client.findClassDefinition(proj,nam);
+         break;
       case FILE :
-	 locs = bump_client.findCompilationUnit(proj,fil,cnam);
-	 break;
+         locs = bump_client.findCompilationUnit(proj,fil,cnam);
+         break;
       case FIELDS :
-	 locs = bump_client.findFields(proj,fil,cnam);
-	 break;
+         locs = bump_client.findFields(proj,fil,cnam);
+         break;
       case STATICS :
-	 locs = bump_client.findClassInitializers(proj,cnam,fil,false);
-	 break;
+         locs = bump_client.findClassInitializers(proj,cnam,fil,false);
+         break;
       case MAIN :
-	 locs = bump_client.findClassInitializers(proj,cnam,fil,true);
-	 break;
+         locs = bump_client.findClassInitializers(proj,cnam,fil,true);
+         break;
       case HEADER :
-	 locs = bump_client.findClassPrefix(proj,fil,cnam);
-	 break;
+         locs = bump_client.findClassPrefix(proj,fil,cnam);
+         break;
       default :
-	 BoardLog.logE("BALE","Unknown fragment type : " + doc.getFragmentType());
-	 break;
+         BoardLog.logE("BALE","Unknown fragment type : " + doc.getFragmentType());
+         break;
     }
 
    if (locs == null) return null;
@@ -1309,9 +1309,9 @@ List<BaleRegion> getFragmentRegions(BaleDocument doc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create editor from a list of Bump Locations			*/
-/*										*/
+/*                                                                              */
+/*      Methods to create editor from a list of Bump Locations                  */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
@@ -1326,40 +1326,40 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
    switch (loc0.getSymbolType()) {
       case FUNCTION :
       case CONSTRUCTOR :
-	 ftyp = BaleFragmentType.METHOD;
-	 String prms = loc0.getParameters();
-	 if (prms != null) fragname += prms;
-	 else fragname += "(...)";
-	 break;
+         ftyp = BaleFragmentType.METHOD;
+         String prms = loc0.getParameters();
+         if (prms != null) fragname += prms;
+         else fragname += "(...)";
+         break;
       case CLASS :
       case INTERFACE :
       case ENUM :
       case THROWABLE :
-	 ftyp = BaleFragmentType.CLASS;
-	 break;
+         ftyp = BaleFragmentType.CLASS;
+         break;
       case STATIC_INITIALIZER :
       case IMPORT :
       case EXPORT :
-	 ftyp = BaleFragmentType.STATICS;
-	 break;
+         ftyp = BaleFragmentType.STATICS;
+         break;
       case MAIN_PROGRAM :
       case PROGRAM :
-	 ftyp = BaleFragmentType.MAIN;
-	 break;
+         ftyp = BaleFragmentType.MAIN;
+         break;
       case ENUM_CONSTANT :
       case FIELD :
       case GLOBAL :
-	 String nm = getFieldsName();
-	 ftyp = BaleFragmentType.FIELDS;
-	 int idx = fragname.lastIndexOf(".");
-	 fragname = fragname.substring(0,idx) + ".< " + nm + " >";
-	 break;
+         String nm = getFieldsName();
+         ftyp = BaleFragmentType.FIELDS;
+         int idx = fragname.lastIndexOf(".");
+         fragname = fragname.substring(0,idx) + ".< " + nm + " >";
+         break;
       case MODULE :
-	 ftyp = BaleFragmentType.FILE;
-	 fragname = loc0.getFile().getPath();
-	 break;
+         ftyp = BaleFragmentType.FILE;
+         fragname = loc0.getFile().getPath();
+         break;
       default :
-	 return null;
+         return null;
     }
 
    return getEditorFromLocations(locs,ftyp,fragname);
@@ -1406,99 +1406,99 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
       if (soffset >= s.length()) continue;
 
       if (lang == BoardLanguage.JS) {
-	 // handle VAR which might be missing in a declaration location context
-	 int decloff = soffset;
-	 while (decloff > 0) {
-	    if (Character.isWhitespace(s.charAt(decloff-1))) --decloff;
-	    else {
-	       boolean fnd = false;
-	       for (String key : new String [] { "var", "let", "const", "async" }) {
-		  if (checkForPriorKeyword(s,decloff,key)) {
-		     decloff -= key.length();
-		     soffset = decloff;
-		     fnd = true;
-		     break;
-		   }
-		}
-	       if (!fnd) break;
-	     }
-	  }
+         // handle VAR which might be missing in a declaration location context
+         int decloff = soffset;
+         while (decloff > 0) {
+            if (Character.isWhitespace(s.charAt(decloff-1))) --decloff;
+            else {
+               boolean fnd = false;
+               for (String key : new String [] { "var", "let", "const", "async" }) {
+                  if (checkForPriorKeyword(s,decloff,key)) {
+                     decloff -= key.length();
+                     soffset = decloff;
+                     fnd = true;
+                     break;
+                   }
+                }
+               if (!fnd) break;
+             }
+          }
        }
       else if (lang == BoardLanguage.DART) {
-	 // handle preliminary @<annotation>
-	 int decloff = soffset;
-	 boolean havekey = false;
-	 while (decloff > 0) {
-	    char c = s.charAt(decloff-1);
-	    BoardLog.logD("BALE","DART BACKSCAN " + decloff + " " + ((int) c)+ " " + havekey +
-			     f1 + " " + soffset + " " + eoffset);
+         // handle preliminary @<annotation>
+         int decloff = soffset;
+         boolean havekey = false;
+         while (decloff > 0) {
+            char c = s.charAt(decloff-1);
+            BoardLog.logD("BALE","DART BACKSCAN " + decloff + " " + ((int) c)+ " " + havekey +
+                             f1 + " " + soffset + " " + eoffset);
 
-	    if (!havekey && Character.isWhitespace(c)) --decloff;
-	    else if (Character.isJavaIdentifierPart(c)) {
-	       --decloff;
-	       havekey = true;
-	      }
-	    else if (havekey && c == '@') {
-	       soffset = decloff;
-	       havekey = false;
-	     }
-	    else break;
-	  }
+            if (!havekey && Character.isWhitespace(c)) --decloff;
+            else if (Character.isJavaIdentifierPart(c)) {
+               --decloff;
+               havekey = true;
+              }
+            else if (havekey && c == '@') {
+               soffset = decloff;
+               havekey = false;
+             }
+            else break;
+          }
        }
 
       // extend the logical regions and note if it ends with a new line
       while (soffset > 0) {
-	 if (s.charAt(soffset-1) == '\n') break;
-	 else if (!Character.isWhitespace(s.charAt(soffset-1))) break;
-	 --soffset;
+         if (s.charAt(soffset-1) == '\n') break;
+         else if (!Character.isWhitespace(s.charAt(soffset-1))) break;
+         --soffset;
        }
       // and remove initial blank lines if necessary
       while (soffset > 0 && soffset < s.length() && s.charAt(soffset) == '\n') ++soffset;
 
       boolean havecmmt = false;
       if (eoffset > 0 && eoffset < s.length() && s.charAt(eoffset-1) != '\n') {        // extend if we don't end on eol
-	 while (eoffset < fdoc.getLength()) {
-	    if (s.charAt(eoffset) == '\n') {
-	       ++eoffset;
-	       break;
-	     }
-	    else if (havecmmt) ;
-	    else if (Character.isWhitespace(s.charAt(eoffset))) ;
+         while (eoffset < fdoc.getLength()) {
+            if (s.charAt(eoffset) == '\n') {
+               ++eoffset;
+               break;
+             }
+            else if (havecmmt) ;
+            else if (Character.isWhitespace(s.charAt(eoffset))) ;
             else if (slashslash_comments &&
-		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
-	       havecmmt = true;
-	     }
-	    else if (lang == BoardLanguage.JS && s.charAt(eoffset) == ';') ;
-	    else break;
-	    ++eoffset;
-	  }
+                  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
+               havecmmt = true;
+             }
+            else if (lang == BoardLanguage.JS && s.charAt(eoffset) == ';') ;
+            else break;
+            ++eoffset;
+          }
        }
 
       boolean haveeol;
       if (eoffset > s.length()) {
-	 haveeol = true;
-	 eoffset = s.length();
+         haveeol = true;
+         eoffset = s.length();
        }
       else haveeol = s.charAt(eoffset-1) == '\n';
 
       BaleRegion br = null;
 
       try {
-	 Position spos = BaleStartPosition.createStartPosition(fdoc,soffset);
-	 Position epos = fdoc.createPosition(eoffset);
-	 br = new BaleRegion(spos,epos,haveeol);
+         Position spos = BaleStartPosition.createStartPosition(fdoc,soffset);
+         Position epos = fdoc.createPosition(eoffset);
+         br = new BaleRegion(spos,epos,haveeol);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Bad location from eclipse for fragment: " + e);
-	 continue;
+         BoardLog.logE("BALE","Bad location from eclipse for fragment: " + e);
+         continue;
        }
 
       if (lastrgn != null) {
-	 BaleRegion nbr = mergeRegions(lastrgn,br,s);
-	 if (nbr != null) {
-	    rgns.remove(lastrgn);
-	    br = nbr;
-	  }
+         BaleRegion nbr = mergeRegions(lastrgn,br,s);
+         if (nbr != null) {
+            rgns.remove(lastrgn);
+            br = nbr;
+          }
        }
 
       rgns.add(br);
@@ -1524,8 +1524,8 @@ private boolean checkForPriorKeyword(Segment s,int off,String key)
 
 
 private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs,
-						     BaleFragmentType ftyp,
-						     String fragname)
+                                                     BaleFragmentType ftyp,
+                                                     String fragname)
 {
    if (locs == null || locs.size() == 0) return null;
 
@@ -1547,8 +1547,8 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs,
 
 
 BaleFragmentEditor getEditorFromRegions(String proj,File f,String fragname,
-					   List<BaleRegion> locs,
-					   BaleFragmentType ftyp)
+                                           List<BaleRegion> locs,
+                                           BaleFragmentType ftyp)
 {
    if (locs == null || locs.size() == 0) return null;
 
@@ -1568,43 +1568,43 @@ BaleFragmentEditor getEditorFromRegions(String proj,File f,String fragname,
 
    for (BaleRegion br : locs) {
       if (lastrgn != null) {
-	 BaleRegion nbr = mergeRegions(lastrgn,br,s);
-	 if (nbr != null) {
-	    rgns.remove(lastrgn);
-	    br = nbr;
-	  }
+         BaleRegion nbr = mergeRegions(lastrgn,br,s);
+         if (nbr != null) {
+            rgns.remove(lastrgn);
+            br = nbr;
+          }
        }
       else {
-	 int soff = br.getStart();
-	 int eoff = br.getEnd();
-	 int soff1 = soff;
-	 while (soff1 > 0) {
-	    if (s.charAt(soff1) == '\n') {
-	       ++soff1;
-	       break;
-	    }
-	    --soff1;
-	 }
-	 int eoff1 = eoff;
-	 while (eoff1 < s.length()) {
-	    if (s.charAt(eoff1) == '\n') {
-	       ++eoff1;
-	       break;
-	    }
-	    else if (Character.isWhitespace(s.charAt(eoff1))) {
-	       --eoff1;
-	    }
-	    else {
-	       eoff1 = eoff;
-	       break;
-	    }
-	 }
-	 if (soff1 != soff || eoff1 != eoff) {
-	    try {
-	       br = fdoc.createDocumentRegion(soff1, eoff1, true);
-	    }
-	    catch (BadLocationException ex) { }
-	 }
+         int soff = br.getStart();
+         int eoff = br.getEnd();
+         int soff1 = soff;
+         while (soff1 > 0) {
+            if (s.charAt(soff1) == '\n') {
+               ++soff1;
+               break;
+            }
+            --soff1;
+         }
+         int eoff1 = eoff;
+         while (eoff1 < s.length()) {
+            if (s.charAt(eoff1) == '\n') {
+               ++eoff1;
+               break;
+            }
+            else if (Character.isWhitespace(s.charAt(eoff1))) {
+               --eoff1;
+            }
+            else {
+               eoff1 = eoff;
+               break;
+            }
+         }
+         if (soff1 != soff || eoff1 != eoff) {
+            try {
+               br = fdoc.createDocumentRegion(soff1, eoff1, true);
+            }
+            catch (BadLocationException ex) { }
+         }
       }
 
       rgns.add(br);
@@ -1629,21 +1629,21 @@ private BaleRegion mergeRegions(BaleRegion r1,BaleRegion r2,Segment txt)
    int s2 = r2.getStart();
    int e2 = r2.getEnd();
 
-   if (e2 < s1) {		// second ends before first, try opposite order
+   if (e2 < s1) {               // second ends before first, try opposite order
       return mergeRegions(r2,r1,txt);
     }
    if (s2 < s1) return null;
    int delta = s2-e1;
-   if (delta > 4) return null;	// not even close -- don't merge
+   if (delta > 4) return null;  // not even close -- don't merge
 
    boolean merge = false;
-   if (e1 > s2 || e1 == s2 || e1+1 == s2) merge = true; 	// easy cases
+   if (e1 > s2 || e1 == s2 || e1+1 == s2) merge = true;         // easy cases
    else {
       merge = true;
       for (int i = e1; merge && i < s2; ++i) {
-	 char c = txt.charAt(i);
-	 // Might want to allow comments here (with a larger delta)
-	 if (!Character.isWhitespace(c)) merge = false;
+         char c = txt.charAt(i);
+         // Might want to allow comments here (with a larger delta)
+         if (!Character.isWhitespace(c)) merge = false;
        }
     }
 
@@ -1661,9 +1661,9 @@ private BaleRegion mergeRegions(BaleRegion r1,BaleRegion r2,Segment txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to handle hovering over problems					*/
-/*										*/
+/*                                                                              */
+/*      Class to handle hovering over problems                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ProblemHover implements BaleContextListener {
@@ -1698,15 +1698,15 @@ private static final class ProblemHover implements BaleContextListener {
    
    
 
-}	// end of inner class ProblemHover
+}       // end of inner class ProblemHover
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Quick fix button action 						*/
-/*										*/
+/*                                                                              */
+/*      Quick fix button action                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static class QuickFix extends AbstractAction {
@@ -1740,16 +1740,16 @@ static class QuickFix extends AbstractAction {
       Collections.sort(fixes);
       Object [] fixalts = fixes.toArray();
       fix = (BaleFixer) JOptionPane.showInputDialog(for_editor,"Select Quick Fix",
-        					       "Quick Fix Selector",
-        					       JOptionPane.QUESTION_MESSAGE,
-        					       null,fixalts,fixes.get(0));
+                                                       "Quick Fix Selector",
+                                                       JOptionPane.QUESTION_MESSAGE,
+                                                       null,fixalts,fixes.get(0));
       if (fix == null) return;
    
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFixOption");
     }
 
-}	// end of inner class QuickFix
+}       // end of inner class QuickFix
 
 
 /********************************************************************************/
@@ -1796,7 +1796,7 @@ static class StyleFix extends AbstractAction {
       BoardMetrics.noteCommand("BALE","FixStyleOption");
     }
 
-}	// end of inner class StyleFix
+}       // end of inner class StyleFix
 
 
 private static String fixMessage(BumpProblem bp)
@@ -1810,9 +1810,9 @@ private static String fixMessage(BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Import format handling							*/
-/*										*/
+/*                                                                              */
+/*      Import format handling                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class FormatImporter implements BudaConstants.ButtonListener {
@@ -1865,14 +1865,14 @@ private static final class FormatImporter implements BudaConstants.ButtonListene
       format_time = System.currentTimeMillis();
     }
 
-}	// end of inner class FormatImporter
+}       // end of inner class FormatImporter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Import format from project						*/
-/*										*/
+/*                                                                              */
+/*      Import format from project                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ProjectFormatImporter implements BudaConstants.ButtonListener {
@@ -1948,10 +1948,10 @@ private static final class ProjectFormatImporter implements BudaConstants.Button
       format_time = System.currentTimeMillis();
     }
 
-}	// end of inner class FormatImporter
+}       // end of inner class FormatImporter
 
 
-}	// end of class BaleFactory
+}       // end of class BaleFactory
 
 
 

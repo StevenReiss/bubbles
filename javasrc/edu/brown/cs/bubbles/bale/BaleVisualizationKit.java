@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleVisualizationKit.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor constant definitions			*/
-/*										*/
+/*                                                                              */
+/*              BaleVisualizationKit.java                                       */
+/*                                                                              */
+/*      Bubble Annotated Language Editor constant definitions                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li				*/
+/*      Copyright 2009 Brown University -- Yu Li                                */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,9 +47,9 @@ class BaleVisualizationKit implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static BaleVisualizationKit visual_kit = new BaleVisualizationKit();
@@ -58,13 +58,13 @@ private static BaleVisualizationKit visual_kit = new BaleVisualizationKit();
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static final String []	GRADIENT_COLORS;
-private static final int	NUM_COLORS;
+private static final String []  GRADIENT_COLORS;
+private static final int        NUM_COLORS;
 
 static {
    List<String> colors = new ArrayList<>();
@@ -82,9 +82,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Static entries								*/
-/*										*/
+/*                                                                              */
+/*      Static entries                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static BaleVisualizationKit getVisualizationKit()
@@ -94,9 +94,9 @@ static BaleVisualizationKit getVisualizationKit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Visualization gradient methods						*/
-/*										*/
+/*                                                                              */
+/*      Visualization gradient methods                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -129,9 +129,9 @@ GradientPaint getGradientPaint(Dimension bsize, String indication)
 
 
 /********************************************************************************/
-/*										*/
-/* Visualization Icon methods							*/
-/*										*/
+/*                                                                              */
+/* Visualization Icon methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -191,9 +191,9 @@ Point getLocation(Dimension bsize, Dimension isize)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get the key for visualization						*/
-/*										*/
+/*                                                                              */
+/*      Get the key for visualization                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static String getIndication(String proj,String from0,String key)
@@ -209,33 +209,33 @@ static String getIndication(String proj,String from0,String key)
    if (idx0 > 0) {
       from = from.substring(0,idx0);
       if (typ.equals("package") || typ.equals("directory")) {
-	    int idx1 = from.lastIndexOf("/");
-	    if (idx1 < 0) from = "*";
-	    else from = from.substring(0,idx1);
+            int idx1 = from.lastIndexOf("/");
+            if (idx1 < 0) from = "*";
+            else from = from.substring(0,idx1);
       }
     }
    else {
    // convert from to a class name
       int idx = from.indexOf("(");
       if (idx > 0) {
-	 from = from.substring(0,idx);
-	 idx = from.lastIndexOf(".");
-	 if (idx > 0) from = from.substring(0,idx);
+         from = from.substring(0,idx);
+         idx = from.lastIndexOf(".");
+         if (idx > 0) from = from.substring(0,idx);
       }
       else {
-	 idx = from.indexOf(".<");
-	 if (idx > 0) {
-	    from = from.substring(0,idx);
-	 }
+         idx = from.indexOf(".<");
+         if (idx > 0) {
+            from = from.substring(0,idx);
+         }
       }
 
       if (typ.equals("package")) {
-	 for ( ; ; ) {
-	    idx = from.lastIndexOf(".");
-	    if (idx < 0) return null;
-	    from = from.substring(0,idx);
-	    if (checkPackage(proj,from)) break;
-	 }
+         for ( ; ; ) {
+            idx = from.lastIndexOf(".");
+            if (idx < 0) return null;
+            from = from.substring(0,idx);
+            if (checkPackage(proj,from)) break;
+         }
       }
       else if (typ.equals("directory")) {
          int idx1 = from.lastIndexOf("/");
@@ -274,7 +274,7 @@ private static boolean checkPackage(String proj,String pkg)
 
 
 
-}	// end of class BaleVisualizationKit
+}       // end of class BaleVisualizationKit
 
 
 

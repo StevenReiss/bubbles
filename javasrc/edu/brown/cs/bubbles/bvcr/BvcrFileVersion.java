@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrFileVersion.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository representation of a file version*/
-/*										*/
+/*                                                                              */
+/*              BvcrFileVersion.java                                            */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository representation of a file version*/
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,29 +44,29 @@ class BvcrFileVersion implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File				for_file;
-private String				version_id;
-private Date				version_time;
-private String				version_author;
-private String				version_message;
+private File                            for_file;
+private String                          version_id;
+private Date                            version_time;
+private String                          version_author;
+private String                          version_message;
 private String                          version_body;
-private Collection<String>		alternative_ids;
-private Collection<BvcrFileVersion>	prior_versions;
-private Collection<String>		prior_names;
+private Collection<String>              alternative_ids;
+private Collection<BvcrFileVersion>     prior_versions;
+private Collection<String>              prior_names;
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrFileVersion(File f,String id,Date when,String auth,String msg)
@@ -104,8 +104,8 @@ BvcrFileVersion(Element xml,Map<String,BvcrFileVersion> versions)
       String id = IvyXml.getAttrString(e,"ID");
       BvcrFileVersion ov = versions.get(id);
       if (ov == null) {
-	 if (prior_names == null) prior_names = new ArrayList<String>();
-	 prior_names.add(id);
+         if (prior_names == null) prior_names = new ArrayList<String>();
+         prior_names.add(id);
        }
       else addPriorVersion(ov);
     }
@@ -120,9 +120,9 @@ BvcrFileVersion(Element xml,Map<String,BvcrFileVersion> versions)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addPriorVersion(BvcrFileVersion v)
@@ -151,13 +151,13 @@ void addAlternativeName(String id)
 
 void addVersionBody(String b)           { version_body = b; }
 
-String getVersionId()			{ return version_id; }
+String getVersionId()                   { return version_id; }
 
-Date getVersionTime()			{ return version_time; }
+Date getVersionTime()                   { return version_time; }
 
-String getAuthor()			{ return version_author; }
+String getAuthor()                      { return version_author; }
 
-String getMessage()			{ return version_message; }
+String getMessage()                     { return version_message; }
 
 String getFullMessage() 
 {
@@ -174,12 +174,12 @@ Collection<BvcrFileVersion> getPriorVersions(Map<String,BvcrFileVersion> version
 {
    if (prior_names != null && versions != null) {
       for (Iterator<String> it = prior_names.iterator(); it.hasNext(); ) {
-	 String id = it.next();
-	 BvcrFileVersion ov = versions.get(id);
-	 if (ov != null) {
-	    addPriorVersion(ov);
-	    it.remove();
-	  }
+         String id = it.next();
+         BvcrFileVersion ov = versions.get(id);
+         if (ov != null) {
+            addPriorVersion(ov);
+            it.remove();
+          }
        }
       if (prior_names.size() == 0) prior_names = null;
     }
@@ -205,9 +205,9 @@ boolean isHead()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -226,7 +226,7 @@ void outputXml(IvyXmlWriter xw)
 
    if (alternative_ids != null) {
       for (String s : alternative_ids) {
-	 xw.textElement("ALTERNATIVE",s);
+         xw.textElement("ALTERNATIVE",s);
        }
     }
 
@@ -284,7 +284,7 @@ void outputXml(IvyXmlWriter xw)
    return buf.toString();
 }
 
-}	// end of class BvcrFileVersion
+}       // end of class BvcrFileVersion
 
 
 

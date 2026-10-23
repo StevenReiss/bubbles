@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BassTest.java							*/
-/*										*/
-/*	Bubble Augmented Search Strategies tester				*/
-/*										*/
+/*                                                                              */
+/*              BassTest.java                                                   */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies tester                               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -45,9 +45,9 @@ public final class BassTest implements BassConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -61,21 +61,21 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
-private BassTest()				{ }
+private BassTest()                              { }
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Text code								*/
-/*										*/
+/*                                                                              */
+/*      Text code                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void test()
@@ -109,15 +109,15 @@ private static class CreateSearch implements Runnable {
       for_root.createSearchBubble(new Point(100,100),null,null);
     }
 
-}	// end of inner class CreateSearch
+}       // end of inner class CreateSearch
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to stop bedrock							*/
-/*										*/
+/*                                                                              */
+/*      Class to stop bedrock                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class CloseBedrock extends Thread {
@@ -126,12 +126,12 @@ private static final class CloseBedrock extends Thread {
       BumpClient.getBump().stopIDE();
     }
 
-}	// end of inner class CloseBedrock
+}       // end of inner class CloseBedrock
 
 
 
 
-}	// end of class BassTest
+}       // end of class BassTest
 
 
 

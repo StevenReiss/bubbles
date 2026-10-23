@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleJavaHinter.java						*/
-/*										*/
-/*	Find hints for a particular element for Java				*/
-/*										*/
+/*                                                                              */
+/*              BaleJavaHinter.java                                             */
+/*                                                                              */
+/*      Find hints for a particular element for Java                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -32,17 +32,17 @@ public class BaleJavaHinter implements BaleConstants.BaleHinter, BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BaleJavaHinter()
@@ -51,9 +51,9 @@ public BaleJavaHinter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getPreHint(BaleElement e)
@@ -84,25 +84,25 @@ public BaleJavaHinter()
       if (np < 2) return null;
       int argno = getArgNumber(e);
       if (argno >= 0) {
-	 Element pe = null;
-	 int ct = 0;
-	 for (Element chld : IvyXml.children(hint,"PARAMETER")) {
-	    if (ct++ == argno) {
-	       pe = chld;
-	       break;
-	     }
-	  }
-	 if (pe != null) {
-	    String nm = IvyXml.getAttrString(pe,"NAME");
-	    if (nm == null || nm.equals("arg" + argno)) {
-	       String tnm = IvyXml.getAttrString(pe,"TYPE");
-	       String tnm1 = IvyFormat.formatTypeName(tnm);
-	       int idx = tnm1.lastIndexOf(".");
-	       if (idx > 0) nm = tnm1.substring(idx+1);
-	       else nm = tnm1;
-	     }
-	    return " " + nm +": ";
-	  }
+         Element pe = null;
+         int ct = 0;
+         for (Element chld : IvyXml.children(hint,"PARAMETER")) {
+            if (ct++ == argno) {
+               pe = chld;
+               break;
+             }
+          }
+         if (pe != null) {
+            String nm = IvyXml.getAttrString(pe,"NAME");
+            if (nm == null || nm.equals("arg" + argno)) {
+               String tnm = IvyXml.getAttrString(pe,"TYPE");
+               String tnm1 = IvyFormat.formatTypeName(tnm);
+               int idx = tnm1.lastIndexOf(".");
+               if (idx > 0) nm = tnm1.substring(idx+1);
+               else nm = tnm1;
+             }
+            return " " + nm +": ";
+          }
        }
     }
    return null;
@@ -115,49 +115,49 @@ private int getArgNumber(BaleElement be)
 
    switch (be.getTokenType()) {
       default :
-	 break;
+         break;
       case LPAREN :
-	 return 0;
+         return 0;
       case COMMA :
-	 int dep = 0;
-	 argno = 1;
-	 BaleElement prev = be;
-	 for (int i = 0; i < 1024; ++i) {
-	    prev = prev.getPreviousCharacterElement();
-	    if (prev == null) return -1;
-	    switch (prev.getTokenType()) {
-	       default :
-		  break;
-	       case RPAREN :
-		  ++dep;
-		  break;
-	       case LPAREN :
-		  if (dep <= 0) return argno;
-		  else --dep;
-		  break;
-	       case COMMA :
-		  if (dep == 0) ++argno;
-		  break;
-	       case SEMICOLON :
-		  return -1;
-	       case IF :
-	       case WHILE :
-	       case FOR :
-	       case BREAK :
-	       case CASE :
-	       case CATCH :
-	       case CLASS :
-	       case CONTINUE :
-	       case DEFAULT :
-	       case ENUM :
-	       case INTERFACE :
-	       case FINALLY :
-	       case SWITCH :
-	       case TRY :
-	       case SYNCHRONIZED :
-		  return -1;
-	     }
-	  }
+         int dep = 0;
+         argno = 1;
+         BaleElement prev = be;
+         for (int i = 0; i < 1024; ++i) {
+            prev = prev.getPreviousCharacterElement();
+            if (prev == null) return -1;
+            switch (prev.getTokenType()) {
+               default :
+                  break;
+               case RPAREN :
+                  ++dep;
+                  break;
+               case LPAREN :
+                  if (dep <= 0) return argno;
+                  else --dep;
+                  break;
+               case COMMA :
+                  if (dep == 0) ++argno;
+                  break;
+               case SEMICOLON :
+                  return -1;
+               case IF :
+               case WHILE :
+               case FOR :
+               case BREAK :
+               case CASE :
+               case CATCH :
+               case CLASS :
+               case CONTINUE :
+               case DEFAULT :
+               case ENUM :
+               case INTERFACE :
+               case FINALLY :
+               case SWITCH :
+               case TRY :
+               case SYNCHRONIZED :
+                  return -1;
+             }
+          }
     }
 
    return -1;
@@ -165,9 +165,9 @@ private int getArgNumber(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Check relevance 							*/
-/*										*/
+/*                                                                              */
+/*      Check relevance                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean isRelevant(BaleElement e)
@@ -176,7 +176,7 @@ private boolean isRelevant(BaleElement e)
 }
 
 
-}	// end of class BaleJavaHinter
+}       // end of class BaleJavaHinter
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleStartPosition.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor start position implementation		*/
-/*										*/
+/*                                                                              */
+/*              BaleStartPosition.java                                          */
+/*                                                                              */
+/*      Bubble Annotated Language Editor start position implementation          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -33,21 +33,21 @@ final class BaleStartPosition implements Position, BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private	  Document	for_document;
-private   Position	base_position;
-private   Position	actual_position;
+private   Document      for_document;
+private   Position      base_position;
+private   Position      actual_position;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Position creation methods						*/
-/*										*/
+/*                                                                              */
+/*      Position creation methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 static Position createStartPosition(Document d,int off) throws BadLocationException
@@ -62,9 +62,9 @@ static Position createStartPosition(Document d,int off) throws BadLocationExcept
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleStartPosition(Document d,int off) throws BadLocationException
@@ -78,9 +78,9 @@ private BaleStartPosition(Document d,int off) throws BadLocationException
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methodes 							*/
-/*										*/
+/*                                                                              */
+/*      Access methodes                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int getOffset()
@@ -93,7 +93,7 @@ private BaleStartPosition(Document d,int off) throws BadLocationException
          base_position = for_document.createPosition(off);
       }
       catch (BadLocationException e) {
-	 // do something
+         // do something
       }
    }
       
@@ -111,9 +111,9 @@ void savePosition(BaleDocument bd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -123,7 +123,7 @@ void savePosition(BaleDocument bd)
 
 
 
-}	// end of class BalePosition
+}       // end of class BalePosition
 
 
 

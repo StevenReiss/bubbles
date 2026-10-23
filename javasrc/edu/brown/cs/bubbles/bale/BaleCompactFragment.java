@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleCompactFragment						*/
-/*										*/
-/*	Bubble Annotated Language Editor fragment for bubbles stack		*/
-/*										*/
+/*                                                                              */
+/*              BaleCompactFragment                                             */
+/*                                                                              */
+/*      Bubble Annotated Language Editor fragment for bubbles stack             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -58,13 +58,13 @@ class BaleCompactFragment extends JLabel implements BaleConstants, BussConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleDocument base_document;
-private String	item_name;
+private String  item_name;
 private transient Map<Integer,LineData> line_data;
 private int title_width;
 private int content_width;
@@ -86,9 +86,9 @@ private static final int ELLIPSIS_LENGTH = getStringWidth("...");
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleCompactFragment(BaleDocument bd,Collection<BumpLocation> locs,int wd)
@@ -104,19 +104,19 @@ BaleCompactFragment(BaleDocument bd,Collection<BumpLocation> locs,int wd)
 
    for (BumpLocation bl : locs) {
       switch (bl.getSymbolType()) {
-	 case CLASS :
-	 case INTERFACE :
-	 case ENUM :
-	 case THROWABLE :
-	 case MODULE :
-	    if (bl.getDefinitionOffset() == bl.getOffset() &&
-	       bl.getDefinitionEndOffset() == bl.getEndOffset()) {
-	       // add dummy line
-	       // continue;
-	    }
-	    break;
-	 default:
-	    break;
+         case CLASS :
+         case INTERFACE :
+         case ENUM :
+         case THROWABLE :
+         case MODULE :
+            if (bl.getDefinitionOffset() == bl.getOffset() &&
+               bl.getDefinitionEndOffset() == bl.getEndOffset()) {
+               // add dummy line
+               // continue;
+            }
+            break;
+         default:
+            break;
        }
 
       int soff = bd.mapOffsetToJava(bl.getOffset());
@@ -124,18 +124,18 @@ BaleCompactFragment(BaleDocument bd,Collection<BumpLocation> locs,int wd)
       int slno = bd.findLineNumber(soff);
       int elno = bd.findLineNumber(eoff);
       if (slno != elno) {
-	 eoff = bd.findLineOffset(slno+1) - 2;
-	 elno = slno;
+         eoff = bd.findLineOffset(slno+1) - 2;
+         elno = slno;
        }
       if (eoff <= soff) {
-	 BoardLog.logW("BALE","Match had no text " + soff + " " + eoff);
-	 continue;
+         BoardLog.logW("BALE","Match had no text " + soff + " " + eoff);
+         continue;
        }
 
       LineData ld = line_data.get(slno);
       if (ld == null) {
-	 ld = new LineData(slno);
-	 line_data.put(slno,ld);
+         ld = new LineData(slno);
+         line_data.put(slno,ld);
        }
       ld.addHighlight(soff,eoff);
     }
@@ -147,9 +147,9 @@ BaleCompactFragment(BaleDocument bd,Collection<BumpLocation> locs,int wd)
 
 
 /********************************************************************************/
-/*										*/
-/*	External setup/access methods						*/
-/*										*/
+/*                                                                              */
+/*      External setup/access methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void init(int contentWidth)
@@ -177,9 +177,9 @@ private static int getStringWidth(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create HTML for a fragment					*/
-/*										*/
+/*                                                                              */
+/*      Methods to create HTML for a fragment                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void initContentData()
@@ -190,31 +190,31 @@ private void initContentData()
       int eoff = base_document.findLineOffset(lno+1);
       Segment s = new Segment();
       try {
-	 base_document.getText(soff,eoff-soff,s);
+         base_document.getText(soff,eoff-soff,s);
 
-	 int index = 0;
-	 List<String> strList = new ArrayList<String>();
+         int index = 0;
+         List<String> strList = new ArrayList<String>();
 
-	 for (BaleSimpleRegion bsr : ld.getHighlights()) {
-	    int hoff = bsr.getStart() - soff;
+         for (BaleSimpleRegion bsr : ld.getHighlights()) {
+            int hoff = bsr.getStart() - soff;
 
-	    if (index >= s.length()) continue;
-	    if (hoff >= s.length()) hoff = s.length();
-	    if (hoff < index) continue;
+            if (index >= s.length()) continue;
+            if (hoff >= s.length()) hoff = s.length();
+            if (hoff < index) continue;
 
-	    strList.add(s.subSequence(index, hoff).toString());
-	    strList.add(s.subSequence(hoff, hoff + bsr.getLength()).toString());
+            strList.add(s.subSequence(index, hoff).toString());
+            strList.add(s.subSequence(hoff, hoff + bsr.getLength()).toString());
 
-	    index = hoff + bsr.getLength();
-	 }
+            index = hoff + bsr.getLength();
+         }
 
-	 strList.add(s.subSequence(index, eoff - soff).toString());
+         strList.add(s.subSequence(index, eoff - soff).toString());
 
-	 String[] aryStr = new String[strList.size()];
-	 strList.toArray(aryStr);
+         String[] aryStr = new String[strList.size()];
+         strList.toArray(aryStr);
 
-	 ContentData contentData = new ContentData(content_width, aryStr);
-	 content_data_list.add(contentData);
+         ContentData contentData = new ContentData(content_width, aryStr);
+         content_data_list.add(contentData);
        }
        catch (BadLocationException e) { }
     }
@@ -239,13 +239,13 @@ private void setupLabel()
 
    for (ContentData contentData : content_data_list) {
       if (ctr++ == 0) {
-	 buf.append("<th");
-	 buf.append(" width='" + title_width + "' align='LEFT'><font size='10pt' face='monospace'>");
-	 buf.append(item_name);
-	 buf.append("</font></th>");
+         buf.append("<th");
+         buf.append(" width='" + title_width + "' align='LEFT'><font size='10pt' face='monospace'>");
+         buf.append(item_name);
+         buf.append("</font></th>");
        }
       else {
-	 buf.append("<th></td>");
+         buf.append("<th></td>");
        }
 
       buf.append(contentData.getResultHtml());
@@ -288,9 +288,9 @@ private static String htmlEncode(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to fix up strings for the display				*/
-/*										*/
+/*                                                                              */
+/*      Methods to fix up strings for the display                               */
+/*                                                                              */
 /********************************************************************************/
 
 private String trimString(String s, int length)
@@ -310,7 +310,7 @@ private String trimString(String s, int length)
 
 
 private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstHighlightStr,
-					   String strAfterHighlight, int length)
+                                           String strAfterHighlight, int length)
 {
    int[] aryOffset = new int[2];
 
@@ -333,38 +333,38 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
 
    if (afterSLength > beforeSLength) {
       if (beforeSLength > beforeLength) {
-	 beforeLength -= ELLIPSIS_LENGTH;
-	 aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
+         beforeLength -= ELLIPSIS_LENGTH;
+         aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
        }
       else {
-	 aryOffset[0] = 0;
-	 afterLength += (beforeLength - beforeSLength);
+         aryOffset[0] = 0;
+         afterLength += (beforeLength - beforeSLength);
        }
 
       if (afterSLength > afterLength) {
-	 afterLength -= ELLIPSIS_LENGTH;
-	 aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
+         afterLength -= ELLIPSIS_LENGTH;
+         aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
        }
       else {
-	 aryOffset[1] = 0;
+         aryOffset[1] = 0;
        }
     }
    else {
       if (afterSLength > afterLength) {
-	 afterLength -= ELLIPSIS_LENGTH;
-	 aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
+         afterLength -= ELLIPSIS_LENGTH;
+         aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
        }
       else {
-	 aryOffset[1] = 0;
-	 beforeLength += (afterLength - afterSLength);
+         aryOffset[1] = 0;
+         beforeLength += (afterLength - afterSLength);
        }
 
       if (beforeSLength > beforeLength) {
-	 beforeLength -= ELLIPSIS_LENGTH;
-	 aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
+         beforeLength -= ELLIPSIS_LENGTH;
+         aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
        }
       else {
-	 aryOffset[0] = 0;
+         aryOffset[0] = 0;
        }
     }
 
@@ -374,9 +374,9 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
 
 
 /********************************************************************************/
-/*										*/
-/*	Title Width Computation 						*/
-/*										*/
+/*                                                                              */
+/*      Title Width Computation                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static String getTitle(Collection<BumpLocation> locs)
@@ -411,18 +411,18 @@ private static String simplifyParameters(String p)
    for (int i = 0; i < n; ++i) {
       char ch = p.charAt(i);
       if (lvl == 0) {
-	 if (ch == ')' || ch == ',') {
-	    if (start > 0) {
-	       addParam(p.substring(start,i),buf);
-	       start = -1;
-	     }
-	    buf.append(ch);
-	  }
-	 else if (ch == '(') {
-	    buf.append(ch);
-	  }
-	 else if (ch == '<') ++lvl;
-	 else if (start < 0) start = i;
+         if (ch == ')' || ch == ',') {
+            if (start > 0) {
+               addParam(p.substring(start,i),buf);
+               start = -1;
+             }
+            buf.append(ch);
+          }
+         else if (ch == '(') {
+            buf.append(ch);
+          }
+         else if (ch == '<') ++lvl;
+         else if (start < 0) start = i;
        }
       else if (ch == '<') ++lvl;
       else if (ch == '>') --lvl;
@@ -447,9 +447,9 @@ private static void addParam(String p,StringBuffer buf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold information about lines to display			*/
-/*										*/
+/*                                                                              */
+/*      Class to hold information about lines to display                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LineData {
@@ -465,24 +465,24 @@ private static class LineData {
    void addHighlight(int soff,int eoff) {
       int idx = 0;
       for (int i = 0; i < line_highlights.size(); ++i) {
-	 BaleSimpleRegion br = line_highlights.get(i);
-	 if (br.getStart() > soff) break;
-	 ++idx;
+         BaleSimpleRegion br = line_highlights.get(i);
+         if (br.getStart() > soff) break;
+         ++idx;
        }
       line_highlights.add(idx,new BaleSimpleRegion(soff,eoff-soff));
     }
 
-   int getLineNumber()				{ return line_number; }
-   List<BaleSimpleRegion> getHighlights()	{ return line_highlights; }
+   int getLineNumber()                          { return line_number; }
+   List<BaleSimpleRegion> getHighlights()       { return line_highlights; }
 
-}	// end of inner class LineData
+}       // end of inner class LineData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold the content						*/
-/*										*/
+/*                                                                              */
+/*      Class to hold the content                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class ContentData {
@@ -510,7 +510,7 @@ private class ContentData {
       StringBuffer afterhighlightstrbuf = new StringBuffer();
 
       for (int i = 2; i<ary_str.length; i++) {
-	 afterhighlightstrbuf.append(ary_str[i]);
+         afterhighlightstrbuf.append(ary_str[i]);
        }
 
       after_highlight_str = afterhighlightstrbuf.toString();
@@ -621,12 +621,12 @@ private class ContentData {
       result_html = htmlBuf.toString();
     }
 
-   String getResultHtml()			{ return result_html; }
+   String getResultHtml()                       { return result_html; }
 
-}	// end of inner class ContentData
+}       // end of inner class ContentData
 
 
-}	// end of class BaleCompactFragment
+}       // end of class BaleCompactFragment
 
 
 

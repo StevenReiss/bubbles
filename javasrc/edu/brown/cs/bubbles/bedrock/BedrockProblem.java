@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockProblem.java						*/
-/*										*/
-/*	Problem management methods for Eclipse :: quick fix suggestions 	*/
-/*										*/
+/*                                                                              */
+/*              BedrockProblem.java                                             */
+/*                                                                              */
+/*      Problem management methods for Eclipse :: quick fix suggestions         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,17 +49,17 @@ class BedrockProblem implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockProblem(BedrockPlugin bp)
@@ -68,9 +68,9 @@ BedrockProblem(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to add fixes for a problem					*/
-/*										*/
+/*                                                                              */
+/*      Methods to add fixes for a problem                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void addFixes(IProblem ip,IvyXmlWriter xw)
@@ -112,26 +112,26 @@ void addFixes(IMarker im,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Actual fixup generation methods 					*/
-/*										*/
+/*                                                                              */
+/*      Actual fixup generation methods                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void addFixes(int id,String [] args,IvyXmlWriter xw)
 {
    switch (id) {
       case IProblem.UndefinedMethod :
-	 if (args == null) return;
-	 xw.begin("FIX");
-	 xw.field("TYPE","NEW_METHOD");
-	 xw.field("CLASS",args[0]);
-	 xw.field("NAME",args[1]);
-	 if (args.length > 2) xw.field("PARAMS",args[2]);
-	 // TODO: determine return type
-	 xw.end("FIX");
-	 break;
+         if (args == null) return;
+         xw.begin("FIX");
+         xw.field("TYPE","NEW_METHOD");
+         xw.field("CLASS",args[0]);
+         xw.field("NAME",args[1]);
+         if (args.length > 2) xw.field("PARAMS",args[2]);
+         // TODO: determine return type
+         xw.end("FIX");
+         break;
       default :
-	 break;
+         break;
     }
 }
 
@@ -140,19 +140,19 @@ private void addFixes(int id,String [] args,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic access methods							*/
-/*										*/
+/*                                                                              */
+/*      Generic access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
-private int getId(IProblem ip)			{ return ip.getID(); }
+private int getId(IProblem ip)                  { return ip.getID(); }
 
-private int getId(IMarkerDelta imd)		{ return imd.getAttribute("id",0); }
+private int getId(IMarkerDelta imd)             { return imd.getAttribute("id",0); }
 
-private int getId(IMarker imd)			{ return imd.getAttribute("id",0); }
+private int getId(IMarker imd)                  { return imd.getAttribute("id",0); }
 
 
-private String [] getArguments(IProblem ip)	{ return ip.getArguments(); }
+private String [] getArguments(IProblem ip)     { return ip.getArguments(); }
 
 private String [] getArguments(IMarkerDelta imd)
 {
@@ -175,7 +175,7 @@ private String [] getArguments(IMarkerDelta imd)
       s1 = s1.replace("##","@@@@@");
       rslt = s1.split("#");
       for (int i = 0; i < rslt.length; ++i) {
-	 rslt[i] = rslt[i].replace("@@@@@","#");
+         rslt[i] = rslt[i].replace("@@@@@","#");
        }
     }
    if (rslt.length != narg) {
@@ -205,7 +205,7 @@ private String [] getArguments(IMarker im)
       s1 = s1.replace("##","@@@@@");
       rslt = s1.split("#");
       for (int i = 0; i < rslt.length; ++i) {
-	 rslt[i] = rslt[i].replace("@@@@@","#");
+         rslt[i] = rslt[i].replace("@@@@@","#");
        }
     }
    
@@ -219,7 +219,7 @@ private String [] getArguments(IMarker im)
 
 
 
-}	// end of class BedrockProblem
+}       // end of class BedrockProblem
 
 
 

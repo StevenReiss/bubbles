@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleBudder.java 						*/
-/*										*/
-/*	Bubble Annotated Language Editor budding actions			*/
-/*										*/
+/*                                                                              */
+/*              BaleBudder.java                                                 */
+/*                                                                              */
+/*      Bubble Annotated Language Editor budding actions                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,20 +49,20 @@ class BaleBudder implements BaleConstants, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudAction	bud_action;
-private FragmentAction	fragment_action;
+private BudAction       bud_action;
+private FragmentAction  fragment_action;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleBudder()
@@ -74,20 +74,20 @@ BaleBudder()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-TextAction getBuddingAction()		{ return bud_action; }
-TextAction getFragmentAction()		{ return fragment_action; }
+TextAction getBuddingAction()           { return bud_action; }
+TextAction getFragmentAction()          { return fragment_action; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor access methods							*/
-/*										*/
+/*                                                                              */
+/*      Editor access methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static BaleEditorPane getBaleEditor(ActionEvent e)
@@ -116,9 +116,9 @@ private static boolean checkEditor(BaleEditorPane e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Position finding methods						*/
-/*										*/
+/*                                                                              */
+/*      Position finding methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static int findEndPoint(Segment s,int off)
@@ -131,11 +131,11 @@ private static int findEndPoint(Segment s,int off)
    }
    if (soff1 >= 0) {
       while (soff1 < off) {
-	 if (s.charAt(soff1) == '\n') {
-	    ++soff1;
-	    break;
-	 }
-	 ++soff1;
+         if (s.charAt(soff1) == '\n') {
+            ++soff1;
+            break;
+         }
+         ++soff1;
       }
    }
 
@@ -156,8 +156,8 @@ private static int findStartPoint(Segment s,int off)
    if (soff2 >= s.length()) return -1;
    while (soff2 > off) {
       if (s.charAt(soff2) == '\n') {
-	 ++soff2;
-	 break;
+         ++soff2;
+         break;
       }
       --soff2;
    }
@@ -168,9 +168,9 @@ private static int findStartPoint(Segment s,int off)
 
 
 /********************************************************************************/
-/*										*/
-/*	Budding action								*/
-/*										*/
+/*                                                                              */
+/*      Budding action                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class BudAction extends TextAction {
@@ -207,7 +207,7 @@ private class BudAction extends TextAction {
          // first find the fragment we are in
          BaleElement be = bd.getCharacterElement(soff);
          while (be != null && be.getParent() != null && be.getParent() != root &&
-        	   be.getBubbleType() == BaleFragmentType.NONE) {
+                   be.getBubbleType() == BaleFragmentType.NONE) {
             be = be.getBaleParent();
           }
          if (be == null || be == root) return false;
@@ -278,7 +278,7 @@ private class BudAction extends TextAction {
       List<BaleRegion> nrgns = new ArrayList<>();
       nrgns.add(r0);
       BaleFragmentEditor bfe = bf.getEditorFromRegions(bd.getProjectName(),bd.getFile(),
-        						   null,nrgns,ftyp);
+                                                           null,nrgns,ftyp);
       if (bfe != null) {
          BudaRoot broot = BudaRoot.findBudaRoot(target);
          Rectangle loc = BudaRoot.findBudaLocation(target);
@@ -293,16 +293,16 @@ private class BudAction extends TextAction {
       return false;
     }
 
-}	// end of inner class BudAction
+}       // end of inner class BudAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Create fragment action							*/
-/*										*/
+/*                                                                              */
+/*      Create fragment action                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class FragmentAction extends TextAction {
@@ -337,22 +337,22 @@ private class FragmentAction extends TextAction {
          BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(target);
          if (bba != null) {
             bba.addBubble(bb,target,null,
-        		     PLACEMENT_NEW |
-        		     PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+                             PLACEMENT_NEW |
+                             PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
           }
          bb.grabFocus();
          BoardMetrics.noteCommand("BALE","Fragment");
        }
     }
 
-}	// end of inner class FragmentAction
+}       // end of inner class FragmentAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Find fragment bubbles							*/
-/*										*/
+/*                                                                              */
+/*      Find fragment bubbles                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 static BaleFragmentEditor findFragmentBubble(BaleEditorPane target,int pos)
@@ -368,8 +368,8 @@ static BaleFragmentEditor findFragmentBubble(BaleEditorPane target,int pos)
       BaleElement root = (BaleElement) relt;
       BaleElement be = bd.getCharacterElement(soff);
       while (be != null && be.getParent() != null && be.getParent() != root &&
-		be.getBubbleType() == BaleFragmentType.NONE) {
-	 be = be.getBaleParent();
+                be.getBubbleType() == BaleFragmentType.NONE) {
+         be = be.getBaleParent();
        }
       if (be == null || be == root) return null;
 
@@ -378,10 +378,10 @@ static BaleFragmentEditor findFragmentBubble(BaleEditorPane target,int pos)
 
       Segment s = new Segment();
       try {
-	 bd.getText(0,bd.getLength(),s);
+         bd.getText(0,bd.getLength(),s);
        }
       catch (BadLocationException ex) {
-	 return null;
+         return null;
        }
 
       int soff0 = be.getStartOffset();
@@ -394,12 +394,12 @@ static BaleFragmentEditor findFragmentBubble(BaleEditorPane target,int pos)
 
       List<BaleRegion> rgns = new ArrayList<BaleRegion>();
       try {
-	 BaleRegion r0 = bd.createDocumentRegion(soff2,eoff2,true);
-	 rgns.add(r0);
-	 // spos = bd.createPosition(soff2);
+         BaleRegion r0 = bd.createDocumentRegion(soff2,eoff2,true);
+         rgns.add(r0);
+         // spos = bd.createPosition(soff2);
        }
       catch (BadLocationException ex) {
-	 return null;
+         return null;
        }
 
       BaleFactory bf = BaleFactory.getFactory();
@@ -412,7 +412,7 @@ static BaleFragmentEditor findFragmentBubble(BaleEditorPane target,int pos)
 
 
 
-}	// end of class BaleBudder
+}       // end of class BaleBudder
 
 
 

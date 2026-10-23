@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconRegionLocation.java 					*/
-/*										*/
-/*	Bubbles Environment Context Viewer internal region from bump		*/
-/*										*/
+/*                                                                              */
+/*              BconRegionLocation.java                                         */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer internal region from bump            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,15 +44,15 @@ class BconRegionLocation extends BconRegion implements BconConstants
 {
 
 
-private BumpLocation	base_location;
-private RegionType	region_type;
+private BumpLocation    base_location;
+private RegionType      region_type;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
@@ -67,32 +67,32 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
       case LOCAL :
       case MODULE :
       default :
-	 region_type = RegionType.REGION_UNKNOWN;
-	 break;
+         region_type = RegionType.REGION_UNKNOWN;
+         break;
       case CLASS :
       case INTERFACE :
       case ENUM :
       case THROWABLE :
-	 region_type = RegionType.REGION_CLASS;
-	 break;
+         region_type = RegionType.REGION_CLASS;
+         break;
       case FIELD :
       case ENUM_CONSTANT :
       case GLOBAL :
-	 region_type = RegionType.REGION_FIELD;
-	 break;
+         region_type = RegionType.REGION_FIELD;
+         break;
       case FUNCTION :
-	 region_type = RegionType.REGION_METHOD;
-	 break;
+         region_type = RegionType.REGION_METHOD;
+         break;
       case CONSTRUCTOR :
-	 region_type = RegionType.REGION_CONSTRUCTOR;
-	 break;
+         region_type = RegionType.REGION_CONSTRUCTOR;
+         break;
       case STATIC_INITIALIZER :
       case MAIN_PROGRAM :
       case IMPORT :
       case EXPORT :
       case PROGRAM :
-	 region_type = RegionType.REGION_INITIALIZER;
-	 break;
+         region_type = RegionType.REGION_INITIALIZER;
+         break;
     }
 
    int pos0 = fov.mapOffsetToJava(bl.getOffset());
@@ -103,23 +103,23 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
       fov.getText(0,fov.getLength(),s);
       int idx = pos0;
       while (idx >= 0 && idx < s.length() && Character.isWhitespace(s.charAt(idx))) {
-	 if (s.charAt(idx) == '\n') {
-	    pos0 = idx;
-	    break;
-	  }
-	 --idx;
+         if (s.charAt(idx) == '\n') {
+            pos0 = idx;
+            break;
+          }
+         --idx;
        }
       idx = pos1;
       while (idx < s.length()) {
-	 if (s.charAt(idx) == '\n') {
-	    pos1 = idx;
-	    break;
-	  }
-	 ++idx;
+         if (s.charAt(idx) == '\n') {
+            pos1 = idx;
+            break;
+          }
+         ++idx;
        }
       while (idx < s.length() && Character.isWhitespace(s.charAt(idx))) {
-	 if (s.charAt(idx) == '\n') pos1 = idx;
-	 ++idx;
+         if (s.charAt(idx) == '\n') pos1 = idx;
+         ++idx;
        }
     }
    catch (BadLocationException e) {
@@ -131,9 +131,9 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override RegionType getRegionType()
@@ -167,8 +167,8 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
       nm = base_location.getSymbolName();
       String pm = base_location.getParameters();
       if (pm != null) {
-	 if (pm.length() < 8) nm += pm;
-	 else nm += "(...)";
+         if (pm.length() < 8) nm += pm;
+         else nm += "(...)";
        }
     }
 
@@ -185,15 +185,15 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 
 
 
-@Override boolean isComment()			{ return base_location == null; }
+@Override boolean isComment()                   { return base_location == null; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble methods								*/
-/*										*/
+/*                                                                              */
+/*      Bubble methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override boolean createBubble(Component src)
@@ -205,7 +205,7 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 
    if (bba != null) {
       bba.addBubble(bb,src,null,BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_LOGICAL|
-		       BudaConstants.PLACEMENT_NEW);
+                       BudaConstants.PLACEMENT_NEW);
     }
 
    return true;
@@ -225,44 +225,44 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
       case LOCAL :
       case PACKAGE :
       case MODULE :
-	 break;
+         break;
       case CLASS :
       case ENUM :
       case INTERFACE :
       case THROWABLE :
-	 bb = bf.createClassBubble(base_location.getProject(),
-				      base_location.getSymbolName());
-	 break;
+         bb = bf.createClassBubble(base_location.getProject(),
+                                      base_location.getSymbolName());
+         break;
       case FUNCTION :
       case CONSTRUCTOR :
-	 String prms = base_location.getParameters();
-	 if (prms == null) prms = "(...)";
-	 String mnm = base_location.getSymbolName() + prms;
-	 bb = bf.createMethodBubble(base_location.getProject(),mnm);
-	 break;
+         String prms = base_location.getParameters();
+         if (prms == null) prms = "(...)";
+         String mnm = base_location.getSymbolName() + prms;
+         bb = bf.createMethodBubble(base_location.getProject(),mnm);
+         break;
       case STATIC_INITIALIZER :
       case EXPORT :
       case IMPORT :
-	 String inm = base_location.getSymbolName();
-	 bb = bf.createStaticsBubble(base_location.getProject(),inm,base_location.getFile());
-	 break;
+         String inm = base_location.getSymbolName();
+         bb = bf.createStaticsBubble(base_location.getProject(),inm,base_location.getFile());
+         break;
       case MAIN_PROGRAM :
       case PROGRAM :
-	 inm = base_location.getSymbolName();
-	 bb = bf.createMainProgramBubble(base_location.getProject(),inm,base_location.getFile());
-	 break;
+         inm = base_location.getSymbolName();
+         bb = bf.createMainProgramBubble(base_location.getProject(),inm,base_location.getFile());
+         break;
       case FIELD :
       case GLOBAL :
       case ENUM_CONSTANT :
-	 String fnm = base_location.getSymbolName();
-	 int idx = fnm.lastIndexOf(".");
-	 if (idx > 0) {
-	    String cnm = fnm.substring(0,idx);
-	    bb = bf.createFieldsBubble(base_location.getProject(),base_location.getFile(),cnm);
-	  }
-	 break;
+         String fnm = base_location.getSymbolName();
+         int idx = fnm.lastIndexOf(".");
+         if (idx > 0) {
+            String cnm = fnm.substring(0,idx);
+            bb = bf.createFieldsBubble(base_location.getProject(),base_location.getFile(),cnm);
+          }
+         break;
       default:
-	 break;
+         break;
     }
 
    return bb;
@@ -276,9 +276,9 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Matching methods							*/
-/*										*/
+/*                                                                              */
+/*      Matching methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override boolean nameMatch(String nm)
@@ -291,17 +291,17 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String toString()		{ return getRegionName(); }
+@Override public String toString()              { return getRegionName(); }
 
 
 
 
-}	// end of class BconRegionLocation
+}       // end of class BconRegionLocation
 
 
 

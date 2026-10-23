@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrVersionManager.java 					*/
-/*										*/
-/*	Bubble Version Collaboration Repository generic version manager iface	*/
-/*										*/
+/*                                                                              */
+/*              BvcrVersionManager.java                                         */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository generic version manager iface   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -54,21 +54,21 @@ abstract class BvcrVersionManager implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected BvcrProject	for_project;
+protected BvcrProject   for_project;
 private BvcrMonitor     for_monitor;
-protected String	repository_id;
+protected String        repository_id;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static BvcrVersionManager createVersionManager(BvcrProject bp,BvcrMonitor mon)
@@ -103,9 +103,9 @@ static BvcrVersionManager createVersionManager(BvcrProject bp,File root)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BvcrVersionManager(BvcrProject bp)
@@ -131,9 +131,9 @@ BvcrMain getBvcrMain()
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic operations on the version management system			*/
-/*										*/
+/*                                                                              */
+/*      Generic operations on the version management system                     */
+/*                                                                              */
 /********************************************************************************/
 
 String getRepositoryId()
@@ -142,21 +142,21 @@ String getRepositoryId()
       File f = getRootDirectory();
       File f0 = new File(f,".uid");
       if (f0.exists()) {
-	 try (BufferedReader br = new BufferedReader(new FileReader(f0))) {
-	    for ( ; ; ) {
-	       String ln = br.readLine();
-	       if (ln == null) break;
-	       ln = ln.trim();
-	       if (ln.length() > 0) {
-		  repository_id = ln;
-		  break;
-		}
-	     }
-	  }
-	 catch (IOException e) { }
+         try (BufferedReader br = new BufferedReader(new FileReader(f0))) {
+            for ( ; ; ) {
+               String ln = br.readLine();
+               if (ln == null) break;
+               ln = ln.trim();
+               if (ln.length() > 0) {
+                  repository_id = ln;
+                  break;
+                }
+             }
+          }
+         catch (IOException e) { }
        }
       else {
-	 generateRepositoryId(f0);
+         generateRepositoryId(f0);
        }
     }
 
@@ -221,9 +221,9 @@ void doFetch()                                          { }
 
 
 /********************************************************************************/
-/*										*/
-/*	File differencing commands						*/
-/*										*/
+/*                                                                              */
+/*      File differencing commands                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void findFileDiffs(BvcrMain bm,File f,String vfr,String vto,IvyXmlWriter xw)
@@ -240,9 +240,9 @@ void findFileDiffs(BvcrMain bm,File f,String vfr,String vto,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to run commands and provide the output				*/
-/*										*/
+/*                                                                              */
+/*      Methods to run commands and provide the output                          */
+/*                                                                              */
 /********************************************************************************/
 
 protected interface CommandCallback {
@@ -309,12 +309,12 @@ protected class StringCommand implements CommandCallback {
       msg_content.append("\n");
     }
 
-   @Override public void handleDone(int sts)	{ command_status = sts; }
+   @Override public void handleDone(int sts)    { command_status = sts; }
 
-   String getContent()				{ return msg_content.toString(); }
-   int getStatus()				{ return command_status; }
+   String getContent()                          { return msg_content.toString(); }
+   int getStatus()                              { return command_status; }
 
-}	// end of inner class XmlMessage
+}       // end of inner class XmlMessage
 
 
 
@@ -328,7 +328,7 @@ protected class XmlCommand extends StringCommand {
       return IvyXml.convertStringToXml(getContent());
     }
 
-}	// end of inner class XmlMessage
+}       // end of inner class XmlMessage
 
 
 
@@ -361,9 +361,9 @@ String getRelativePath(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Difference analyzer for generic diff command				*/
-/*										*/
+/*                                                                              */
+/*      Difference analyzer for generic diff command                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static final Pattern LINE_PAT = Pattern.compile("@@ \\-(\\d+),(\\d+) \\+(\\d+),(\\d+) @@.*");
@@ -482,7 +482,7 @@ protected class DiffAnalyzer implements CommandCallback {
       diff_set.finish();
     }
 
-}	// end of inner class DiffAnalyzer
+}       // end of inner class DiffAnalyzer
 
 
 
@@ -493,7 +493,7 @@ protected class DiffAnalyzer implements CommandCallback {
 
 
 
-}	// end of abstract class BvcrVersionManager
+}       // end of abstract class BvcrVersionManager
 
 
 

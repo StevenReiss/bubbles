@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtHistoryController.java					*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool history recording		*/
-/*										*/
+/*                                                                              */
+/*              BddtHistoryController.java                                      */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool history recording             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -46,20 +46,20 @@ class BddtHistoryController implements BddtConstants, BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<BddtLaunchControl,HistoryData>	history_data;
-private Map<String,HistoryData> 		process_data;
+private Map<BddtLaunchControl,HistoryData>      history_data;
+private Map<String,HistoryData>                 process_data;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructor								*/
-/*										*/
+/*                                                                              */
+/*      Constructor                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 BddtHistoryController()
@@ -76,9 +76,9 @@ BddtHistoryController()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void setupHistory(BddtLaunchControl blc)
@@ -90,9 +90,9 @@ void setupHistory(BddtLaunchControl blc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 BddtHistoryBubble createHistory(BddtLaunchControl ctrl)
@@ -107,9 +107,9 @@ BddtHistoryBubble createHistory(BddtLaunchControl ctrl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to access history information					*/
-/*										*/
+/*                                                                              */
+/*      Methods to access history information                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private HistoryData getHistory(BddtLaunchControl ctrl)
@@ -117,10 +117,10 @@ private HistoryData getHistory(BddtLaunchControl ctrl)
    synchronized (history_data) {
       HistoryData hd = history_data.get(ctrl);
       if (hd == null) {
-	 BumpProcess bp = ctrl.getProcess();
-	 if (bp != null) hd = getHistory(bp.getId(),false);
-	 if (hd == null) hd = new HistoryData();
-	 history_data.put(ctrl,hd);
+         BumpProcess bp = ctrl.getProcess();
+         if (bp != null) hd = getHistory(bp.getId(),false);
+         if (hd == null) hd = new HistoryData();
+         history_data.put(ctrl,hd);
        }
       return hd;
     }
@@ -135,17 +135,17 @@ private HistoryData getHistory(String pid,boolean force)
       HistoryData hd = process_data.get(pid);
       if (hd != null) return hd;
       for (Map.Entry<BddtLaunchControl,HistoryData> ent : history_data.entrySet()) {
-	 BddtLaunchControl blc = ent.getKey();
-	 BumpProcess bp = blc.getProcess();
-	 if (bp != null && bp.getId().equals(pid)) {
-	    hd = ent.getValue();
-	    process_data.put(pid,hd);
-	    return hd;
-	  }
+         BddtLaunchControl blc = ent.getKey();
+         BumpProcess bp = blc.getProcess();
+         if (bp != null && bp.getId().equals(pid)) {
+            hd = ent.getValue();
+            process_data.put(pid,hd);
+            return hd;
+          }
        }
       if (force) {
-	 hd = new HistoryData();
-	 process_data.put(pid,hd);
+         hd = new HistoryData();
+         process_data.put(pid,hd);
        }
       return hd;
     }
@@ -166,9 +166,9 @@ void clearHistory(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class HistoryHandler implements BumpConstants.BumpRunEventHandler {
@@ -214,15 +214,15 @@ private final class HistoryHandler implements BumpConstants.BumpRunEventHandler 
     }
 
 
-}	// end of inner class HistoryHandler
+}       // end of inner class HistoryHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	History Data structure							*/
-/*										*/
+/*                                                                              */
+/*      History Data structure                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HistoryData implements BddtHistoryData {
@@ -289,11 +289,11 @@ private static class HistoryData implements BddtHistoryData {
 
    private void historyUpdated() {
       for (BddtHistoryListener bl : listener_list) {
-	 bl.handleHistoryUpdated();
+         bl.handleHistoryUpdated();
        }
     }
 
-}	// end of inner class HistoryData
+}       // end of inner class HistoryData
 
 
 
@@ -305,24 +305,24 @@ private static class HistoryThread {
       thread_items = new ConcurrentLinkedQueue<>();
     }
 
-   void endAt(long when)			{ }
+   void endAt(long when)                        { }
 
    void add(HistoryItem hi) {
       thread_items.add(hi);
     }
 
-   Iterable<BddtHistoryItem> getItems() 	{ return thread_items; }
+   Iterable<BddtHistoryItem> getItems()         { return thread_items; }
 
-}	// end of inner class HistoryThread
+}       // end of inner class HistoryThread
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Single history datum							*/
-/*										*/
+/*                                                                              */
+/*      Single history datum                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HistoryItem implements BddtHistoryItem {
@@ -337,9 +337,9 @@ private static class HistoryItem implements BddtHistoryItem {
       at_time = at;
     }
 
-   @Override public BumpThread getThread()	{ return for_stack.getThread(); }
-   @Override public long getTime()		{ return at_time; }
-   @Override public BumpThreadStack getStack()	{ return for_stack; }
+   @Override public BumpThread getThread()      { return for_stack.getThread(); }
+   @Override public long getTime()              { return at_time; }
+   @Override public BumpThreadStack getStack()  { return for_stack; }
 
    @Override public BumpRunValue getThisValue() {
       BumpStackFrame fm0 = for_stack.getFrame(0);
@@ -360,7 +360,7 @@ private static class HistoryItem implements BddtHistoryItem {
          BumpStackFrame fi = for_stack.getFrame(i-delta);
          if (fi == null) return false;
          if (!fi.getFrameClass().equals(pfi.getFrameClass()) ||
-        	!fi.getMethod().equals(pfi.getMethod()))
+                !fi.getMethod().equals(pfi.getMethod()))
             return false;
        }
       return true;
@@ -370,12 +370,12 @@ private static class HistoryItem implements BddtHistoryItem {
       return "HISTORY[" + getThread().getName() + " " + getClassName() + " " + getTime() + "]";
     }
 
-}	// end of inner class HistoryItem
+}       // end of inner class HistoryItem
 
 
 
 
-}	// end of class BddtHistoryController
+}       // end of class BddtHistoryController
 
 
 

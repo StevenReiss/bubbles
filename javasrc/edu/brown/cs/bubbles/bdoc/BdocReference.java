@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdocReference.java						*/
-/*										*/
-/*	Bubbles Environment Documentation reference to a javadoc item		*/
-/*										*/
+/*                                                                              */
+/*              BdocReference.java                                              */
+/*                                                                              */
+/*      Bubbles Environment Documentation reference to a javadoc item           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,17 +52,17 @@ class BdocReference extends BassNameBase implements BdocConstants, BassConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private URI	ref_url;
-private String	bdoc_name;
-private String	name_parameters;
-private String	ref_description;
-private String	for_project;
-private String	key_name;
+private URI     ref_url;
+private String  bdoc_name;
+private String  name_parameters;
+private String  ref_description;
+private String  for_project;
+private String  key_name;
 private BdocRepository for_repository;
 
 
@@ -142,9 +142,9 @@ private static DescriptionData [] prefix_set = new DescriptionData [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdocReference(BdocRepository br,String proj,URI base,String ref,String desc0) throws BdocException
@@ -164,9 +164,9 @@ BdocReference(BdocRepository br,String proj,URI base,String ref,String desc0) th
    
    for (DescriptionData dd : prefix_set) {
       if (desc.startsWith(dd.getPrefix())) {
-	 name_type = dd.getNameType();
-	 inside = desc.substring(dd.getLength()).trim();
-	 break;
+         name_type = dd.getNameType();
+         inside = desc.substring(dd.getLength()).trim();
+         break;
        }
     }
    if (inside == null && !desc.contains(" ")) {
@@ -203,7 +203,7 @@ BdocReference(BdocRepository br,Element xml)
    if (url == null) ref_url = null;
    else {
       try {
-	 ref_url = new URI(url);
+         ref_url = new URI(url);
        }
       catch (URISyntaxException e) { }
     }
@@ -218,10 +218,10 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
    else if (nt == "MODULE") name_type = BassNameType.NONE;
    else {
       try {
-	 name_type = Enum.valueOf(BassNameType.class,nt);
+         name_type = Enum.valueOf(BassNameType.class,nt);
        }
       catch (IllegalArgumentException e) {
-	 name_type = BassNameType.NONE;
+         name_type = BassNameType.NONE;
        }
     }
    bdoc_name = nm;
@@ -232,7 +232,7 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
    if (url == null) ref_url = null;
    else {
       try {
-	 ref_url = new URI(url);
+         ref_url = new URI(url);
        }
       catch (URISyntaxException e) { }
     }
@@ -241,12 +241,12 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-URI getReferenceUrl()			{ return ref_url; }
+URI getReferenceUrl()                   { return ref_url; }
 
 
 @Override public String getDisplayName()
@@ -271,9 +271,9 @@ BdocReference findRelatedReference(URI u)
 
 
 /********************************************************************************/
-/*										*/
-/*	Description methods							*/
-/*										*/
+/*                                                                              */
+/*      Description methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void addDescription(String s)
@@ -286,9 +286,9 @@ void addDescription(String s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Name interpretation methods						*/
-/*										*/
+/*                                                                              */
+/*      Name interpretation methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private void setName(String lcl,String inside,String ref) throws BdocException
@@ -305,23 +305,23 @@ private void setName(String lcl,String inside,String ref) throws BdocException
 
    switch (name_type) {
       case PACKAGE :
-	 bdoc_name = lcl;
-	 return;
+         bdoc_name = lcl;
+         return;
       case CLASS :
       case ENUM :
       case INTERFACE :
       case THROWABLE :
       case ANNOTATION :
-	 bdoc_name = inside + "." + lcl.replace('.','$');
-	 return;
+         bdoc_name = inside + "." + lcl.replace('.','$');
+         return;
       case CONSTRUCTOR :
-	 idx = lcl.indexOf(".");
-	 if (idx >= 0) {
-	    lcl = lcl.substring(idx+1);
-	  }
-	 break;
+         idx = lcl.indexOf(".");
+         if (idx >= 0) {
+            lcl = lcl.substring(idx+1);
+          }
+         break;
       default:
-	 break;
+         break;
     }
 
    idx = ref.lastIndexOf("#");
@@ -349,20 +349,20 @@ private void setName(String lcl,String inside,String ref) throws BdocException
 
 
 /********************************************************************************/
-/*										*/
-/*	BassNameBase methods							*/
-/*										*/
+/*                                                                              */
+/*      BassNameBase methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProject()		{ return null; }
+@Override public String getProject()            { return null; }
 
-@Override protected String getSymbolName()	
+@Override protected String getSymbolName()      
 { 
    if (name_parameters != null) return BDOC_DOC_PREFIX + bdoc_name + name_parameters;
    return BDOC_DOC_PREFIX + bdoc_name; 
 }
 
-@Override protected String getParameters()	{ return name_parameters; }
+@Override protected String getParameters()      { return name_parameters; }
 
 @Override protected String getKey()
 {
@@ -378,19 +378,19 @@ private void setName(String lcl,String inside,String ref) throws BdocException
 {
    switch (name_type) {
       case CLASS :
-	 return " (class)";
+         return " (class)";
       case ENUM :
-	 return " (enum)";
+         return " (enum)";
       case INTERFACE :
-	 return " (interface)";
+         return " (interface)";
       case PACKAGE :
-	 return " (package)";
+         return " (package)";
       case THROWABLE :
-	 return " (throwable)";
+         return " (throwable)";
       case ANNOTATION :
-	 return " (annotation)";
+         return " (annotation)";
       default:
-	 break;
+         break;
     }
 
    return super.getLocalName();
@@ -407,12 +407,12 @@ private void setName(String lcl,String inside,String ref) throws BdocException
       case THROWABLE :
       case PACKAGE :
       case ANNOTATION :
-	 String nm = getUserSymbolName();
-	 int idx = nm.indexOf("<");
-	 if (idx > 0) nm = nm.substring(0,idx);
-	 return nm;
+         String nm = getUserSymbolName();
+         int idx = nm.indexOf("<");
+         if (idx > 0) nm = nm.substring(0,idx);
+         return nm;
       default:
-	 break;
+         break;
     }
 
    return super.getNameHead();
@@ -428,14 +428,14 @@ private void setName(String lcl,String inside,String ref) throws BdocException
 /**
  * Method to access the digested name of the doc
  */
-String getDigestedName()	 { return bdoc_name; }
+String getDigestedName()         { return bdoc_name; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Name matching methods							*/
-/*										*/
+/*                                                                              */
+/*      Name matching methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 boolean matchName(String nm)
@@ -447,8 +447,8 @@ boolean matchName(String nm)
    if (!mtch) {
       int idx1 = bnm.indexOf('<');
       if (idx1 > 1) {
-	 bnm = bnm.substring(0,idx1);
-	 mtch = nm.startsWith(bnm);
+         bnm = bnm.substring(0,idx1);
+         mtch = nm.startsWith(bnm);
        }
     }
    if (!mtch) return false;
@@ -466,9 +466,9 @@ boolean matchName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble()
@@ -493,9 +493,9 @@ boolean matchName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -514,9 +514,9 @@ void outputXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Description Data for parsing						*/
-/*										*/
+/*                                                                              */
+/*      Description Data for parsing                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class DescriptionData {
@@ -529,16 +529,16 @@ private static class DescriptionData {
       name_type = nt;
     }
 
-   String getPrefix()			{ return data_prefix; }
-   BassNameType getNameType()		{ return name_type; }
-   int getLength()			{ return data_prefix.length(); }
+   String getPrefix()                   { return data_prefix; }
+   BassNameType getNameType()           { return name_type; }
+   int getLength()                      { return data_prefix.length(); }
 
-}	// end of inner class DescriptionData
-
-
+}       // end of inner class DescriptionData
 
 
-}	// end of class BdocReference
+
+
+}       // end of class BdocReference
 
 
 

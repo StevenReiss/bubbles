@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtConstants.java						*/
-/*										*/
-/*	Bubbles Environment dynamic debugger tool constants			*/
-/*										*/
+/*                                                                              */
+/*              BddtConstants.java                                              */
+/*                                                                              */
+/*      Bubbles Environment dynamic debugger tool constants                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -53,13 +53,13 @@ BoardProperties BDDT_PROPERTIES = BoardProperties.getProperties("Bddt");
 
 
 /********************************************************************************/
-/*										*/
-/*	Graphic definitions							*/
-/*										*/
+/*                                                                              */
+/*      Graphic definitions                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Basic color for a debugging channel
+ *      Basic color for a debugging channel
  **/
 
 String BDDT_CHANNEL_TOP_COLOR_PROP = "Bddt.ChannelTopColor";
@@ -68,26 +68,26 @@ String BDDT_CHANNEL_BOTTOM_COLOR_PROP = "Bddt.ChannelBottomColor";
 
 
 /**
- *	Color (top) for the debugging panel.
+ *      Color (top) for the debugging panel.
  **/
 String BDDT_PANEL_TOP_COLOR_PROP = "Bddt.PanelTopColor";
 
 
 /**
- *	Color (bottom) for the debugging panel.
+ *      Color (bottom) for the debugging panel.
  **/
 String BDDT_PANEL_BOTTOM_COLOR_PROP = "Bddt.PanelBottomColor";
 
 
 /**
- *	Colors for the configuration panel
+ *      Colors for the configuration panel
  **/
 
 String BDDT_CONFIG_TOP_COLOR_PROP = "Bddt.ConfigTopColor";
 String BDDT_CONFIG_BOTTOM_COLOR_PROP = "Bddt.ConfigBottomColor";
 
-int	BDDT_CONFIG_WIDTH = BDDT_PROPERTIES.getInt("Bddt.config.width",450);
-int	BDDT_CONFIG_HEIGHT = BDDT_PROPERTIES.getInt("Bddt.config.height",150);
+int     BDDT_CONFIG_WIDTH = BDDT_PROPERTIES.getInt("Bddt.config.width",450);
+int     BDDT_CONFIG_HEIGHT = BDDT_PROPERTIES.getInt("Bddt.config.height",150);
 
 
 /**
@@ -131,7 +131,7 @@ String BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP = "Bddt.StackExtinctBottomColor";
 
 
 /**
- *	Constants for execution (method) bubbles
+ *      Constants for execution (method) bubbles
  **/
 
 String BDDT_LINK_COLOR_PROP = "Bddt.LinkColor";
@@ -139,7 +139,7 @@ String BDDT_LINK_COLOR_PROP = "Bddt.LinkColor";
 
 
 /**
- *	Constants for history viewer
+ *      Constants for history viewer
  **/
 
 int   BDDT_HISTORY_WIDTH = BDDT_PROPERTIES.getInt("Bddt.history.width",300);
@@ -147,7 +147,7 @@ int   BDDT_HISTORY_HEIGHT = BDDT_PROPERTIES.getInt("Bddt.history.height",200);
 
 
 /**
- *	Constants for stop trace viewer
+ *      Constants for stop trace viewer
  **/
 
 int   BDDT_STOP_TRACE_WIDTH = BDDT_PROPERTIES.getInt("Bddt.stop.trace.width",300);
@@ -168,9 +168,9 @@ String BDDT_TOOLBAR_RUN_BUTTON = "DebugRun";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for console bubbles						*/
-/*										*/
+/*                                                                              */
+/*      Constants for console bubbles                                           */
+/*                                                                              */
 /********************************************************************************/
 
 Font BDDT_CONSOLE_FONT = BoardFont.getFont(Font.MONOSPACED, Font.PLAIN, 11);
@@ -183,9 +183,9 @@ int BDDT_CONSOLE_MAX_LINES = BDDT_PROPERTIES.getInt("Bddt.console.max.lines",100
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for performance bubbles					*/
-/*										*/
+/*                                                                              */
+/*      Constants for performance bubbles                                       */
+/*                                                                              */
 /********************************************************************************/
 
 Font BDDT_PERF_FONT = BoardFont.getFont(Font.SERIF, Font.PLAIN, 11);
@@ -199,9 +199,9 @@ String BDDT_PERF_BOTTOM_COLOR_PROP = "Bddt.PerfBottomColor";
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint display constants						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint display constants                                            */
+/*                                                                              */
 /********************************************************************************/
 //amc6
 
@@ -252,13 +252,13 @@ Insets BDDT_BREAKPOINT_BUTTON_MARGIN = new Insets(0,0,0,0);
 
 
 /********************************************************************************/
-/*										*/
-/*	Execution annotation constants						*/
-/*										*/
+/*                                                                              */
+/*      Execution annotation constants                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Color for execution annotations
+ *      Color for execution annotations
  **/
 String BDDT_EXECUTE_ANNOT_COLOR_PROP = "Bddt.ExecutionAnnotation.color";
 String BDDT_EXECUTE_EXCEPT_COLOR_PROP = "Bddt.ExecutionAnnotation.exception.color";
@@ -273,14 +273,14 @@ interface BddtFrameListener extends EventListener {
 
    void setActiveFrame(BumpStackFrame frm);
 
-}	// end of interface BddtFrameListener
+}       // end of interface BddtFrameListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Evaluation area constants						*/
-/*										*/
+/*                                                                              */
+/*      Evaluation area constants                                               */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -306,9 +306,9 @@ String BDDT_INTERACTION_OUTLINE_PROP = "Bddt.InteractionOutline";
 
 
 /********************************************************************************/
-/*										*/
-/*	Launch control definitions						*/
-/*										*/
+/*                                                                              */
+/*      Launch control definitions                                              */
+/*                                                                              */
 /********************************************************************************/
 
 enum LaunchState {
@@ -338,22 +338,22 @@ String BDDT_PROPERTY_FLOAT_PERFORMANCE = "Performance.float";
 
 
 /********************************************************************************/
-/*										*/
-/*	Value definitions							*/
-/*										*/
+/*                                                                              */
+/*      Value definitions                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 enum ValueSetType {
-   THREAD,			// thread
-   STACK,			// stack for a thread
-   FRAME,			// single frame
-   VALUE,			// variable value
-   CATEGORY			// set of values
+   THREAD,                      // thread
+   STACK,                       // stack for a thread
+   FRAME,                       // single frame
+   VALUE,                       // variable value
+   CATEGORY                     // set of values
 }
 
 
 
-String	BDDT_PROPERTY_FREEZE_LEVELS = "Freeze.levels";
+String  BDDT_PROPERTY_FREEZE_LEVELS = "Freeze.levels";
 
 
 
@@ -365,7 +365,7 @@ interface ValueTreeNode extends TreeNode {
    BumpRunValue getRunValue();
    boolean showValueArea();
 
-}	// end of inner interface ValueTreeNode
+}       // end of inner interface ValueTreeNode
 
 
 
@@ -378,18 +378,18 @@ interface ExpressionValue {
 
    String formatResult();
 
-}	// end of inner interface ExpressionValue
+}       // end of inner interface ExpressionValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Repository definitions							*/
-/*										*/
+/*                                                                              */
+/*      Repository definitions                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Search box name prefix for launch configurations
+ *      Search box name prefix for launch configurations
  **/
 
 String BDDT_LAUNCH_CONFIG_PREFIX = "zzzzzz#@Launch Configurations.";
@@ -397,7 +397,7 @@ String BDDT_LAUNCH_CONFIG_PREFIX = "zzzzzz#@Launch Configurations.";
 
 
 /**
- *	Search box name prefix for processes
+ *      Search box name prefix for processes
  **/
 
 String BDDT_PROCESS_PREFIX = "zzzzzz#@Processes.";
@@ -407,9 +407,9 @@ String BDDT_PROCESS_PREFIX = "zzzzzz#@Processes.";
 
 
 /********************************************************************************/
-/*										*/
-/*	History definitions							*/
-/*										*/
+/*                                                                              */
+/*      History definitions                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 interface BddtHistoryData {
@@ -432,7 +432,7 @@ interface BddtHistoryItem {
 
    boolean isInside(BddtHistoryItem bhi);
 
-}	// end of inner interface BddtHistoryItem
+}       // end of inner interface BddtHistoryItem
 
 
 
@@ -446,24 +446,24 @@ interface BddtHistoryListener extends EventListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	History Graph parameters						*/
-/*										*/
+/*                                                                              */
+/*      History Graph parameters                                                */
+/*                                                                              */
 /********************************************************************************/
 
-int	GRAPH_DEFAULT_WIDTH = 400;
-int	GRAPH_DEFAULT_HEIGHT = 300;
+int     GRAPH_DEFAULT_WIDTH = 400;
+int     GRAPH_DEFAULT_HEIGHT = 300;
 
 
-double	GRAPH_LEFT_RIGHT_MARGIN = 5;
-double	GRAPH_OBJECT_WIDTH = 100;
-double	GRAPH_OBJECT_HEIGHT = 24;
-double	GRAPH_OBJECT_H_SPACE = 10;
-double	GRAPH_OBJECT_V_SPACE = 10;
-double	GRAPH_TOP_BOTTOM_MARGIN = 5;
-double	GRAPH_ACTIVE_WIDTH = 20;
-double	GRAPH_TIME_SPACE = GRAPH_DEFAULT_HEIGHT - 2 * GRAPH_TOP_BOTTOM_MARGIN -
-				GRAPH_OBJECT_HEIGHT - GRAPH_OBJECT_V_SPACE;
+double  GRAPH_LEFT_RIGHT_MARGIN = 5;
+double  GRAPH_OBJECT_WIDTH = 100;
+double  GRAPH_OBJECT_HEIGHT = 24;
+double  GRAPH_OBJECT_H_SPACE = 10;
+double  GRAPH_OBJECT_V_SPACE = 10;
+double  GRAPH_TOP_BOTTOM_MARGIN = 5;
+double  GRAPH_ACTIVE_WIDTH = 20;
+double  GRAPH_TIME_SPACE = GRAPH_DEFAULT_HEIGHT - 2 * GRAPH_TOP_BOTTOM_MARGIN -
+                                GRAPH_OBJECT_HEIGHT - GRAPH_OBJECT_V_SPACE;
 
 
 enum LinkType {
@@ -475,25 +475,25 @@ enum LinkType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble types								*/
-/*										*/
+/*                                                                              */
+/*      Bubble types                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 enum BubbleType {
-   BDDT,		// launch control, frames, etc
-   THREADS,		// thread view
-   CONSOLE,		// console
-   HISTORY,		// debugging history
-   SWING,		// swing debugging
-   PERF,		// performance view
-   EVAL,		// evaluation
-   EXEC,		// bubble for current execution point
-   FRAME,		// bubble for user selection up the call stack
-   VALUES,		// stack frame values bubble
-   STOP_TRACE,		// trace of stacks just before debugger stop
-   USER,		// bubble created by the user
-   INTERACT,		// interaction bubble
+   BDDT,                // launch control, frames, etc
+   THREADS,             // thread view
+   CONSOLE,             // console
+   HISTORY,             // debugging history
+   SWING,               // swing debugging
+   PERF,                // performance view
+   EVAL,                // evaluation
+   EXEC,                // bubble for current execution point
+   FRAME,               // bubble for user selection up the call stack
+   VALUES,              // stack frame values bubble
+   STOP_TRACE,          // trace of stacks just before debugger stop
+   USER,                // bubble created by the user
+   INTERACT,            // interaction bubble
    AUX,                 // auxilliary bubbles from separate package
 }
 
@@ -519,7 +519,7 @@ interface BddtAuxBubble {
 
 
 
-}	// end of interface BddtConstants
+}       // end of interface BddtConstants
 
 
 

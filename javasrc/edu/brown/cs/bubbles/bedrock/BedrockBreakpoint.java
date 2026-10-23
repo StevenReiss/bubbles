@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockBreakpoint.java						*/
-/*										*/
-/*	Breakpoint manager for Bubbles - Eclipse interface			*/
-/*										*/
+/*                                                                              */
+/*              BedrockBreakpoint.java                                          */
+/*                                                                              */
+/*      Breakpoint manager for Bubbles - Eclipse interface                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -158,9 +158,9 @@ class BedrockBreakpoint implements BedrockConstants, IBreakpointsListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockPlugin our_plugin;
@@ -176,9 +176,9 @@ private enum LocationType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockBreakpoint(BedrockPlugin bp)
@@ -190,9 +190,9 @@ BedrockBreakpoint(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void start()
@@ -210,9 +210,9 @@ void start()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle finding breakpoints						*/
-/*										*/
+/*                                                                              */
+/*      Handle finding breakpoints                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void getAllBreakpoints(IvyXmlWriter xw)
@@ -231,14 +231,14 @@ void getAllBreakpoints(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint set routines 						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint set routines                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 boolean setLineBreakpoint(String proj,String bid,String filename,String cls,int lineno,
-			  boolean suspvm,boolean trace)
-	throws BedrockException
+                          boolean suspvm,boolean trace)
+        throws BedrockException
 {
    if (filename == null || lineno < 0) {
       BedrockPlugin.logD("Bad line breakpoint parameters");
@@ -264,14 +264,14 @@ boolean setLineBreakpoint(String proj,String bid,String filename,String cls,int 
 
    if (cls == null || cls.length() == 0) {
       try {
-	 IType [] typs = icu.getTypes();
-	 if (typs.length > 0) {
-	    cls = typs[0].getFullyQualifiedName();
-	  }
-	 else {
-	    BedrockPlugin.logE("No class found for file " + filename + " ICU = " + icu + " " +
-				  typs.length);
-	  }
+         IType [] typs = icu.getTypes();
+         if (typs.length > 0) {
+            cls = typs[0].getFullyQualifiedName();
+          }
+         else {
+            BedrockPlugin.logE("No class found for file " + filename + " ICU = " + icu + " " +
+                                  typs.length);
+          }
        }
       catch (JavaModelException e) { }
     }
@@ -307,7 +307,7 @@ boolean setLineBreakpoint(String proj,String bid,String filename,String cls,int 
 
 
 void setExceptionBreakpoint(String proj,String cls,boolean ct,boolean uct,boolean chk,
-			       boolean suspvm,boolean subcls) throws BedrockException
+                               boolean suspvm,boolean subcls) throws BedrockException
 {
    if (cls == null) throw new BedrockException("Bad exception breakpoint parameters");
 
@@ -336,22 +336,22 @@ private void setAllExceptionBreakpoint()
 
    for (IBreakpoint bp : bm.getBreakpoints()) {
       if (bp instanceof IJavaExceptionBreakpoint) {
-	 IJavaExceptionBreakpoint bjp = (IJavaExceptionBreakpoint) bp;
-	 try {
-	    if (bjp.isCaught()) continue;
-	    if (!bjp.getTypeName().equals("java.lang.Throwable")) continue;
-	    if (!bjp.isEnabled()) continue;
-	    // breakpoint already set, ignore
-	    return;
-	  }
-	 catch (CoreException e) { }
+         IJavaExceptionBreakpoint bjp = (IJavaExceptionBreakpoint) bp;
+         try {
+            if (bjp.isCaught()) continue;
+            if (!bjp.getTypeName().equals("java.lang.Throwable")) continue;
+            if (!bjp.isEnabled()) continue;
+            // breakpoint already set, ignore
+            return;
+          }
+         catch (CoreException e) { }
        }
     }
 
    try {
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.Throwable",
-								  false,true,false,true,null);
+                                                                  false,true,false,true,null);
       bp.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
       bm.addBreakpoint(bp);
     }
@@ -370,15 +370,15 @@ private void setAssertionBreakpoint()
    
    for (IBreakpoint bp : bm.getBreakpoints()) {
       if (bp instanceof IJavaExceptionBreakpoint) {
-	 IJavaExceptionBreakpoint bjp = (IJavaExceptionBreakpoint) bp;
-	 try {
+         IJavaExceptionBreakpoint bjp = (IJavaExceptionBreakpoint) bp;
+         try {
             if (!bjp.isCaught()) continue;
-	    if (!bjp.getTypeName().equals("java.lang.AssertionError")) continue;
-	    if (!bjp.isEnabled()) continue;
-	    // breakpoint already set, ignore
-	    return;
-	  }
-	 catch (CoreException e) { }
+            if (!bjp.getTypeName().equals("java.lang.AssertionError")) continue;
+            if (!bjp.isEnabled()) continue;
+            // breakpoint already set, ignore
+            return;
+          }
+         catch (CoreException e) { }
        }
     }
    
@@ -400,26 +400,26 @@ private void setAssertionBreakpoint()
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint clear routines						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint clear routines                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void clearLineBreakpoints(String proj,String file,String cls,int line)
-	throws BedrockException
+        throws BedrockException
 {
    IBreakpointManager bm = debug_plugin.getBreakpointManager();
 
    if (cls == null && file != null) {
       ICompilationUnit icu = our_plugin.getProjectManager().getCompilationUnit(proj,file);
       if (icu != null) {
-	 try {
-	    IType [] typs = icu.getTypes();
-	    for (IType typ : typs) {
-	       clearLineBreakpoints(proj,null,typ.getFullyQualifiedName(),line);
-	     }
-	  }
-	 catch (JavaModelException e) { }
+         try {
+            IType [] typs = icu.getTypes();
+            for (IType typ : typs) {
+               clearLineBreakpoints(proj,null,typ.getFullyQualifiedName(),line);
+             }
+          }
+         catch (JavaModelException e) { }
        }
     }
    else {
@@ -444,21 +444,21 @@ void clearLineBreakpoints(String proj,String file,String cls,int line)
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint edit routines						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint edit routines                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void editBreakpoint(int id,String p0,String v0,String p1,String v1,
-		       String p2,String v2) throws BedrockException
+                       String p2,String v2) throws BedrockException
 {
    IBreakpointManager bm = debug_plugin.getBreakpointManager();
    IBreakpoint [] bps = bm.getBreakpoints();
    IBreakpoint bp = null;
    for (int i = 0; i < bps.length; ++i) {
       if (bps[i].hashCode() == id) {
-	 bp = bps[i];
-	 break;
+         bp = bps[i];
+         break;
        }
     }
 
@@ -466,10 +466,10 @@ void editBreakpoint(int id,String p0,String v0,String p1,String v1,
 
    if (p0.equals("CLEAR")) {
       try {
-	 bp.delete();
+         bp.delete();
        }
       catch (CoreException e) {
-	 throw new BedrockException("Problem removing breakpoing",e);
+         throw new BedrockException("Problem removing breakpoing",e);
        }
       return;
     }
@@ -489,34 +489,34 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
    try {
       if (p.equals("ENABLE") || p.equals("ENABLED")) {
-	 if (v == null) bp.setEnabled(true);
-	 else bp.setEnabled(Boolean.parseBoolean(v));
+         if (v == null) bp.setEnabled(true);
+         else bp.setEnabled(Boolean.parseBoolean(v));
        }
       else if (p.equals("DISABLE") || p.equals("DISABLED")) {
-	 bp.setEnabled(false);
+         bp.setEnabled(false);
        }
       else if (p.equals("CAUGHT") || p.equals("UNCAUGHT")) {
-	 if (bp instanceof IJavaExceptionBreakpoint) {
-	    IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
-	    boolean v0 = true;
-	    if (v != null) v0 = Boolean.parseBoolean(v);
-	    if (p.equals("CAUGHT")) eb.setCaught(v0);
-	    else eb.setUncaught(v0);
-	  }
+         if (bp instanceof IJavaExceptionBreakpoint) {
+            IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
+            boolean v0 = true;
+            if (v != null) v0 = Boolean.parseBoolean(v);
+            if (p.equals("CAUGHT")) eb.setCaught(v0);
+            else eb.setUncaught(v0);
+          }
        }
       else if (p.equals("EXCLUDE")) {
-	 if (bp instanceof IJavaExceptionBreakpoint) {
-	    IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
-	    String [] exc = v.split(",");
-	    eb.setExclusionFilters(exc);
-	  }
+         if (bp instanceof IJavaExceptionBreakpoint) {
+            IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
+            String [] exc = v.split(",");
+            eb.setExclusionFilters(exc);
+          }
        }
       else if (p.equals("INCLUDE")) {
-	 if (bp instanceof IJavaExceptionBreakpoint) {
-	    IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
-	    String [] inf = v.split(",");
-	    eb.setExclusionFilters(inf);
-	  }
+         if (bp instanceof IJavaExceptionBreakpoint) {
+            IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
+            String [] inf = v.split(",");
+            eb.setExclusionFilters(inf);
+          }
        }
       else if (p.equals("SUBCLASSES") || p.equals("ISSUBCLASSES")) {
          if (bp instanceof IJavaExceptionBreakpoint) {
@@ -538,9 +538,9 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handler for breakpoint events					*/
-/*										*/
+/*                                                                              */
+/*      Event handler for breakpoint events                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void breakpointsAdded(IBreakpoint [] bpts)
@@ -605,9 +605,9 @@ private void saveBreakpoints()
 }
 
 /********************************************************************************/
-/*										*/
-/*	Methods for validating the line number for a breakpoint 		*/
-/*										*/
+/*                                                                              */
+/*      Methods for validating the line number for a breakpoint                 */
+/*                                                                              */
 /********************************************************************************/
 
 private int validateLine(String bid,String proj,String file,int lno)
@@ -629,16 +629,16 @@ private int validateLine(String bid,String proj,String file,int lno)
 
    switch (bpl.getLocationType()) {
       case NOT_FOUND :
-	 lno = -1;
-	 break;
+         lno = -1;
+         break;
       case LINE :
-	 lno = bpl.getLineNumber();
-	 break;
+         lno = bpl.getLineNumber();
+         break;
       case FIELD :
       case METHOD :
-	 BedrockPlugin.logD("BREAK LINE " + bpl.getLocationType());
-	 // TODO: create field or method entry/exit breakpoints as appropriate
-	 break;
+         BedrockPlugin.logD("BREAK LINE " + bpl.getLocationType());
+         // TODO: create field or method entry/exit breakpoints as appropriate
+         break;
     }
 
    return lno;
@@ -661,138 +661,138 @@ private static class BreakpointLocator extends ASTVisitor {
       comp_unit = cu;
     }
 
-   LocationType getLocationType()		{ return location_type; }
-   int getLineNumber()				{ return line_number; }
+   LocationType getLocationType()               { return location_type; }
+   int getLineNumber()                          { return line_number; }
 
    @Override public boolean visit(AnnotationTypeDeclaration node) {
       if (visit(node, false)) {
-	 List<?> bodyDeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
-	    ((BodyDeclaration) iter.next()).accept(this);
-	  }
+         List<?> bodyDeclaration= node.bodyDeclarations();
+         for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
+            ((BodyDeclaration) iter.next()).accept(this);
+          }
        }
       return false;
     }
 
    @Override public boolean visit(AnnotationTypeMemberDeclaration node) { return false; }
 
-   @Override public boolean visit(AnonymousClassDeclaration node)	{ return visit(node,false); }
-   @Override public boolean visit(ArrayAccess node)			{ return visit(node,true); }
+   @Override public boolean visit(AnonymousClassDeclaration node)       { return visit(node,false); }
+   @Override public boolean visit(ArrayAccess node)                     { return visit(node,true); }
 
    @Override public boolean visit(ArrayCreation node) {
       return visit(node,node.getInitializer() == null);
     }
 
-   @Override public boolean visit(ArrayInitializer node)		{ return visit(node,true); }
-   @Override public boolean visit(ArrayType node)			{ return false; }
-   @Override public boolean visit(AssertStatement node) 		{ return visit(node,true); }
+   @Override public boolean visit(ArrayInitializer node)                { return visit(node,true); }
+   @Override public boolean visit(ArrayType node)                       { return false; }
+   @Override public boolean visit(AssertStatement node)                 { return visit(node,true); }
 
    @Override public boolean visit(Assignment node) {
       if (visit(node,false)) {
-	 // if the left hand side represent a local variable, or a static field
-	 // and the breakpoint was requested on a line before the line where
-	 // starts the assigment, set the location to be the first executable
-	 // instruction of the right hand side, as it will be the first part of
-	 // this assigment to be executed
-	 Expression lhs= node.getLeftHandSide();
-	 if (lhs instanceof Name) {
-	    int startline = getLineNumber(node.getStartPosition());
-	    if (line_number < startline) {
-	       IVariableBinding binding = (IVariableBinding) ((Name) lhs).resolveBinding();
-	       if (binding != null && (!binding.isField() || Modifier.isStatic(binding.getModifiers())))  {
-		  node.getRightHandSide().accept(this);
-		}
-	     }
-	  }
-	 return true;
+         // if the left hand side represent a local variable, or a static field
+         // and the breakpoint was requested on a line before the line where
+         // starts the assigment, set the location to be the first executable
+         // instruction of the right hand side, as it will be the first part of
+         // this assigment to be executed
+         Expression lhs= node.getLeftHandSide();
+         if (lhs instanceof Name) {
+            int startline = getLineNumber(node.getStartPosition());
+            if (line_number < startline) {
+               IVariableBinding binding = (IVariableBinding) ((Name) lhs).resolveBinding();
+               if (binding != null && (!binding.isField() || Modifier.isStatic(binding.getModifiers())))  {
+                  node.getRightHandSide().accept(this);
+                }
+             }
+          }
+         return true;
        }
       return false;
     }
 
    @Override public boolean visit(Block node) {
       if (visit(node,false)) {
-	 if (node.statements().isEmpty() && node.getParent().getNodeType() == ASTNode.METHOD_DECLARATION) {
-	    line_number = getLineNumber(node.getStartPosition() + node.getLength() - 1);
-	    location_found = true;
-	    location_type = LocationType.LINE;
-	    return false;
-	  }
-	 return true;
+         if (node.statements().isEmpty() && node.getParent().getNodeType() == ASTNode.METHOD_DECLARATION) {
+            line_number = getLineNumber(node.getStartPosition() + node.getLength() - 1);
+            location_found = true;
+            location_type = LocationType.LINE;
+            return false;
+          }
+         return true;
        }
       return false;
     }
 
-   @Override public boolean visit(BlockComment node)			{ return false; }
-   @Override public boolean visit(BooleanLiteral node)			{ return visit(node,true); }
-   @Override public boolean visit(BreakStatement node)			{ return visit(node,true); }
-   @Override public boolean visit(CastExpression node)			{ return visit(node,true); }
-   @Override public boolean visit(CatchClause node)			{ return visit(node,false); }
-   @Override public boolean visit(CharacterLiteral node)		{ return visit(node,true); }
-   @Override public boolean visit(ClassInstanceCreation node)		{ return visit(node,true); }
-   @Override public boolean visit(CompilationUnit node) 		{ return visit(node,false); }
-   @Override public boolean visit(ConditionalExpression node)		{ return visit(node,true); }
-   @Override public boolean visit(ConstructorInvocation node)		{ return visit(node,true); }
-   @Override public boolean visit(ContinueStatement node)		{ return visit(node,true); }
-   @Override public boolean visit(CreationReference node)		{ return visit(node,true); }
-   @Override public boolean visit(DoStatement node)			{ return visit(node,false); }
-   @Override public boolean visit(EmptyStatement node)			{ return false; }
+   @Override public boolean visit(BlockComment node)                    { return false; }
+   @Override public boolean visit(BooleanLiteral node)                  { return visit(node,true); }
+   @Override public boolean visit(BreakStatement node)                  { return visit(node,true); }
+   @Override public boolean visit(CastExpression node)                  { return visit(node,true); }
+   @Override public boolean visit(CatchClause node)                     { return visit(node,false); }
+   @Override public boolean visit(CharacterLiteral node)                { return visit(node,true); }
+   @Override public boolean visit(ClassInstanceCreation node)           { return visit(node,true); }
+   @Override public boolean visit(CompilationUnit node)                 { return visit(node,false); }
+   @Override public boolean visit(ConditionalExpression node)           { return visit(node,true); }
+   @Override public boolean visit(ConstructorInvocation node)           { return visit(node,true); }
+   @Override public boolean visit(ContinueStatement node)               { return visit(node,true); }
+   @Override public boolean visit(CreationReference node)               { return visit(node,true); }
+   @Override public boolean visit(DoStatement node)                     { return visit(node,false); }
+   @Override public boolean visit(EmptyStatement node)                  { return false; }
 
    @Override public boolean visit(EnhancedForStatement node) {
       if (visit(node,false)) {
-	 node.getExpression().accept(this);
-	 node.getBody().accept(this);
+         node.getExpression().accept(this);
+         node.getBody().accept(this);
        }
       return false;
     }
 
    @Override public boolean visit(EnumConstantDeclaration node) {
       if (visit(node,false)) {
-	 List<?> arguments= node.arguments();
-	 for (Iterator<?> iter= arguments.iterator(); iter.hasNext(); ) {
-	    ((Expression) iter.next()).accept(this);
-	  }
-	 AnonymousClassDeclaration decl= node.getAnonymousClassDeclaration();
-	 if (decl != null) {
-	    decl.accept(this);
-	  }
+         List<?> arguments= node.arguments();
+         for (Iterator<?> iter= arguments.iterator(); iter.hasNext(); ) {
+            ((Expression) iter.next()).accept(this);
+          }
+         AnonymousClassDeclaration decl= node.getAnonymousClassDeclaration();
+         if (decl != null) {
+            decl.accept(this);
+          }
        }
       return false;
     }
 
    @Override public boolean visit(EnumDeclaration node) {
       if (visit(node,false)) {
-	 List<?> enumConstants= node.enumConstants();
-	 for (Iterator<?> iter = enumConstants.iterator(); iter.hasNext(); ) {
-	    ((EnumConstantDeclaration) iter.next()).accept(this);
-	  }
-	 List<?> bodyDeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
-	    ((BodyDeclaration) iter.next()).accept(this);
-	  }
+         List<?> enumConstants= node.enumConstants();
+         for (Iterator<?> iter = enumConstants.iterator(); iter.hasNext(); ) {
+            ((EnumConstantDeclaration) iter.next()).accept(this);
+          }
+         List<?> bodyDeclaration= node.bodyDeclarations();
+         for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
+            ((BodyDeclaration) iter.next()).accept(this);
+          }
        }
       return false;
     }
 
-   @Override public boolean visit(ExpressionMethodReference node)	{ return visit(node,true); }
-   @Override public boolean visit(ExpressionStatement node)		{ return visit(node,false); }
-   @Override public boolean visit(FieldAccess node)			{ return visit(node,false); }
+   @Override public boolean visit(ExpressionMethodReference node)       { return visit(node,true); }
+   @Override public boolean visit(ExpressionStatement node)             { return visit(node,false); }
+   @Override public boolean visit(FieldAccess node)                     { return visit(node,false); }
 
    @Override public boolean visit(FieldDeclaration node) {
       if (visit(node,false)) {
-	 // check if the line contains a single field declaration.
-	 List<?> fragments = node.fragments();
-	 // if (fragments.size() == 1) {
-	    // int offset= ((VariableDeclarationFragment)fragments.get(0)).getName().getStartPosition();
-	    // check if the breakpoint is to be set on the line which contains the name of the field
-	    // if (getLineNumber(offset) == line_number) {
-	       // location_type = LocationType.FIELD;
-	       // location_found = true;
-	       // return false;
-	     // }
-	  // }
-	 for (Iterator<?> iter= fragments.iterator(); iter.hasNext(); ) {
-	    ((VariableDeclarationFragment) iter.next()).accept(this);
-	  }
+         // check if the line contains a single field declaration.
+         List<?> fragments = node.fragments();
+         // if (fragments.size() == 1) {
+            // int offset= ((VariableDeclarationFragment)fragments.get(0)).getName().getStartPosition();
+            // check if the breakpoint is to be set on the line which contains the name of the field
+            // if (getLineNumber(offset) == line_number) {
+               // location_type = LocationType.FIELD;
+               // location_found = true;
+               // return false;
+             // }
+          // }
+         for (Iterator<?> iter= fragments.iterator(); iter.hasNext(); ) {
+            ((VariableDeclarationFragment) iter.next()).accept(this);
+          }
        }
       return false;
     }
@@ -802,65 +802,65 @@ private static class BreakpointLocator extends ASTVisitor {
       return visit(node, node.initializers().isEmpty() && node.getExpression() == null && node.updaters().isEmpty());
     }
 
-   @Override public boolean visit(IfStatement node)			{ return visit(node,false); }
-   @Override public boolean visit(ImportDeclaration node)		{ return false; }
+   @Override public boolean visit(IfStatement node)                     { return visit(node,false); }
+   @Override public boolean visit(ImportDeclaration node)               { return false; }
 
    @Override public boolean visit(InfixExpression node) {
       // if the breakpoint is to be set on a constant operand, the breakpoint needs to be
       // set on the first constant operand after the previous non-constant operand
       // (or the beginning of the expression, if there is no non-constant operand before).
-      // ex:   foo() +	  // previous non-constant operand
-      //       1 +	  // breakpoint set here
-      //       2	  // breakpoint asked to be set here
+      // ex:   foo() +    // previous non-constant operand
+      //       1 +        // breakpoint set here
+      //       2          // breakpoint asked to be set here
       if (visit(node,false)) {
-	 Expression left = node.getLeftOperand();
-	 Expression firstconstant = null;
-	 if (visit(left,false)) {
-	    left.accept(this);
-	    return false;
-	  }
-	 if (isReplacedByConstantValue(left)) firstconstant = left;
-	 Expression right = node.getRightOperand();
-	 if (visit(right,false)) {
-	    if (firstconstant == null || !isReplacedByConstantValue(right)) {
-	       right.accept(this);
-	       return false;
-	     }
-	  }
-	 else {
-	    if (isReplacedByConstantValue(right)) {
-	       if (firstconstant == null) firstconstant= right;
-	     }
-	    else firstconstant= null;
-	    List<?> extendedoperands= node.extendedOperands();
-	    for (Iterator<?> iter = extendedoperands.iterator(); iter.hasNext(); ) {
-	       Expression operand= (Expression) iter.next();
-	       if (visit(operand,false)) {
-		  if (firstconstant == null || !isReplacedByConstantValue(operand)) {
-		     operand.accept(this);
-		     return false;
-		   }
-		  break;
-		}
-	       if (isReplacedByConstantValue(operand)) {
-		  if (firstconstant == null) firstconstant = operand;
-		}
-	       else firstconstant= null;
-	     }
-	  }
-	 if (firstconstant != null) {
-	    line_number = getLineNumber(firstconstant.getStartPosition());
-	    location_found= true;
-	    location_type= LocationType.LINE;
-	  }
+         Expression left = node.getLeftOperand();
+         Expression firstconstant = null;
+         if (visit(left,false)) {
+            left.accept(this);
+            return false;
+          }
+         if (isReplacedByConstantValue(left)) firstconstant = left;
+         Expression right = node.getRightOperand();
+         if (visit(right,false)) {
+            if (firstconstant == null || !isReplacedByConstantValue(right)) {
+               right.accept(this);
+               return false;
+             }
+          }
+         else {
+            if (isReplacedByConstantValue(right)) {
+               if (firstconstant == null) firstconstant= right;
+             }
+            else firstconstant= null;
+            List<?> extendedoperands= node.extendedOperands();
+            for (Iterator<?> iter = extendedoperands.iterator(); iter.hasNext(); ) {
+               Expression operand= (Expression) iter.next();
+               if (visit(operand,false)) {
+                  if (firstconstant == null || !isReplacedByConstantValue(operand)) {
+                     operand.accept(this);
+                     return false;
+                   }
+                  break;
+                }
+               if (isReplacedByConstantValue(operand)) {
+                  if (firstconstant == null) firstconstant = operand;
+                }
+               else firstconstant= null;
+             }
+          }
+         if (firstconstant != null) {
+            line_number = getLineNumber(firstconstant.getStartPosition());
+            location_found= true;
+            location_type= LocationType.LINE;
+          }
        }
       return false;
     }
 
-   @Override public boolean visit(Initializer node)			{ return visit(node,false); }
-   @Override public boolean visit(InstanceofExpression node)		{ return visit(node,true); }
-   @Override public boolean visit(IntersectionType node)		{ return false; }
-   @Override public boolean visit(Javadoc node) 			{ return false; }
+   @Override public boolean visit(Initializer node)                     { return visit(node,false); }
+   @Override public boolean visit(InstanceofExpression node)            { return visit(node,true); }
+   @Override public boolean visit(IntersectionType node)                { return false; }
+   @Override public boolean visit(Javadoc node)                         { return false; }
 
    @Override public boolean visit(LabeledStatement node) {
       nestLabel(node.getLabel().getFullyQualifiedName());
@@ -871,124 +871,124 @@ private static class BreakpointLocator extends ASTVisitor {
       super.endVisit(node);
     }
 
-   @Override public boolean visit(LambdaExpression node)		{ return visit(node,true); }
-   @Override public boolean visit(LineComment node)			{ return false; }
-   @Override public boolean visit(MarkerAnnotation node)		{ return false; }
-   @Override public boolean visit(MemberRef node)			{ return false; }
-   @Override public boolean visit(MemberValuePair node) 		{ return false; }
+   @Override public boolean visit(LambdaExpression node)                { return visit(node,true); }
+   @Override public boolean visit(LineComment node)                     { return false; }
+   @Override public boolean visit(MarkerAnnotation node)                { return false; }
+   @Override public boolean visit(MemberRef node)                       { return false; }
+   @Override public boolean visit(MemberValuePair node)                 { return false; }
 
    @Override public boolean visit(MethodDeclaration node) {
       if (visit(node,false)) {
-	 // check if we are on the line which contains the method name
-	 // int nameoffset = node.getName().getStartPosition();
-	 // if (getLineNumber(nameoffset) == line_number) {
-	    // location_type = LocationType.METHOD;
-	    // location_found = true;
-	    // return false;
-	  // }
+         // check if we are on the line which contains the method name
+         // int nameoffset = node.getName().getStartPosition();
+         // if (getLineNumber(nameoffset) == line_number) {
+            // location_type = LocationType.METHOD;
+            // location_found = true;
+            // return false;
+          // }
 
-	 // visit only the body
-	 Block body = node.getBody();
-	 if (body != null) { // body is null for abstract methods
-	    body.accept(this);
-	  }
+         // visit only the body
+         Block body = node.getBody();
+         if (body != null) { // body is null for abstract methods
+            body.accept(this);
+          }
        }
       return false;
     }
 
-   @Override public boolean visit(MethodInvocation node)		{ return visit(node,true); }
-   @Override public boolean visit(MethodRef node)			{ return false; }
-   @Override public boolean visit(MethodRefParameter node)		{ return false; }
-   @Override public boolean visit(Modifier node)			{ return false; }
-   @Override public boolean visit(NormalAnnotation node)		{ return false; }
-   @Override public boolean visit(NullLiteral node)			{ return visit(node,true); }
-   @Override public boolean visit(NumberLiteral node)			{ return visit(node,true); }
-   @Override public boolean visit(PackageDeclaration node)		{ return false; }
-   @Override public boolean visit(ParameterizedType node)		{ return false; }
-   @Override public boolean visit(ParenthesizedExpression node) 	{ return visit(node,false); }
-   @Override public boolean visit(PostfixExpression node)		{ return visit(node,true); }
+   @Override public boolean visit(MethodInvocation node)                { return visit(node,true); }
+   @Override public boolean visit(MethodRef node)                       { return false; }
+   @Override public boolean visit(MethodRefParameter node)              { return false; }
+   @Override public boolean visit(Modifier node)                        { return false; }
+   @Override public boolean visit(NormalAnnotation node)                { return false; }
+   @Override public boolean visit(NullLiteral node)                     { return visit(node,true); }
+   @Override public boolean visit(NumberLiteral node)                   { return visit(node,true); }
+   @Override public boolean visit(PackageDeclaration node)              { return false; }
+   @Override public boolean visit(ParameterizedType node)               { return false; }
+   @Override public boolean visit(ParenthesizedExpression node)         { return visit(node,false); }
+   @Override public boolean visit(PostfixExpression node)               { return visit(node,true); }
 
    @Override public boolean visit(PrefixExpression node) {
       if (visit(node,false)) {
-	 if (isReplacedByConstantValue(node)) {
-	    line_number = getLineNumber(node.getStartPosition());
-	    location_found = true;
-	    location_type = LocationType.LINE;
-	    return false;
-	  }
-	 return true;
+         if (isReplacedByConstantValue(node)) {
+            line_number = getLineNumber(node.getStartPosition());
+            location_found = true;
+            location_type = LocationType.LINE;
+            return false;
+          }
+         return true;
        }
       return false;
     }
 
-   @Override public boolean visit(PrimitiveType node)			{ return false; }
+   @Override public boolean visit(PrimitiveType node)                   { return false; }
 
    @Override public boolean visit(QualifiedName node) {
       visit(node,true);
       return false;
     }
 
-   @Override public boolean visit(QualifiedType node)			{ return false; }
-   @Override public boolean visit(ReturnStatement node) 		{ return visit(node,true); }
+   @Override public boolean visit(QualifiedType node)                   { return false; }
+   @Override public boolean visit(ReturnStatement node)                 { return visit(node,true); }
 
    @Override public boolean visit(SimpleName node) {
       // the name is only code if its not the current label (if any)
       return visit(node,!node.getFullyQualifiedName().equals(getLabel()));
     }
 
-   @Override public boolean visit(SimpleType node)			{ return false; }
-   @Override public boolean visit(SingleMemberAnnotation node)		{ return false; }
-   @Override public boolean visit(SingleVariableDeclaration node)	{ return visit(node,false); }
-   @Override public boolean visit(StringLiteral node)			{ return visit(node,true); }
-   @Override public boolean visit(SuperConstructorInvocation node)	{ return visit(node,true); }
-   @Override public boolean visit(SuperFieldAccess node)		{ return visit(node,true); }
-   @Override public boolean visit(SuperMethodInvocation node)		{ return visit(node,true); }
-   @Override public boolean visit(SuperMethodReference node)		{ return visit(node,true); }
-   @Override public boolean visit(SwitchCase node)			{ return false; }
-   @Override public boolean visit(SwitchStatement node) 		{ return visit(node,false); }
-   @Override public boolean visit(SynchronizedStatement node)		{ return visit(node,false); }
-   @Override public boolean visit(TagElement node)			{ return false; }
-   @Override public boolean visit(TextBlock node)			{ return visit(node,true); }
-   @Override public boolean visit(TextElement node)			{ return false; }
-   @Override public boolean visit(ThisExpression node)			{ return visit(node,true); }
-   @Override public boolean visit(ThrowStatement node)			{ return visit(node,true); }
-   @Override public boolean visit(TryStatement node)			{ return visit(node,false); }
+   @Override public boolean visit(SimpleType node)                      { return false; }
+   @Override public boolean visit(SingleMemberAnnotation node)          { return false; }
+   @Override public boolean visit(SingleVariableDeclaration node)       { return visit(node,false); }
+   @Override public boolean visit(StringLiteral node)                   { return visit(node,true); }
+   @Override public boolean visit(SuperConstructorInvocation node)      { return visit(node,true); }
+   @Override public boolean visit(SuperFieldAccess node)                { return visit(node,true); }
+   @Override public boolean visit(SuperMethodInvocation node)           { return visit(node,true); }
+   @Override public boolean visit(SuperMethodReference node)            { return visit(node,true); }
+   @Override public boolean visit(SwitchCase node)                      { return false; }
+   @Override public boolean visit(SwitchStatement node)                 { return visit(node,false); }
+   @Override public boolean visit(SynchronizedStatement node)           { return visit(node,false); }
+   @Override public boolean visit(TagElement node)                      { return false; }
+   @Override public boolean visit(TextBlock node)                       { return visit(node,true); }
+   @Override public boolean visit(TextElement node)                     { return false; }
+   @Override public boolean visit(ThisExpression node)                  { return visit(node,true); }
+   @Override public boolean visit(ThrowStatement node)                  { return visit(node,true); }
+   @Override public boolean visit(TryStatement node)                    { return visit(node,false); }
 
    @Override public boolean visit(TypeDeclaration node) {
       if (visit(node,false)) {
-	 // visit only the elements of the type declaration
-	 List<?> bodydeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter = bodydeclaration.iterator(); iter.hasNext(); ) {
-	    ((BodyDeclaration) iter.next()).accept(this);
-	  }
+         // visit only the elements of the type declaration
+         List<?> bodydeclaration= node.bodyDeclarations();
+         for (Iterator<?> iter = bodydeclaration.iterator(); iter.hasNext(); ) {
+            ((BodyDeclaration) iter.next()).accept(this);
+          }
        }
       return false;
     }
 
-   @Override public boolean visit(TypeDeclarationStatement node)	{ return visit(node,false); }
-   @Override public boolean visit(TypeMethodReference node)		{ return visit(node,true); }
-   @Override public boolean visit(TypeParameter node)			{ return false; }
-   @Override public boolean visit(TypeLiteral node)			{ return false; }
-   @Override public boolean visit(UnionType node)			{ return false; }
-   @Override public boolean visit(VariableDeclarationExpression node)	{ return visit(node,false); }
+   @Override public boolean visit(TypeDeclarationStatement node)        { return visit(node,false); }
+   @Override public boolean visit(TypeMethodReference node)             { return visit(node,true); }
+   @Override public boolean visit(TypeParameter node)                   { return false; }
+   @Override public boolean visit(TypeLiteral node)                     { return false; }
+   @Override public boolean visit(UnionType node)                       { return false; }
+   @Override public boolean visit(VariableDeclarationExpression node)   { return visit(node,false); }
 
    @Override public boolean visit(VariableDeclarationFragment node) {
       Expression initializer = node.getInitializer();
       if (visit(node,false) && initializer != null) {
-	 int startline = getLineNumber(node.getName().getStartPosition());
-	 if (line_number == startline) {
-	    location_found = true;
-	    location_type= LocationType.LINE;
-	    return false;
-	  }
-	 initializer.accept(this);
+         int startline = getLineNumber(node.getName().getStartPosition());
+         if (line_number == startline) {
+            location_found = true;
+            location_type= LocationType.LINE;
+            return false;
+          }
+         initializer.accept(this);
        }
       return false;
     }
 
-   @Override public boolean visit(WildcardType node)			{ return false; }
-   @Override public boolean visit(VariableDeclarationStatement node)	{ return visit(node,false); }
-   @Override public boolean visit(WhileStatement node)			{ return visit(node,false); }
+   @Override public boolean visit(WildcardType node)                    { return false; }
+   @Override public boolean visit(VariableDeclarationStatement node)    { return visit(node,false); }
+   @Override public boolean visit(WhileStatement node)                  { return visit(node,false); }
 
 
    private boolean visit(ASTNode n,boolean code) {
@@ -998,10 +998,10 @@ private static class BreakpointLocator extends ASTVisitor {
       if (endline < line_number) return false;
       int startline = getLineNumber(spos);
       if (code && line_number <= startline) {
-	 line_number = startline;
-	 location_found = true;
-	 location_type = LocationType.LINE;
-	 return false;
+         line_number = startline;
+         location_found = true;
+         location_type = LocationType.LINE;
+         return false;
        }
       return true;
     }
@@ -1034,14 +1034,14 @@ private static class BreakpointLocator extends ASTVisitor {
 
    private boolean isReplacedByConstantValue(InfixExpression node) {
       if (!(isReplacedByConstantValue(node.getLeftOperand()) && isReplacedByConstantValue(node.getRightOperand()))) {
-	 return false;
+         return false;
        }
       if (node.hasExtendedOperands()) {
-	 for (Iterator<?> iter = node.extendedOperands().iterator(); iter.hasNext(); ) {
-	    if (!isReplacedByConstantValue((Expression) iter.next())) {
-	       return false;
-	     }
-	  }
+         for (Iterator<?> iter = node.extendedOperands().iterator(); iter.hasNext(); ) {
+            if (!isReplacedByConstantValue((Expression) iter.next())) {
+               return false;
+             }
+          }
        }
       return true;
     }
@@ -1051,7 +1051,7 @@ private static class BreakpointLocator extends ASTVisitor {
       // the expression is replaced by a constant value
       PrefixExpression.Operator operator = node.getOperator();
       if (operator != PrefixExpression.Operator.INCREMENT && operator != PrefixExpression.Operator.DECREMENT) {
-	 return isReplacedByConstantValue(node.getOperand());
+         return isReplacedByConstantValue(node.getOperand());
        }
       return false;
     }
@@ -1060,7 +1060,7 @@ private static class BreakpointLocator extends ASTVisitor {
       // if node is a variable with a constant value (static final field)
       IBinding binding= node.resolveBinding();
       if (binding != null && binding.getKind() == IBinding.VARIABLE) {
-	 return ((IVariableBinding) binding).getConstantValue() != null;
+         return ((IVariableBinding) binding).getConstantValue() != null;
        }
       return false;
     }
@@ -1070,7 +1070,7 @@ private static class BreakpointLocator extends ASTVisitor {
       Expression expression= node.getExpression();
       IVariableBinding binding= node.resolveFieldBinding();
       if (binding != null && expression.getNodeType() == ASTNode.THIS_EXPRESSION) {
-	 return binding.getConstantValue() != null;
+         return binding.getConstantValue() != null;
        }
       return false;
     }
@@ -1105,11 +1105,11 @@ private static class BreakpointLocator extends ASTVisitor {
     }
 
 
-}	// end of inner class BreakpointLocator
+}       // end of inner class BreakpointLocator
 
 
 
-}	// end of class BedrockBreakpoint
+}       // end of class BedrockBreakpoint
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
- /*		BassNameBase.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies name base implementation		*/
-/*										*/
+/*                                                                              */
+ /*             BassNameBase.java                                               */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies name base implementation             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -40,10 +40,10 @@ import javax.swing.Icon;
 
 
 /**
- *	This class provides a default implementation of BassConstants.BassName that
- *	should simplify implementations.  In particular, it provides methods for
- *	putting together the various strings that are needed by BassName from
- *	simpler components.
+ *      This class provides a default implementation of BassConstants.BassName that
+ *      should simplify implementations.  In particular, it provides methods for
+ *      putting together the various strings that are needed by BassName from
+ *      simpler components.
  **/
 
 public abstract class BassNameBase implements BassName, BassConstants, BumpConstants
@@ -52,19 +52,19 @@ public abstract class BassNameBase implements BassName, BassConstants, BumpConst
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The type of object that this name represents.  This is generally set by
- *	the subclass constructor.
+ *      The type of object that this name represents.  This is generally set by
+ *      the subclass constructor.
  **/
-protected BassNameType	name_type;
+protected BassNameType  name_type;
 
-private   String	full_name;
-private   String	param_name;
+private   String        full_name;
+private   String        param_name;
 
 private static final String SPLIT_PATTERN = "[.]";
 
@@ -72,13 +72,13 @@ private static final String SPLIT_PATTERN = "[.]";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Default constructor.
+ *      Default constructor.
  **/
 protected BassNameBase()
 {
@@ -90,25 +90,25 @@ protected BassNameBase()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public abstract String getProject();
 
 /**
- *	Return the local name of the symbol.  This should be a fully qualified name, but
- *	does not include parameters for methods.
+ *      Return the local name of the symbol.  This should be a fully qualified name, but
+ *      does not include parameters for methods.
  **/
 
 protected abstract String getSymbolName();
 
 
 /**
- *	Return the parameter list for a method, null for anything else.  The parameter
- *	list is given in the form of '(type,type,...,type)', where the types should be
- *	fully qualified if possible.
+ *      Return the parameter list for a method, null for anything else.  The parameter
+ *      list is given in the form of '(type,type,...,type)', where the types should be
+ *      fully qualified if possible.
  **/
 
 protected abstract String getParameters();
@@ -116,24 +116,24 @@ protected abstract String getParameters();
 
 
 /**
- *	Return a unique string that identifies this symbol.  Two symbols are considered
- *	the same if they have the same key.
+ *      Return a unique string that identifies this symbol.  Two symbols are considered
+ *      the same if they have the same key.
  **/
 
 protected abstract String getKey();
 
 
-@Override public BassNameType getNameType()	{ return name_type; }
+@Override public BassNameType getNameType()     { return name_type; }
 
-@Override public int getModifiers()		{ return BASS_MODIFIERS_UNDEFINED; }
+@Override public int getModifiers()             { return BASS_MODIFIERS_UNDEFINED; }
 
-@Override public int getSortPriority()		{ return BASS_DEFAULT_SORT_PRIORITY; }
+@Override public int getSortPriority()          { return BASS_DEFAULT_SORT_PRIORITY; }
 
 
 /**
- *	Returns the symbol name that is shown to the user.  This might differ from the
- *	internal symbol name.  For example, in Java, nested classes are separated by
- *	a dollar sign rather than a dot.
+ *      Returns the symbol name that is shown to the user.  This might differ from the
+ *      internal symbol name.  For example, in Java, nested classes are separated by
+ *      a dollar sign rather than a dot.
  **/
 
 protected String getUserSymbolName()
@@ -148,7 +148,7 @@ protected String getUserSymbolName()
 
 
 /**
- *	Return the local name, i.e. the tail part of the name without any qualifications.
+ *      Return the local name, i.e. the tail part of the name without any qualifications.
  **/
 
 protected String getLocalName()
@@ -161,13 +161,13 @@ protected String getLocalName()
 }
 
 
-@Override public String getName()		  { return getUserSymbolName(); }
+@Override public String getName()                 { return getUserSymbolName(); }
 
 
 /**
- *	Return the enclosing name.  This is the full name minus the local name, e.g.
- *	for a method or field it is the name of the enclosing class and for a class it
- *	is the name of the enclosing package.
+ *      Return the enclosing name.  This is the full name minus the local name, e.g.
+ *      for a method or field it is the name of the enclosing class and for a class it
+ *      is the name of the enclosing package.
  **/
 
 @Override public String getNameHead()
@@ -182,9 +182,9 @@ protected String getLocalName()
 
 
 /**
- *	Return the name of the associated class.  This may either be the name of the
- *	symbol if the symbol is a type, or it can be the name of the enclosing class for
- *	a method or field.
+ *      Return the name of the associated class.  This may either be the name of the
+ *      symbol if the symbol is a type, or it can be the name of the enclosing class for
+ *      a method or field.
  **/
 
 @Override public String getClassName()
@@ -193,30 +193,30 @@ protected String getLocalName()
       case NONE :
       case PACKAGE :
       case MODULE :
-	 break;
+         break;
       case CLASS :
       case INTERFACE :
       case ENUM :
       case THROWABLE :
       case ANNOTATION :
-	 String nm1 = getSymbolName();
-	 nm1 = nm1.replace('$','.');
-	 return nm1;
+         String nm1 = getSymbolName();
+         nm1 = nm1.replace('$','.');
+         return nm1;
       case FIELDS :
       case VARIABLES :
       case METHOD :
       case CONSTRUCTOR :
       case STATICS :
       case MAIN_PROGRAM :
-	 String nm = getSymbolName();
-	 int idx1 = nm.lastIndexOf(".");
-	 if (idx1 <= 0) return null;
-	 int idx2 = nm.lastIndexOf(".",idx1-1);
-	 String cnm = nm.substring(idx2+1,idx1);
-	 cnm = cnm.replace('$','.');
-	 return cnm;
+         String nm = getSymbolName();
+         int idx1 = nm.lastIndexOf(".");
+         if (idx1 <= 0) return null;
+         int idx2 = nm.lastIndexOf(".",idx1-1);
+         String cnm = nm.substring(idx2+1,idx1);
+         cnm = cnm.replace('$','.');
+         return cnm;
       default:
-	 break;
+         break;
     }
 
    return null;
@@ -228,16 +228,16 @@ protected String getLocalName()
 {
    switch (name_type) {
       case NONE :
-	 break;
+         break;
       case PACKAGE :
-	 return getName();
+         return getName();
       case CLASS :
       case INTERFACE :
       case ENUM :
       case THROWABLE :
       case MODULE :
       case ANNOTATION :
-	 return getNameHead();
+         return getNameHead();
       case FIELDS :
       case VARIABLES :
       case METHOD :
@@ -245,14 +245,14 @@ protected String getLocalName()
       case STATICS :
       case MAIN_PROGRAM :
       case VIRTUAL_CODE :
-	 String nm = getSymbolName();
-	 int idx1 = nm.lastIndexOf(".");
-	 if (idx1 <= 0) return null;
-	 int idx2 = nm.lastIndexOf(".",idx1-1);
-	 if (idx2 < 0) return null;
-	 return nm.substring(0,idx2);
+         String nm = getSymbolName();
+         int idx1 = nm.lastIndexOf(".");
+         if (idx1 <= 0) return null;
+         int idx2 = nm.lastIndexOf(".",idx1-1);
+         if (idx2 < 0) return null;
+         return nm.substring(0,idx2);
       default:
-	 break;
+         break;
     }
 
    return null;
@@ -325,10 +325,10 @@ protected String getLocalName()
 }
 
 
-protected String getPrefix()				{ return null; }
+protected String getPrefix()                            { return null; }
 
 
-@Override public Icon getDisplayIcon()			{ return null; }
+@Override public Icon getDisplayIcon()                  { return null; }
 
 @Override public String getDisplayName()
 {
@@ -338,7 +338,7 @@ protected String getPrefix()				{ return null; }
 
 
 
-@Override public BumpLocation getLocation()		{ return null; }
+@Override public BumpLocation getLocation()             { return null; }
 @Override public Collection<BumpLocation> getLocations() { return null; }
 
 
@@ -346,9 +346,9 @@ protected String getPrefix()				{ return null; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 protected String stripTemplates(String nm)
@@ -361,10 +361,10 @@ protected String stripTemplates(String nm)
    for (int i = idx; i < nm.length(); ++i) {
       char ch = nm.charAt(i);
       if (ch == '<') {
-	 ++lvl;
+         ++lvl;
        }
       else if (ch == '>') {
-	 --lvl;
+         --lvl;
        }
       else if (lvl <= 0) buf.append(ch);
     }
@@ -376,10 +376,10 @@ protected String stripTemplates(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public abstract BudaBubble createBubble();
@@ -402,9 +402,9 @@ protected String stripTemplates(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -416,9 +416,9 @@ protected String stripTemplates(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hashing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Hashing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int hashCode()
@@ -441,7 +441,7 @@ protected String stripTemplates(String nm)
 
 
 
-}	// end of class BassNameBase
+}       // end of class BassNameBase
 
 
 

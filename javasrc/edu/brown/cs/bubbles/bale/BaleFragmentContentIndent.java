@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleFragmentContentIndent.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment indented content container	*/
-/*										*/
+/*                                                                              */
+/*              BaleFragmentContentIndent.java                                  */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment indented content container    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,8 +43,8 @@ import java.util.Map;
 
 
 /**
- *	This class extends BaleFragmentContent to handle content that is
- *	indented by some minimum amount.
+ *      This class extends BaleFragmentContent to handle content that is
+ *      indented by some minimum amount.
  **/
 
 
@@ -54,9 +54,9 @@ class BaleFragmentContentIndent extends BaleFragmentContent implements BaleConst
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private int tab_size;
@@ -66,14 +66,14 @@ private boolean regions_valid;
 private DocMonitor doc_monitor;
 private Map<BaleRegion,RegionData> region_map;
 
-private static final int	MIN_INDENT = 3;
+private static final int        MIN_INDENT = 3;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFragmentContentIndent(BaleDocumentIde base,Position soff,Position eoff)
@@ -117,9 +117,9 @@ private void initialize(BaleDocumentIde base)
 
 
 /********************************************************************************/
-/*										*/
-/*	Outside update methods							*/
-/*										*/
+/*                                                                              */
+/*      Outside update methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override boolean removeRegions(List<BaleRegion> rgns)
@@ -145,7 +145,7 @@ private void initialize(BaleDocumentIde base)
 
 @Override void reload()
 {
-   super.reload();			// check regions
+   super.reload();                      // check regions
 
    base_document.checkWriteLock();
    setupSpacing();
@@ -154,9 +154,9 @@ private void initialize(BaleDocumentIde base)
 
 
 /********************************************************************************/
-/*										*/
-/*	Region access methods							*/
-/*										*/
+/*                                                                              */
+/*      Region access methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected int getRegionLength(BaleRegion br)
@@ -202,7 +202,7 @@ private void initialize(BaleDocumentIde base)
 
 
 @Override protected boolean getRegionText(BaleRegion br,int off,int len,Segment text)
-	throws BadLocationException
+        throws BadLocationException
 {
    int soff = br.getStart();
    int eoff = br.getEnd();
@@ -228,7 +228,7 @@ private void initialize(BaleDocumentIde base)
    else {
       if (doff + dlen > eoff) dlen = eoff - off + 1;
       base_document.getText(doff,len,text);
-      lastbad = (doff + len > eoff);	   // if last character might be bad
+      lastbad = (doff + len > eoff);       // if last character might be bad
     }
 
    return lastbad;
@@ -279,9 +279,9 @@ private void fixupOffset(BaleRegion br,int off,boolean edit)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to manage removal of initial space				*/
-/*										*/
+/*                                                                              */
+/*      Methods to manage removal of initial space                              */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupSpacing()
@@ -308,13 +308,13 @@ private void setupSpacing()
       int soff = br.getStart();
       int eoff = br.getEnd();
       try {
-	 base_document.getText(soff,eoff-soff,s);
+         base_document.getText(soff,eoff-soff,s);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem getting region text " + soff + " " + eoff + " " +
-			  s.length() + " " + base_document.getLength(),e);
-	 // should this be "throw e;"
-	 continue;
+         BoardLog.logE("BALE","Problem getting region text " + soff + " " + eoff + " " +
+                          s.length() + " " + base_document.getLength(),e);
+         // should this be "throw e;"
+         continue;
        }
 
       int ln = s.length();
@@ -322,28 +322,28 @@ private void setupSpacing()
       boolean sol = true;
       int ind = 0;
       for (int i = 0; i < ln && (minsp < 0 || minsp >= MIN_INDENT); ++i) {
-	 char c = s.charAt(i);
-	 if (sol) {
-	    switch (c) {
-	       case ' ' :
-		  ind += 1;
-		  break;
-	       case '\t' :
-		  ind = nextTabPosition(ind);
-		  break;
-	       case '\n' :
-		  ind = 0;
-		  break;
-	       default :
-		  if (minsp < 0 || minsp > ind) minsp = ind;
-		  sol = false;
-		  break;
-	     }
-	  }
-	 else if (c == '\n') {
-	    sol = true;
-	    ind = 0;
-	  }
+         char c = s.charAt(i);
+         if (sol) {
+            switch (c) {
+               case ' ' :
+                  ind += 1;
+                  break;
+               case '\t' :
+                  ind = nextTabPosition(ind);
+                  break;
+               case '\n' :
+                  ind = 0;
+                  break;
+               default :
+                  if (minsp < 0 || minsp > ind) minsp = ind;
+                  sol = false;
+                  break;
+             }
+          }
+         else if (c == '\n') {
+            sol = true;
+            ind = 0;
+          }
        }
 
       if (minsp >= 0 && minsp < MIN_INDENT) break;
@@ -359,7 +359,7 @@ private void setupSpacing()
    regions_valid = false;
    for (BaleRegion br : fragment_regions) {
       for (int i = getRegionLength(br)-1; i >= 0; --i) {
-	 fixupOffset(br,i,true);
+         fixupOffset(br,i,true);
        }
     }
 }
@@ -378,36 +378,36 @@ private void validateRegions()
       region_map.clear();
 
       for (BaleRegion br : fragment_regions) {
-	 RegionData rd = new RegionData(indent_size);
-	 region_map.put(br,rd);
-	 int soff = br.getStart();
-	 int eoff = br.getEnd();
-	 if (eoff < soff) continue;
-	 try {
-	    base_document.getText(soff,eoff-soff,s);
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Problem getting region indentation",e);
-	    continue;
-	  }
-	 int ln = s.length();
+         RegionData rd = new RegionData(indent_size);
+         region_map.put(br,rd);
+         int soff = br.getStart();
+         int eoff = br.getEnd();
+         if (eoff < soff) continue;
+         try {
+            base_document.getText(soff,eoff-soff,s);
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Problem getting region indentation",e);
+            continue;
+          }
+         int ln = s.length();
 
-	 LineData ld;
-	 boolean sol = true;
-	 for (int i = 0; i < ln; ++i) {
-	    char c = s.charAt(i);
-	    if (sol) {
-	       ld = computeLineData(i,s);
-	       rd.add(ld);
-	       sol = false;
-	     }
-	    if (c == '\n') sol = true;
-	  }
-	 if (!sol) {
-	    ld = computeLineData(ln,s);
-	    rd.add(ld);
-	    ++ln;
-	  }
+         LineData ld;
+         boolean sol = true;
+         for (int i = 0; i < ln; ++i) {
+            char c = s.charAt(i);
+            if (sol) {
+               ld = computeLineData(i,s);
+               rd.add(ld);
+               sol = false;
+             }
+            if (c == '\n') sol = true;
+          }
+         if (!sol) {
+            ld = computeLineData(ln,s);
+            rd.add(ld);
+            ++ln;
+          }
        }
 
       regions_valid = true;
@@ -419,9 +419,9 @@ private void validateRegions()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup the indentation changes per line					*/
-/*										*/
+/*                                                                              */
+/*      Setup the indentation changes per line                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private LineData computeLineData(int offset,Segment s)
@@ -435,35 +435,35 @@ private LineData computeLineData(int offset,Segment s)
    for (int i = offset; indent < indent_size; ++i) {
       char c = (i < ln ? s.charAt(i) : '\n');
       if (c == ' ') {
-	 ++indent;
-	 ++delchar;
+         ++indent;
+         ++delchar;
        }
       else if (c == '\t') {
-	 havetab = true;
-	 indent = nextTabPosition(indent);
-	 if (indent > indent_size) {
-	    delchar = (i-offset+1);
-	    addchar = indent - indent_size;
-	    break;
-	  }
-	 else {
-	    ++delchar;
-	  }
+         havetab = true;
+         indent = nextTabPosition(indent);
+         if (indent > indent_size) {
+            delchar = (i-offset+1);
+            addchar = indent - indent_size;
+            break;
+          }
+         else {
+            ++delchar;
+          }
        }
       else if (c == '\n') {
-	 if (havetab) {
-	    delchar = (i-offset);
-	    addchar = indent_size;
-	  }
-	 else {
-	    addchar = indent_size - (i-offset);
-	  }
-	 break;
+         if (havetab) {
+            delchar = (i-offset);
+            addchar = indent_size;
+          }
+         else {
+            addchar = indent_size - (i-offset);
+          }
+         break;
        }
       else {
-	 BoardLog.logI("BALE","Minimum space compute incorrectly " + ln + " " + 
+         BoardLog.logI("BALE","Minimum space compute incorrectly " + ln + " " + 
                offset + " " + i + " " + s.toString());
-	 break;
+         break;
        }
     }
 
@@ -474,9 +474,9 @@ private LineData computeLineData(int offset,Segment s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tab handling								*/
-/*										*/
+/*                                                                              */
+/*      Tab handling                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private int nextTabPosition(int pos)
@@ -491,9 +491,9 @@ private int nextTabPosition(int pos)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hold region data for removing initial spaces				*/
-/*										*/
+/*                                                                              */
+/*      Hold region data for removing initial spaces                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class RegionData {
@@ -503,13 +503,13 @@ private class RegionData {
 
    RegionData(int minsp) {
       line_data = new LineData[128];
-      // add(new LineData(-1,0,0));		   // dummy line 0
+      // add(new LineData(-1,0,0));                // dummy line 0
     }
 
    int getDeltaLength() {
       int d = 0;
       for (int i = 0; i < num_lines; ++i) {
-	 d += line_data[i].getViewDelta();
+         d += line_data[i].getViewDelta();
        }
       return d;
     }
@@ -518,8 +518,8 @@ private class RegionData {
       // return offset in view given offset in region
       int d = 0;
       for (int i = 0; i < num_lines; ++i) {
-	 if (off < line_data[i].getOffset() + line_data[i].getDelete()) break;
-	 d += line_data[i].getViewDelta();
+         if (off < line_data[i].getOffset() + line_data[i].getDelete()) break;
+         d += line_data[i].getViewDelta();
        }
       return off + d;
     }
@@ -530,14 +530,14 @@ private class RegionData {
       int spos = 0;
       int line = 0;
       for (int i = 1; i < num_lines; ++i) {
-	 int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
-	    line_data[i-1].getViewDelta();
-	 if (off < npos) break;
-	 spos = npos;
-	 line = i;
+         int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
+            line_data[i-1].getViewDelta();
+         if (off < npos) break;
+         spos = npos;
+         line = i;
        }
       int delta = off - spos - line_data[line].getAdd();
-      if (delta < 0) delta = 0; 	// inside virtual space
+      if (delta < 0) delta = 0;         // inside virtual space
       return line_data[line].getOffset() + line_data[line].getDelete() + delta;
     }
 
@@ -547,11 +547,11 @@ private class RegionData {
       int spos = 0;
       int line = 0;
       for (int i = 1; i < num_lines; ++i) {
-	 int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
-	    line_data[i-1].getViewDelta();
-	 if (off < npos) break;
-	 spos = npos;
-	 line = i;
+         int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
+            line_data[i-1].getViewDelta();
+         if (off < npos) break;
+         spos = npos;
+         line = i;
        }
       int delta = off - spos - line_data[line].getAdd();
       if (delta >= 0) return;
@@ -561,16 +561,16 @@ private class RegionData {
       int len1 = line_data[line].getAdd();
       if (len0 != 0) len1 += indent_size;
       try {
-	 if (len1 > 0) {
-	    String s = "";
-	    for (int i = 0; i < len1; ++i) s += " ";
-	    base_document.insertString(off0,s,null);
-	  }
-	 if (len0 > 0) base_document.remove(off0+len1,len0);
+         if (len1 > 0) {
+            String s = "";
+            for (int i = 0; i < len1; ++i) s += " ";
+            base_document.insertString(off0,s,null);
+          }
+         if (len0 > 0) base_document.remove(off0+len1,len0);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem fixing line indent",e);
-	 delta = 0;
+         BoardLog.logE("BALE","Problem fixing line indent",e);
+         delta = 0;
        }
       regions_valid = false;
     }
@@ -587,58 +587,58 @@ private class RegionData {
 
       // first find the line where the data starts
       for (int i = 1; i < num_lines; ++i) {
-	 int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
-	    line_data[i-1].getViewDelta();
-	 if (voff < npos) break;
-	 spos = npos;
-	 line = i;
+         int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
+            line_data[i-1].getViewDelta();
+         if (voff < npos) break;
+         spos = npos;
+         line = i;
        }
 
       // now add the data
       int pos = spos;
       for (int i = line+1; i < num_lines; ++i) {
-	 int rpos = line_data[i-1].getOffset();
-	 rpos += line_data[i-1].getDelete();
-	 int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
-	    line_data[i-1].getViewDelta();
-	 int addct = (line_data[i-1].getDelete() > 0 ? line_data[i-1].getAdd() : 0);
-	 while (pos < npos) {
-	    char c;
-	    if (pos-spos < addct) c = ' ';
-	    else c = brtext.charAt(rpos + pos - spos - addct);
-	    if (pos >= voff) s.array[s.count++] = c;
-	    if (s.count == len) break;
-	    ++pos;
-	  }
-	 spos = npos;
-	 if (s.count == len) break;
+         int rpos = line_data[i-1].getOffset();
+         rpos += line_data[i-1].getDelete();
+         int npos = spos + line_data[i].getOffset() - line_data[i-1].getOffset() +
+            line_data[i-1].getViewDelta();
+         int addct = (line_data[i-1].getDelete() > 0 ? line_data[i-1].getAdd() : 0);
+         while (pos < npos) {
+            char c;
+            if (pos-spos < addct) c = ' ';
+            else c = brtext.charAt(rpos + pos - spos - addct);
+            if (pos >= voff) s.array[s.count++] = c;
+            if (s.count == len) break;
+            ++pos;
+          }
+         spos = npos;
+         if (s.count == len) break;
        }
 
       boolean lastbad = false;
 
       if (s.count < len && num_lines > 0) {
-	 if (pos < voff) pos = voff;
-	 int rpos = line_data[num_lines-1].getOffset();
-	 rpos += line_data[num_lines-1].getDelete();
-	 int addct = line_data[num_lines-1].getAdd();
-	 while (s.count < len) {
-	    char c;
-	    int idx = rpos + pos - spos -addct;
-	    if (pos-spos < addct) c = ' ';
-	    else if (idx < brtext.length()) c = brtext.charAt(idx);
-	    else {
-	       lastbad = true;
-	       c = '\n';
-	     }
-	    s.array[s.count++] = c;
-	    ++pos;
-	  }
+         if (pos < voff) pos = voff;
+         int rpos = line_data[num_lines-1].getOffset();
+         rpos += line_data[num_lines-1].getDelete();
+         int addct = line_data[num_lines-1].getAdd();
+         while (s.count < len) {
+            char c;
+            int idx = rpos + pos - spos -addct;
+            if (pos-spos < addct) c = ' ';
+            else if (idx < brtext.length()) c = brtext.charAt(idx);
+            else {
+               lastbad = true;
+               c = '\n';
+             }
+            s.array[s.count++] = c;
+            ++pos;
+          }
        }
       else if (s.count < len) {
-	 while (s.count < len) {
-	    s.array[s.count++] = '\n';
-	  }
-	 lastbad = true;
+         while (s.count < len) {
+            s.array[s.count++] = '\n';
+          }
+         lastbad = true;
        }
 
       return lastbad;
@@ -656,21 +656,21 @@ private class RegionData {
       line_data = Arrays.copyOf(line_data,sz);
     }
 
-}	// end of inner class RegionData
+}       // end of inner class RegionData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Line data: information on what needs to be changed per line		*/
-/*										*/
+/*                                                                              */
+/*      Line data: information on what needs to be changed per line             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LineData {
 
-   private int delete_chars;		// initial characters to delete
-   private int add_chars;		// spaces to add
-   private int line_offset;		// offset of the line
+   private int delete_chars;            // initial characters to delete
+   private int add_chars;               // spaces to add
+   private int line_offset;             // offset of the line
 
    LineData(int offset,int add,int del) {
       line_offset = offset;
@@ -678,23 +678,23 @@ private static class LineData {
       delete_chars = del;
     }
 
-   int getOffset()			{ return line_offset; }
-   int getAdd() 			{ return add_chars; }
-   int getDelete()			{ return delete_chars; }
+   int getOffset()                      { return line_offset; }
+   int getAdd()                         { return add_chars; }
+   int getDelete()                      { return delete_chars; }
 
    int getViewDelta() {
       if (delete_chars == 0) return 0;
       return add_chars - delete_chars;
     }
 
-}	// end of inner class LineData
+}       // end of inner class LineData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Position methods							*/
-/*										*/
+/*                                                                              */
+/*      Position methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Position createPosition(int off) throws BadLocationException
@@ -759,15 +759,15 @@ private class IndentPosition extends BalePosition {
       return "[" + getOffset() + "@" + base_position.toString() + "/" + local_offset + "]";
     }
 
-}	// end of inner class FragPosition
+}       // end of inner class FragPosition
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Monitor the base document						*/
-/*										*/
+/*                                                                              */
+/*      Monitor the base document                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void noteBeginEdit()
@@ -779,7 +779,7 @@ private class IndentPosition extends BalePosition {
 
 private final class DocMonitor implements DocumentListener {
 
-   @Override public void changedUpdate(DocumentEvent e) 	{ }
+   @Override public void changedUpdate(DocumentEvent e)         { }
 
    // these might be smarter and only invalidate if needed
    
@@ -791,11 +791,11 @@ private final class DocMonitor implements DocumentListener {
       if (region_map != null) regions_valid = false;
     }
 
-}	// end of inner class DocMonitor
+}       // end of inner class DocMonitor
 
 
 
-}	// end of class BaleFragmentContentIndent
+}       // end of class BaleFragmentContentIndent
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseName.java 						*/
-/*										*/
-/*	Information about a name in Javascript (for nobbles)			*/
-/*										*/
+/*                                                                              */
+/*              NobaseName.java                                                 */
+/*                                                                              */
+/*      Information about a name in Javascript (for nobbles)                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -31,24 +31,24 @@ class NobaseName implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseProject	for_project;
-private NobaseFile	for_file;
-private ASTNode 	def_node;
-private NameType	def_type;
-private String		def_name;
+private NobaseProject   for_project;
+private NobaseFile      for_file;
+private ASTNode         def_node;
+private NameType        def_type;
+private String          def_name;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseName(NobaseProject p,NobaseFile ifd,ASTNode n,String nm,NameType typ)
@@ -63,23 +63,23 @@ NobaseName(NobaseProject p,NobaseFile ifd,ASTNode n,String nm,NameType typ)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-NobaseProject getProject()		{ return for_project; }
+NobaseProject getProject()              { return for_project; }
 
-NobaseFile getFileData()		{ return for_file; }
+NobaseFile getFileData()                { return for_file; }
 
-ASTNode getAstNode()			{ return def_node; }
+ASTNode getAstNode()                    { return def_node; }
 
-NameType getNameType()			{ return def_type; }
+NameType getNameType()                  { return def_type; }
 
-String getName()			{ return def_name; }
+String getName()                        { return def_name; }
 
 
-}	// end of class NobaseName
+}       // end of class NobaseName
 
 
 

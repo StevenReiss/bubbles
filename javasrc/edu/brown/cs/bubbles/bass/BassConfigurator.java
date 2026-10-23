@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BassConfigurator.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies class for handing configutations	*/
-/*										*/
+/*                                                                              */
+/*              BassConfigurator.java                                           */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies class for handing configutations     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,9 +47,9 @@ class BassConfigurator implements BassConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -64,18 +64,18 @@ class BassConfigurator implements BassConstants, BudaConstants.BubbleConfigurato
    else if (typ.equals("SEARCH")) {
       BassFactory bf = BassFactory.getFactory();
       if (sv) {
-	 bb = bf.createPackageExplorer(bba);
+         bb = bf.createPackageExplorer(bba);
        }
       else {
-	 String proj = IvyXml.getAttrString(cnt,"PROJECT");
-	 String pfx = IvyXml.getAttrString(cnt,"PREFIX");
-	 String txt = IvyXml.getAttrString(cnt,"TEXT");
-	 BudaConstants.SearchType st = IvyXml.getAttrEnum(cnt,"TYPE",BudaConstants.SearchType.SEARCH_CODE);
-	 bb = bf.createSearch(st,proj,pfx);
-	 if (bb != null && txt != null) {
-	    BassSearchBox sb = (BassSearchBox) bb.getContentPane();
-	    sb.setDefaultText(txt);
-	  }
+         String proj = IvyXml.getAttrString(cnt,"PROJECT");
+         String pfx = IvyXml.getAttrString(cnt,"PREFIX");
+         String txt = IvyXml.getAttrString(cnt,"TEXT");
+         BudaConstants.SearchType st = IvyXml.getAttrEnum(cnt,"TYPE",BudaConstants.SearchType.SEARCH_CODE);
+         bb = bf.createSearch(st,proj,pfx);
+         if (bb != null && txt != null) {
+            BassSearchBox sb = (BassSearchBox) bb.getContentPane();
+            sb.setDefaultText(txt);
+          }
        }
     }
    else if (typ.equals("TEXTSEARCH")) {
@@ -104,9 +104,9 @@ class BassConfigurator implements BassConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
+/*                                                                              */
+/*      I/O methods                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void outputXml(BudaXmlWriter xw,boolean history)
@@ -129,7 +129,7 @@ class BassConfigurator implements BassConstants, BudaConstants.BubbleConfigurato
 
 
 
-}	// end of class BassConfigurator
+}       // end of class BassConfigurator
 
 
 

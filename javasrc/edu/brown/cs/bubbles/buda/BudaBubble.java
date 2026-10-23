@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaBubble.java 						*/
-/*										*/
-/*	BUblles Display Area bubble basic implementation			*/
-/*										*/
+/*                                                                              */
+/*              BudaBubble.java                                                 */
+/*                                                                              */
+/*      BUblles Display Area bubble basic implementation                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -80,65 +80,65 @@ import java.util.Map;
 
 
 /**
- *	This class represents a bubble.  It is designed to be implemented by subclasses
- *	that define the internal component and set up various properties.
+ *      This class represents a bubble.  It is designed to be implemented by subclasses
+ *      that define the internal component and set up various properties.
  *
- *	Bubbles appear on the display with a border and a content.  Various styles of
- *	border are supported.  The content can be an arbitrary Java Component.	There
- *	are various types of bubbles.  Standard bubbles exist in the overall bubble area.
- *	Fixed bubbles appear in a fixed place in the bubble area and do not take part
- *	in bubble movements.  Floating bubbles appear in a fixed location on the display
- *	and move themselves to that location when the bubble area is panned.
+ *      Bubbles appear on the display with a border and a content.  Various styles of
+ *      border are supported.  The content can be an arbitrary Java Component.  There
+ *      are various types of bubbles.  Standard bubbles exist in the overall bubble area.
+ *      Fixed bubbles appear in a fixed place in the bubble area and do not take part
+ *      in bubble movements.  Floating bubbles appear in a fixed location on the display
+ *      and move themselves to that location when the bubble area is panned.
  *
  **/
 
 public class BudaBubble extends JComponent implements BudaConstants,
-		BudaConstants.BudaContentLocation, BudaConstants.BudaFileHandler,
-		Printable
+                BudaConstants.BudaContentLocation, BudaConstants.BudaFileHandler,
+                Printable
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Component	content_pane;
-private Color		bubble_color;
-private Color		border_color;
-private Color		focus_color;
-private Shape		border_shape;
-private ChildManager	child_manager;
-private Component	focus_pane;
-private int		border_width;
+private Component       content_pane;
+private Color           bubble_color;
+private Color           border_color;
+private Color           focus_color;
+private Shape           border_shape;
+private ChildManager    child_manager;
+private Component       focus_pane;
+private int             border_width;
 private BudaBubbleGroup bubble_group;
-private boolean 	is_fixed;
-private boolean 	is_float;
-private boolean 	is_docked;
-private boolean 	is_userpos;
-private BudaMovement	spacer_movement;
-private boolean 	has_focus;
+private boolean         is_fixed;
+private boolean         is_float;
+private boolean         is_docked;
+private boolean         is_userpos;
+private BudaMovement    spacer_movement;
+private boolean         has_focus;
 private BudaBubbleGroup original_group;
-private boolean 	is_transient;
-private Boolean 	is_resizable;
-private Color		new_color;
-private String		unique_id;
-private long		creation_time;
-private BudaBorder	border_type;
-private double		scale_factor;
+private boolean         is_transient;
+private Boolean         is_resizable;
+private Color           new_color;
+private String          unique_id;
+private long            creation_time;
+private BudaBorder      border_type;
+private double          scale_factor;
 private float           base_font_size;
 private long            last_viewed;
 private long            unviewed_time;
 
-private BudaWorkingSet	fixed_set;
-private Point		fixed_position;
-private boolean 	fixed_stop;
+private BudaWorkingSet  fixed_set;
+private Point           fixed_position;
+private boolean         fixed_stop;
 
-private Stroke		border_stroke;
-private Stroke		focus_stroke;
-private Stroke		copy_stroke;
+private Stroke          border_stroke;
+private Stroke          focus_stroke;
+private Stroke          copy_stroke;
 
 private static final long serialVersionUID = 1L;
 
@@ -162,13 +162,13 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Convenience constructor for new BudaBubble(null,BudaBorder.ROUNDED)
+ *      Convenience constructor for new BudaBubble(null,BudaBorder.ROUNDED)
  **/
 
 protected BudaBubble()
@@ -178,7 +178,7 @@ protected BudaBubble()
 
 
 /**
- *	Convenience constructor for new BudaBubble(Component,BudaBorder.ROUNDED)
+ *      Convenience constructor for new BudaBubble(Component,BudaBorder.ROUNDED)
  **/
 
 protected BudaBubble(Component c)
@@ -188,7 +188,7 @@ protected BudaBubble(Component c)
 
 
 /**
- *	Convenience constructor for new BudaBubble(null,border)
+ *      Convenience constructor for new BudaBubble(null,border)
  **/
 
 protected BudaBubble(BudaBorder border)
@@ -198,11 +198,11 @@ protected BudaBubble(BudaBorder border)
 
 
 /**
- *	Create a bubble encasing the given component with a border of the type
- *	specified.  Any object added to a bubble area must be a subtype of BudaBubble.
- *	The component can be null as part of this call, in which case it is  assumed
- *	that the call setContentPane(Component) will be made before the bubble is placed
- *	in the bubble area.
+ *      Create a bubble encasing the given component with a border of the type
+ *      specified.  Any object added to a bubble area must be a subtype of BudaBubble.
+ *      The component can be null as part of this call, in which case it is  assumed
+ *      that the call setContentPane(Component) will be made before the bubble is placed
+ *      in the bubble area.
  **/
 
 protected BudaBubble(Component c,BudaBorder bdr)
@@ -211,14 +211,14 @@ protected BudaBubble(Component c,BudaBorder bdr)
 
    switch (bdr) {
       case NONE :
-	 border_width = 0;
-	 break;
+         border_width = 0;
+         break;
       case RECTANGLE :
-	 border_width = (int) (BUBBLE_FOCUS_EDGE_SIZE + 0.5);
-	 break;
+         border_width = (int) (BUBBLE_FOCUS_EDGE_SIZE + 0.5);
+         break;
       case ROUNDED :
-	 border_width = (int) (BUBBLE_FOCUS_EDGE_SIZE + 1.5);
-	 break;
+         border_width = (int) (BUBBLE_FOCUS_EDGE_SIZE + 1.5);
+         break;
     }
 
    child_manager = new ChildManager();
@@ -259,7 +259,7 @@ protected BudaBubble(Component c,BudaBorder bdr)
    if (content_pane != null) content_pane.setCursor(getBubbleCursor());
 
    setBorderColor(BoardColors.getColor(BUBBLE_BORDER_COLOR_PROP),
-	 BoardColors.getColor(BUBBLE_FOCUS_COLOR_PROP));
+         BoardColors.getColor(BUBBLE_FOCUS_COLOR_PROP));
    
    last_viewed = System.currentTimeMillis();
    unviewed_time = 0;
@@ -276,30 +276,30 @@ static BudaBubble createInternalBubble(Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Get the color of the border drawn for the bubble.
+ *      Get the color of the border drawn for the bubble.
  **/
 
-public Color getBorderColor()			{ return border_color; }
+public Color getBorderColor()                   { return border_color; }
 
 
 
 /**
- *	Get the color of the border when the bubble has the focus
+ *      Get the color of the border when the bubble has the focus
  **/
 
-public Color getBorderFocusColor()		{ return focus_color; }
+public Color getBorderFocusColor()              { return focus_color; }
 
 
 
 /**
- *	Set the border colors.	The first argument is for when the bubble does
- *	not have the focus; the second is for when the bubble does have the focus.
+ *      Set the border colors.  The first argument is for when the bubble does
+ *      not have the focus; the second is for when the bubble does have the focus.
  **/
 
 public final void setBorderColor(Color c,Color fc)
@@ -310,19 +310,19 @@ public final void setBorderColor(Color c,Color fc)
 
 
 /**
- *	Get the color of the interior of the bubble.  If this is null, then
- *	the interior color defaults to that of the background (e.g. either the
- *	bubble area itself or the group if the bubble belongs to a group).  This
- *	should be used if the border is rounded since otherwise there might
- *	be gaps between the border and the interior rectangular bubble.
+ *      Get the color of the interior of the bubble.  If this is null, then
+ *      the interior color defaults to that of the background (e.g. either the
+ *      bubble area itself or the group if the bubble belongs to a group).  This
+ *      should be used if the border is rounded since otherwise there might
+ *      be gaps between the border and the interior rectangular bubble.
  **/
 
-public Color getInteriorColor() 		{ return bubble_color; }
+public Color getInteriorColor()                 { return bubble_color; }
 
 
 /**
- *	Set the interior color of the bubble.
- *	@see  #getInteriorColor
+ *      Set the interior color of the bubble.
+ *      @see  #getInteriorColor
  **/
 
 public final void setInteriorColor(Color c)
@@ -333,7 +333,7 @@ public final void setInteriorColor(Color c)
 
 
 /**
- *	Get the content pane associated with the bubble.
+ *      Get the content pane associated with the bubble.
  **/
 
 public Component getContentPane()
@@ -375,8 +375,8 @@ void refreshFreeze()
 
 
 /**
- *	Add a new focusable interior component for this bubble.  If this component
- *	has the text focus, then the bubble will be drawn as if it has the focus.
+ *      Add a new focusable interior component for this bubble.  If this component
+ *      has the text focus, then the bubble will be drawn as if it has the focus.
  **/
 
 protected void addFocusComponent(Component f)
@@ -396,10 +396,10 @@ void setGroup(BudaBubbleGroup bg)
 }
 
 
-public BudaBubbleGroup getGroup()		{ return bubble_group; }
+public BudaBubbleGroup getGroup()               { return bubble_group; }
 
 
-void saveGroup()				{ original_group = bubble_group; }
+void saveGroup()                                { original_group = bubble_group; }
 BudaBubbleGroup getNewGroup()
 {
    if (original_group != null && original_group.isEmpty()) return original_group;
@@ -410,7 +410,7 @@ BudaBubbleGroup getNewGroup()
 
 
 /**
- *	Indicate whether the bubble is currently a floating bubble or not
+ *      Indicate whether the bubble is currently a floating bubble or not
  **/
 
 public boolean isFloating()
@@ -431,28 +431,28 @@ void noteFloatMoved()
       Rectangle r1 = fixed_set.getRegion();
       Rectangle r2 = getBounds();
       if (r1.contains(r2) && !fixed_stop) {
-	 BudaRoot br = BudaRoot.findBudaRoot(this);
-	 Point p1 = SwingUtilities.convertPoint(getParent(),getLocation(),br);
-	 fixed_position = new Point(p1);
+         BudaRoot br = BudaRoot.findBudaRoot(this);
+         Point p1 = SwingUtilities.convertPoint(getParent(),getLocation(),br);
+         fixed_position = new Point(p1);
        }
       else if (!fixed_stop) {
-	 fixed_stop = true;
-	 System.err.println("MOVE OUT OF AREA");
-	 r2.x = r1.x + 10;
-	 setBounds(r2);
+         fixed_stop = true;
+         System.err.println("MOVE OUT OF AREA");
+         r2.x = r1.x + 10;
+         setBounds(r2);
        }
     }
 }
 
 
-public boolean isFixed()			{ return is_fixed; }
-public boolean isDocked()			{ return is_docked; }
-public boolean isUserPos()			{ return is_userpos; }
-public boolean isRemovable()			{ return true; }
+public boolean isFixed()                        { return is_fixed; }
+public boolean isDocked()                       { return is_docked; }
+public boolean isUserPos()                      { return is_userpos; }
+public boolean isRemovable()                    { return true; }
 
 /**
- *	Indicate that the bubble is fixed (i.e. should not be considered by the
- *	bubble spacer.
+ *      Indicate that the bubble is fixed (i.e. should not be considered by the
+ *      bubble spacer.
  **/
 
 public void setFixed(boolean fg)
@@ -463,10 +463,10 @@ public void setFixed(boolean fg)
 }
 
 /**
- *	Indicate that the bubble is floating (i.e. should remain in the same
- *	physical location on the screen even if the user changes the viewport.
- *	Floating bubbles are also forced to be on top, ungrouped, and do not
- *	take part in the bubble spacer.
+ *      Indicate that the bubble is floating (i.e. should remain in the same
+ *      physical location on the screen even if the user changes the viewport.
+ *      Floating bubbles are also forced to be on top, ungrouped, and do not
+ *      take part in the bubble spacer.
  **/
 
 void setFloating(boolean fg)
@@ -485,8 +485,8 @@ void setFloating(boolean fg)
 
 
 /**
- *	Indicate where a bubble is docked (i.e. permanently attached to one of the sides of
- *	the viewport).
+ *      Indicate where a bubble is docked (i.e. permanently attached to one of the sides of
+ *      the viewport).
  **/
 
 public void setDocked(boolean fg)
@@ -505,35 +505,35 @@ void setUserPos(boolean fg)
 
 
 
-BudaMovement getMovement()			{ return spacer_movement; }
+BudaMovement getMovement()                      { return spacer_movement; }
 
-void setMovement(BudaMovement v)		{ spacer_movement = v; }
+void setMovement(BudaMovement v)                { spacer_movement = v; }
 
-int getId()					{ return hashCode(); }
+int getId()                                     { return hashCode(); }
 
 
 
 /**
- *	Tell if a bubble is transient or not.  Transient bubbles will not be
- *	saved as part of the configuration.
+ *      Tell if a bubble is transient or not.  Transient bubbles will not be
+ *      saved as part of the configuration.
  **/
 
-public boolean isTransient()			{ return is_transient; }
+public boolean isTransient()                    { return is_transient; }
 
 
 /**
- *	Indicate that this bubble is transient.
+ *      Indicate that this bubble is transient.
  **/
 
-public void setTransient(boolean fg)		{ is_transient = fg; }
+public void setTransient(boolean fg)            { is_transient = fg; }
 
 
 
 /**
- *	Indicate whether this bubble can be resized.  This can be affected
- *	by the minimum/maximum sizes of the content pane or by calling
- *	setResizable.
- *	@see #setResizable
+ *      Indicate whether this bubble can be resized.  This can be affected
+ *      by the minimum/maximum sizes of the content pane or by calling
+ *      setResizable.
+ *      @see #setResizable
  **/
 
 public boolean isResizable()
@@ -555,14 +555,14 @@ public boolean isResizable()
 
 
 /**
- *	Indicate that this bubble is/is not resizabe
+ *      Indicate that this bubble is/is not resizabe
  **/
 
-protected void setResizable(boolean fg) 	{ is_resizable = fg; }
+protected void setResizable(boolean fg)         { is_resizable = fg; }
 
 
 /**
- *	Get the minimum bubble width for resizing.
+ *      Get the minimum bubble width for resizing.
  **/
 
 public int getMinimumResizeWidth()
@@ -577,7 +577,7 @@ public int getMinimumResizeWidth()
 
 
 /**
- *	Get the minimum bubble height for resizing
+ *      Get the minimum bubble height for resizing
  **/
 
 public int getMinimumResizeHeight()
@@ -640,9 +640,9 @@ public long getUnviewedTime()
 
 
 /********************************************************************************/
-/*										*/
-/*	Content pane methods							*/
-/*										*/
+/*                                                                              */
+/*      Content pane methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -661,7 +661,7 @@ protected void setContentPane(Component c)
 /**
  * Set the content pane associated with the bubble.  This method also
  * sets the interior pane that should have the text focus if this bubble
- * is focused.	Only one of the setContentPane routines should be called
+ * is focused.  Only one of the setContentPane routines should be called
  * and it should be called only once.
  **/
 
@@ -689,7 +689,7 @@ public Component getFrozenPane()
 
 
 /**
- *	Indicate where the bubble may be frozen (saved as bitmap for redraw) or now
+ *      Indicate where the bubble may be frozen (saved as bitmap for redraw) or now
  **/
 
 protected void setShouldFreeze(boolean b)
@@ -733,52 +733,52 @@ private void setRealPane(Component c,Component f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Content access methods							*/
-/*										*/
+/*                                                                              */
+/*      Content access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the eclipse project associated with this bubble if any.
+ *      Return the eclipse project associated with this bubble if any.
  **/
 
-@Override public String getContentProject()		{ return null; }
+@Override public String getContentProject()             { return null; }
 
 
 
 /**
- *	Return the source file associated with this bubble if any.
+ *      Return the source file associated with this bubble if any.
  **/
 
-@Override public File getContentFile()			{ return null; }
+@Override public File getContentFile()                  { return null; }
 
 
 
 /**
- *	Return the name of the content associated with the bubble.  For example,
- *	for a method bubble this would be the name of the method.
+ *      Return the name of the content associated with the bubble.  For example,
+ *      for a method bubble this would be the name of the method.
  **/
 
-@Override public String getContentName()			{ return null; }
+@Override public String getContentName()                        { return null; }
 
 
 /**
- *	Return the document associated with the bubble.
+ *      Return the document associated with the bubble.
  **/
 
-public Document getContentDocument()		{ return null; }
+public Document getContentDocument()            { return null; }
 
 
 
 
 /**
- *	Return information on how to interpret the content name associated with
- *	this bubble.
- *	@see #getContentName
- *	@see BudaConstants.BudaContentNameType
+ *      Return information on how to interpret the content name associated with
+ *      this bubble.
+ *      @see #getContentName
+ *      @see BudaConstants.BudaContentNameType
  **/
 
-@Override public BudaContentNameType getContentType()	{ return BudaContentNameType.NONE; }
+@Override public BudaContentNameType getContentType()   { return BudaContentNameType.NONE; }
 
 
 
@@ -809,9 +809,9 @@ void setCreationTime(long t)
 
 
 /********************************************************************************/
-/*										*/
-/*	Scaling methods 							*/
-/*										*/
+/*                                                                              */
+/*      Scaling methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 public void setScaleFactor(double sf)
@@ -831,14 +831,14 @@ public void setScaleFactor(double sf)
       JScrollPane jsp = (JScrollPane) c;
       JViewport vp = jsp.getViewport();
       if (vp != null && vp.getView() != null && vp.getView() instanceof Scalable) {
-	 Scalable sc = (Scalable) vp.getView();
-	 sc.setScaleFactor(sf);
-	 return;
+         Scalable sc = (Scalable) vp.getView();
+         sc.setScaleFactor(sf);
+         return;
        }
       if (vp != null && vp.getView() != null && vp.getView() instanceof Zoomable) {
-	 Zoomable zc = (Zoomable) vp.getView();
-	 zc.setScaleFactor(sf);
-	 return;
+         Zoomable zc = (Zoomable) vp.getView();
+         zc.setScaleFactor(sf);
+         return;
        }
     }
 
@@ -854,18 +854,18 @@ private void scaleFonts(Component c,double sf)
    if (c instanceof Container) {
       Container cc = (Container) c;
       for (int i = 0; i < cc.getComponentCount(); ++i) {
-	 Component c1 = cc.getComponent(i);
-	 scaleFonts(c1,sf);
+         Component c1 = cc.getComponent(i);
+         scaleFonts(c1,sf);
        }
     }
 
    if (c.isFontSet()) {
       Font ft = c.getFont();
       if (ft != null) {
-	 float sz = ft.getSize2D();
-	 sz *= sf;
-	 Font ft1 = ft.deriveFont(sz);
-	 c.setFont(ft1);
+         float sz = ft.getSize2D();
+         sz *= sf;
+         Font ft1 = ft.deriveFont(sz);
+         c.setFont(ft1);
        }
     }
 }
@@ -879,15 +879,15 @@ public double getScaleFactor()
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback methods							*/
-/*										*/
+/*                                                                              */
+/*      Callback methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	User requested quit.  This should take appropriate action (e.g. save contents)
- *	before quit.  It should return true if quit is okay.  A return of false will
- *	abort the quit.
+ *      User requested quit.  This should take appropriate action (e.g. save contents)
+ *      before quit.  It should return true if quit is okay.  A return of false will
+ *      abort the quit.
  **/
 
 @Override public boolean handleQuitRequest()
@@ -897,55 +897,55 @@ public double getScaleFactor()
 
 
 /**
- *	User requested save all.  This should take whatever action is appropriate
- *	for the bubble.
+ *      User requested save all.  This should take whatever action is appropriate
+ *      for the bubble.
  **/
 
-@Override public void handleSaveRequest()			{ }
+@Override public void handleSaveRequest()                       { }
 
-@Override public void handleSaveDone()				{ }
+@Override public void handleSaveDone()                          { }
 
 /**
- *	User requested commit all.  This should take whatever action is appropriate
- *	for the bubble.
+ *      User requested commit all.  This should take whatever action is appropriate
+ *      for the bubble.
  **/
 
-@Override public void handleCommitRequest()			{ }
+@Override public void handleCommitRequest()                     { }
 
 
 
-
-
-
-/**
- *	Timer based checkpoint.  This should do an interim save that would allow
- *	later recovery of files, contents, etc.
- **/
-
-@Override public void handleCheckpointRequest() 	{ }
-
-
-/**
- *	Called when user changes properties
- **/
-
-@Override public void handlePropertyChange()		{ }
 
 
 
 /**
- *	Handle popup menu requests
+ *      Timer based checkpoint.  This should do an interim save that would allow
+ *      later recovery of files, contents, etc.
  **/
 
-public void handlePopupMenu(MouseEvent e)		{ }
+@Override public void handleCheckpointRequest()         { }
+
+
+/**
+ *      Called when user changes properties
+ **/
+
+@Override public void handlePropertyChange()            { }
+
+
+
+/**
+ *      Handle popup menu requests
+ **/
+
+public void handlePopupMenu(MouseEvent e)               { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Position and sizing methods						*/
-/*										*/
+/*                                                                              */
+/*      Position and sizing methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Dimension getPreferredSize()
@@ -996,10 +996,10 @@ public void handlePopupMenu(MouseEvent e)		{ }
 
 
 /**
- *	This routine returns the actual bubble at the given location.  Normally
- *	this is the current bubble.  However, items like bubble stacks might
- *	contain nested bubbles that should be used instead.  This routine provides
- *	a bubble with the way of indicating that.
+ *      This routine returns the actual bubble at the given location.  Normally
+ *      this is the current bubble.  However, items like bubble stacks might
+ *      contain nested bubbles that should be used instead.  This routine provides
+ *      a bubble with the way of indicating that.
  **/
 
 public BudaBubble getActualBubble(int x,int y, boolean moved)
@@ -1019,8 +1019,8 @@ private void setContentSizeFromBubble()
 
       Dimension dc = content_pane.getSize();
       if (dc.width != w1 || dc.height != h1) {
-	 // BoardLog.logD("BUDA","RESIZE CONTENT " + dc.width + "," + dc.height + " => " + w1 + " " + h1);
-	 content_pane.setSize(w1,h1);
+         // BoardLog.logD("BUDA","RESIZE CONTENT " + dc.width + "," + dc.height + " => " + w1 + " " + h1);
+         content_pane.setSize(w1,h1);
        }
     }
 
@@ -1040,12 +1040,12 @@ private void setSizeFromContent()
       if (sz.width == 0 || sz.height == 0) sz = content_pane.getPreferredSize();
       Dimension d1 = new Dimension();
       d1.setSize(sz.width + getContentLeftOffset() + getContentRightOffset(),
-		    sz.height + getContentTopOffset() + getContentBottomOffset());
+                    sz.height + getContentTopOffset() + getContentBottomOffset());
       Dimension d0 = getSize();
       if (!d0.equals(d1)) {
-	 // BoardLog.logD("BUDA","RESIZE BUBBLE " + d0 + " => " + d1);
-	 setSize(d1);
-	 content_pane.setSize(sz);
+         // BoardLog.logD("BUDA","RESIZE BUBBLE " + d0 + " => " + d1);
+         setSize(d1);
+         content_pane.setSize(sz);
        }
     }
 
@@ -1075,9 +1075,9 @@ private void setSizeFromContent()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle bubbles fixed to a particular working set			*/
-/*										*/
+/*                                                                              */
+/*      Handle bubbles fixed to a particular working set                        */
+/*                                                                              */
 /********************************************************************************/
 
 public void setWorkingSet(BudaWorkingSet ws)
@@ -1096,7 +1096,7 @@ public void setWorkingSet(BudaWorkingSet ws)
       setFloating(true);
       fixed_set = ws;
       fixed_stop = false;
-      noteFloatMoved(); 		// sets position for reset
+      noteFloatMoved();                 // sets position for reset
     }
 
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
@@ -1114,12 +1114,12 @@ void checkWorkingSet()
       Rectangle vpt = bba.getViewport();
       Rectangle wsr = fixed_set.getRegion();
       if (vpt.intersects(wsr)) {
-	 BudaRoot br = BudaRoot.findBudaRoot(bba);
-	 Point p0 = SwingUtilities.convertPoint(br,fixed_position,bba);
-	 if (wsr.contains(p0)) {
-	    fixed_stop = false;
-	    setLocation(p0);
-	  }
+         BudaRoot br = BudaRoot.findBudaRoot(bba);
+         Point p0 = SwingUtilities.convertPoint(br,fixed_position,bba);
+         if (wsr.contains(p0)) {
+            fixed_stop = false;
+            setLocation(p0);
+          }
        }
     }
    else {
@@ -1127,12 +1127,12 @@ void checkWorkingSet()
       Rectangle r2 = getBounds();
       Rectangle r3 = bba.getViewport();
       if (!r1.contains(r2)) {
-	 fixed_stop = true;
-	 r2.x = r1.x + 10;
-	 setBounds(r2);
+         fixed_stop = true;
+         r2.x = r1.x + 10;
+         setBounds(r2);
        }
       if (!r3.intersects(r1)) {
-	 fixed_stop = true;
+         fixed_stop = true;
        }
     }
 }
@@ -1143,15 +1143,15 @@ public void clearWorkingSet(BudaWorkingSet ws)
 }
 
 
-BudaWorkingSet getFixedWorkingSet()		{ return fixed_set; }
-Point getFixedWorkingSetPosition()		{ return fixed_position; }
+BudaWorkingSet getFixedWorkingSet()             { return fixed_set; }
+Point getFixedWorkingSetPosition()              { return fixed_position; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Location methods							*/
-/*										*/
+/*                                                                              */
+/*      Location methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 BudaRegion correlate(int x,int y)
@@ -1179,14 +1179,14 @@ BudaRegion correlate(int x,int y)
    
    if (border_type != BudaBorder.NONE) {
       if (y0 < BUBBLE_BORDER_DELTA) {
-	 if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_NW;
-	 else if (x1 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_NE;
-	 else return BudaRegion.BORDER_N;
+         if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_NW;
+         else if (x1 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_NE;
+         else return BudaRegion.BORDER_N;
        }
       if (y1 < BUBBLE_BORDER_DELTA) {
-	 if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_SW;
-	 if (x1 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_SE;
-	 return BudaRegion.BORDER_S;
+         if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_SW;
+         if (x1 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_SE;
+         return BudaRegion.BORDER_S;
        }
       if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_W;
       if (x1 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_E;
@@ -1199,14 +1199,14 @@ BudaRegion correlate(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	New bubble methods							*/
-/*										*/
+/*                                                                              */
+/*      New bubble methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Indicate that this bubble has just been created.  This will cause it to
- *	be highlighted for a short while to draw the user's attention to its location.
+ *      Indicate that this bubble has just been created.  This will cause it to
+ *      be highlighted for a short while to draw the user's attention to its location.
  **/
 
 public void markBubbleAsNew()
@@ -1247,24 +1247,24 @@ private class NewUpdater implements ActionListener {
       repaint();
     }
 
-}	// end of inner class NewUpdater
+}       // end of inner class NewUpdater
 
 
 
-protected void setBubbleNew(boolean fg) 	{ }
+protected void setBubbleNew(boolean fg)         { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Connection methods							*/
-/*										*/
+/*                                                                              */
+/*      Connection methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Handle a user specified connection.  This routine returns true if the
- *	bubble handles the connection itself, false otherwise.
+ *      Handle a user specified connection.  This routine returns true if the
+ *      bubble handles the connection itself, false otherwise.
  **/
 
 public boolean connectTo(BudaBubble bb,MouseEvent evt)
@@ -1275,9 +1275,9 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Drawing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -1285,13 +1285,13 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
    super.paint(g);
 
 //   if (scale_factor == 1 || scale_factor == 0 || this instanceof Scalable) {
-//	super.paint(g);
+//      super.paint(g);
 //    }
 //   else {
-//	Graphics2D g1 = (Graphics2D) g.create();
-//	g1.scale(scale_factor,scale_factor);
-//	g1.setClip(0,0,getWidth(),getHeight());
-//	super.paint(g1);
+//      Graphics2D g1 = (Graphics2D) g.create();
+//      g1.scale(scale_factor,scale_factor);
+//      g1.setClip(0,0,getWidth(),getHeight());
+//      super.paint(g1);
 //    }
 
    if (new_color != null) {
@@ -1359,7 +1359,7 @@ protected void paintOverview(Graphics2D g)
 
 
 
-protected void paintContentOverview(Graphics2D g,Shape s)	{ }
+protected void paintContentOverview(Graphics2D g,Shape s)       { }
 
 
 
@@ -1367,28 +1367,28 @@ protected void paintBubbleBorder(Graphics2D g2)
 {
    if (border_type != BudaBorder.NONE) {
       if (has_focus) {
-	 g2.setColor(focus_color);
-	 g2.setStroke(focus_stroke);
+         g2.setColor(focus_color);
+         g2.setStroke(focus_stroke);
        }
       else {
-	 g2.setColor(border_color);
-	 g2.setStroke(border_stroke);
+         g2.setColor(border_color);
+         g2.setStroke(border_stroke);
        }
       if (is_userpos) {
-	 Color c = BoardColors.getColor("Buda.userpos.color");
-	 g2.setColor(c);
+         Color c = BoardColors.getColor("Buda.userpos.color");
+         g2.setColor(c);
        }
 
       Shape s0 = getShape();
       g2.draw(s0);
       if (!has_focus && getContentKey() != null) {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 if (bba != null && getContentKey().equals(bba.getFocusKey()) &&
-		bba.getFocusBubble() != this) {
-	    g2.setColor(focus_color);
-	    g2.setStroke(copy_stroke);
-	    g2.draw(s0);
-	  }
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         if (bba != null && getContentKey().equals(bba.getFocusKey()) &&
+                bba.getFocusBubble() != this) {
+            g2.setColor(focus_color);
+            g2.setStroke(copy_stroke);
+            g2.draw(s0);
+          }
        }
     }
 }
@@ -1407,9 +1407,9 @@ Point scalePoint(Point p0)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void outputBubbleXml(BudaXmlWriter xw)
@@ -1480,7 +1480,7 @@ private BudaBubbleOutputer findBubbleOutputer(Component c)
    if (c instanceof SwingFreezePane) {
       SwingFreezePane fp = (SwingFreezePane) c;
       if (fp.getComponentCount() > 0)
-	return findBubbleOutputer(fp.getComponent(0));
+        return findBubbleOutputer(fp.getComponent(0));
     }
 
    return null;
@@ -1488,34 +1488,34 @@ private BudaBubbleOutputer findBubbleOutputer(Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Positioning methods							*/
-/*										*/
+/*                                                                              */
+/*      Positioning methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
-private double getContentLeftOffset()		{ return border_width; }
+private double getContentLeftOffset()           { return border_width; }
 
-private double getContentRightOffset()		{ return border_width; }
+private double getContentRightOffset()          { return border_width; }
 
-private double getContentTopOffset()		{ return border_width; }
+private double getContentTopOffset()            { return border_width; }
 
-private double getContentBottomOffset() 	{ return border_width; }
+private double getContentBottomOffset()         { return border_width; }
 
-private double getShapeLeftOffset()		{ return (BUBBLE_FOCUS_EDGE_SIZE/2); }
+private double getShapeLeftOffset()             { return (BUBBLE_FOCUS_EDGE_SIZE/2); }
 
-private double getShapeRightOffset()		{ return (BUBBLE_FOCUS_EDGE_SIZE/2); }
+private double getShapeRightOffset()            { return (BUBBLE_FOCUS_EDGE_SIZE/2); }
 
-private double getShapeTopOffset()		{ return (BUBBLE_FOCUS_EDGE_SIZE/2); }
+private double getShapeTopOffset()              { return (BUBBLE_FOCUS_EDGE_SIZE/2); }
 
-private double getShapeBottomOffset()		{ return (BUBBLE_FOCUS_EDGE_SIZE/2); }
+private double getShapeBottomOffset()           { return (BUBBLE_FOCUS_EDGE_SIZE/2); }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Shape Methods								*/
-/*										*/
+/*                                                                              */
+/*      Shape Methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 protected Shape getShape()
@@ -1529,13 +1529,13 @@ protected Shape getShape()
       double h0 = sz.getHeight() - getShapeTopOffset() - getShapeBottomOffset() - 1.5;
 
       switch (border_type) {
-	 case NONE :
-	 case RECTANGLE :
-	    border_shape = new Rectangle2D.Double(x0,y0,w0,h0);
-	    break;
-	 case ROUNDED :
-	    border_shape = new RoundRectangle2D.Double(x0,y0,w0,h0,BUBBLE_ARC_SIZE,BUBBLE_ARC_SIZE);
-	    break;
+         case NONE :
+         case RECTANGLE :
+            border_shape = new Rectangle2D.Double(x0,y0,w0,h0);
+            break;
+         case ROUNDED :
+            border_shape = new RoundRectangle2D.Double(x0,y0,w0,h0,BUBBLE_ARC_SIZE,BUBBLE_ARC_SIZE);
+            break;
        }
     }
 
@@ -1546,30 +1546,30 @@ protected Shape getShape()
 
 
 /********************************************************************************/
-/*										*/
-/*	Cursor methods								*/
-/*										*/
+/*                                                                              */
+/*      Cursor methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 protected Cursor getBubbleCursor()
 {
-   return null; 	//default_cursor;
+   return null;         //default_cursor;
 }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Component Management Methods						*/
-/*										*/
+/*                                                                              */
+/*      Component Management Methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Give this bubble the focus.  This will actually pass the focus on to whatever
- *	component has been registered as the focus component
- *	@see #setContentPane(java.awt.Component,java.awt.Component)
- *	@see #addFocusComponent
+ *      Give this bubble the focus.  This will actually pass the focus on to whatever
+ *      component has been registered as the focus component
+ *      @see #setContentPane(java.awt.Component,java.awt.Component)
+ *      @see #addFocusComponent
  **/
 
 @Override public void grabFocus()
@@ -1599,7 +1599,7 @@ private final class BubbleManager extends ComponentAdapter {
       setContentSizeFromBubble();
     }
 
-}	// end of inner class BubbleManager
+}       // end of inner class BubbleManager
 
 
 
@@ -1634,20 +1634,20 @@ private final class ChildManager extends ComponentAdapter implements FocusListen
        }
     }
 
-}	// end of inner class ChildManager
+}       // end of inner class ChildManager
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Removal methods 							*/
-/*										*/
+/*                                                                              */
+/*      Removal methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Call when one is done with a bubble.  This will ensure that its resources
- *	are released.
+ *      Call when one is done with a bubble.  This will ensure that its resources
+ *      are released.
  **/
 
 public void disposeBubble()
@@ -1667,23 +1667,23 @@ public void disposeBubble()
 
 
 /**
- *	This is invoked when the bubble is actually removed and any undo remove
- *	has been eliminated.  The bubble won't be made visible after this call.
+ *      This is invoked when the bubble is actually removed and any undo remove
+ *      has been eliminated.  The bubble won't be made visible after this call.
  **/
 
-protected void localDispose()			{ }
+protected void localDispose()                   { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Metrics methods 							*/
-/*										*/
+/*                                                                              */
+/*      Metrics methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return a hash value identifying this bubble by content
+ *      Return a hash value identifying this bubble by content
  **/
 
 public String getHashId()
@@ -1732,15 +1732,15 @@ protected void noteResize(int owd,int oht)
    Dimension d = getSize();
 
    BoardMetrics.noteCommand("BUDA","bubbleResized_" + getHashId() + "_" +
-			       owd + "_" + oht + "_" + d.width + "_" + d.height);
+                               owd + "_" + oht + "_" + d.width + "_" + d.height);
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*     Printing methods 							*/
-/*										*/
+/*                                                                              */
+/*     Printing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int print(Graphics g0,PageFormat fmt,int idx)
@@ -1782,13 +1782,13 @@ protected void noteResize(int owd,int oht)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return an action to switch this bubble between floating and fixed
+ *      Return an action to switch this bubble between floating and fixed
  **/
 
 public Action getFloatBubbleAction()
@@ -1811,22 +1811,22 @@ private class FloatAction extends AbstractAction {
       boolean fg = !isFloating();
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BudaBubble.this);
       if (bba != null) {
-	 bba.setBubbleFloating(BudaBubble.this,fg);
-	 if (fg) {
-	    for (BudaWorkingSet bws : bba.getWorkingSets()) {
-	       if (bws.isSticky()) {
-		  Rectangle r = bws.getRegion();
-		  if (r.contains(getLocation())) {
-		     setWorkingSet(bws);
-		     break;
-		   }
-		}
-	     }
-	  }
+         bba.setBubbleFloating(BudaBubble.this,fg);
+         if (fg) {
+            for (BudaWorkingSet bws : bba.getWorkingSets()) {
+               if (bws.isSticky()) {
+                  Rectangle r = bws.getRegion();
+                  if (r.contains(getLocation())) {
+                     setWorkingSet(bws);
+                     break;
+                   }
+                }
+             }
+          }
        }
     }
 
-}	// end of FloatAction
+}       // end of FloatAction
 
 
 
@@ -1849,13 +1849,13 @@ private class RemoveAction extends AbstractAction {
       if (bba != null) bba.userRemoveBubble(BudaBubble.this);
     }
 
-}	// end of FloatAction
+}       // end of FloatAction
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -1869,7 +1869,7 @@ private class RemoveAction extends AbstractAction {
 
 
 
-}	// end of class BudaBubble
+}       // end of class BudaBubble
 
 
 

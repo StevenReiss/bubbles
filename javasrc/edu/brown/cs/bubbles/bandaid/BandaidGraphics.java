@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidGraphics.java						*/
-/*										*/
-/*	Swing debugging assistant agent graphics checker			*/
-/*										*/
+/*                                                                              */
+/*              BandaidGraphics.java                                            */
+/*                                                                              */
+/*      Swing debugging assistant agent graphics checker                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -69,34 +69,34 @@ class BandaidGraphics extends Graphics2D
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Rectangle	active_area;
-private Rectangle	active_shape;
-private Component	base_component;
-private Shape		user_clip;
+private Rectangle       active_area;
+private Rectangle       active_shape;
+private Component       base_component;
+private Shape           user_clip;
 private AffineTransform user_transform;
-private Color		fg_color;
-private Paint		user_paint;
-private Color		bg_color;
-private Stroke		user_stroke;
-private Composite	user_composite;
+private Color           fg_color;
+private Paint           user_paint;
+private Color           bg_color;
+private Stroke          user_stroke;
+private Composite       user_composite;
 private GraphicsConfiguration graphics_config;
-private RenderingHints	user_hints;  
-private Font		user_font;
-private Graphics	base_graphics;
+private RenderingHints  user_hints;  
+private Font            user_font;
+private Graphics        base_graphics;
 private BandaidXmlWriter xml_output;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidGraphics(Rectangle a,Component b)
@@ -122,15 +122,15 @@ private BandaidGraphics(BandaidGraphics g)
 }
 
 
-@Override public void dispose() 			{ }
+@Override public void dispose()                         { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 String getResult()
@@ -141,9 +141,9 @@ String getResult()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void initialize(Graphics g)
@@ -185,9 +185,9 @@ private void initialize(Graphics g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic Graphic drawing primitives					*/
-/*										*/
+/*                                                                              */
+/*      Basic Graphic drawing primitives                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void drawArc(int x,int y,int w,int h,int sa,int aa)
@@ -335,9 +335,9 @@ private void initialize(Graphics g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Image methods								*/
-/*										*/
+/*                                                                              */
+/*      Image methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean drawImage(Image img,int x,int y,int w,int h,Color bg,ImageObserver o)
@@ -349,7 +349,7 @@ private void initialize(Graphics g)
 
 
 @Override public boolean drawImage(Image img,int dx1,int dy1,int dx2,int dy2,
-				      int sx1,int sy1,int xs2,int sy2,Color bg,ImageObserver o)
+                                      int sx1,int sy1,int xs2,int sy2,Color bg,ImageObserver o)
 {
    fillRect(Math.min(dx1,dx2),Math.min(dy1,dy2),Math.abs(dx2-dx1),Math.abs(dy2-dy1));
 
@@ -417,9 +417,9 @@ private void initialize(Graphics g)
 
 
 /********************************************************************************/
-/*										*/
-/*	String methods								*/
-/*										*/
+/*                                                                              */
+/*      String methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void drawString(String s,int x,int y)
@@ -472,9 +472,9 @@ private void initialize(Graphics g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Clipping methods							*/
-/*										*/
+/*                                                                              */
+/*      Clipping methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void clipRect(int x,int y,int w,int h)
@@ -572,9 +572,9 @@ private Shape intersectRectShape(Rectangle2D r,Shape s)
       double y1 = Math.max(r.getY(), r2.getY());
       double y2 = Math.min(r.getY()  + r.getHeight(), r2.getY() + r2.getHeight());
       if (((x2 - x1) < 0) || ((y2 - y1) < 0))
-	 out.setFrameFromDiagonal(0, 0, 0, 0);
+         out.setFrameFromDiagonal(0, 0, 0, 0);
       else
-	 out.setFrameFromDiagonal(x1, y1, x2, y2);
+         out.setFrameFromDiagonal(x1, y1, x2, y2);
       return out;
     }
    if (r.contains(s.getBounds2D())) return s;
@@ -598,9 +598,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Color getColor()
@@ -721,9 +721,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Font methods								*/
-/*										*/
+/*                                                                              */
+/*      Font methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Font getFont()
@@ -751,9 +751,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Transforms								*/
-/*										*/
+/*                                                                              */
+/*      Transforms                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void translate(int x,int y)
@@ -822,9 +822,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Higher level primitives 						*/
-/*										*/
+/*                                                                              */
+/*      Higher level primitives                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean drawImage(Image img,int x,int y,Color bg,ImageObserver o)
@@ -846,7 +846,7 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 @Override public boolean drawImage(Image img,int dx1,int dy1,int dx2,int dy2,
-				      int sx1,int sy1,int sx2,int sy2,ImageObserver o)
+                                      int sx1,int sy1,int sx2,int sy2,ImageObserver o)
 {
    return drawImage(img,dx1,dy1,dx2,dy2,sx1,sy1,sx2,sy2,null,o);
 }
@@ -854,9 +854,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Miscellaneous methods							*/
-/*										*/
+/*                                                                              */
+/*      Miscellaneous methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean hit(Rectangle r,Shape s,boolean onstroke)
@@ -872,9 +872,9 @@ private Shape intersectByArea(Shape s1,Shape s2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void generateReport()
@@ -901,10 +901,10 @@ private void generateReport()
    int to = -1;
    for (int i = 1; i < elts.length; ++i) {
       if (elts[i].getClassName().startsWith("edu.brown.cs.bubbles.bandaid")) {
-	 if (fr > 0) {
-	    to = i;
-	    break;
-	  }
+         if (fr > 0) {
+            to = i;
+            break;
+          }
        }
       else if (fr < 0) fr = i;
     }
@@ -925,7 +925,7 @@ private void generateReport()
 
 
 
-}	// end of class BandaidGraphics
+}       // end of class BandaidGraphics
 
 
 

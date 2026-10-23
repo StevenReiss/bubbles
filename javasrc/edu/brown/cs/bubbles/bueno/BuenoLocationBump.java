@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoLocationBump.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator location from Bump		*/
-/*										*/
+/*                                                                              */
+/*              BuenoLocationBump.java                                          */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator location from Bump              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -35,20 +35,20 @@ class BuenoLocationBump extends BuenoLocation
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpLocation	bump_location;
-private boolean 	is_before;
+private BumpLocation    bump_location;
+private boolean         is_before;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoLocationBump(BumpLocation loc,boolean before)
@@ -60,9 +60,9 @@ BuenoLocationBump(BumpLocation loc,boolean before)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getProject()
@@ -95,7 +95,7 @@ BuenoLocationBump(BumpLocation loc,boolean before)
 
 
 
-}	// end of class BuenoLocaitonBump
+}       // end of class BuenoLocaitonBump
 
 
 

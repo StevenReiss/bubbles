@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugThread.java						*/
-/*										*/
-/*	Information for the current javascript thread				*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugThread.java                                          */
+/*                                                                              */
+/*      Information for the current javascript thread                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -37,14 +37,14 @@ class NobaseDebugThread implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		thread_id;
-private boolean 	is_running;
-private boolean 	is_terminated;
+private String          thread_id;
+private boolean         is_running;
+private boolean         is_terminated;
 private DebugDetailValue continue_reason;
 private List<NobaseDebugStackFrame> cur_stack;
 
@@ -54,9 +54,9 @@ private static IdCounter       thread_counter = new IdCounter();
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseDebugThread(NobaseDebugTarget tgt)
@@ -72,9 +72,9 @@ NobaseDebugThread(NobaseDebugTarget tgt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean canResume()
@@ -95,7 +95,7 @@ boolean canTerminate()
 }
 
 
-boolean isTerminated()			{ return is_terminated; }
+boolean isTerminated()                  { return is_terminated; }
 
 boolean isSuspended()
 {
@@ -108,8 +108,8 @@ boolean isRunning()
 }
 
 
-String getLocalId()			{ return thread_id; }
-String getName()			{ return "*MAIN*"; }
+String getLocalId()                     { return thread_id; }
+String getName()                        { return "*MAIN*"; }
 
 
 void setContinue(DebugDetailValue reason)
@@ -123,13 +123,13 @@ void setRunning(boolean running)
    if (is_running != running) {
       is_running = running;
       if (running) {
-	 for_target.generateThreadEvent("RESUME",continue_reason,this);
-	 cur_stack = null;
+         for_target.generateThreadEvent("RESUME",continue_reason,this);
+         cur_stack = null;
        }
       else {
-	 for_target.generateThreadEvent("SUSPEND",continue_reason,this);
-	 // stack_command = new NobaseDebugCommand.Backtrace(for_target,0,1000,false);
-	 // for_target.postCommand(stack_command);
+         for_target.generateThreadEvent("SUSPEND",continue_reason,this);
+         // stack_command = new NobaseDebugCommand.Backtrace(for_target,0,1000,false);
+         // for_target.postCommand(stack_command);
        }
     }
    if (!running) continue_reason = null;
@@ -139,9 +139,9 @@ void setRunning(boolean running)
 
 
 /********************************************************************************/
-/*										*/
-/*	Stack frame maintenance 						*/
-/*										*/
+/*                                                                              */
+/*      Stack frame maintenance                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 boolean hasStackFrames()
@@ -173,9 +173,9 @@ void updateFrames(JSONArray fdata)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -190,7 +190,7 @@ void outputXml(IvyXmlWriter xw)
    if (isSuspended()) {
       xw.field("STACK",true);
       if (hasStackFrames()) {
-	 xw.field("FRAMES",cur_stack.size());
+         xw.field("FRAMES",cur_stack.size());
        }
     }
    xw.begin("LAUNCH");
@@ -206,7 +206,7 @@ void outputXml(IvyXmlWriter xw)
 
 
 
-}	// end of class NobaseDebugThread
+}       // end of class NobaseDebugThread
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockJava.java						*/
-/*										*/
-/*	Handle java-related commands for Bubbles				*/
-/*										*/
+/*                                                                              */
+/*              BedrockJava.java                                                */
+/*                                                                              */
+/*      Handle java-related commands for Bubbles                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -91,9 +91,9 @@ class BedrockJava implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockPlugin our_plugin;
@@ -102,9 +102,9 @@ private BedrockPlugin our_plugin;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockJava(BedrockPlugin bp)
@@ -114,9 +114,9 @@ BedrockJava(BedrockPlugin bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	GET ALL NAMES command							*/
-/*										*/
+/*                                                                              */
+/*      GET ALL NAMES command                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void handleGetAllNames(String proj,String bid,Set<String> files,String bkg,IvyXmlWriter xw) throws BedrockException
@@ -132,7 +132,7 @@ void handleGetAllNames(String proj,String bid,Set<String> files,String bkg,IvyXm
    else {
       IJavaElement [] ps = getAllProjects();
       for (int i = 0; i < ps.length; ++i) {
-	 handleAllNames(ps[i],files,nt,xw);
+         handleAllNames(ps[i],files,nt,xw);
        }
     }
 
@@ -171,59 +171,59 @@ private class NameThread extends Thread {
       boolean doelt = false;
 
       switch (je.getElementType()) {
-	 case IJavaElement.CLASS_FILE :
-	    return;
-	 case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	    IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
-	    try {
-	       if (!ipfr.isArchive() && !ipfr.isExternal() &&
-		      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
-		  dochld = true;
-	     }
-	    catch (JavaModelException e) { }
-	    break;
-	 case IJavaElement.PACKAGE_FRAGMENT :
-	 case IJavaElement.JAVA_PROJECT :
-	    dochld = true;
-	    doelt = true;
-	    break;
-	 case IJavaElement.JAVA_MODEL :
-	 case IJavaElement.IMPORT_CONTAINER :
-	 case IJavaElement.IMPORT_DECLARATION :
-	 case IJavaElement.TYPE_PARAMETER :
-	 case IJavaElement.PACKAGE_DECLARATION :
-	 default :
-	    dochld = true;
-	    break;
-	 case IJavaElement.COMPILATION_UNIT :
-	    dochld = false;
-	    doelt = true;
-	    break;
-	 case IJavaElement.FIELD :
-	 case IJavaElement.METHOD :
-	 case IJavaElement.INITIALIZER :
-	 case IJavaElement.TYPE :
-	 case IJavaElement.LOCAL_VARIABLE :
-	    dochld = false;
-	    break;
+         case IJavaElement.CLASS_FILE :
+            return;
+         case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+            IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
+            try {
+               if (!ipfr.isArchive() && !ipfr.isExternal() &&
+                      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
+                  dochld = true;
+             }
+            catch (JavaModelException e) { }
+            break;
+         case IJavaElement.PACKAGE_FRAGMENT :
+         case IJavaElement.JAVA_PROJECT :
+            dochld = true;
+            doelt = true;
+            break;
+         case IJavaElement.JAVA_MODEL :
+         case IJavaElement.IMPORT_CONTAINER :
+         case IJavaElement.IMPORT_DECLARATION :
+         case IJavaElement.TYPE_PARAMETER :
+         case IJavaElement.PACKAGE_DECLARATION :
+         default :
+            dochld = true;
+            break;
+         case IJavaElement.COMPILATION_UNIT :
+            dochld = false;
+            doelt = true;
+            break;
+         case IJavaElement.FIELD :
+         case IJavaElement.METHOD :
+         case IJavaElement.INITIALIZER :
+         case IJavaElement.TYPE :
+         case IJavaElement.LOCAL_VARIABLE :
+            dochld = false;
+            break;
        }
 
       if (dochld) {
-	 if (doelt) separate_elements.put(je,Boolean.FALSE);
-	 if (je instanceof IParent) {
-	    try {
-	       for (IJavaElement c : ((IParent) je).getChildren()) {
-		  addElement(c);
-		}
-	     }
-	    catch (JavaModelException e) { }
-	    catch (Throwable e) {
-	       BedrockPlugin.logE("Problem geting children for all names: " + e);
-	     }
-	  }
+         if (doelt) separate_elements.put(je,Boolean.FALSE);
+         if (je instanceof IParent) {
+            try {
+               for (IJavaElement c : ((IParent) je).getChildren()) {
+                  addElement(c);
+                }
+             }
+            catch (JavaModelException e) { }
+            catch (Throwable e) {
+               BedrockPlugin.logE("Problem geting children for all names: " + e);
+             }
+          }
        }
       else if (doelt) {
-	 separate_elements.put(je,Boolean.TRUE);
+         separate_elements.put(je,Boolean.TRUE);
        }
     }
 
@@ -233,54 +233,54 @@ private class NameThread extends Thread {
       IvyXmlWriter xw = null;
 
       try {
-	 for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
-	    if (xw == null) {
-	       xw = our_plugin.beginMessage("NAMES",bump_id);
-	       xw.field("NID",name_id);
-	     }
-	    boolean cfg = ent.getValue();
-	    BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
-	    if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
-	       BedrockPlugin.logD("SEND NAMES " + xw.getLength());
-	       String sts = our_plugin.finishMessageWait(xw,600000);
-	       BedrockPlugin.logD("NAME STATUS: " + sts);
-	       xw = null;
-	     }
-	  }
+         for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
+            if (xw == null) {
+               xw = our_plugin.beginMessage("NAMES",bump_id);
+               xw.field("NID",name_id);
+             }
+            boolean cfg = ent.getValue();
+            BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
+            if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
+               BedrockPlugin.logD("SEND NAMES " + xw.getLength());
+               String sts = our_plugin.finishMessageWait(xw,600000);
+               BedrockPlugin.logD("NAME STATUS: " + sts);
+               xw = null;
+             }
+          }
 
-	 if (xw != null) {
-	    BedrockPlugin.logD("SEND NAMES " + name_id + " " + xw.getLength());
-	    String sts = our_plugin.finishMessageWait(xw);
-	    BedrockPlugin.logD("NAME STATUS: " + sts);
-	  }
+         if (xw != null) {
+            BedrockPlugin.logD("SEND NAMES " + name_id + " " + xw.getLength());
+            String sts = our_plugin.finishMessageWait(xw);
+            BedrockPlugin.logD("NAME STATUS: " + sts);
+          }
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem getting names",t);
+         BedrockPlugin.logE("Problem getting names",t);
        }
       finally {
-	 BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
-	 xw = our_plugin.beginMessage("ENDNAMES",bump_id);
-	 xw.field("NID",name_id);
-	 our_plugin.finishMessage(xw);
+         BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
+         xw = our_plugin.beginMessage("ENDNAMES",bump_id);
+         xw.field("NID",name_id);
+         our_plugin.finishMessage(xw);
        }
     }
 
-}	// end of inner class NameThread
+}       // end of inner class NameThread
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	FIND ALL command							*/
-/*										*/
+/*                                                                              */
+/*      FIND ALL command                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 void handleFindAll(String proj,String file,int start,int end,boolean defs,boolean refs,
-		      boolean impls,boolean equiv,boolean exact,boolean system,boolean typeof,
-		      boolean ronly,boolean wonly,
-		      IvyXmlWriter xw) throws BedrockException
+                      boolean impls,boolean equiv,boolean exact,boolean system,boolean typeof,
+                      boolean ronly,boolean wonly,
+                      IvyXmlWriter xw) throws BedrockException
 // CHECKSTYLE:ON
 {
    IJavaProject ijp = getJavaProject(proj);
@@ -323,25 +323,25 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
 //    int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
       int fg = IJavaSearchScope.SOURCES;
       if (system) {
-	 BedrockPlugin.logD("DOING SYSTEM SEARCH");
-	 fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
-	 fg |= IJavaSearchScope.REFERENCED_PROJECTS;
+         BedrockPlugin.logD("DOING SYSTEM SEARCH");
+         fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
+         fg |= IJavaSearchScope.REFERENCED_PROJECTS;
        }
       else  {
-//	 try {
-//	    for (IJavaElement elt : pelt) {
-//	       IJavaProject xjp = (IJavaProject) elt;
-//	       IPackageFragmentRoot [] roots = ijp.getAllPackageFragmentRoots();
-//	       BedrockPlugin.logD("NON_SYSTEM SEARCH " + xjp.getPath() + " " + roots.length);
-//	       for (int i = 0; i < roots.length; ++i) {
-//		  BedrockPlugin.logD("PACKAGE ROOT: " + roots[i].getPath());
-//		}
-//	     }
+//       try {
+//          for (IJavaElement elt : pelt) {
+//             IJavaProject xjp = (IJavaProject) elt;
+//             IPackageFragmentRoot [] roots = ijp.getAllPackageFragmentRoots();
+//             BedrockPlugin.logD("NON_SYSTEM SEARCH " + xjp.getPath() + " " + roots.length);
+//             for (int i = 0; i < roots.length; ++i) {
+//                BedrockPlugin.logD("PACKAGE ROOT: " + roots[i].getPath());
+//              }
+//           }
 //
-//	  }
-//	 catch (Throwable e) {
-//	    BedrockPlugin.logD("Problem with listing roots: " + e);
-//	  }
+//        }
+//       catch (Throwable e) {
+//          BedrockPlugin.logD("Problem with listing roots: " + e);
+//        }
        }
       scp = SearchEngine.createJavaSearchScope(pelt,fg);
 
@@ -349,126 +349,126 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
       IJavaElement [] elts = icu.codeSelect(start,end-start);
 
       if (typeof) {
-	 Set<IJavaElement> nelt = new LinkedHashSet<IJavaElement>();
-	 for (int i = 0; i < elts.length; ++i) {
-	    IType typ = null;
-	    String tnm = null;
-	    switch (elts[i].getElementType()) {
-	       case IJavaElement.FIELD :
-		  tnm = ((IField) elts[i]).getTypeSignature();
-		  break;
-	       case IJavaElement.LOCAL_VARIABLE :
-		  tnm = ((ILocalVariable) elts[i]).getTypeSignature();
-		  break;
-	       case IJavaElement.METHOD :
-		  typ = ((IMethod) elts[i]).getDeclaringType();
-		  break;
-	       default :
-		  nelt.add(elts[i]);
-		  break;
-	      }
-	    if (typ != null) nelt.add(typ);
-	    else if (tnm != null && ijp != null) {
-	       IJavaElement elt = ijp.findElement(tnm,null);
-	       if (elt != null) {
-		  nelt.add(elt);
-		  typ = null;
-		}
-	       else {
-		  while (tnm.startsWith("[")) {
-		     String xtnm = tnm.substring(1);
-		     if (xtnm == null) break;
-		     tnm = xtnm;
-		   }
-		  int ln = tnm.length();
-		  String xtnm = tnm;
-		  if (tnm.startsWith("L") && tnm.endsWith(";")) {
-		     xtnm = tnm.substring(1,ln-1);
-		   }
-		  else if (tnm.startsWith("Q") && tnm.endsWith(";")) {
-		     xtnm = tnm.substring(1,ln-1);
-		   }
-		  if (xtnm != null) tnm = xtnm;
-		  int idx1 = tnm.lastIndexOf(".");
-		  if (idx1 > 0) {
-		     String pkgnm = tnm.substring(0,idx1);
-		     xtnm = tnm.substring(idx1+1);
-		     if (xtnm != null) tnm = xtnm;
-		     pkgnm = pkgnm.replace('$','.');
-		     packagename = pkgnm.toCharArray();
-		   }
-		  tnm = tnm.replace('$','.');
-		  typename = tnm.toCharArray();
-		}
+         Set<IJavaElement> nelt = new LinkedHashSet<IJavaElement>();
+         for (int i = 0; i < elts.length; ++i) {
+            IType typ = null;
+            String tnm = null;
+            switch (elts[i].getElementType()) {
+               case IJavaElement.FIELD :
+                  tnm = ((IField) elts[i]).getTypeSignature();
+                  break;
+               case IJavaElement.LOCAL_VARIABLE :
+                  tnm = ((ILocalVariable) elts[i]).getTypeSignature();
+                  break;
+               case IJavaElement.METHOD :
+                  typ = ((IMethod) elts[i]).getDeclaringType();
+                  break;
+               default :
+                  nelt.add(elts[i]);
+                  break;
+              }
+            if (typ != null) nelt.add(typ);
+            else if (tnm != null && ijp != null) {
+               IJavaElement elt = ijp.findElement(tnm,null);
+               if (elt != null) {
+                  nelt.add(elt);
+                  typ = null;
+                }
+               else {
+                  while (tnm.startsWith("[")) {
+                     String xtnm = tnm.substring(1);
+                     if (xtnm == null) break;
+                     tnm = xtnm;
+                   }
+                  int ln = tnm.length();
+                  String xtnm = tnm;
+                  if (tnm.startsWith("L") && tnm.endsWith(";")) {
+                     xtnm = tnm.substring(1,ln-1);
+                   }
+                  else if (tnm.startsWith("Q") && tnm.endsWith(";")) {
+                     xtnm = tnm.substring(1,ln-1);
+                   }
+                  if (xtnm != null) tnm = xtnm;
+                  int idx1 = tnm.lastIndexOf(".");
+                  if (idx1 > 0) {
+                     String pkgnm = tnm.substring(0,idx1);
+                     xtnm = tnm.substring(idx1+1);
+                     if (xtnm != null) tnm = xtnm;
+                     pkgnm = pkgnm.replace('$','.');
+                     packagename = pkgnm.toCharArray();
+                   }
+                  tnm = tnm.replace('$','.');
+                  typename = tnm.toCharArray();
+                }
 
-	       if (typename != null) {
-		  BedrockPlugin.logD("Handling type names");
-		  FindTypeHandler fth = new FindTypeHandler(ijp);
-		  SearchEngine se = new SearchEngine(working);
-		  se.searchAllTypeNames(packagename,SearchPattern.R_EXACT_MATCH,
-					   typename,SearchPattern.R_EXACT_MATCH,
-					   IJavaSearchConstants.TYPE,
-					   scp,fth,
-					   IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,null);
-		  nelt.addAll(fth.getFoundItems());
-		}
-	     }
-	  }
-	 IJavaElement [] nelts = new IJavaElement[nelt.size()];
-	 elts = nelt.toArray(nelts);
+               if (typename != null) {
+                  BedrockPlugin.logD("Handling type names");
+                  FindTypeHandler fth = new FindTypeHandler(ijp);
+                  SearchEngine se = new SearchEngine(working);
+                  se.searchAllTypeNames(packagename,SearchPattern.R_EXACT_MATCH,
+                                           typename,SearchPattern.R_EXACT_MATCH,
+                                           IJavaSearchConstants.TYPE,
+                                           scp,fth,
+                                           IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,null);
+                  nelt.addAll(fth.getFoundItems());
+                }
+             }
+          }
+         IJavaElement [] nelts = new IJavaElement[nelt.size()];
+         elts = nelt.toArray(nelts);
        }
 
       if (elts.length == 1 && !typeof) {
-	 xw.begin("SEARCHFOR");
-	 switch (elts[0].getElementType()) {
-	    case IJavaElement.FIELD :
-	       xw.field("TYPE","Field");
-	       break;
-	    case IJavaElement.LOCAL_VARIABLE :
-	       xw.field("TYPE","Local");
-	       break;
-	    case IJavaElement.METHOD :
-	       xw.field("TYPE","Function");
-	       break;
-	    case IJavaElement.TYPE :
-	    case IJavaElement.TYPE_PARAMETER :
-	       xw.field("TYPE","Class");
-	       cls = elts[0];
-	       break;
-	   }
-	 xw.text(elts[0].getElementName());
-	 xw.end("SEARCHFOR");
+         xw.begin("SEARCHFOR");
+         switch (elts[0].getElementType()) {
+            case IJavaElement.FIELD :
+               xw.field("TYPE","Field");
+               break;
+            case IJavaElement.LOCAL_VARIABLE :
+               xw.field("TYPE","Local");
+               break;
+            case IJavaElement.METHOD :
+               xw.field("TYPE","Function");
+               break;
+            case IJavaElement.TYPE :
+            case IJavaElement.TYPE_PARAMETER :
+               xw.field("TYPE","Class");
+               cls = elts[0];
+               break;
+           }
+         xw.text(elts[0].getElementName());
+         xw.end("SEARCHFOR");
        }
       int etyp = -1;
       for (int i = 0; i < elts.length; ++i) {
-	 SearchPattern sp;
-	 int xlimit = limit;
-	 switch (elts[i].getElementType()) {
-	    case IJavaElement.FIELD :
-	    case IJavaElement.LOCAL_VARIABLE :
-	       xlimit = flimit;
-	       break;
-	    case IJavaElement.TYPE :
-	       if (impls) xlimit = IJavaSearchConstants.IMPLEMENTORS;
-	       break;
-	    case IJavaElement.METHOD :
-	       if (impls) {
-		  xlimit |= IJavaSearchConstants.IGNORE_DECLARING_TYPE;
-		}
-	       break;
-	  }
-	 if (mrule < 0) sp = SearchPattern.createPattern(elts[i],xlimit);
-	 else sp = SearchPattern.createPattern(elts[i],xlimit,mrule);
-	 if (pat == null) pat = sp;
-	 else pat = SearchPattern.createOrPattern(pat,sp);
-	 if (etyp < 0) etyp = elts[i].getElementType();
+         SearchPattern sp;
+         int xlimit = limit;
+         switch (elts[i].getElementType()) {
+            case IJavaElement.FIELD :
+            case IJavaElement.LOCAL_VARIABLE :
+               xlimit = flimit;
+               break;
+            case IJavaElement.TYPE :
+               if (impls) xlimit = IJavaSearchConstants.IMPLEMENTORS;
+               break;
+            case IJavaElement.METHOD :
+               if (impls) {
+                  xlimit |= IJavaSearchConstants.IGNORE_DECLARING_TYPE;
+                }
+               break;
+          }
+         if (mrule < 0) sp = SearchPattern.createPattern(elts[i],xlimit);
+         else sp = SearchPattern.createPattern(elts[i],xlimit,mrule);
+         if (pat == null) pat = sp;
+         else pat = SearchPattern.createOrPattern(pat,sp);
+         if (etyp < 0) etyp = elts[i].getElementType();
        }
 
       if (etyp == IJavaElement.METHOD) {
-	 if (impls) {
-	    if (defs) filter = new ImplementFilter(elts);
-	  }
-	 else if (defs && !refs) filter = new ClassFilter(elts);
+         if (impls) {
+            if (defs) filter = new ImplementFilter(elts);
+          }
+         else if (defs && !refs) filter = new ClassFilter(elts);
        }
 
     }
@@ -496,7 +496,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
       throw new BedrockException("Problem doing find all search for " + pat + ": " + e,e);
     }
 
-   if (cls != null && defs) {		// need to add the actual class definition
+   if (cls != null && defs) {           // need to add the actual class definition
       BedrockUtil.outputJavaElement(cls,false,xw);
     }
 }
@@ -510,13 +510,13 @@ private static class ImplementFilter implements FindFilter {
    ImplementFilter(IJavaElement [] elts) {
       base_types = new HashSet<String>();
       for (IJavaElement je : elts) {
-	 if (je instanceof IMember) {
-	    IMember im = (IMember) je;
-	    IType ty = im.getDeclaringType();
-	    String nm = ty.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-	    base_types.add(nm);
-	  }
+         if (je instanceof IMember) {
+            IMember im = (IMember) je;
+            IType ty = im.getDeclaringType();
+            String nm = ty.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+            base_types.add(nm);
+          }
        }
     }
 
@@ -530,15 +530,15 @@ private static class ImplementFilter implements FindFilter {
       // BedrockPlugin.logD("CHECK FILTER " + ty + " " + nm);
       if (base_types.contains(nm)) return true;
       try {
-	 ITypeHierarchy th = ty.newTypeHierarchy(null);
-	 for (IType st : th.getAllSupertypes(ty)) {
-	    String snm = st.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
-	    if (base_types.contains(snm)) return true;
-	  }
+         ITypeHierarchy th = ty.newTypeHierarchy(null);
+         for (IType st : th.getAllSupertypes(ty)) {
+            String snm = st.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
+            if (base_types.contains(snm)) return true;
+          }
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem building type hierarchy: " + e);
+         BedrockPlugin.logE("Problem building type hierarchy: " + e);
        }
       return false;
     }
@@ -554,13 +554,13 @@ private static class ClassFilter implements FindFilter {
    ClassFilter(IJavaElement [] elts) {
       base_types = new HashSet<>();
       for (IJavaElement je : elts) {
-	 if (je instanceof IMember) {
-	    IMember im = (IMember) je;
-	    IType ty = im.getDeclaringType();
-	    String nm = ty.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-	    base_types.add(nm);
-	  }
+         if (je instanceof IMember) {
+            IMember im = (IMember) je;
+            IType ty = im.getDeclaringType();
+            String nm = ty.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+            base_types.add(nm);
+          }
        }
     }
 
@@ -601,39 +601,39 @@ private static class FindTypeHandler extends TypeNameRequestor {
       String snm = "";
       if (pkg != null) snm = new String(pkg) + ".";
       for (int i = 0; i < encs.length; ++i) {
-	 String enm = new String(encs[i]);
-	 snm += enm + ".";
+         String enm = new String(encs[i]);
+         snm += enm + ".";
        }
       snm += new String(typ);
       IJavaElement elt = null;
       try {
-	 elt = java_project.findType(snm);
+         elt = java_project.findType(snm);
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem looking up type " + snm,ex);
+         BedrockPlugin.logE("Problem looking up type " + snm,ex);
        }
       BedrockPlugin.logD("ACCEPT TYPE " + snm + " " + elt + " " + path);
       if (elt != null) found_items.add(elt);
     }
 
-   List<IJavaElement> getFoundItems()		{ return found_items; }
+   List<IJavaElement> getFoundItems()           { return found_items; }
 
-}	// end of inner class FindTypeHandler
+}       // end of inner class FindTypeHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Java Search command							*/
-/*										*/
+/*                                                                              */
+/*      Java Search command                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 void handlePatternSearch(String proj,String bid,String patstr,String foritems,
-			 boolean defs,boolean refs,boolean impls,
-			 boolean equiv,boolean exact,boolean system,
-			 IvyXmlWriter xw) throws BedrockException
+                         boolean defs,boolean refs,boolean impls,
+                         boolean equiv,boolean exact,boolean system,
+                         IvyXmlWriter xw) throws BedrockException
 // CHECKSTYLE:ON 
 {
    IJavaProject ijp = getJavaProject(proj);
@@ -677,7 +677,7 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    SearchPattern pat = SearchPattern.createPattern(patstr,forflags,limit,mrule);
    if (pat == null) {
       throw new BedrockException("Invalid java search pattern `" + patstr + "' " + forflags + " " +
-				    limit + " " + mrule);
+                                    limit + " " + mrule);
     }
 
    FindFilter filter = null;
@@ -687,7 +687,7 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
       if (idx > 0) p = p.substring(0,idx);
       idx = p.lastIndexOf(".");
       if (idx > 0) {
-	 if (defs) filter = new ClassFilter(p.substring(0,idx));
+         if (defs) filter = new ClassFilter(p.substring(0,idx));
        }
     }
 
@@ -699,11 +699,11 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    ICompilationUnit [] working = getWorkingElements(pelt);
    for (ICompilationUnit xcu : working) {
       try {
-	 BedrockPlugin.logD("WORK WITH " + xcu.isWorkingCopy() + " " + xcu.getPath() +
-			       xcu.getSourceRange());
+         BedrockPlugin.logD("WORK WITH " + xcu.isWorkingCopy() + " " + xcu.getPath() +
+                               xcu.getSourceRange());
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logD("WORK WITH ERROR: " + e);
+         BedrockPlugin.logD("WORK WITH ERROR: " + e);
        }
     }
 
@@ -712,16 +712,16 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    if (system && pelt.length > 0) {
       IJavaElement top = null;
       for (IJavaElement telt = pelt[0]; telt != null; telt = telt.getParent()) {
-	 top = telt;
+         top = telt;
        }
       if (top instanceof IOpenable) {
-//	 IOpenable topo = (IOpenable) top;
-//	 try {
-//	    topo.open(null);
-//	  }
-//	 catch (JavaModelException e) {
-//	    BedrockPlugin.logE("Problem opening root",e);
-//	  }
+//       IOpenable topo = (IOpenable) top;
+//       try {
+//          topo.open(null);
+//        }
+//       catch (JavaModelException e) {
+//          BedrockPlugin.logE("Problem opening root",e);
+//        }
        }
       IJavaElement [] pelt1 = new IJavaElement[pelt.length+1];
       for (int i = 0; i < pelt.length; ++i) pelt1[i+1] = pelt[i];
@@ -744,9 +744,9 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    BedrockPlugin.logD("SEARCH SCOPE " + system + " " + fg + " " + scp);
 // if (ijp != null) {
 //    try {
-//	 for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
-//	    BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
-//	  }
+//       for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
+//          BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
+//        }
 //     }
 //    catch (JavaModelException e) { }
 //  }
@@ -762,9 +762,9 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for Java search handling					*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for Java search handling                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FindHandler extends SearchRequestor {
@@ -784,23 +784,23 @@ private static class FindHandler extends SearchRequestor {
    @Override public void acceptSearchMatch(SearchMatch mat) {
       BedrockPlugin.logD("FOUND MATCH " + mat + (System.currentTimeMillis()-begin_time));
       if (reportMatch(mat)) {
-	 BedrockUtil.outputSearchMatch(mat,xml_writer);
+         BedrockUtil.outputSearchMatch(mat,xml_writer);
        }
     }
 
    private boolean reportMatch(SearchMatch mat) {
       IResource irc = mat.getResource();
       if (!allow_system && irc.getType() != IResource.FILE) {
-	 BedrockPlugin.logD("System file " + irc);
-	 return false;
+         BedrockPlugin.logD("System file " + irc);
+         return false;
        }
       if (find_filter != null) {
-	 return find_filter.checkMatch(mat);
+         return find_filter.checkMatch(mat);
        }
       return true;
     }
 
-}	// end of subclass FindHandler
+}       // end of subclass FindHandler
 
 
 
@@ -814,16 +814,16 @@ private interface FindFilter {
 
 
 /********************************************************************************/
-/*										*/
-/*	TEXT SEARCH commands							*/
-/*										*/
-/*	These need to be reimplemented so as not to require the workspace	*/
-/*	to be set up within the user interface. 				*/
-/*										*/
+/*                                                                              */
+/*      TEXT SEARCH commands                                                    */
+/*                                                                              */
+/*      These need to be reimplemented so as not to require the workspace       */
+/*      to be set up within the user interface.                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void textSearch(String proj,int regexpfgs,String pat,int max,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    String fp = ".*\\.java";
 
@@ -885,8 +885,8 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IvyXmlWriter xml_writer;
    private ICompilationUnit [] base_units;
-   private int	max_results;
-   private int	num_results;
+   private int  max_results;
+   private int  num_results;
 
    SearchHandler(IvyXmlWriter xw,ICompilationUnit [] units,int max) {
       xml_writer = xw;
@@ -910,11 +910,11 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IJavaElement getElement(IFile r,int off,int len) {
       for (ICompilationUnit icu : base_units) {
-	 IResource ir = icu.getResource();
-	 if (ir == null) return null;
-	 if (ir.equals(r)) {
-	    return findInnerElement(icu,off,len);
-	  }
+         IResource ir = icu.getResource();
+         if (ir == null) return null;
+         if (ir.equals(r)) {
+            return findInnerElement(icu,off,len);
+          }
        }
       return null;
     }
@@ -923,43 +923,43 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-	 ISourceRange rng = sref.getSourceRange();
-	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+         ISourceRange rng = sref.getSourceRange();
+         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting range: " + ex);
-	 return null;
+         BedrockPlugin.logE("Problem getting range: " + ex);
+         return null;
        }
 
       if (!(elt instanceof IParent)) return elt;
 
       IParent par = (IParent) elt;
       try {
-	 for (IJavaElement je : par.getChildren()) {
-	    IJavaElement fe = findInnerElement(je,off,len);
-	    if (fe != null) return fe;
-	  }
+         for (IJavaElement je : par.getChildren()) {
+            IJavaElement fe = findInnerElement(je,off,len);
+            if (fe != null) return fe;
+          }
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting children: " + ex);
+         BedrockPlugin.logE("Problem getting children: " + ex);
        }
 
       return elt;
     }
 
-}	// end of subclass SearchHandler
+}       // end of subclass SearchHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	FULLYQUALIFIEDNAME command						*/
-/*										*/
+/*                                                                              */
+/*      FULLYQUALIFIEDNAME command                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void getFullyQualifiedName(String proj,String file,int start,int end,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    String name = null;
    String key = null;
@@ -972,51 +972,51 @@ void getFullyQualifiedName(String proj,String file,int start,int end,IvyXmlWrite
    try {
       IJavaElement [] elts = icu.codeSelect(start,end-start);
       for (int i = 0; i < elts.length && name == null; ++i) {
-	 switch (elts[i].getElementType()) {
-	    case IJavaElement.JAVA_PROJECT :
-	    case IJavaElement.JAVA_MODEL :
-	    case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	    case IJavaElement.CLASS_FILE :
-	    case IJavaElement.PACKAGE_FRAGMENT :
-	    case IJavaElement.IMPORT_CONTAINER :
-	    case IJavaElement.IMPORT_DECLARATION :
-	    case IJavaElement.TYPE_PARAMETER :
-	    case IJavaElement.COMPILATION_UNIT :
-	    default :
-	       break;
-	    case IJavaElement.TYPE :
-	       IType typ = (IType) elts[i];
-	       name = typ.getFullyQualifiedName();
-	       key = typ.getKey();
-	       break;
-	    case IJavaElement.FIELD :
-	       IField fld = ((IField) elts[i]);
-	       name = fld.getDeclaringType().getFullyQualifiedName() + "." + fld.getElementName();
-	       key = fld.getKey();
-	       sgn = fld.getTypeSignature();
-	       break;
-	    case IJavaElement.METHOD :
-	       IMethod mthd = ((IMethod) elts[i]);
-	       name = mthd.getDeclaringType().getFullyQualifiedName() + "." +
-		  mthd.getElementName();
-	       key = mthd.getKey();
-	       sgn = mthd.getSignature();
-	       // TODO: might want to add signture here as well
-	       break;
-	    case IJavaElement.INITIALIZER :
-	       IInitializer init = ((IInitializer) elts[i]);
-	       name = init.getDeclaringType().getFullyQualifiedName() + ".<clinit>";
-	       break;
-	    case IJavaElement.PACKAGE_DECLARATION :
-	       name = ((IPackageDeclaration) elts[i]).getElementName();
-	       break;
-	    case IJavaElement.LOCAL_VARIABLE :
-	       ILocalVariable lcl = (ILocalVariable) elts[i];
-	       name = lcl.getHandleIdentifier();
-	       sgn = lcl.getTypeSignature();
-	       break;
-	  }
-	 hdl = elts[i].getHandleIdentifier();
+         switch (elts[i].getElementType()) {
+            case IJavaElement.JAVA_PROJECT :
+            case IJavaElement.JAVA_MODEL :
+            case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+            case IJavaElement.CLASS_FILE :
+            case IJavaElement.PACKAGE_FRAGMENT :
+            case IJavaElement.IMPORT_CONTAINER :
+            case IJavaElement.IMPORT_DECLARATION :
+            case IJavaElement.TYPE_PARAMETER :
+            case IJavaElement.COMPILATION_UNIT :
+            default :
+               break;
+            case IJavaElement.TYPE :
+               IType typ = (IType) elts[i];
+               name = typ.getFullyQualifiedName();
+               key = typ.getKey();
+               break;
+            case IJavaElement.FIELD :
+               IField fld = ((IField) elts[i]);
+               name = fld.getDeclaringType().getFullyQualifiedName() + "." + fld.getElementName();
+               key = fld.getKey();
+               sgn = fld.getTypeSignature();
+               break;
+            case IJavaElement.METHOD :
+               IMethod mthd = ((IMethod) elts[i]);
+               name = mthd.getDeclaringType().getFullyQualifiedName() + "." +
+                  mthd.getElementName();
+               key = mthd.getKey();
+               sgn = mthd.getSignature();
+               // TODO: might want to add signture here as well
+               break;
+            case IJavaElement.INITIALIZER :
+               IInitializer init = ((IInitializer) elts[i]);
+               name = init.getDeclaringType().getFullyQualifiedName() + ".<clinit>";
+               break;
+            case IJavaElement.PACKAGE_DECLARATION :
+               name = ((IPackageDeclaration) elts[i]).getElementName();
+               break;
+            case IJavaElement.LOCAL_VARIABLE :
+               ILocalVariable lcl = (ILocalVariable) elts[i];
+               name = lcl.getHandleIdentifier();
+               sgn = lcl.getTypeSignature();
+               break;
+          }
+         hdl = elts[i].getHandleIdentifier();
        }
     }
    catch (CoreException e) {
@@ -1041,14 +1041,14 @@ void getFullyQualifiedName(String proj,String file,int start,int end,IvyXmlWrite
 
 
 /********************************************************************************/
-/*										*/
-/*	CREATECLASS command							*/
-/*										*/
+/*                                                                              */
+/*      CREATECLASS command                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void handleNewClass(String proj,String name,boolean frc,
-				    String cnts,IvyXmlWriter xw)
-	throws BedrockException
+                                    String cnts,IvyXmlWriter xw)
+        throws BedrockException
 {
    if (name == null) return;
 
@@ -1089,9 +1089,9 @@ synchronized void handleNewClass(String proj,String name,boolean frc,
 
 
 /********************************************************************************/
-/*										*/
-/*	FINDHIERARCHY command							*/
-/*										*/
+/*                                                                              */
+/*      FINDHIERARCHY command                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWriter xw)
@@ -1107,16 +1107,16 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
       IJavaElement [] aps = getAllProjects();
       if (aps.length == 0) return;
       if (cls != null) {
-	 for (IJavaElement ije : aps) {
-	    IJavaProject xjp = ije.getJavaProject();
-	    try {
-	       if (xjp.findType(cls) != null) {
-		  ijp = xjp;
-		  break;
-		}
-	     }
-	    catch (JavaModelException e) { }
-	  }
+         for (IJavaElement ije : aps) {
+            IJavaProject xjp = ije.getJavaProject();
+            try {
+               if (xjp.findType(cls) != null) {
+                  ijp = xjp;
+                  break;
+                }
+             }
+            catch (JavaModelException e) { }
+          }
        }
       if (ijp == null) ijp = aps[0].getJavaProject();
     }
@@ -1125,96 +1125,96 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
 
    if (cls != null && ijp != null) {
       try {
-	 IType typ = ijp.findType(cls);
-	 fortype = typ;
-	 // rgn.add(typ);
-	 // ++addct;
+         IType typ = ijp.findType(cls);
+         fortype = typ;
+         // rgn.add(typ);
+         // ++addct;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem getting type by name: " + e);
+         BedrockPlugin.logE("Problem getting type by name: " + e);
        }
     }
 
    if (pkg != null && ijp != null) {
       String ppth = "/" + pkg.replace(".","/");
       try {
-	 for (IPackageFragmentRoot ipr : ijp.getPackageFragmentRoots()) {
-	    IPath rpath = ipr.getPath();
-	    Path npath = new Path(rpath.toString() + ppth);
-	    IPackageFragment ipf = ijp.findPackageFragment(npath);
-	    if (ipf != null) {
-	       rgn.add(ipf);
-	       ++addct;
-	     }
-	  }
+         for (IPackageFragmentRoot ipr : ijp.getPackageFragmentRoots()) {
+            IPath rpath = ipr.getPath();
+            Path npath = new Path(rpath.toString() + ppth);
+            IPackageFragment ipf = ijp.findPackageFragment(npath);
+            if (ipf != null) {
+               rgn.add(ipf);
+               ++addct;
+             }
+          }
        }
       catch (Exception e) {
-	 BedrockPlugin.logE("Problem getting package fragments for " + ppth + ": " + e);
+         BedrockPlugin.logE("Problem getting package fragments for " + ppth + ": " + e);
        }
     }
    else if (havejp && ijp != null) {
       if (all) {
-	 rgn.add(ijp);
-	 ++addct;
+         rgn.add(ijp);
+         ++addct;
        }
       else {
-	 try {
-	    for (IPackageFragment ipf : ijp.getPackageFragments()) {
-	       for (ICompilationUnit icu : ipf.getCompilationUnits()) {
-		  IType ity = ((ITypeRoot) icu).findPrimaryType();
-		  if (ity != null) {
-		     rgn.add(ity);
-		     ++addct;
-		   }
-		}
-	     }
-	  }
-	 catch (Throwable e) {
-	    BedrockPlugin.logE("Problem getting package fragments: " + e);
-	  }
+         try {
+            for (IPackageFragment ipf : ijp.getPackageFragments()) {
+               for (ICompilationUnit icu : ipf.getCompilationUnits()) {
+                  IType ity = ((ITypeRoot) icu).findPrimaryType();
+                  if (ity != null) {
+                     rgn.add(ity);
+                     ++addct;
+                   }
+                }
+             }
+          }
+         catch (Throwable e) {
+            BedrockPlugin.logE("Problem getting package fragments: " + e);
+          }
        }
     }
    else {
       BedrockPlugin.logD("Adding all projects");
       for (IJavaElement pi : getAllProjects()) {
-	 IJavaProject xjp = pi.getJavaProject();
-	 if (xjp != null && !rgn.contains(xjp)) {
-	    rgn.add(xjp);
-	    ++addct;
-	  }
-	 for (IJavaElement par = xjp.getParent(); par != null; par = par.getParent()) {
-	    BedrockPlugin.logD("PROJECT PARENT " + par.getElementName());
-	    if (par != null && !rgn.contains(par)) {
-	       rgn.add(par);
-	       ++addct;
-	     }
-	  }
-	 // String pnm = pi.getJavaProject().getProject().getName();
-	 // handleFindHierarchy(pnm,null,null,all,xw);
+         IJavaProject xjp = pi.getJavaProject();
+         if (xjp != null && !rgn.contains(xjp)) {
+            rgn.add(xjp);
+            ++addct;
+          }
+         for (IJavaElement par = xjp.getParent(); par != null; par = par.getParent()) {
+            BedrockPlugin.logD("PROJECT PARENT " + par.getElementName());
+            if (par != null && !rgn.contains(par)) {
+               rgn.add(par);
+               ++addct;
+             }
+          }
+         // String pnm = pi.getJavaProject().getProject().getName();
+         // handleFindHierarchy(pnm,null,null,all,xw);
        }
     }
 
    if (addct > 0 && ijp != null) {
       try {
-	 BedrockPlugin.logD("FIND TYPE HIERARCHY FOR " + fortype + " " + addct + " " + havejp);
+         BedrockPlugin.logD("FIND TYPE HIERARCHY FOR " + fortype + " " + addct + " " + havejp);
 
-	 ITypeHierarchy ith;
-	 if (fortype != null && !havejp) {
-	    ith = fortype.newTypeHierarchy(null);
-	  }
-	 else if (fortype != null) {
-	    ith = ijp.newTypeHierarchy(fortype,rgn,null);
-	  }
-	 else {
-	    ith = ijp.newTypeHierarchy(rgn,null);
-	  }
-	 BedrockUtil.outputTypeHierarchy(ith,xw);
+         ITypeHierarchy ith;
+         if (fortype != null && !havejp) {
+            ith = fortype.newTypeHierarchy(null);
+          }
+         else if (fortype != null) {
+            ith = ijp.newTypeHierarchy(fortype,rgn,null);
+          }
+         else {
+            ith = ijp.newTypeHierarchy(rgn,null);
+          }
+         BedrockUtil.outputTypeHierarchy(ith,xw);
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem outputing type hierarchy: " + e);
+         BedrockPlugin.logE("Problem outputing type hierarchy: " + e);
        }
       catch (NullPointerException e) {
-	 // this is a bug in Eclipse that should be fixed
+         // this is a bug in Eclipse that should be fixed
        }
     }
 }
@@ -1223,9 +1223,9 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility routines							*/
-/*										*/
+/*                                                                              */
+/*      Utility routines                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 IJavaProject getJavaProject(String p) throws BedrockException
@@ -1247,10 +1247,10 @@ static IJavaElement [] getAllProjects()
       if (!BedrockProject.useProject(ip.getName())) continue;
       IJavaProject jp = JavaCore.create(ip);
       try {
-	 jp.open(null);
+         jp.open(null);
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem opening java project: " + e);
+         BedrockPlugin.logE("Problem opening java project: " + e);
        }
       trslt.add(jp);
     }
@@ -1305,9 +1305,9 @@ private ICompilationUnit getCompilationElement(ICompilationUnit icu)
 
 
 /********************************************************************************/
-/*										*/
-/*	Method to get restricted search set					*/
-/*										*/
+/*                                                                              */
+/*      Method to get restricted search set                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private IJavaElement [] getSearchElements(IJavaElement [] pelt)
@@ -1317,8 +1317,8 @@ private IJavaElement [] getSearchElements(IJavaElement [] pelt)
 
    for (IJavaElement je : pelt) {
       if (je.getElementType() == IJavaElement.JAVA_PROJECT) {
-	 IJavaProject jp = (IJavaProject) je;
-	 addProjectElements(jp,done,active);
+         IJavaProject jp = (IJavaProject) je;
+         addProjectElements(jp,done,active);
        }
       else active.add(je);
     }
@@ -1339,17 +1339,17 @@ private void addProjectElements(IJavaProject jp,Set<IJavaProject> done,List<IJav
 
    try {
       for (IPackageFragmentRoot pfr : jp.getPackageFragmentRoots()) {
-	 if (!pfr.isArchive() && !pfr.isExternal() &&
-		pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
-	    rslt.add(pfr);
-	  }
+         if (!pfr.isArchive() && !pfr.isExternal() &&
+                pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
+            rslt.add(pfr);
+          }
        }
       for (String pn : jp.getRequiredProjectNames()) {
-	 try {
-	    IJavaProject rjp = getJavaProject(pn);
-	    if (rjp != null) addProjectElements(rjp,done,rslt);
-	  }
-	 catch (BedrockException e) { }
+         try {
+            IJavaProject rjp = getJavaProject(pn);
+            if (rjp != null) addProjectElements(rjp,done,rslt);
+          }
+         catch (BedrockException e) { }
        }
     }
    catch (JavaModelException e) { }
@@ -1359,7 +1359,7 @@ private void addProjectElements(IJavaProject jp,Set<IJavaProject> done,List<IJav
 
 
 
-}	// end of class BedrockJava
+}       // end of class BedrockJava
 
 
 

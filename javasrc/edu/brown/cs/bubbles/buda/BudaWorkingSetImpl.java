@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaWorkingSetImpl.java 					*/
-/*										*/
-/*	BUblles Display Area working set implementation 			*/
-/*										*/
+/*                                                                              */
+/*              BudaWorkingSetImpl.java                                         */
+/*                                                                              */
+/*      BUblles Display Area working set implementation                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,21 +56,21 @@ class BudaWorkingSetImpl implements BudaConstants, BudaConstants.BudaWorkingSet,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaBubbleArea bubble_area;
-private String	set_label;
+private String  set_label;
 private Rectangle set_region;
-private int	preferred_y;
-private Color	border_color;
-private Color	top_color;
-private Color	bottom_color;
-private Color	text_color;
+private int     preferred_y;
+private Color   border_color;
+private Color   top_color;
+private Color   bottom_color;
+private Color   text_color;
 private boolean being_changed;
-private long	create_time;
+private long    create_time;
 private boolean is_shared;
 private WorkingSetGrowth grow_type;
 private GrowCallback grow_callback;
@@ -83,9 +83,9 @@ private static final int GROW_EXTRA = 20;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaWorkingSetImpl(BudaBubbleArea bba,String lbl,Rectangle rgn,int y,WorkingSetGrowth g)
@@ -111,12 +111,12 @@ BudaWorkingSetImpl(BudaBubbleArea bba,String lbl,Rectangle rgn,int y,WorkingSetG
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getLabel()			{ return set_label; }
+@Override public String getLabel()                      { return set_label; }
 
 @Override public void setLabel(String s)
 {
@@ -167,8 +167,8 @@ void setGrowth(WorkingSetGrowth g)
 }
 
 
-Color getTopColor()			{ return top_color; }
-Color getBottomColor()			{ return bottom_color; }
+Color getTopColor()                     { return top_color; }
+Color getBottomColor()                  { return bottom_color; }
 Color getBorderColor()
 {
    if (being_changed) return BoardColors.getColor("Buda.WorkingsetChangedColor");
@@ -176,7 +176,7 @@ Color getBorderColor()
 }
 
 
-Color getTextColor()			{ return text_color; }
+Color getTextColor()                    { return text_color; }
 
 
 void setColor(Color c)
@@ -191,13 +191,13 @@ void setColor(Color c)
 
 
 
-void setBeingChanged(boolean fg)	{ being_changed = fg; }
-boolean isBeingChanged()		{ return being_changed; }
+void setBeingChanged(boolean fg)        { being_changed = fg; }
+boolean isBeingChanged()                { return being_changed; }
 
-void setCreateTime(long when)		{ create_time = when; }
+void setCreateTime(long when)           { create_time = when; }
 
-boolean isShared()			{ return is_shared; }
-void setShared(boolean fg)		{ is_shared = fg; }
+boolean isShared()                      { return is_shared; }
+void setShared(boolean fg)              { is_shared = fg; }
 
 @Override public boolean isSticky()
 {
@@ -219,9 +219,9 @@ void setShared(boolean fg)		{ is_shared = fg; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble methods								*/
-/*										*/
+/*                                                                              */
+/*      Bubble methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void removeBubbles()
@@ -234,9 +234,9 @@ void removeBubbles()
 
 
 /********************************************************************************/
-/*										*/
-/*	Save methods								*/
-/*										*/
+/*                                                                              */
+/*      Save methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public File getDescription() throws IOException
@@ -287,12 +287,12 @@ void sendMail(String to)
       String msg = "Here is a working set to share:\n\n" + bup.getFileURL() + "\n";
       BowerMailer bmm = BoardMail.createMessage(to);
       if (bmm != null) {
-	 bmm.setSubject("Bubbles working set to share");
-	 bmm.addBodyText(msg);
-	 bmm.send();
+         bmm.setSubject("Bubbles working set to share");
+         bmm.addBodyText(msg);
+         bmm.send();
        }
       else {
-	 JOptionPane.showMessageDialog(bubble_area,"Java Desktop Mail Interface not supported");
+         JOptionPane.showMessageDialog(bubble_area,"Java Desktop Mail Interface not supported");
        }
     }
    catch (IOException e) {
@@ -315,12 +315,12 @@ void sendPDF(String to)
       String msg = "Here is the working set image:\n\n" + bup.getFileURL() + "\n";
       BowerMailer bmm = BoardMail.createMessage(to);
       if (bmm != null) {
-	 bmm.setSubject("Bubbles working set image");
-	 bmm.addBodyText(msg);
-	 bmm.send();
+         bmm.setSubject("Bubbles working set image");
+         bmm.addBodyText(msg);
+         bmm.send();
        }
       else {
-	 JOptionPane.showMessageDialog(bubble_area,"Java Desktop Mail Interface not supported");
+         JOptionPane.showMessageDialog(bubble_area,"Java Desktop Mail Interface not supported");
        }
     }
    catch (Exception e) {
@@ -371,9 +371,9 @@ void createTask(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -449,7 +449,7 @@ private final class GrowCallback implements BubbleViewCallback {
 
 
 
-}	// end of class BudaWorkingSetImpl
+}       // end of class BudaWorkingSetImpl
 
 
 

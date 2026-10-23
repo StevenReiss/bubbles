@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoLocation.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator location holder 		*/
-/*										*/
+/*                                                                              */
+/*              BuenoLocation.java                                              */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator location holder                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -37,46 +37,46 @@ public abstract class BuenoLocation implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private fields								*/
-/*										*/
+/*                                                                              */
+/*      Private fields                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-private File		insert_file;
-private int		insert_offset;
-private int		insert_length;
+private File            insert_file;
+private int             insert_offset;
+private int             insert_length;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public String getProject()			{ return null; }
+public String getProject()                      { return null; }
 
-public String getPackage()			{ return null; }
+public String getPackage()                      { return null; }
 
 
 
 /**
- *	This should return the fully qualified class name, with $ separating nested classes.
+ *      This should return the fully qualified class name, with $ separating nested classes.
  **/
 
-public String getClassName()			{ return null; }
+public String getClassName()                    { return null; }
 
 
 
-public int getOffset()			{ return -1; }
+public int getOffset()                  { return -1; }
 
-public File getFile()			        { return null; }
+public File getFile()                           { return null; }
 
-public String getInsertAfter()		{ return null; }
+public String getInsertAfter()          { return null; }
 
-public String getInsertBefore() 		{ return null; }
+public String getInsertBefore()                 { return null; }
 
-public String getInsertAtEnd()		{ return null; }
+public String getInsertAtEnd()          { return null; }
 
 public String getFileWhere()                   
 {
@@ -94,12 +94,12 @@ public String getFileWhere()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to record the actual location					*/
-/*										*/
+/*                                                                              */
+/*      Methods to record the actual location                                   */
+/*                                                                              */
 /********************************************************************************/
 
-public void setFile(File f)		
+public void setFile(File f)             
 {
    insert_file = f;
 }
@@ -111,16 +111,16 @@ public void setLocation(int offset,int len)
 }
 
 
-public File getInsertionFile()		{ return insert_file; }
-public int getInsertionOffset() 		{ return insert_offset; }
-public int getInsertionLength() 		{ return insert_length; }
+public File getInsertionFile()          { return insert_file; }
+public int getInsertionOffset()                 { return insert_offset; }
+public int getInsertionLength()                 { return insert_length; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public String getTitle(BuenoType typ)
@@ -129,40 +129,40 @@ public String getTitle(BuenoType typ)
    
    switch (typ) {
       case NEW_METHOD :
-	 ttl = "Create New Method " + getMemberWhere();
-	 break;
+         ttl = "Create New Method " + getMemberWhere();
+         break;
       case NEW_CLASS :
-	 ttl = "Create New Class " + getClassWhere();
-	 break;
+         ttl = "Create New Class " + getClassWhere();
+         break;
       case NEW_INTERFACE :
-	 ttl = "Create New Interface " + getClassWhere();
-	 break;
+         ttl = "Create New Interface " + getClassWhere();
+         break;
       case NEW_ENUM :
-	 ttl = "Create New Enum " + getClassWhere();
-	 break;
+         ttl = "Create New Enum " + getClassWhere();
+         break;
       case NEW_TYPE :
-	 ttl = "Create New Class/Interface/Enum " + getClassWhere();
-	 break;
+         ttl = "Create New Class/Interface/Enum " + getClassWhere();
+         break;
       case NEW_INNER_TYPE :
-	 ttl = "Create New Inner Class/Interface/Enum " + getMemberWhere();
-	 break;
+         ttl = "Create New Inner Class/Interface/Enum " + getMemberWhere();
+         break;
       case NEW_FIELD :
-	 ttl = "Create New Field " + getMemberWhere();
-	 break;
+         ttl = "Create New Field " + getMemberWhere();
+         break;
       case NEW_PACKAGE :
-	 ttl = "Create New Package in Project " + getProject();
-	 break;
+         ttl = "Create New Package in Project " + getProject();
+         break;
       case NEW_MODULE :
-	 ttl = "Create New Module in Project " + getProject();
-	 break;
+         ttl = "Create New Module in Project " + getProject();
+         break;
       case NEW_FILE :
-	 ttl = "Create New File/Module in " + getFileWhere();
-	 break;
+         ttl = "Create New File/Module in " + getFileWhere();
+         break;
       case NEW_DIRECTORY :
          ttl = "Create new Directory in " + getFileWhere();
          break;
       default:
-	 break;
+         break;
     }
 
    return ttl;
@@ -178,16 +178,16 @@ public String getTitleLocation(BuenoType typ)
       case NEW_METHOD :
       case NEW_INNER_TYPE :
       case NEW_FIELD :
-	 ttl = getMemberWhere();
-	 break;
+         ttl = getMemberWhere();
+         break;
       case NEW_CLASS :
       case NEW_INTERFACE :
       case NEW_ENUM :
       case NEW_TYPE :
-	 ttl = getClassWhere();
-	 break;
+         ttl = getClassWhere();
+         break;
       default:
-	 break;
+         break;
     }
 
    return ttl;
@@ -205,8 +205,8 @@ private String getMemberWhere()
       whr = getInsertBefore();
       if (whr != null) ttl += "Before " + getTitleName(whr);
       else {
-	 whr = getInsertAtEnd();
-	 if (whr != null) ttl += "At end of " + getTitleName(whr);
+         whr = getInsertAtEnd();
+         if (whr != null) ttl += "At end of " + getTitleName(whr);
       }
    }
 
@@ -243,7 +243,7 @@ private String getTitleName(String s)
 
 
 
-}	// end of abstract class BuenoLocation
+}       // end of abstract class BuenoLocation
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
- /*		BddtLaunchBubble.java						*/
-/*										*/
-/*	Bubble Environment launch configuration bubble				*/
-/*										*/
+/*                                                                              */
+ /*             BddtLaunchBubble.java                                           */
+/*                                                                              */
+/*      Bubble Environment launch configuration bubble                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss	*/
+/*      Copyright 2010 Brown University -- Adam M. Cook, Steven P. Reiss        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -75,28 +75,28 @@ import java.util.Map;
 
 
 class BddtLaunchBubble extends BudaBubble implements BddtConstants, BudaConstants, BassConstants,
-	BumpConstants, BudaBubbleOutputer, ActionListener, UndoableEditListener {
+        BumpConstants, BudaBubbleOutputer, ActionListener, UndoableEditListener {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpClient		bump_client;
-private BumpLaunchConfig	launch_config;
-private BumpLaunchConfig	edit_config;
-private JTextComponent		launch_name;
-private JButton 		debug_button;
-private JButton 		save_button;
-private JButton 		revert_button;
-private JButton 		clone_button;
-private SwingComboBox<String>	project_name;
-private JTextComponent		log_file;
-private JTextComponent		working_directory;
-private boolean 		doing_load;
+private BumpClient              bump_client;
+private BumpLaunchConfig        launch_config;
+private BumpLaunchConfig        edit_config;
+private JTextComponent          launch_name;
+private JButton                 debug_button;
+private JButton                 save_button;
+private JButton                 revert_button;
+private JButton                 clone_button;
+private SwingComboBox<String>   project_name;
+private JTextComponent          log_file;
+private JTextComponent          working_directory;
+private boolean                 doing_load;
 private Map<JComponent,String> component_items;
 
 
@@ -106,9 +106,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtLaunchBubble(BumpLaunchConfig cfg)
@@ -123,9 +123,9 @@ BddtLaunchBubble(BumpLaunchConfig cfg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BumpLaunchConfig getLaunchConfig()
@@ -136,9 +136,9 @@ BumpLaunchConfig getLaunchConfig()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel methods								*/
-/*										*/
+/*                                                                              */
+/*      Panel methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -160,16 +160,16 @@ private void setupPanel()
    if (pxml != null) {
       List<String> pnms = new ArrayList<String>();
       for (Element pe : IvyXml.children(pxml,"PROJECT")) {
-	 String pnm = IvyXml.getAttrString(pe,"NAME");
-	 pnms.add(pnm);
+         String pnm = IvyXml.getAttrString(pe,"NAME");
+         pnms.add(pnm);
        }
       if (pnms.size() > 1 || lp == null) {
-	 project_name = pnl.addChoice("Project",pnms,lp,this);
-	 String xp = (String) project_name.getSelectedItem();
-	 if (xp != null && (lp == null || !xp.equals(lp))) {
-	    BumpLaunchConfig blc = launch_config.setProject(xp);
-	    if (blc != null) launch_config = blc;
-	  }
+         project_name = pnl.addChoice("Project",pnms,lp,this);
+         String xp = (String) project_name.getSelectedItem();
+         if (xp != null && (lp == null || !xp.equals(lp))) {
+            BumpLaunchConfig blc = launch_config.setProject(xp);
+            if (blc != null) launch_config = blc;
+          }
        }
     }
 
@@ -180,13 +180,13 @@ private void setupPanel()
       String what = fld.getFieldName();
       String val = launch_config.getAttribute(what);
       switch (fld.getType()) {
-	 case STRING :
-	    JTextArea jta = pnl.addTextArea(fld.getDescription(),val,
+         case STRING :
+            JTextArea jta = pnl.addTextArea(fld.getDescription(),val,
                   fld.getNumRows(),24,this);
-	    cmp = jta;
-	    focus = jta;
-	    break;
-	 case INTEGER  :
+            cmp = jta;
+            focus = jta;
+            break;
+         case INTEGER  :
             int ivl = 0;
             if (val != null) {
                try {
@@ -194,14 +194,14 @@ private void setupPanel()
                 }
                catch (NumberFormatException e) { }
              }
-	    SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
-		  fld.getMin(),fld.getMax(),ivl,this);
-	    cmp = snf;
-	    break;
-	 case CHOICE :
-	    List<ChoiceItem> vals = getChoiceValues(blt,fld);
-	    SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
-		  vals,val,false,this);
+            SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
+                  fld.getMin(),fld.getMax(),ivl,this);
+            cmp = snf;
+            break;
+         case CHOICE :
+            List<ChoiceItem> vals = getChoiceValues(blt,fld);
+            SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
+                  vals,val,false,this);
 //          if (val == null) {
 //             ChoiceItem cval = (ChoiceItem) cmb.getSelectedItem();
 //             if (cval == null && vals.size() > 0) cval = vals.get(0);
@@ -209,26 +209,26 @@ private void setupPanel()
 //               edit_config = edit_config.setAttribute(what,cval.getValue());
 //              }
 //           }
-	    cmp = cmb;
-	    break;
-	 case BOOLEAN :
-	    boolean bvl = (val == null ? false : "Tt1Yy".indexOf(val.charAt(0)) >= 0);
-	    JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
-	    cmp = cbx;
-	    break;
+            cmp = cmb;
+            break;
+         case BOOLEAN :
+            boolean bvl = (val == null ? false : "Tt1Yy".indexOf(val.charAt(0)) >= 0);
+            JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
+            cmp = cbx;
+            break;
          case PRESET :
-	 default :
-	    break;
+         default :
+            break;
        }
       if (cmp != null) component_items.put(cmp, what);
     }
 
    FileSystemView fsv = BoardFileSystemView.getFileSystemView();
    log_file = pnl.addFileField("Record Output",launch_config.getLogFile(),
-				  JFileChooser.FILES_ONLY,null,fsv,this,null,this);
+                                  JFileChooser.FILES_ONLY,null,fsv,this,null,this);
    component_items.put(log_file,"CAPTURE_IN_FILE");
    working_directory = pnl.addFileField("Working Directory",launch_config.getWorkingDirectory(),
-					   JFileChooser.DIRECTORIES_ONLY,null,fsv,this,null,this);
+                                           JFileChooser.DIRECTORIES_ONLY,null,fsv,this,null,this);
    pnl.addSeparator();
    debug_button = pnl.addBottomButton("Debug","DEBUG",this);
    save_button = pnl.addBottomButton("Save","SAVE",this);
@@ -279,15 +279,15 @@ private static class ChoiceItem {
       use_value = use;
    }
 
-   @Override public String toString()			{ return display_value; }
+   @Override public String toString()                   { return display_value; }
 
-   public String getValue()				{ return use_value; }
+   public String getValue()                             { return use_value; }
 
    @Override public boolean equals(Object o) {
       if (o instanceof ChoiceItem) return o == this;
       else if (o instanceof String) {
-	 String s = (String) o;
-	 if (s.equals(display_value) || s.equals(use_value)) return true;
+         String s = (String) o;
+         if (s.equals(display_value) || s.equals(use_value)) return true;
       }
       return false;
    }
@@ -329,22 +329,22 @@ private void reload()
       String val = launch_config.getAttribute(ent.getValue());
       JComponent cmp = ent.getKey();
       if (cmp instanceof JTextArea) {
-	 JTextArea ta = (JTextArea) cmp;
-	 ta.setText(val);
+         JTextArea ta = (JTextArea) cmp;
+         ta.setText(val);
       }
       else if (cmp instanceof SwingNumericField) {
-	 SwingNumericField snf = (SwingNumericField) cmp;
-	 int ival = Integer.parseInt(val);
-	 snf.setValue(ival);
+         SwingNumericField snf = (SwingNumericField) cmp;
+         int ival = Integer.parseInt(val);
+         snf.setValue(ival);
       }
       else if (cmp instanceof JCheckBox) {
-	 JCheckBox cbx = (JCheckBox) cmp;
-	 boolean bvl = launch_config.getBoolAttribute(ent.getValue());
-	 cbx.setSelected(bvl);
+         JCheckBox cbx = (JCheckBox) cmp;
+         boolean bvl = launch_config.getBoolAttribute(ent.getValue());
+         cbx.setSelected(bvl);
       }
       else if (cmp instanceof SwingComboBox<?>) {
-	 SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
-	 cmbo.setSelectedItem(val);
+         SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
+         cmbo.setSelectedItem(val);
       }
    }
 
@@ -369,9 +369,9 @@ private String getNewName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -384,9 +384,9 @@ private String getNewName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble output methods							*/
-/*										*/
+/*                                                                              */
+/*      Bubble output methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getConfigurator()
@@ -396,9 +396,9 @@ private String getNewName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Pop-up methods								*/
-/*										*/
+/*                                                                              */
+/*      Pop-up methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -421,9 +421,9 @@ private String getNewName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Button handler								*/
-/*										*/
+/*                                                                              */
+/*      Button handler                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -434,13 +434,13 @@ private String getNewName()
    
    if (cmd.equals("DEBUG")) {
       if (edit_config != null) {
-	 BumpLaunchConfig blc = edit_config.save();
-	 if (blc != null) {
-	    launch_config = blc;
-	    edit_config = null;
-	  }
-	 reload();
-	 reloadRepository();
+         BumpLaunchConfig blc = edit_config.save();
+         if (blc != null) {
+            launch_config = blc;
+            edit_config = null;
+          }
+         reload();
+         reloadRepository();
        }
       BddtFactory bf = BddtFactory.getFactory();
       bf.newDebugger(launch_config);
@@ -454,30 +454,30 @@ private String getNewName()
       if (edit_config != null) blc = edit_config.save();
       else if (launch_config.isWorkingCopy()) blc = launch_config.save();
       if (blc != null) {
-	 launch_config = blc;
-	 edit_config = null;
+         launch_config = blc;
+         edit_config = null;
        }
       reload();
       reloadRepository();
     }
    else if (cmd.equals("REVERT")) {
       if (edit_config != null) {
-	 edit_config = null;
-	 reload();
+         edit_config = null;
+         reload();
        }
     }
    else if (cmd.equals("CLONE")) {
       BumpLaunchConfig blc = launch_config.clone(getNewName());
       if (edit_config != null) {
-	 blc = blc.setArguments(edit_config.getArguments());
-	 blc = blc.setVMArguments(edit_config.getVMArguments());
-	 blc = blc.setMainClass(edit_config.getMainClass());
+         blc = blc.setArguments(edit_config.getArguments());
+         blc = blc.setVMArguments(edit_config.getVMArguments());
+         blc = blc.setMainClass(edit_config.getMainClass());
        }
       if (blc != null) {
-	 BddtLaunchBubble bbl = new BddtLaunchBubble(blc);
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 Rectangle loc = BudaRoot.findBudaLocation(this);
-	 bba.addBubble(bbl,loc.x + loc.width + 25,loc.y);
+         BddtLaunchBubble bbl = new BddtLaunchBubble(blc);
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         Rectangle loc = BudaRoot.findBudaLocation(this);
+         bba.addBubble(bbl,loc.x + loc.width + 25,loc.y);
        }
     }
    else if (doing_load) return;
@@ -501,12 +501,12 @@ private String getNewName()
       String pnm = (String) project_name.getSelectedItem();
       if (pnm != null && edit_config != null && edit_config.getProject().equals(pnm)) return;
       if (pnm != null && edit_config == null && launch_config != null &&
-	    launch_config.getProject().equals(pnm)) return;
+            launch_config.getProject().equals(pnm)) return;
       
       if (edit_config == null) edit_config = launch_config;
       if (edit_config != null) {
-	 edit_config = edit_config.setProject(pnm);
-	 recomputeStarts();
+         edit_config = edit_config.setProject(pnm);
+         recomputeStarts();
        }
     }
    else if (cmd.equals("comboBoxEdited")) ;
@@ -572,32 +572,32 @@ private void recomputeStarts()
 
    if (lt != null) {
       for (BumpLaunchConfigField fld : lt.getFields()) {
-	 if (fld.getEvaluate() != null && fld.getEvaluate().equals("START")) {
-	    SwingComboBox<ChoiceItem> combo = null;
-	    for (JComponent cmp : component_items.keySet()) {
-	       if (component_items.get(cmp).equals(fld.getFieldName())) {
-		  combo = (SwingComboBox<ChoiceItem>) cmp;
-		  break;
-	       }
-	    }
-	    if (combo != null) {
-	       List<ChoiceItem> vals = getChoiceValues(lt,fld);
-	       String val = cfg.getAttribute(fld.getFieldName());
-	       combo.removeAllItems();
-	       ChoiceItem st0 = null;
-	       ChoiceItem sel = null;
-	       for (ChoiceItem itm : vals) {
-		  if (st0 == null) st0 = itm;
-		  else if (itm.getValue().equals(val)) {
-		     sel = itm;
-		  }
-		  combo.addItem(itm);
-	       }
-	       if (sel == null) sel = st0;
-	       combo.setSelectedItem(sel);
-	       combo.repaint();
-	    }
-	 }
+         if (fld.getEvaluate() != null && fld.getEvaluate().equals("START")) {
+            SwingComboBox<ChoiceItem> combo = null;
+            for (JComponent cmp : component_items.keySet()) {
+               if (component_items.get(cmp).equals(fld.getFieldName())) {
+                  combo = (SwingComboBox<ChoiceItem>) cmp;
+                  break;
+               }
+            }
+            if (combo != null) {
+               List<ChoiceItem> vals = getChoiceValues(lt,fld);
+               String val = cfg.getAttribute(fld.getFieldName());
+               combo.removeAllItems();
+               ChoiceItem st0 = null;
+               ChoiceItem sel = null;
+               for (ChoiceItem itm : vals) {
+                  if (st0 == null) st0 = itm;
+                  else if (itm.getValue().equals(val)) {
+                     sel = itm;
+                  }
+                  combo.addItem(itm);
+               }
+               if (sel == null) sel = st0;
+               combo.setSelectedItem(sel);
+               combo.repaint();
+            }
+         }
       }
    }
 }
@@ -613,15 +613,15 @@ private void recomputeStarts()
    boolean fnd = false;
    for (JComponent cmp : component_items.keySet()) {
       if (cmp instanceof JTextComponent) {
-	 JTextComponent tc = (JTextComponent) cmp;
-	 if (tc.getDocument() == doc) {
-	    String val = tc.getText();
-	    String itm = component_items.get(cmp);
+         JTextComponent tc = (JTextComponent) cmp;
+         if (tc.getDocument() == doc) {
+            String val = tc.getText();
+            String itm = component_items.get(cmp);
             if (edit_config == null) edit_config = launch_config;
-	    if (edit_config != null) edit_config = edit_config.setAttribute(itm,val);
+            if (edit_config != null) edit_config = edit_config.setAttribute(itm,val);
             fnd = true;
-	    break;
-	 }
+            break;
+         }
       }
    }
 
@@ -652,7 +652,7 @@ private boolean isArea(JTextComponent tc,Document d)
 
 
 
-}	// end of class BddtLaunchBubble
+}       // end of class BddtLaunchBubble
 
 
 

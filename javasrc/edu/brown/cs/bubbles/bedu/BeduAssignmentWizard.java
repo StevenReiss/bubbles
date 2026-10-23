@@ -86,9 +86,9 @@ BeduAssignmentWizard()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /*
@@ -116,8 +116,8 @@ private void setDropDown()
    for (Assignment asg : avail_assignments) {
       asgs.add(asg.getName());
       if (idx < 0 && asg.isCurrent()) {
-	 idx = ct;
-	 desc = asg.getDescription();
+         idx = ct;
+         desc = asg.getDescription();
        }
       ++ct;
     }
@@ -133,9 +133,9 @@ private void setDropDown()
 
 
 /********************************************************************************/
-/*										*/
-/*	Choose Action								*/
-/*										*/
+/*                                                                              */
+/*      Choose Action                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ChooseAction implements ActionListener {
@@ -197,7 +197,7 @@ private class AssignmentWizardBubble extends BudaBubble {
       setContentPane(c,fc);
     }
 
-}	// end of inner class WizardBubble
+}       // end of inner class WizardBubble
 
 
 }       // end of class BeduAssignmentWizard

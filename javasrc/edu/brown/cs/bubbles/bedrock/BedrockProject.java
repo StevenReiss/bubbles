@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockProject.java						*/
-/*										*/
-/*	Project manager for Bubbles - Eclipse interface 			*/
-/*										*/
+/*                                                                              */
+/*              BedrockProject.java                                             */
+/*                                                                              */
+/*      Project manager for Bubbles - Eclipse interface                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -121,9 +121,9 @@ class BedrockProject implements BedrockConstants, IResourceChangeListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockPlugin our_plugin;
@@ -132,15 +132,16 @@ private boolean projects_registered;
 private Set<IProject> open_projects;
 private String default_project;
 private boolean projects_setup;
+private boolean doing_setup;
 private boolean use_android;
 
-private static boolean		initial_build = false;
-private static boolean		initial_refresh = false;
+private static boolean          initial_build = false;
+private static boolean          initial_refresh = false;
 
 private static Set<String> ignore_projects;
 
-private static boolean		show_events = true;
-private static boolean		show_preferences = false;
+private static boolean          show_events = true;
+private static boolean          show_preferences = false;
 
 static {
    ignore_projects = new HashSet<String>();
@@ -150,9 +151,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockProject(BedrockPlugin bp)
@@ -161,15 +162,16 @@ BedrockProject(BedrockPlugin bp)
    projects_inited = false;
    projects_registered = false;
    projects_setup = false;
+   doing_setup = false;
    open_projects = new HashSet<>();
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Starutp methods 							*/
-/*										*/
+/*                                                                              */
+/*      Starutp methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void initialize()
@@ -178,7 +180,7 @@ void initialize()
    
    default_project = null;
 
-   IvyXmlWriter xw = new IvyXmlWriter();		// force loading
+   IvyXmlWriter xw = new IvyXmlWriter();                // force loading
    xw.close();
 
    IWorkspace ws = ResourcesPlugin.getWorkspace();
@@ -192,36 +194,36 @@ void initialize()
       BedrockPlugin.logI("    PROJECT = " + projs[i].getName());
       String desc = "Project Setup for " + projs[i].getName();
       if (projs[i].isOpen()) {
-	 BedrockPlugin.logI("PROJECT OPEN");
-	 if (initial_build) {
-	    try {
-	       BedrockPlugin.logD("BUILD");
-	       BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);
-	       projs[i].build(IncrementalProjectBuilder.INCREMENTAL_BUILD,pm);
-	       pm.finish();
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logE("Problem doing initial build: " + e);
-	     }
-	  }
-	 attachProject(projs[i],false);
+         BedrockPlugin.logI("PROJECT OPEN");
+         if (initial_build) {
+            try {
+               BedrockPlugin.logD("BUILD");
+               BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);
+               projs[i].build(IncrementalProjectBuilder.INCREMENTAL_BUILD,pm);
+               pm.finish();
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logE("Problem doing initial build: " + e);
+             }
+          }
+         attachProject(projs[i],false);
        }
       else if (!PlatformUI.isWorkbenchRunning()) {
-	 try {
-	    if (initial_refresh) {
-	       BedrockPlugin.logI("REFRESH");
-	       projs[i].refreshLocal(IResource.DEPTH_INFINITE,null);
-	     }
-	    if (initial_build) {
-	       BedrockPlugin.logI("BUILD");
-	       BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);
-	       projs[i].build(IncrementalProjectBuilder.INCREMENTAL_BUILD,pm);
-	       pm.finish();
-	     }
-	  }
-	 catch (CoreException e) {
-	    BedrockPlugin.logE("Problem doing initial build: " + e);
-	  }
+         try {
+            if (initial_refresh) {
+               BedrockPlugin.logI("REFRESH");
+               projs[i].refreshLocal(IResource.DEPTH_INFINITE,null);
+             }
+            if (initial_build) {
+               BedrockPlugin.logI("BUILD");
+               BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);
+               projs[i].build(IncrementalProjectBuilder.INCREMENTAL_BUILD,pm);
+               pm.finish();
+             }
+          }
+         catch (CoreException e) {
+            BedrockPlugin.logE("Problem doing initial build: " + e);
+          }
        }
     }
 
@@ -236,7 +238,7 @@ void register()
    projects_registered = true;
 
    JavaCore.addPreProcessingResourceChangedListener(this,
-				     IResourceChangeEvent.POST_CHANGE|IResourceChangeEvent.POST_BUILD);
+                                     IResourceChangeEvent.POST_CHANGE|IResourceChangeEvent.POST_BUILD);
 }
 
 
@@ -250,9 +252,9 @@ void terminate()
 
 
 /********************************************************************************/
-/*										*/
-/*	Command processing							*/
-/*										*/
+/*                                                                              */
+/*      Command processing                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void listProjects(IvyXmlWriter xw)
@@ -272,27 +274,27 @@ void listProjects(IvyXmlWriter xw)
       boolean isjava = false;
       boolean isandroid = false;
       try {
-	 isjava = ip.hasNature(JavaCore.NATURE_ID);
-	 isandroid = ip.hasNature("com.android.ide.eclipse.adt.AndroidNature");
+         isjava = ip.hasNature(JavaCore.NATURE_ID);
+         isandroid = ip.hasNature("com.android.ide.eclipse.adt.AndroidNature");
        }
       catch (CoreException e) { }
       xw.field("ISJAVA",isjava);
       xw.field("ISANDROID",isandroid);
       try {
-	 xw.cdataElement("DESCRIPTION",ip.getDescription().getComment());
+         xw.cdataElement("DESCRIPTION",ip.getDescription().getComment());
        }
       catch (CoreException e) { }
       xw.textElement("BASE",ip.getFullPath().toOSString());
       try {
-	 IProject[] rp = ip.getReferencedProjects();
-	 for (int j = 0; j < rp.length; ++j) {
-	    xw.textElement("REFERENCES",rp[j].getName());
-	  }
+         IProject[] rp = ip.getReferencedProjects();
+         for (int j = 0; j < rp.length; ++j) {
+            xw.textElement("REFERENCES",rp[j].getName());
+          }
        }
       catch (Exception e) { }
       IProject[] up = ip.getReferencingProjects();
       for (int j = 0; j < up.length; ++j) {
-	 xw.textElement("USEDBY",up[j].getName());
+         xw.textElement("USEDBY",up[j].getName());
        }
       xw.end("PROJECT");
     }
@@ -303,20 +305,20 @@ void listProjects(IvyXmlWriter xw)
    for (IVMInstallType vtyp : vmtypes) {
       IVMInstall [] inst = vtyp.getVMInstalls();
       for (IVMInstall vm : inst) {
-	 xw.begin("VM");
-	 xw.field("NAME",vm.getName());
-	 xw.field("TYPE",vtyp.getName());
-	 xw.field("LOCATION",vm.getInstallLocation());
-	 xw.field("JAVADOC",vm.getJavadocLocation());
-	 boolean valid = vtyp.validateInstallLocation(vm.getInstallLocation()).isOK();
-	 xw.field("VALID",valid);
-	 if (vm == dflt) xw.field("DEFAULT",true);
-	 if (vm.getVMArguments() != null) {
-	    for (String s : vm.getVMArguments()) {
-	       xw.textElement("ARGUMENT",s);
-	     }
-	  }
-	 xw.end("VM");
+         xw.begin("VM");
+         xw.field("NAME",vm.getName());
+         xw.field("TYPE",vtyp.getName());
+         xw.field("LOCATION",vm.getInstallLocation());
+         xw.field("JAVADOC",vm.getJavadocLocation());
+         boolean valid = vtyp.validateInstallLocation(vm.getInstallLocation()).isOK();
+         xw.field("VALID",valid);
+         if (vm == dflt) xw.field("DEFAULT",true);
+         if (vm.getVMArguments() != null) {
+            for (String s : vm.getVMArguments()) {
+               xw.textElement("ARGUMENT",s);
+             }
+          }
+         xw.end("VM");
        }
     }
    xw.end("VMS");
@@ -325,8 +327,8 @@ void listProjects(IvyXmlWriter xw)
 
 
 void openProject(String name,boolean fil,boolean pat,boolean cls,boolean opt,boolean imps,
-		    String bkg,IvyXmlWriter xw)
-	throws BedrockException
+                    String bkg,IvyXmlWriter xw)
+        throws BedrockException
 {
    setupProjects();
 
@@ -370,7 +372,7 @@ void listSourceFiles(String name,IvyXmlWriter xw) throws BedrockException
 
 
 void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    IProject ip = findProject(proj);
 
@@ -382,7 +384,7 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
       mrks = ip.findMarkers(null,true,IResource.DEPTH_INFINITE);
       Map<Long,IMarker> marset = new HashMap<>();
       for (IMarker m : mrks) {
-	 marset.put(m.getId(),m);
+         marset.put(m.getId(),m);
        }
       BedrockUtil.outputMarkers(ip,marset.values(),xw);
       bdt = new BuildDoneThread(ip,marset.values());
@@ -420,7 +422,7 @@ private class BuildDoneThread extends Thread {
       our_plugin.finishMessage(xw);
     }
 
-}	// end of inner class BuildDoneThread
+}       // end of inner class BuildDoneThread
 
 
 
@@ -430,9 +432,9 @@ String getDefaultProject()
 }
 
 /********************************************************************************/
-/*										*/
-/*	Thread to compute and output project definitions			*/
-/*										*/
+/*                                                                              */
+/*      Thread to compute and output project definitions                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProjectThread extends Thread {
@@ -461,15 +463,15 @@ private class ProjectThread extends Thread {
       our_plugin.finishMessage(xw);
     }
 
-}	// end of inner class ProjectThread
+}       // end of inner class ProjectThread
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Project property editing						*/
-/*										*/
+/*                                                                              */
+/*      Project property editing                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void editProject(String proj,boolean lcl,Element xml,IvyXmlWriter xw) throws BedrockException
@@ -488,8 +490,8 @@ void editProject(String proj,boolean lcl,Element xml,IvyXmlWriter xw) throws Bed
       IWorkbench wb = PlatformUI.getWorkbench();
       ww = wb.getActiveWorkbenchWindow();
       if (ww == null) {
-	 IWorkbenchWindow [] wins = wb.getWorkbenchWindows();
-	 if (wins != null && wins.length > 0) ww = wins[0];
+         IWorkbenchWindow [] wins = wb.getWorkbenchWindows();
+         if (wins != null && wins.length > 0) ww = wins[0];
        }
       if (ww == null) ww = wb.openWorkbenchWindow(ip);
     }
@@ -512,69 +514,69 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
    List<IClasspathEntry> ents = new ArrayList<>();
    try {
       for (Element oe : IvyXml.children(pxml,"OPTION")) {
-	 String k = IvyXml.getAttrString(oe,"NAME");
-	 String v = IvyXml.getAttrString(oe,"VALUE");
-	 if (k.startsWith("edu.brown.cs.bubbles.bedrock.")) {
-	    String sfx = k.substring(29);
-	    QualifiedName qn = new QualifiedName("edu.brown.cs.bubbles.bedrock",
+         String k = IvyXml.getAttrString(oe,"NAME");
+         String v = IvyXml.getAttrString(oe,"VALUE");
+         if (k.startsWith("edu.brown.cs.bubbles.bedrock.")) {
+            String sfx = k.substring(29);
+            QualifiedName qn = new QualifiedName("edu.brown.cs.bubbles.bedrock",
                   sfx);
-	    try {
-	       ip.setPersistentProperty(qn,v);
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logD("Problem setting property " + qn + ": " + e);
-	     }
-	  }
-	 else ijp.setOption(k,v);
+            try {
+               ip.setPersistentProperty(qn,v);
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logD("Problem setting property " + qn + ": " + e);
+             }
+          }
+         else ijp.setOption(k,v);
        }
 
       for (Element xe : IvyXml.children(pxml,"XPREF")) {
-	  String q = IvyXml.getAttrString(xe,"NODE");
-	  String k = IvyXml.getAttrString(xe,"KEY");
-	  String v = IvyXml.getAttrString(xe,"VALUE");
-	  IPreferencesService ps = Platform.getPreferencesService();
-	  Preferences rn = ps.getRootNode();
-	  Preferences qn = rn.node(q);
-	  qn.put(k,v);
+          String q = IvyXml.getAttrString(xe,"NODE");
+          String k = IvyXml.getAttrString(xe,"KEY");
+          String v = IvyXml.getAttrString(xe,"VALUE");
+          IPreferencesService ps = Platform.getPreferencesService();
+          Preferences rn = ps.getRootNode();
+          Preferences qn = rn.node(q);
+          qn.put(k,v);
        }
 
       for (IClasspathEntry cpe : ijp.getRawClasspath()) ents.add(cpe);
       for (Element pe : IvyXml.children(pxml,"PATH")) {
-	 updatePathElement(ents,pe);
+         updatePathElement(ents,pe);
        }
 
       Element ref = IvyXml.getChild(pxml,"REFERENCES");
       if (ref != null) {
-	 IProject [] orefs = ip.getReferencedProjects();
-	 List<IProject> projs = new ArrayList<IProject>();
-	 for (Element re : IvyXml.children(ref,"PROJECT")) {
-	    String rpnm = IvyXml.getText(re);
-	    IProject rp = findProject(rpnm);
-	    if (rp != null) {
-	       projs.add(rp);
+         IProject [] orefs = ip.getReferencedProjects();
+         List<IProject> projs = new ArrayList<IProject>();
+         for (Element re : IvyXml.children(ref,"PROJECT")) {
+            String rpnm = IvyXml.getText(re);
+            IProject rp = findProject(rpnm);
+            if (rp != null) {
+               projs.add(rp);
                BedrockPlugin.logD("Handle reference project " + rp.getName());
-	       boolean fnd = false;
-	       for (IProject orp : orefs) {
-		  if (orp == rp) fnd = true;
+               boolean fnd = false;
+               for (IProject orp : orefs) {
+                  if (orp == rp) fnd = true;
                 }
-	       if (!fnd) {
-		  // IPath ppath = rp.getLocation();
-		  IPath ppath = rp.getFullPath();
-		  IClasspathEntry pent = JavaCore.newProjectEntry(ppath,
+               if (!fnd) {
+                  // IPath ppath = rp.getLocation();
+                  IPath ppath = rp.getFullPath();
+                  IClasspathEntry pent = JavaCore.newProjectEntry(ppath,
                         new IAccessRule[0],
                         false,
                         new IClasspathAttribute[0],false);
-		  ents.add(pent);
+                  ents.add(pent);
                 }
              }
             else {
                BedrockPlugin.logE("Reference project " + rpnm + " not found");
              }
-	  }
-	 IProject [] parr = projs.toArray(new IProject[projs.size()]);
-	 IProjectDescription ipd = ip.getDescription();
-	 ipd.setReferencedProjects(parr);
-	 ip.setDescription(ipd,null);
+          }
+         IProject [] parr = projs.toArray(new IProject[projs.size()]);
+         IProjectDescription ipd = ip.getDescription();
+         ipd.setReferencedProjects(parr);
+         ip.setDescription(ipd,null);
        }
 
       IClasspathEntry [] enta = new IClasspathEntry[ents.size()];
@@ -598,10 +600,10 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
    int id = IvyXml.getAttrInt(xml,"ID",0);
    if (id != 0) {
       for (IClasspathEntry ent : ents) {
-	 if (ent.hashCode() == id) {
-	    oent = ent;
-	    break;
-	  }
+         if (ent.hashCode() == id) {
+            oent = ent;
+            break;
+          }
        }
     }
 
@@ -615,82 +617,82 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
    switch (typ) {
       case "LIBRARY" :
       case "SOURCE" :
-	 BedrockPlugin.logD("START WROK ON ELEMENT");
-	 String f = IvyXml.getTextElement(xml,"BINARY");
-	 IPath bin = (f == null ? null : Path.fromOSString(f));
-	 f = IvyXml.getTextElement(xml,"SOURCE");
-	 IPath src = (f == null ? null : Path.fromOSString(f));
-	 BedrockPlugin.logD("PATHS " + bin + " " + src);
+         BedrockPlugin.logD("START WROK ON ELEMENT");
+         String f = IvyXml.getTextElement(xml,"BINARY");
+         IPath bin = (f == null ? null : Path.fromOSString(f));
+         f = IvyXml.getTextElement(xml,"SOURCE");
+         IPath src = (f == null ? null : Path.fromOSString(f));
+         BedrockPlugin.logD("PATHS " + bin + " " + src);
 
-	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
-	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
-	 IAccessRule [] rls = null;
-	 URI docu = null;
-	 String doc = IvyXml.getTextElement(xml,"JAVADOC");
-	 if (doc != null) {
-	    try {
-	       docu = new URI(doc);
-	     }
-	    catch (URISyntaxException e) { }
-	    if (docu == null) {
-	       try {
-		  docu = new URI("file://" + doc);
-		}
-	       catch (URISyntaxException e) { }
-	     }
-	  }
-	 if (oent != null) {
-	    rls = oent.getAccessRules();
-	  }
+         boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
+         boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
+         IAccessRule [] rls = null;
+         URI docu = null;
+         String doc = IvyXml.getTextElement(xml,"JAVADOC");
+         if (doc != null) {
+            try {
+               docu = new URI(doc);
+             }
+            catch (URISyntaxException e) { }
+            if (docu == null) {
+               try {
+                  docu = new URI("file://" + doc);
+                }
+               catch (URISyntaxException e) { }
+             }
+          }
+         if (oent != null) {
+            rls = oent.getAccessRules();
+          }
 
-	 IClasspathAttribute [] xatts = null;
-	 List<IClasspathAttribute> els = new ArrayList<>();
-	 if (optfg) els.add(JavaCore.newClasspathAttribute(IClasspathAttribute.OPTIONAL,"true"));
-	 if (docu != null) {
-	    els.add(JavaCore.newClasspathAttribute(
-		       IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME,docu.toString()));
-	  }
-	 if (!els.isEmpty()) {
-	    xatts = new IClasspathAttribute[els.size()];
-	    xatts = els.toArray(xatts);
-	  }
-	 List<IPath> exclpaths = new ArrayList<>();
-	 List<IPath> inclpaths = new ArrayList<>();
-	 for (Element pat : IvyXml.children(xml,"EXCLUDE")) {
-	    String f1 = IvyXml.getAttrString(pat,"PATH");
-	    if (f1 == null) continue;
-	    IPath fp = Path.fromOSString(f1);
-	    exclpaths.add(fp);
-	  }
-	 for (Element pat : IvyXml.children(xml,"INCLUDE")) {
-	    String f1 = IvyXml.getAttrString(pat,"PATH");
-	    if (f1 == null) continue;
-	    IPath fp = Path.fromOSString(f1);
-	    inclpaths.add(fp);
-	  }
-	 IPath [] exclarr = new IPath[exclpaths.size()];
-	 exclarr = exclpaths.toArray(exclarr);
-	 IPath [] inclarr = new IPath[inclpaths.size()];
-	 inclarr = exclpaths.toArray(inclarr);
+         IClasspathAttribute [] xatts = null;
+         List<IClasspathAttribute> els = new ArrayList<>();
+         if (optfg) els.add(JavaCore.newClasspathAttribute(IClasspathAttribute.OPTIONAL,"true"));
+         if (docu != null) {
+            els.add(JavaCore.newClasspathAttribute(
+                       IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME,docu.toString()));
+          }
+         if (!els.isEmpty()) {
+            xatts = new IClasspathAttribute[els.size()];
+            xatts = els.toArray(xatts);
+          }
+         List<IPath> exclpaths = new ArrayList<>();
+         List<IPath> inclpaths = new ArrayList<>();
+         for (Element pat : IvyXml.children(xml,"EXCLUDE")) {
+            String f1 = IvyXml.getAttrString(pat,"PATH");
+            if (f1 == null) continue;
+            IPath fp = Path.fromOSString(f1);
+            exclpaths.add(fp);
+          }
+         for (Element pat : IvyXml.children(xml,"INCLUDE")) {
+            String f1 = IvyXml.getAttrString(pat,"PATH");
+            if (f1 == null) continue;
+            IPath fp = Path.fromOSString(f1);
+            inclpaths.add(fp);
+          }
+         IPath [] exclarr = new IPath[exclpaths.size()];
+         exclarr = exclpaths.toArray(exclarr);
+         IPath [] inclarr = new IPath[inclpaths.size()];
+         inclarr = exclpaths.toArray(inclarr);
 
-	 IClasspathEntry nent = null;
-	 if (bin != null && !typ.equals("SOURCE")) {
-	    nent = JavaCore.newLibraryEntry(bin,src,null,
-		  rls,xatts,export);
-	  }
-	 else {
-	    nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
-		  null,xatts);
-	  }
+         IClasspathEntry nent = null;
+         if (bin != null && !typ.equals("SOURCE")) {
+            nent = JavaCore.newLibraryEntry(bin,src,null,
+                  rls,xatts,export);
+          }
+         else {
+            nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
+                  null,xatts);
+          }
 
-	 if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
-	    int idx = ents.indexOf(oent);
-	    ents.set(idx,nent);
-	  }
-	 else {
-	    ents.add(nent);
-	  }
-	 break;
+         if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
+            int idx = ents.indexOf(oent);
+            ents.set(idx,nent);
+          }
+         else {
+            ents.add(nent);
+          }
+         break;
     }
 
 }
@@ -712,11 +714,11 @@ private static final class SelProvider implements ISelectionProvider, IShellProv
    @Override public void removeSelectionChangedListener(ISelectionChangedListener listener) { }
    @Override public void setSelection(ISelection selection) { }
 
-   @Override public ISelection getSelection()		{ return project_selection; }
-   @Override public Shell getShell()			{ return use_shell; }
+   @Override public ISelection getSelection()           { return project_selection; }
+   @Override public Shell getShell()                    { return use_shell; }
 
 
-}	// end of inner class SelProvider
+}       // end of inner class SelProvider
 
 
 
@@ -731,22 +733,22 @@ private static final class RunPropDialog implements Runnable {
    @Override public void run() {
       PropertyDialogAction act = new PropertyDialogAction(use_provider,use_provider);
       try {
-	 act.run();
+         act.run();
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
+         BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
        }
     }
 
-}	// end of inner class RunPropDialog
+}       // end of inner class RunPropDialog
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	New project setup							*/
-/*										*/
+/*                                                                              */
+/*      New project setup                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void handleCreateProject(String pnm,File pdir,String type,Element props,IvyXmlWriter xw)
@@ -794,9 +796,9 @@ void importExistingProject(String name) throws Exception
 
 
 /********************************************************************************/
-/*										*/
-/*	Command utility routines						*/
-/*										*/
+/*                                                                              */
+/*      Command utility routines                                                */
+/*                                                                              */
 /********************************************************************************/
 
 IProject findProject(String name) throws BedrockException
@@ -823,7 +825,7 @@ private static final class JavaSourceFilter implements FileFilter {
       return f.getPath().endsWith(".java");
     }
 
-}	// end of subclass JavaSourceFilter
+}       // end of subclass JavaSourceFilter
 
 
 
@@ -839,9 +841,9 @@ static boolean useProject(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Attach and detach methods						*/
-/*										*/
+/*                                                                              */
+/*      Attach and detach methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean attachProject(IProject p,boolean setup)
@@ -856,9 +858,9 @@ private boolean attachProject(IProject p,boolean setup)
       IJavaProject ijp = JavaCore.create(p);
       ijp.open(null);
       if (setup) {
-	 SetupDefaults sdf = new SetupDefaults(ijp);
-	 sdf.schedule();
-	 sdf.join();
+         SetupDefaults sdf = new SetupDefaults(ijp);
+         sdf.schedule();
+         sdf.join();
        }
 //    if (setup) setupDefaults(ijp);
     }
@@ -920,13 +922,34 @@ private void detachProject(IProject p)
 
 private void setupProjects()
 {
+   if (projects_setup) return;
+   
+   synchronized (this) {
+      while (doing_setup) {
+         try {
+            wait(1000);
+          }
+         catch (InterruptedException e) { }
+       }
+      doing_setup = true;
+    }
+   
    if (!projects_setup) {
-      BedrockApplication.getDisplay();		     // wait for setup
+      BedrockApplication.getDisplay();               // wait for setup
+      BedrockPlugin.logD("SETUP PROJECTS");
       IWorkspace ws = ResourcesPlugin.getWorkspace();
       IWorkspaceRoot wr = ws.getRoot();
       IProject[] projs = wr.getProjects();
-      for (IProject ip : projs) attachProject(ip,true);
+      for (IProject ip : projs) {
+         attachProject(ip,true);
+       }
+      BedrockPlugin.logD("SETUP PROJECTS DONE");
       projects_setup = true;
+    }
+   
+   synchronized (this) {
+      doing_setup = false;
+      notifyAll();
     }
 }
 
@@ -943,26 +966,26 @@ private class SetupDefaults extends WorkbenchJob {
 
    @Override public IStatus runInUIThread(IProgressMonitor m) {
       try {
-	 BedrockApplication.getDisplay();
-	 IPreferenceStore ps = DebugUITools.getPreferenceStore();
-	 String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
-	 if (s == null || s.equals("prompt")) {
-	    ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
-	  }
-	 s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
-	 if (s == null || s.equals("prompt")) {
-	    ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
-	  }
-	 s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
-	 if (s == null || !s.equals("always")) {
-	    ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
-	    String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
-	    BedrockPlugin.logD("PREFSET " + s + " " + s1);
-	  }
-	 BedrockPlugin.logD("PREFVALUE " + s);
+         BedrockApplication.getDisplay();
+         IPreferenceStore ps = DebugUITools.getPreferenceStore();
+         String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
+         if (s == null || s.equals("prompt")) {
+            ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
+          }
+         s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
+         if (s == null || s.equals("prompt")) {
+            ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
+          }
+         s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+         if (s == null || !s.equals("always")) {
+            ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
+            String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+            BedrockPlugin.logD("PREFSET " + s + " " + s1);
+          }
+         BedrockPlugin.logD("PREFVALUE " + s);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem seting defaults",t);
+         BedrockPlugin.logE("Problem seting defaults",t);
        }
 
       return Status.OK_STATUS;
@@ -978,17 +1001,17 @@ private void setupDefaults(IJavaProject ijp)
       IPreferenceStore ps = DebugUITools.getPreferenceStore();
       String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
       if (s == null || s.equals("prompt")) {
-	 ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
+         ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
        }
       s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
       if (s == null || s.equals("prompt")) {
-	 ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
+         ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
        }
       s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
       if (s == null || !s.equals("always")) {
-	 ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
-	 String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
-	 BedrockPlugin.logD("PREFSET " + s + " " + s1);
+         ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
+         String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+         BedrockPlugin.logD("PREFSET " + s + " " + s1);
        }
       BedrockPlugin.logD("PREFVALUE " + s);
     }
@@ -1001,9 +1024,9 @@ private void setupDefaults(IJavaProject ijp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Project Access methods							*/
-/*										*/
+/*                                                                              */
+/*      Project Access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<IFile> getAllSourceFiles(String p) throws BedrockException
@@ -1025,13 +1048,13 @@ Collection<IProject> getOpenProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Package management methods						*/
-/*										*/
+/*                                                                              */
+/*      Package management methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void createPackage(String proj,String pkg,boolean force,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    IProject ip = findProject(proj);
    IJavaProject ijp = JavaCore.create(ip);
@@ -1039,14 +1062,14 @@ void createPackage(String proj,String pkg,boolean force,IvyXmlWriter xw)
    IPackageFragmentRoot ipfr = null;
    try {
       for (IPackageFragmentRoot pfr : ijp.getAllPackageFragmentRoots()) {
-	 try {
-	    if (!pfr.isExternal() && !pfr.isArchive() &&
-		   pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
-	       ipfr = pfr;
-	       break;
-	     }
-	  }
-	 catch (JavaModelException e) { }
+         try {
+            if (!pfr.isExternal() && !pfr.isArchive() &&
+                   pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
+               ipfr = pfr;
+               break;
+             }
+          }
+         catch (JavaModelException e) { }
        }
     }
    catch (JavaModelException e) {
@@ -1076,7 +1099,7 @@ void createPackage(String proj,String pkg,boolean force,IvyXmlWriter xw)
 
 
 void findPackage(String proj,String pkg,IvyXmlWriter xw)
-	throws BedrockException
+        throws BedrockException
 {
    IProject ip = findProject(proj);
    IPackageFragment ipf = findPackageFragment(proj,pkg);
@@ -1104,18 +1127,18 @@ IPackageFragment findPackageFragment(String proj,String pkg)
 
    try {
       for (IPackageFragmentRoot pfr : ijp.getAllPackageFragmentRoots()) {
-	 try {
-	    if (!pfr.isExternal() && !pfr.isArchive() &&
-		   pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
-	       IPackageFragment ipf = pfr.getPackageFragment(pkg);
-	       if (ipf != null && ipf.isOpen()) {
-		  File f = BedrockUtil.getFileForPath(ipf.getPath(),ip);
-		  if (f.exists()) return ipf;
-		  BedrockPlugin.logE("Fragment path doesn't exist: " + f);
-		}
-	     }
-	  }
-	 catch (JavaModelException e) { }
+         try {
+            if (!pfr.isExternal() && !pfr.isArchive() &&
+                   pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
+               IPackageFragment ipf = pfr.getPackageFragment(pkg);
+               if (ipf != null && ipf.isOpen()) {
+                  File f = BedrockUtil.getFileForPath(ipf.getPath(),ip);
+                  if (f.exists()) return ipf;
+                  BedrockPlugin.logE("Fragment path doesn't exist: " + f);
+                }
+             }
+          }
+         catch (JavaModelException e) { }
        }
     }
    catch (JavaModelException e) {
@@ -1130,9 +1153,9 @@ IPackageFragment findPackageFragment(String proj,String pkg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Preference methods							*/
-/*										*/
+/*                                                                              */
+/*      Preference methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void handlePreferences(String proj,IvyXmlWriter xw)
@@ -1157,12 +1180,12 @@ void handlePreferences(String proj,IvyXmlWriter xw)
     }
    else {
       try {
-	 IProject ip = findProject(proj);
-	 IJavaProject ijp = JavaCore.create(ip);
-	 opts = ijp.getOptions(true);
+         IProject ip = findProject(proj);
+         IJavaProject ijp = JavaCore.create(ip);
+         opts = ijp.getOptions(true);
        }
       catch (BedrockException e) {
-	 opts = JavaCore.getOptions();
+         opts = JavaCore.getOptions();
        }
     }
 
@@ -1181,24 +1204,24 @@ void handlePreferences(String proj,IvyXmlWriter xw)
 // try {
 //    Bundle b = Platform.getBundle("com.android.ide.eclipse.adt");
 //    if (b != null) {
-//	 xw.begin("PREF");
-//	 xw.field("NAME","bedrock.useAndroid");
-//	 xw.field("VALUE",true);
-//	 xw.field("OPTS",true);
-//	 xw.end("PREF");
-//	 use_android = true;
+//       xw.begin("PREF");
+//       xw.field("NAME","bedrock.useAndroid");
+//       xw.field("VALUE",true);
+//       xw.field("OPTS",true);
+//       xw.end("PREF");
+//       use_android = true;
 //     }
 //  }
 // catch (Throwable t) { }
 
    if (show_preferences) {
       try {
-	 IPreferencesService ips = Platform.getPreferencesService();
-	 IEclipsePreferences iep = ips.getRootNode();
-	 iep.accept(new PreferenceLister());
+         IPreferencesService ips = Platform.getPreferencesService();
+         IEclipsePreferences iep = ips.getRootNode();
+         iep.accept(new PreferenceLister());
        }
       catch (Throwable t) {
-	 BedrockPlugin.logD("Problem listing preferences: " + t);
+         BedrockPlugin.logD("Problem listing preferences: " + t);
        }
     }
 
@@ -1212,14 +1235,14 @@ void handleSetPreferences(String proj,Element xml,IvyXmlWriter xw)
 {
    if (proj == null) {
       for (IProject ip : open_projects) {
-	 setProjectPreferences(ip,xml);
+         setProjectPreferences(ip,xml);
        }
       setProjectPreferences(null,xml);
     }
    else {
       try {
-	 IProject ip = findProject(proj);
-	 setProjectPreferences(ip,xml);
+         IProject ip = findProject(proj);
+         setProjectPreferences(ip,xml);
        }
       catch (BedrockException e) { }
     }
@@ -1262,9 +1285,9 @@ private static final class PreferenceLister implements IPreferenceNodeVisitor {
    @Override public boolean visit(IEclipsePreferences node) {
       BedrockPlugin.logD("PREF " + node.name());
       try {
-	 for (String k : node.keys()) {
-	    BedrockPlugin.logD("PREFV " + k + " " + node.get(k,""));
-	  }
+         for (String k : node.keys()) {
+            BedrockPlugin.logD("PREFV " + k + " " + node.get(k,""));
+          }
        }
       catch (Throwable t) { }
       return true;
@@ -1275,9 +1298,9 @@ private static final class PreferenceLister implements IPreferenceNodeVisitor {
 
 
 /********************************************************************************/
-/*										*/
-/*	Project search methods							*/
-/*										*/
+/*                                                                              */
+/*      Project search methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
@@ -1286,24 +1309,24 @@ Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
 
    try {
       if (ir instanceof IFile) {
-	 IFile ifl = (IFile) ir;
-	 if (!ifl.isHidden() && !ifl.isDerived() && !ifl.isLinked()) {
-	    String nm = ifl.getName();
-	    int idx = nm.lastIndexOf(".");
-	    if (idx > 0) {
-	       String tail = nm.substring(idx);
-	       if (tail.equalsIgnoreCase(".java")) {
-		  rslt.add(ifl);
-		}
-	     }
-	  }
+         IFile ifl = (IFile) ir;
+         if (!ifl.isHidden() && !ifl.isDerived() && !ifl.isLinked()) {
+            String nm = ifl.getName();
+            int idx = nm.lastIndexOf(".");
+            if (idx > 0) {
+               String tail = nm.substring(idx);
+               if (tail.equalsIgnoreCase(".java")) {
+                  rslt.add(ifl);
+                }
+             }
+          }
        }
       else if (ir instanceof IContainer) {
-	 IContainer ic = (IContainer) ir;
-	 IResource[] mems = ic.members();
-	 for (int i = 0; i < mems.length; ++i) {
-	    findSourceFiles(mems[i],rslt);
-	  }
+         IContainer ic = (IContainer) ir;
+         IResource[] mems = ic.members();
+         for (int i = 0; i < mems.length; ++i) {
+            findSourceFiles(mems[i],rslt);
+          }
        }
     }
    catch (CoreException e) {
@@ -1326,12 +1349,12 @@ Collection<File> findFilteredFiles(File basefile,FileFilter ff,Collection<File> 
 
    if (basefile.isFile()) {
       if (ff == null || ff.accept(basefile)) {
-	 rslt.add(basefile);
+         rslt.add(basefile);
        }
     }
    else if (basefile.isDirectory()) {
       for (File f : basefile.listFiles()) {
-	 findFilteredFiles(f,ff,rslt);
+         findFilteredFiles(f,ff,rslt);
        }
     }
 
@@ -1348,15 +1371,15 @@ Collection<File> findProjectSourceFiles(IJavaProject jp)
    try {
       IClasspathEntry [] ents = jp.getResolvedClasspath(true);
       for (IClasspathEntry ent : ents) {
-	 if (ent.getEntryKind() != IClasspathEntry.CPE_SOURCE) continue;
-	 SourceFileFilter sff = new SourceFileFilter(ent);
-	 IPath p = ent.getPath();
-	 File f1 = BedrockUtil.getFileForPath(p,ip);
-	 String sp = p.toOSString();
-	 IFolder pf = ip.getFolder(f1.getPath());
-	 BedrockPlugin.logD("Lookup source path " + p + " " +
-	       sp + " " + pf + " " + f1);
-	 findFilteredFiles(f1,sff,rslt);
+         if (ent.getEntryKind() != IClasspathEntry.CPE_SOURCE) continue;
+         SourceFileFilter sff = new SourceFileFilter(ent);
+         IPath p = ent.getPath();
+         File f1 = BedrockUtil.getFileForPath(p,ip);
+         String sp = p.toOSString();
+         IFolder pf = ip.getFolder(f1.getPath());
+         BedrockPlugin.logD("Lookup source path " + p + " " +
+               sp + " " + pf + " " + f1);
+         findFilteredFiles(f1,sff,rslt);
        }
     }
    catch (CoreException e) {
@@ -1384,7 +1407,7 @@ private static final class SourceFileFilter implements FileFilter {
    private List<IvyPathPattern> buildPatternList(IPath [] pats) {
       List<IvyPathPattern> rslt = new ArrayList<>();
       for (IPath p : pats) {
-	 rslt.add(new IvyPathPattern(p.toOSString()));
+         rslt.add(new IvyPathPattern(p.toOSString()));
        }
       return rslt;
     }
@@ -1444,26 +1467,26 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
    try {
       IClasspathEntry[] ents = ijp.getResolvedClasspath(true);
       for (int i = 0; i < ents.length; ++i) {
-	 if (ents[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-	    IPath p = ents[i].getPath();
-	    File f = BedrockUtil.getFileForPath(p,ip);
-	    if (!f.exists()) continue;
-	    File f1 = IvyFile.getCanonical(f);
-	    icu = checkFilePrefix(ijp,f.getAbsolutePath(),file);
-	    if (icu != null) return icu;
-	    if (f1 != null && !f.equals(f1)) {
-	       icu = checkFilePrefix(ijp,f1.getAbsolutePath(),file);
-	       if (icu != null) return icu;
-	     }
-	    if (cfile != null) {
-	       icu = checkFilePrefix(ijp,f.getAbsolutePath(),cfile);
-	       if (icu != null) return icu;
-	       if (f1 != null && !f.equals(f1)) {
-		  icu = checkFilePrefix(ijp,f1.getAbsolutePath(),cfile);
-		  if (icu != null) return icu;
-		}
-	     }
-	  }
+         if (ents[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+            IPath p = ents[i].getPath();
+            File f = BedrockUtil.getFileForPath(p,ip);
+            if (!f.exists()) continue;
+            File f1 = IvyFile.getCanonical(f);
+            icu = checkFilePrefix(ijp,f.getAbsolutePath(),file);
+            if (icu != null) return icu;
+            if (f1 != null && !f.equals(f1)) {
+               icu = checkFilePrefix(ijp,f1.getAbsolutePath(),file);
+               if (icu != null) return icu;
+             }
+            if (cfile != null) {
+               icu = checkFilePrefix(ijp,f.getAbsolutePath(),cfile);
+               if (icu != null) return icu;
+               if (f1 != null && !f.equals(f1)) {
+                  icu = checkFilePrefix(ijp,f1.getAbsolutePath(),cfile);
+                  if (icu != null) return icu;
+                }
+             }
+          }
        }
 
       BedrockPlugin.logD("Can't find resolved entry for " + file + " " + ijp.getPath());
@@ -1495,7 +1518,7 @@ private ICompilationUnit checkFilePrefix(IJavaProject ijp,String pfx,String file
       IPath fp = new Path(file);
       IJavaElement je = ijp.findElement(fp);
       if (je != null && je instanceof ICompilationUnit) {
-	 return (ICompilationUnit) je;
+         return (ICompilationUnit) je;
        }
       BedrockPlugin.logD("File not found: " + file + " " + fp + " " + ijp);
     }
@@ -1507,7 +1530,7 @@ private ICompilationUnit checkFilePrefix(IJavaProject ijp,String pfx,String file
       IPath fp = new Path(file);
       IJavaElement je = ijp.findElement(fp);
       if (je != null && je instanceof ICompilationUnit) {
-	 return (ICompilationUnit) je;
+         return (ICompilationUnit) je;
        }
     }
    catch (JavaModelException e) { }
@@ -1522,8 +1545,8 @@ IFile getProjectFile(String proj,String file) throws BedrockException
 {
    if (proj == null) {
       for (IProject ip : open_projects) {
-	 IFile ifl = findProjectFile(ip,file,null);
-	 if (ifl != null) return ifl;
+         IFile ifl = findProjectFile(ip,file,null);
+         if (ifl != null) return ifl;
        }
       return null;
     }
@@ -1540,8 +1563,8 @@ IProject findProjectForFile(String proj,String file) throws BedrockException
    if (proj == null && file != null) {
       IProject last = null;
       for (IProject ip : open_projects) {
-	 IFile ifl = findProjectFile(ip,file,null);
-	 if (ifl != null) return ip;
+         IFile ifl = findProjectFile(ip,file,null);
+         if (ifl != null) return ip;
          last = ip;
        }
       BedrockPlugin.logX("No project found for file " + file);
@@ -1564,28 +1587,28 @@ private IFile findProjectFile(IResource ir,String name,String fname)
    if (fname == null) {
       int idx = name.lastIndexOf(File.separator);
       if (idx > 0) {
-	 fname = name.substring(idx+1);
+         fname = name.substring(idx+1);
        }
     }
 
    try {
       if (ir instanceof IFile) {
-	 IFile ifl = (IFile) ir;
-	 File f = ifl.getLocation().toFile();
-	 File f1 = f;
-	 if (fname != null && !f1.getName().equals(fname)) return null;
-	 if (f.getAbsolutePath().equals(name) || f.getPath().equals(name)) return ifl;
-	 f1 = IvyFile.getCanonical(f);
-	 if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
+         IFile ifl = (IFile) ir;
+         File f = ifl.getLocation().toFile();
+         File f1 = f;
+         if (fname != null && !f1.getName().equals(fname)) return null;
+         if (f.getAbsolutePath().equals(name) || f.getPath().equals(name)) return ifl;
+         f1 = IvyFile.getCanonical(f);
+         if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
          if (f.getPath().endsWith(name)) return ifl;
        }
       else if (ir instanceof IContainer) {
-	 IContainer ic = (IContainer) ir;
-	 IResource[] mems = ic.members();
-	 for (int i = 0; i < mems.length; ++i) {
-	    IFile ifl = findProjectFile(mems[i],name,fname);
-	    if (ifl != null) return ifl;
-	  }
+         IContainer ic = (IContainer) ir;
+         IResource[] mems = ic.members();
+         for (int i = 0; i < mems.length; ++i) {
+            IFile ifl = findProjectFile(mems[i],name,fname);
+            if (ifl != null) return ifl;
+          }
        }
     }
    catch (CoreException e) {
@@ -1598,13 +1621,13 @@ private IFile findProjectFile(IResource ir,String name,String fname)
 
 
 /********************************************************************************/
-/*										*/
-/*	Project dumping methods 						*/
-/*										*/
+/*                                                                              */
+/*      Project dumping methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolean opt,boolean imps,
-			      IvyXmlWriter xw)
+                              IvyXmlWriter xw)
 {
    if (p == null || p.getLocation() == null) return;
 
@@ -1614,9 +1637,9 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
    xw.field("WORKSPACE",p.getWorkspace().getRoot().getLocation().toOSString());
    try {
       if (p.hasNature("org.eclipse.jdt.core.javanature"))
-	 xw.field("ISJAVA",true);
+         xw.field("ISJAVA",true);
       if (p.hasNature("com.android.ide.eclipse.adt.AndroidNature"))
-	 xw.field("ISANDROID",true);
+         xw.field("ISANDROID",true);
     }
    catch (CoreException e) { }
 
@@ -1627,22 +1650,22 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       xw.end("CLASSPATH");
       xw.begin("CLASSPATH_VARS");
       for (String nm : JavaCore.getClasspathVariableNames()) {
-	 IPath vpath = JavaCore.getClasspathVariable(nm);
-	 if (vpath != null) {
-	    xw.begin("VARIABLE");
-	    xw.field("NAME",nm);
-	    xw.field("PATH",vpath.toOSString());
-	    xw.field("FILE",vpath.toFile().getAbsolutePath());
-	    xw.end("VARIABLE");
-	  }
+         IPath vpath = JavaCore.getClasspathVariable(nm);
+         if (vpath != null) {
+            xw.begin("VARIABLE");
+            xw.field("NAME",nm);
+            xw.field("PATH",vpath.toOSString());
+            xw.field("FILE",vpath.toFile().getAbsolutePath());
+            xw.end("VARIABLE");
+          }
        }
       xw.end("CLASSPATH_VARS");
       xw.begin("RAWPATH");
       try {
-	 IClasspathEntry [] ents = jp.getRawClasspath();
-	 for (IClasspathEntry ent : ents) {
-	    addPath(xw,jp,ent,false);
-	  }
+         IClasspathEntry [] ents = jp.getRawClasspath();
+         for (IClasspathEntry ent : ents) {
+            addPath(xw,jp,ent,false);
+          }
        }
       catch (JavaModelException e) { }
       xw.end("RAWPATH");
@@ -1664,10 +1687,10 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       IProject[] rp = p.getReferencedProjects();
       IProject[] up = p.getReferencingProjects();
       for (int j = 0; j < rp.length; ++j) {
-	 xw.textElement("REFERENCES",rp[j].getName());
+         xw.textElement("REFERENCES",rp[j].getName());
        }
       for (int j = 0; j < up.length; ++j) {
-	 xw.textElement("USEDBY",up[j].getName());
+         xw.textElement("USEDBY",up[j].getName());
        }
     }
    catch (Exception e) { }
@@ -1675,41 +1698,41 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
    if (opt && jp != null) {
       Map<?,?> opts = jp.getOptions(false);
       for (Map.Entry<?,?> ent : opts.entrySet()) {
-	 xw.begin("OPTION");
-	 xw.field("NAME",ent.getKey().toString());
-	 xw.field("VALUE",ent.getValue().toString());
-	 xw.end("OPTION");
+         xw.begin("OPTION");
+         xw.field("NAME",ent.getKey().toString());
+         xw.field("VALUE",ent.getValue().toString());
+         xw.end("OPTION");
        }
       Map<?,?> allopts = jp.getOptions(true);
       for (Map.Entry<?,?> ent : allopts.entrySet()) {
-	 String knm = (String) ent.getKey();
-	 if (opts.containsKey(knm)) continue;
-	 if (knm.startsWith("org.eclipse.jdt.core.formatter")) continue;
-	 xw.begin("OPTION");
-	 xw.field("DEFAULT",true);
-	 xw.field("NAME",ent.getKey().toString());
-	 xw.field("VALUE",ent.getValue().toString());
-	 xw.end("OPTION");
+         String knm = (String) ent.getKey();
+         if (opts.containsKey(knm)) continue;
+         if (knm.startsWith("org.eclipse.jdt.core.formatter")) continue;
+         xw.begin("OPTION");
+         xw.field("DEFAULT",true);
+         xw.field("NAME",ent.getKey().toString());
+         xw.field("VALUE",ent.getValue().toString());
+         xw.end("OPTION");
        }
       try {
-	 Map<?,?> pm = p.getPersistentProperties();
-	 for (Map.Entry<?,?> ent : pm.entrySet()) {
-	    QualifiedName qn = (QualifiedName) ent.getKey();
-	    xw.begin("PROPERTY");
-	    xw.field("QUAL",qn.getQualifier());
-	    xw.field("NAME",qn.getLocalName());
-	    xw.field("VALUE",ent.getValue().toString());
-	    xw.end("PROPERTY");
-	  }
+         Map<?,?> pm = p.getPersistentProperties();
+         for (Map.Entry<?,?> ent : pm.entrySet()) {
+            QualifiedName qn = (QualifiedName) ent.getKey();
+            xw.begin("PROPERTY");
+            xw.field("QUAL",qn.getQualifier());
+            xw.field("NAME",qn.getLocalName());
+            xw.field("VALUE",ent.getValue().toString());
+            xw.end("PROPERTY");
+          }
        }
       catch (CoreException e) { }
     }
 
    if (imps && jp != null) {
       try {
-	 for (IPackageFragment ipf : jp.getPackageFragments()) {
-	    outputImports(xw,ipf);
-	  }
+         for (IPackageFragment ipf : jp.getPackageFragments()) {
+            outputImports(xw,ipf);
+          }
        }
       catch (JavaModelException e) {}
     }
@@ -1730,21 +1753,21 @@ private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,bo
    try {
       IClasspathEntry[] ents = jp.getResolvedClasspath(true);
       for (IClasspathEntry ent : ents) {
-	 addPath(xw,jp,ent,refd);
+         addPath(xw,jp,ent,refd);
        }
       IPath op = jp.getOutputLocation();
       if (op != null) {
-	 xw.begin("PATH");
-	 xw.field("TYPE","BINARY");
-	 xw.field("TARGET",true);
-	 File f = BedrockUtil.getFileForPath(op,jp.getProject());
-	 if (f.exists()) xw.textElement("BINARY",f.getAbsolutePath());
-	 xw.end("PATH");
+         xw.begin("PATH");
+         xw.field("TYPE","BINARY");
+         xw.field("TARGET",true);
+         File f = BedrockUtil.getFileForPath(op,jp.getProject());
+         if (f.exists()) xw.textElement("BINARY",f.getAbsolutePath());
+         xw.end("PATH");
        }
       for (IProject rp : jp.getProject().getReferencedProjects()) {
-	 if (done.contains(rp)) continue;
-	 IJavaProject jrp = JavaCore.create(rp);
-	 addClassPaths(jrp,xw,done,true);
+         if (done.contains(rp)) continue;
+         IJavaProject jrp = JavaCore.create(rp);
+         addClassPaths(jrp,xw,done,true);
        }
     }
    catch (CoreException e) {
@@ -1769,10 +1792,10 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
    IClasspathAttribute [] atts = ent.getExtraAttributes();
    for (IClasspathAttribute att : atts) {
       if (att.getName().equals(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME))
-	 jdp = att.getValue();
+         jdp = att.getValue();
       else if (att.getName().equals(IClasspathAttribute.OPTIONAL)) {
-	 String v = att.getValue();
-	 if (v.equals("true")) opt = true;
+         String v = att.getValue();
+         if (v.equals("true")) opt = true;
        }
     }
 
@@ -1781,57 +1804,57 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
    if (p != null) {
       f1 = BedrockUtil.getFileForPath(p,ip);
       if (!f1.exists()) {
-	 BedrockPlugin.logD("Path file " + p + " not found as " + f1);
-	 // f1 = null;
+         BedrockPlugin.logD("Path file " + p + " not found as " + f1);
+         // f1 = null;
        }
     }
    File f2 = null;
    if (op != null) {
       f2 = BedrockUtil.getFileForPath(op,ip);
       if (!f2.exists()) {
-	 BedrockPlugin.logD("Path file " + op + " not found");
-	 f2 = null;
+         BedrockPlugin.logD("Path file " + op + " not found");
+         f2 = null;
        }
     }
    File f3 = null;
    if (sp != null) {
       f3 = BedrockUtil.getFileForPath(sp,ip);
       if (!f3.exists()) {
-	 BedrockPlugin.logD("Path file " + sp + " not found");
-	 f3 = null;
+         BedrockPlugin.logD("Path file " + sp + " not found");
+         f3 = null;
        }
     }
 
    if (ent.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
       try {
-	 for (IPackageFragmentRoot pfr : jp.findPackageFragmentRoots(ent)) {
-	    String nm = pfr.toString();
-	    if (nm.startsWith("<module:")) {
-	       IClasspathEntry xent = pfr.getResolvedClasspathEntry();
-	       IPath entp = xent.getPath();
-	       File entf = BedrockUtil.getFileForPath(entp,ip);
-	       File entf1 = entf.getParentFile();
-	       File entf2 = entf1.getParentFile();
-	       File entf3 = new File(entf2,"jmods");
-	       int idx = nm.indexOf(">");
-	       String nm1 = nm.substring(8,idx);
-	       File entf4 = new File(entf3,nm1 + ".jmod");
-	       // BedrockPlugin.logD("Add Module path " + entf4);
-	       xw.begin("PATH");
-	       if (refd) xw.field("INDIRECT",true);
-	       xw.field("TYPE","BINARY");
-	       xw.field("MODULE",true);
-	       xw.field("BINARY",entf4.getAbsolutePath());
-	       xw.field("SYSTEM",true);
-	       if (f3 != null) xw.textElement("SOURCE",f3.getAbsolutePath());
-	       if (jdp != null) xw.textElement("JAVADOC",jdp);
-	       xw.end("PATH");
-	     }
-	  }
-	 return;
+         for (IPackageFragmentRoot pfr : jp.findPackageFragmentRoots(ent)) {
+            String nm = pfr.toString();
+            if (nm.startsWith("<module:")) {
+               IClasspathEntry xent = pfr.getResolvedClasspathEntry();
+               IPath entp = xent.getPath();
+               File entf = BedrockUtil.getFileForPath(entp,ip);
+               File entf1 = entf.getParentFile();
+               File entf2 = entf1.getParentFile();
+               File entf3 = new File(entf2,"jmods");
+               int idx = nm.indexOf(">");
+               String nm1 = nm.substring(8,idx);
+               File entf4 = new File(entf3,nm1 + ".jmod");
+               // BedrockPlugin.logD("Add Module path " + entf4);
+               xw.begin("PATH");
+               if (refd) xw.field("INDIRECT",true);
+               xw.field("TYPE","BINARY");
+               xw.field("MODULE",true);
+               xw.field("BINARY",entf4.getAbsolutePath());
+               xw.field("SYSTEM",true);
+               if (f3 != null) xw.textElement("SOURCE",f3.getAbsolutePath());
+               if (jdp != null) xw.textElement("JAVADOC",jdp);
+               xw.end("PATH");
+             }
+          }
+         return;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logD("Problem getting roots: " + e);
+         BedrockPlugin.logD("Problem getting roots: " + e);
        }
     }
 
@@ -1849,17 +1872,17 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
 
    switch (ent.getEntryKind()) {
       case IClasspathEntry.CPE_SOURCE :
-	 xw.field("TYPE","SOURCE");
-	 xw.field("SUBDIRS",true);
-	 f3 = f1;
-	 f1 = null;
-	 break;
+         xw.field("TYPE","SOURCE");
+         xw.field("SUBDIRS",true);
+         f3 = f1;
+         f1 = null;
+         break;
       case IClasspathEntry.CPE_PROJECT :
-	 xw.field("TYPE","BINARY");
-	 break;
+         xw.field("TYPE","BINARY");
+         break;
       case IClasspathEntry.CPE_LIBRARY :
-	 xw.field("TYPE","LIBRARY");
-	 break;
+         xw.field("TYPE","LIBRARY");
+         break;
     }
    if (ent.isExported()) xw.field("EXPORTED",true);
    if (opt) xw.field("OPTIONAL",true);
@@ -1902,16 +1925,16 @@ private void addSourceFiles(IJavaProject jp,IvyXmlWriter xw,FileFilter ff)
    if (ff != null) {
       fls = findSourceFiles(ir,fls);
       for (IFile ifl : fls) {
-	 IPath ip = ifl.getLocation();
-	 File f = ip.toFile();
-	 ffls.add(f);
+         IPath ip = ifl.getLocation();
+         File f = ip.toFile();
+         ffls.add(f);
        }
     }
    else {
       ffls = findProjectSourceFiles(jp);
       for (File f : ffls) {
-	 IFile ifl = ir.getFile(f.getPath());
-	 fls.add(ifl);
+         IFile ifl = ir.getFile(f.getPath());
+         fls.add(ifl);
        }
     }
 
@@ -1923,21 +1946,21 @@ private void addSourceFiles(IJavaProject jp,IvyXmlWriter xw,FileFilter ff)
       else if (f.getName().endsWith(".class")) cid = "javaClass";
       if (ff != null && !ff.accept(f)) continue;
       if (f.exists()) {
-	 f = IvyFile.getCanonical(f);
-	 xw.begin("FILE");
-	 if (cid.endsWith("javaSource")) xw.field("SOURCE",true);
-	 else if (cid.endsWith("javaClass")) xw.field("BINARY",true);
-	 else xw.field("TYPENAME",cid);
-	 xw.field("NAME",f.getName());
-	 if (!f.canWrite()) xw.field("READONLY",true);
-//	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
-//	 xw.field("PROJPATH",ipr.toOSString());
-	 String path = f.getAbsolutePath();
-	 xw.field("PATH",path);
-	 if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path));
-	 xw.text(f.getPath());
-	 xw.end("FILE");
-	
+         f = IvyFile.getCanonical(f);
+         xw.begin("FILE");
+         if (cid.endsWith("javaSource")) xw.field("SOURCE",true);
+         else if (cid.endsWith("javaClass")) xw.field("BINARY",true);
+         else xw.field("TYPENAME",cid);
+         xw.field("NAME",f.getName());
+         if (!f.canWrite()) xw.field("READONLY",true);
+//       if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
+//       xw.field("PROJPATH",ipr.toOSString());
+         String path = f.getAbsolutePath();
+         xw.field("PATH",path);
+         if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path));
+         xw.text(f.getPath());
+         xw.end("FILE");
+        
        }
     }
 }
@@ -1950,23 +1973,23 @@ private void addClasses(IJavaProject jp,IvyXmlWriter xw)
    try {
       IClasspathEntry[] ents = jp.getResolvedClasspath(true);
       for (int k = 0; k < ents.length; ++k) {
-	 if (ents[k].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-	    IPackageFragmentRoot[] rts = jp.findPackageFragmentRoots(ents[k]);
-	    for (int l = 0; l < rts.length; ++l) {
-	       IJavaElement[] elts = rts[l].getChildren();
-	       for (int m = 0; m < elts.length; ++m) {
-		  if (elts[m] instanceof IPackageFragment) {
-		     IPackageFragment frag = (IPackageFragment) elts[m];
-		     xw.textElement("PACKAGE",frag.getElementName());
-		     for (ICompilationUnit icu : frag.getCompilationUnits()) {
-			for (IType typ : icu.getTypes()) {
-			   outputType(typ,jp,xw);
-			 }
-		      }
-		   }
-		}
-	     }
-	  }
+         if (ents[k].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+            IPackageFragmentRoot[] rts = jp.findPackageFragmentRoots(ents[k]);
+            for (int l = 0; l < rts.length; ++l) {
+               IJavaElement[] elts = rts[l].getChildren();
+               for (int m = 0; m < elts.length; ++m) {
+                  if (elts[m] instanceof IPackageFragment) {
+                     IPackageFragment frag = (IPackageFragment) elts[m];
+                     xw.textElement("PACKAGE",frag.getElementName());
+                     for (ICompilationUnit icu : frag.getCompilationUnits()) {
+                        for (IType typ : icu.getTypes()) {
+                           outputType(typ,jp,xw);
+                         }
+                      }
+                   }
+                }
+             }
+          }
        }
     }
    catch (JavaModelException e) {
@@ -1999,17 +2022,17 @@ private void outputImports(IvyXmlWriter xw,IPackageFragment ipf)
    try {
       boolean havepkg = false;
       for (ICompilationUnit icu : ipf.getCompilationUnits()) {
-	 for (IImportDeclaration imp : icu.getImports()) {
-	    xw.begin("IMPORT");
-	    if (imp.isOnDemand()) xw.field("DEMAND",true);
-	    if (Modifier.isStatic(imp.getFlags())) xw.field("STATIC",true);
-	    if (!havepkg) {
-	       xw.field("PACKAGE",ipf.getElementName());
-	       havepkg = true;
-	     }
-	    xw.text(imp.getElementName());
-	    xw.end("IMPORT");
-	 }
+         for (IImportDeclaration imp : icu.getImports()) {
+            xw.begin("IMPORT");
+            if (imp.isOnDemand()) xw.field("DEMAND",true);
+            if (Modifier.isStatic(imp.getFlags())) xw.field("STATIC",true);
+            if (!havepkg) {
+               xw.field("PACKAGE",ipf.getElementName());
+               havepkg = true;
+             }
+            xw.text(imp.getElementName());
+            xw.end("IMPORT");
+         }
        }
     }
    catch (JavaModelException e) { }
@@ -2033,9 +2056,9 @@ private File findBinaryFor(IJavaProject jp,IType typ)
 
 
 /********************************************************************************/
-/*										*/
-/*	Build methods								*/
-/*										*/
+/*                                                                              */
+/*      Build methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleBuild(IProject p,boolean clean,boolean full,boolean refresh) throws BedrockException
@@ -2044,20 +2067,20 @@ private void handleBuild(IProject p,boolean clean,boolean full,boolean refresh) 
 
    try {
       if (refresh) {
-	 String desc = "Refreshing project " + p.getName();
-	 BedrockProgressMonitor wait = new BuildMonitor(p.getName(),our_plugin,desc);
-	 p.refreshLocal(IResource.DEPTH_INFINITE,wait);
-	 wait.finish();
+         String desc = "Refreshing project " + p.getName();
+         BedrockProgressMonitor wait = new BuildMonitor(p.getName(),our_plugin,desc);
+         p.refreshLocal(IResource.DEPTH_INFINITE,wait);
+         wait.finish();
        }
       int kind = IncrementalProjectBuilder.INCREMENTAL_BUILD;
       String knm = "";
       if (clean) {
-	 kind = IncrementalProjectBuilder.CLEAN_BUILD;
-	 knm = "(clean)";
+         kind = IncrementalProjectBuilder.CLEAN_BUILD;
+         knm = "(clean)";
        }
       else if (full) {
-	 kind = IncrementalProjectBuilder.FULL_BUILD;
-	 knm = "(full)";
+         kind = IncrementalProjectBuilder.FULL_BUILD;
+         knm = "(full)";
        }
       String desc = "Building " + knm + " project " + p.getName();
       BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);
@@ -2085,19 +2108,21 @@ private class BuildMonitor extends BedrockProgressMonitor {
       super.done();
     }
 
-}	// end of inner class BuildMonitor
+}       // end of inner class BuildMonitor
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handler for workspace resources					*/
-/*										*/
+/*                                                                              */
+/*      Event handler for workspace resources                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void resourceChanged(IResourceChangeEvent evt)
 {
+   if (!projects_setup) return;         // ignore messages too early
+   
    if (show_events) {
       BedrockPlugin.logD("Resource Events Change: " + evt.getBuildKind() + " " +
             evt.getType() + " " +
@@ -2118,30 +2143,30 @@ private class BuildMonitor extends BedrockProgressMonitor {
 
    if (evt.getType() == IResourceChangeEvent.POST_CHANGE) {
       try {
-	 IvyXmlWriter xw = our_plugin.beginMessage("RESOURCE");
-	 IResourceDelta rd = evt.getDelta();
-	 int ctr = BedrockUtil.outputResource(rd,xw);
-	 if (ctr == 0) return;				   // nothing output
-	 our_plugin.finishMessage(xw);
+         IvyXmlWriter xw = our_plugin.beginMessage("RESOURCE");
+         IResourceDelta rd = evt.getDelta();
+         int ctr = BedrockUtil.outputResource(rd,xw);
+         if (ctr == 0) return;                             // nothing output
+         our_plugin.finishMessage(xw);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem with resource: " + t);
-	 t.printStackTrace();
+         BedrockPlugin.logE("Problem with resource: " + t);
+         t.printStackTrace();
        }
     }
    else if (evt.getType() == IResourceChangeEvent.POST_BUILD) {
 //    try {
-//	 IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
-//	 IResourceDelta rd = evt.getDelta();
-//	 int ctr = BedrockUtil.outputResource(rd,xw);
-//	 if (ctr != 0) our_plugin.finishMessage(xw);
-//	 else {
-//	    checkForProjectOpen(rd);
-//	  }
+//       IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
+//       IResourceDelta rd = evt.getDelta();
+//       int ctr = BedrockUtil.outputResource(rd,xw);
+//       if (ctr != 0) our_plugin.finishMessage(xw);
+//       else {
+//          checkForProjectOpen(rd);
+//        }
 //     }
 //    catch (Throwable t) {
-//	 BedrockPlugin.logE("Problem with resource: " + t);
-//	 t.printStackTrace();
+//       BedrockPlugin.logE("Problem with resource: " + t);
+//       t.printStackTrace();
 //     }
     }
 }
@@ -2153,7 +2178,7 @@ private void dumpDelta(int lvl,IResourceDelta drd)
 {
    if (drd == null) return;
    BedrockPlugin.logD("Resource " + lvl + " Delta: " + drd + " " + drd.getFullPath() + " " +
-			 drd.getFlags() + " " + drd.getKind() + " " + drd.getResource());
+                         drd.getFlags() + " " + drd.getKind() + " " + drd.getResource());
    for (IResourceDelta xrd : drd.getAffectedChildren()) {
       dumpDelta(lvl+1,xrd);
     }
@@ -2166,14 +2191,14 @@ private void dumpDelta(int lvl,IResourceDelta drd)
 // IResource ir = rd.getResource();
 // if (rd.getFlags() == IResourceDelta.OPEN) {
 //    if (ir != null && ir.getProject() != null && ir.getType() == IResource.PROJECT) {
-//	 IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
-//	 xw.field("PROJECT",ir.getProject().getName());
-//	 our_plugin.finishMessage(xw);
+//       IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
+//       xw.field("PROJECT",ir.getProject().getName());
+//       our_plugin.finishMessage(xw);
 //     }
 //  }
 // else if (ir.getType() == IResource.ROOT) {
 //    for (IResourceDelta crd : rd.getAffectedChildren()) {
-//	 checkForProjectOpen(crd);
+//       checkForProjectOpen(crd);
 //     }
 //  }
 // }
@@ -2182,9 +2207,9 @@ private void dumpDelta(int lvl,IResourceDelta drd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Project editing methods 						*/
-/*										*/
+/*                                                                              */
+/*      Project editing methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void setProjectClassPath(String proj,Element desc)
@@ -2211,7 +2236,7 @@ void setProjectDescription(String proj,Element desc)
 
 
 
-}	// end of class BedrockProject
+}       // end of class BedrockProject
 
 
 

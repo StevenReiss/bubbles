@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalMain.java							*/
-/*										*/
-/*	Bubbles ANALysis package main program for running independently 	*/
-/*										*/
+/*                                                                              */
+/*              BanalMain.java                                                  */
+/*                                                                              */
+/*      Bubbles ANALysis package main program for running independently         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -37,9 +37,9 @@ public final class BanalMain implements BanalConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -52,20 +52,20 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		mint_handle;
-private BanalMonitor	the_monitor;
+private String          mint_handle;
+private BanalMonitor    the_monitor;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BanalMain(String [] args)
@@ -85,20 +85,20 @@ private BanalMain(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument processing							*/
-/*										*/
+/*                                                                              */
+/*      Argument processing                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
 {
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-m") && i+1 < args.length) {   // -m <mint handle>
-	    mint_handle = args[++i];
-	  }
-	 else if (args[i].startsWith("-S")) {                           // -SERVER
-	  }
+         if (args[i].startsWith("-m") && i+1 < args.length) {   // -m <mint handle>
+            mint_handle = args[++i];
+          }
+         else if (args[i].startsWith("-S")) {                           // -SERVER
+          }
          else if (args[i].startsWith("-D")) {                           // -Debug
             IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
           }
@@ -111,10 +111,10 @@ private void scanArgs(String [] args)
             IvyLog.setLogFile(logf);
             IvyLog.useStdErr(false);
           }
-	 else badArgs();
+         else badArgs();
        }
       else {
-	 badArgs();
+         badArgs();
        }
     }
    
@@ -132,9 +132,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -150,7 +150,7 @@ private void process()
 
 
 
-}	// end of class BanalMain
+}       // end of class BanalMain
 
 
 

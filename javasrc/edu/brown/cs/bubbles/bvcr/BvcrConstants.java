@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrConstants.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository constant definitions		*/
-/*										*/
+/*                                                                              */
+/*              BvcrConstants.java                                              */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository constant definitions            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -36,9 +36,9 @@ public interface BvcrConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	BvcrCollaborationEvent -- event sent between users			*/
-/*										*/
+/*                                                                              */
+/*      BvcrCollaborationEvent -- event sent between users                      */
+/*                                                                              */
 /********************************************************************************/
 
 interface BvcrCollaborationEvent {
@@ -59,9 +59,9 @@ interface BvcrEventHandler {
 
 
 /********************************************************************************/
-/*										*/
-/*	Encryption constants							*/
-/*										*/
+/*                                                                              */
+/*      Encryption constants                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 byte [] KEY_SALT = new byte [] {
@@ -132,7 +132,7 @@ interface BvcrProjectUpdated extends EventListener {
 }
 
 
-}	// end of interface BattConstants
+}       // end of interface BattConstants
 
 
 

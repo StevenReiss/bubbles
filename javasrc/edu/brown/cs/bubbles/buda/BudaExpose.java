@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaExpose.java 						*/
-/*										*/
-/*	BUblles Display Area expose global action handler			*/
-/*										*/
+/*                                                                              */
+/*              BudaExpose.java                                                 */
+/*                                                                              */
+/*      BUblles Display Area expose global action handler                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,29 +51,29 @@ class BudaExpose extends AbstractAction implements ActionListener, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot	for_root;
-private BudaBubbleArea	bubble_area;
-// private Rectangle	start_viewport;
-// private int		center_x;
-// private int		center_y;
-// private int		target_x;
-// private int		target_y;
-private Mouser		mouse_handler;
-private Keyer		key_handler;
+private BudaRoot        for_root;
+private BudaBubbleArea  bubble_area;
+// private Rectangle    start_viewport;
+// private int          center_x;
+// private int          center_y;
+// private int          target_x;
+// private int          target_y;
+private Mouser          mouse_handler;
+private Keyer           key_handler;
 
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaExpose(BudaRoot br,BudaBubbleArea ba)
@@ -86,9 +86,9 @@ BudaExpose(BudaRoot br,BudaBubbleArea ba)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handler								*/
-/*										*/
+/*                                                                              */
+/*      Action handler                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent evt)
@@ -147,9 +147,9 @@ private void restore(boolean aimAtBubble)
 
 
 /********************************************************************************/
-/*										*/
-/*	Correlation methods							*/
-/*										*/
+/*                                                                              */
+/*      Correlation methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaBubble findBubble(int x,int y)
@@ -169,21 +169,21 @@ private BudaBubble findBubble(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handler								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handler                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Mouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       Point p0 = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),
-						bubble_area);
+                                                bubble_area);
       BudaBubble bb = findBubble(p0.x,p0.y);
       if (bb != null) {
-	//  target_x = bb.getX() + bb.getWidth()/2;
-	// target_y = bb.getY() + bb.getHeight()/2;
-	 restore(true);
+        //  target_x = bb.getX() + bb.getWidth()/2;
+        // target_y = bb.getY() + bb.getHeight()/2;
+         restore(true);
        }
     }
 
@@ -209,15 +209,15 @@ private final class Mouser extends MouseAdapter {
    @Override public void mouseExited(MouseEvent e) {
       bubble_area.processMouseMotionEvent(e);
     }
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Key handler								*/
-/*										*/
+/*                                                                              */
+/*      Key handler                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Keyer extends KeyAdapter {
@@ -228,14 +228,14 @@ private final class Keyer extends KeyAdapter {
        }
     }
 
-}	// end of inner class Keyer
+}       // end of inner class Keyer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Scaler: animate scaling the bubble area 				*/
-/*										*/
+/*                                                                              */
+/*      Scaler: animate scaling the bubble area                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class Scaler implements ActionListener {
@@ -274,11 +274,11 @@ private class Scaler implements ActionListener {
        }
     }
 
-}	// end of inner class Scaler
+}       // end of inner class Scaler
 
 
 
-}	// end of class BudaExpose
+}       // end of class BudaExpose
 
 
 

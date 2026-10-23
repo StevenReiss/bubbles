@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaViewport.java						*/
-/*										*/
-/*	BUblles Display Area scrollable viewport				*/
-/*										*/
+/*                                                                              */
+/*              BudaViewport.java                                               */
+/*                                                                              */
+/*      BUblles Display Area scrollable viewport                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,9 +47,9 @@ class BudaViewport extends JViewport implements Printable, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -57,9 +57,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaViewport(BudaBubbleArea view,Element config,int delta)
@@ -73,17 +73,17 @@ BudaViewport(BudaBubbleArea view,Element config,int delta)
    setDoubleBuffered(true);
 
    setScrollMode(SIMPLE_SCROLL_MODE);
-   // setScrollMode(BLIT_SCROLL_MODE);		// causes problems with floating windows
-   // setScrollMode(BACKINGSTORE_SCROLL_MODE);	Doesn't work correctly on macs
+   // setScrollMode(BLIT_SCROLL_MODE);          // causes problems with floating windows
+   // setScrollMode(BACKINGSTORE_SCROLL_MODE);  Doesn't work correctly on macs
 }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -98,9 +98,9 @@ void outputXml(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Print methods								*/
-/*										*/
+/*                                                                              */
+/*      Print methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int print(Graphics g0,PageFormat fmt,int idx)
@@ -140,7 +140,7 @@ void outputXml(BudaXmlWriter xw)
 
 
 
-}	// end of class BudaViewport
+}       // end of class BudaViewport
 
 
 

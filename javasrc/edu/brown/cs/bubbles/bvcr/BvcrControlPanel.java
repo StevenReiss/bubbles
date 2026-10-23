@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrControlPanel.java						*/
-/*										*/
-/*	Control panel for version management					*/
-/*										*/
+/*                                                                              */
+/*              BvcrControlPanel.java                                           */
+/*                                                                              */
+/*      Control panel for version management                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -71,19 +71,19 @@ class BvcrControlPanel implements BvcrConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private enum UpdateType { ABORT, UPDATE, UPDATE_KEEP, UPDATE_REMOVE };
 
-private String	for_project;
-private String	vcr_type;
-private File	root_directory;
+private String  for_project;
+private String  vcr_type;
+private File    root_directory;
 private Map<String,BvcrControlFileStatus> status_map;
 private Map<String,BvcrControlVersion> version_map;
-private int	update_count;
+private int     update_count;
 private SwingEventListenerList<BvcrProjectUpdated> update_listeners;
 private boolean  do_ignored;
 
@@ -91,9 +91,9 @@ private boolean  do_ignored;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrControlPanel(String proj,String typ,String dir)
@@ -111,14 +111,14 @@ BvcrControlPanel(String proj,String typ,String dir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getProject()				{ return for_project; }
+String getProject()                             { return for_project; }
 
-String getVcrType()				{ return vcr_type; }
+String getVcrType()                             { return vcr_type; }
 
 Map<String,BvcrControlFileStatus>  getFileMap() { return status_map; }
 
@@ -129,14 +129,14 @@ Set<BvcrControlFileStatus> getFiles()
    return new HashSet<BvcrControlFileStatus>(status_map.values());
 }
 
-Map<String,BvcrControlVersion> getVersionMap()	{ return version_map; }
+Map<String,BvcrControlVersion> getVersionMap()  { return version_map; }
 
 Set<BvcrControlVersion> getVersions()
 {
    return new HashSet<BvcrControlVersion>(version_map.values());
 }
 
-File getRootDirectory() 			{ return root_directory; }
+File getRootDirectory()                         { return root_directory; }
 
 void setIncludeIgnored(boolean fg)
 {
@@ -148,9 +148,9 @@ void setIncludeIgnored(boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener methods							*/
-/*										*/
+/*                                                                              */
+/*      Listener methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void addUpdateListener(BvcrProjectUpdated upd)
@@ -168,9 +168,9 @@ void removeUpdateListener(BvcrProjectUpdated upd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble getControlBubble()
@@ -184,9 +184,9 @@ BudaBubble getControlBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void startUpdate()
@@ -194,8 +194,8 @@ void startUpdate()
    synchronized (this) {
       if (update_count > 2) return;
       if (update_count++ == 0) {
-	 Updater upd = new Updater();
-	 BoardThreadPool.start(upd);
+         Updater upd = new Updater();
+         BoardThreadPool.start(upd);
        }
     }
 }
@@ -206,10 +206,10 @@ void waitForUpdate()
 {
    synchronized (this) {
       while (update_count > 0) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -231,7 +231,7 @@ void updateCompleted()
 
 private class Updater implements Runnable {
 
-   Updater() {	}
+   Updater() {  }
 
    @Override public void run() {
       for ( ; ; ) {
@@ -276,9 +276,9 @@ private class Updater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Version changing methods						*/
-/*										*/
+/*                                                                              */
+/*      Version changing methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void commitVersion(String msg)
@@ -314,8 +314,8 @@ private static String getCommitMessage()
    pnl.addBannerLabel("Commit");
    JTextArea area = pnl.addTextArea("Message",null,null);
    int fg = JOptionPane.showOptionDialog(null,pnl,"Commit Message",
-	 JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
-	 null,null,null);
+         JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
+         null,null,null);
    if (fg != JOptionPane.OK_OPTION) return null;
    String txt = area.getText();
    if (txt == null) return null;
@@ -385,8 +385,8 @@ private UpdateType safeForUpdate(String what,boolean allowuse)
     }
    // need to add options for update: Use Changes
    Object o = JOptionPane.showInputDialog(null,"Current source changed and not saved",
-	 "Confirm " + what,JOptionPane.ERROR_MESSAGE,
-	 null,choices,"Cancel Set Version");
+         "Confirm " + what,JOptionPane.ERROR_MESSAGE,
+         null,choices,"Cancel Set Version");
    if (o == null) return UpdateType.ABORT;
    if (o.equals("Cancel " + what)) return UpdateType.ABORT;
    else if (o.equals("Stash Changes")) {
@@ -418,15 +418,15 @@ void updateVersion()
    String cmd = "<BVCR DO='UPDATE' PROJECT='" + for_project + "'";
    switch (typ) {
       case ABORT :
-	 return;
+         return;
       case UPDATE :
-	 break;
+         break;
       case UPDATE_KEEP :
-	 cmd += " KEEP='T'";
-	 break;
+         cmd += " KEEP='T'";
+         break;
       case UPDATE_REMOVE :
-	 cmd += " DISCARD='T'";
-	 break;
+         cmd += " DISCARD='T'";
+         break;
     }
    cmd += "/>";
    mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
@@ -458,14 +458,14 @@ boolean hasChanged()
    Collection<BvcrControlFileStatus> files = getFiles();
    for (BvcrControlFileStatus file : files) {
       switch (file.getFileState()) {
-	 case ADDED :
-	 case COPIED :
-	 case DELETED :
-	 case MODIFIED :
-	 case RENAMED :
-	    return true;
-	 default :
-	    break;
+         case ADDED :
+         case COPIED :
+         case DELETED :
+         case MODIFIED :
+         case RENAMED :
+            return true;
+         default :
+            break;
        }
     }
 
@@ -476,13 +476,13 @@ boolean hasChanged()
 
 
 /********************************************************************************/
-/*										*/
-/*	Class containing the control bubble					*/
-/*										*/
+/*                                                                              */
+/*      Class containing the control bubble                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ControlPanelBubble extends BudaBubble implements BvcrProjectUpdated,
-		BudaBubble.BudaBubbleOutputer
+                BudaBubble.BudaBubbleOutputer
 {
    private BvcrControlPanel control_panel;
    private JButton version_button;
@@ -533,20 +533,20 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
          for (BvcrControlFileStatus fsts : ctrl.getFileMap().values()) {
             switch (fsts.getFileState()) {
                case ADDED :
-        	  nct++;
-        	  break;
+                  nct++;
+                  break;
                case COPIED :
                case MODIFIED :
-        	  mct++;
-        	  break;
+                  mct++;
+                  break;
                case DELETED :
-        	  dct++;
-        	  break;
+                  dct++;
+                  break;
                case UNTRACKED :
-        	  uct++;
-        	  break;
+                  uct++;
+                  break;
                default :
-        	  break;
+                  break;
              }
           }
        }
@@ -554,7 +554,7 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
       files_label.setText(cts);
     }
 
-   @Override public String getConfigurator()		   { return "BVCR"; }
+   @Override public String getConfigurator()               { return "BVCR"; }
 
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","CONTROL");
@@ -619,15 +619,15 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
       return pnl;
     }
 
-}	// end of inner class ControlPanelBubble
+}       // end of inner class ControlPanelBubble
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	File Change manager							*/
-/*										*/
+/*                                                                              */
+/*      File Change manager                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class FileChangeManager implements BumpConstants.BumpChangeHandler {
@@ -645,14 +645,14 @@ private final class FileChangeManager implements BumpConstants.BumpChangeHandler
       startUpdate();
     }
 
-}	// end of inner class FileChangeManager
+}       // end of inner class FileChangeManager
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class VersionPanelAction extends AbstractAction {
@@ -673,7 +673,7 @@ private static class VersionPanelAction extends AbstractAction {
       bba.addBubble(pnl,bbl,null,BudaConstants.PLACEMENT_LOGICAL);
     }
 
-}	// end of inner class VersionPanelAction
+}       // end of inner class VersionPanelAction
 
 
 
@@ -696,7 +696,7 @@ private static class FilePanelAction extends AbstractAction {
       bba.addBubble(pnl,bbl,null,BudaConstants.PLACEMENT_LOGICAL);
     }
 
-}	// end of inner class FilePanelAction
+}       // end of inner class FilePanelAction
 
 
 private static class CommitAction extends AbstractAction {
@@ -714,7 +714,7 @@ private static class CommitAction extends AbstractAction {
       control_panel.commitVersion(msg);
     }
 
-}	//end of inner class CommitAction
+}       //end of inner class CommitAction
 
 
 
@@ -731,7 +731,7 @@ private static class PushAction extends AbstractAction {
       control_panel.pushVersion();
     }
 
-}	//end of inner class PushAction
+}       //end of inner class PushAction
 
 
 
@@ -749,13 +749,13 @@ private static class UpdateAction extends AbstractAction {
       control_panel.updateVersion();
     }
 
-}	//end of inner class UpdateAction
+}       //end of inner class UpdateAction
 
 
 
 
 
-}	// end of class BvcrControlPanel
+}       // end of class BvcrControlPanel
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamFeedbackReport.java 					*/
-/*										*/
-/*	Bubbles Environment Auxillary & Missing items feedback report		*/
-/*										*/
+/*                                                                              */
+/*              BeamFeedbackReport.java                                         */
+/*                                                                              */
+/*      Bubbles Environment Auxillary & Missing items feedback report           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Yu Li			      */
+/*      Copyright 2010 Brown University -- Yu Li                              */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -62,9 +62,9 @@ class BeamFeedbackReport implements BeamConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/* Private Storage								*/
-/*										*/
+/*                                                                              */
+/* Private Storage                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaRoot     for_root;
@@ -74,9 +74,9 @@ enum FeedbackType { SUGGESTION, COMMENT, QUESTION, OTHER };
 
 
 /********************************************************************************/
-/*										*/
-/* Constructors 								*/
-/*										*/
+/*                                                                              */
+/* Constructors                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 BeamFeedbackReport(BudaRoot br)
@@ -87,9 +87,9 @@ BeamFeedbackReport(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*      Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addPanel()
@@ -247,9 +247,9 @@ private void sendFeedback(SwingGridPanel panel)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback to gather feedback report information				*/
-/*										*/
+/*                                                                              */
+/*      Callback to gather feedback report information                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class FeedbackReportListener implements ActionListener {
@@ -267,9 +267,9 @@ private final class FeedbackReportListener implements ActionListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback for anger reports						*/
-/*										*/
+/*                                                                              */
+/*      Callback for anger reports                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static boolean isLiLaPresent()
@@ -284,22 +284,22 @@ private static final class AngryListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       try {
-	 Class<?> c = Class.forName("usi.bubbles.FlyBy");
-	 Method m = c.getMethod("dumpStack");
-	 m.invoke(null);
-	 BoardLog.logI("BEAM","Anger report successful");
+         Class<?> c = Class.forName("usi.bubbles.FlyBy");
+         Method m = c.getMethod("dumpStack");
+         m.invoke(null);
+         BoardLog.logI("BEAM","Anger report successful");
        }
       catch (Throwable t) {
-	 BoardLog.logE("BEAM","Anger report failed",t);
+         BoardLog.logE("BEAM","Anger report failed",t);
        }
     }
 
-}	// end of inner class AngryListener
+}       // end of inner class AngryListener
 
 
 
 
-}	// end of class BeamFeedbackReport
+}       // end of class BeamFeedbackReport
 
 
 

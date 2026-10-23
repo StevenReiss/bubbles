@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentCpu.java						*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data cpu performance agent	*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentCpu.java                                            */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data cpu performance agent        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -37,32 +37,32 @@ class BandaidAgentCpu extends BandaidAgent implements BandaidConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<String,PerfCounter> counter_map;
 private Map<String,PerfCounter> current_map;
-private long			last_sample;
-private long			last_delta;
-private long			sample_count;
-private long			active_samples;
-private boolean 		have_active;
-private long			item_total;
-private long			item_base;
-private long			total_active;
+private long                    last_sample;
+private long                    last_delta;
+private long                    sample_count;
+private long                    active_samples;
+private boolean                 have_active;
+private long                    item_total;
+private long                    item_base;
+private long                    total_active;
 
 
-private StackTraceElement []	sys_stack;
+private StackTraceElement []    sys_stack;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentCpu(BandaidController bc)
@@ -88,9 +88,9 @@ BandaidAgentCpu(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void handleThreadStack(long now,ThreadInfo ti,StackTraceElement [] trc)
@@ -117,27 +117,27 @@ BandaidAgentCpu(BandaidController bc)
       StackTraceElement te = trc[j];
       String nm = te.getClassName();
       if (j == 0 && the_control.isIOClass(nm)) {
-	 isio = true;
-	 continue;
+         isio = true;
+         continue;
        }
       if (!haveuser && te.isNativeMethod()) continue;
       if (the_control.isSystemClass(nm)) {
-	 if (haveuser) sys_stack[scnt++] = te;
-	 else issys = true;
-	 continue;
+         if (haveuser) sys_stack[scnt++] = te;
+         else issys = true;
+         continue;
        }
       if (!have_active && !isio) {
-	 have_active = true;
-	 total_active += last_delta;
-	 ++active_samples;
+         have_active = true;
+         total_active += last_delta;
+         ++active_samples;
        }
       haveuser = true;
       if (scnt > 0) {
-	 for (int k = 0; k < scnt; ++k) {
-	    handleStackItem(now,sys_stack[k],null,depth++,isio,issys,true);
-	    sys_stack[k] = null;
-	  }
-	 scnt = 0;
+         for (int k = 0; k < scnt; ++k) {
+            handleStackItem(now,sys_stack[k],null,depth++,isio,issys,true);
+            sys_stack[k] = null;
+          }
+         scnt = 0;
        }
       handleStackItem(now,te,nm,depth++,isio,issys,false);
     }
@@ -149,7 +149,7 @@ BandaidAgentCpu(BandaidController bc)
 
 
 private void handleStackItem(long now,StackTraceElement te,String nm,int depth,
-				boolean isio,boolean issys,boolean thissys)
+                                boolean isio,boolean issys,boolean thissys)
 {
    if (isio) return;
 
@@ -180,9 +180,9 @@ private void handleStackItem(long now,StackTraceElement te,String nm,int depth,
 
 
 /********************************************************************************/
-/*										*/
-/*	Reporting methods							*/
-/*										*/
+/*                                                                              */
+/*      Reporting methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void generateReport(BandaidXmlWriter xw,long now)
@@ -201,7 +201,7 @@ private void handleStackItem(long now,StackTraceElement te,String nm,int depth,
 
    if (counter_map != null) {
       for (Map.Entry<String,PerfCounter> ent : counter_map.entrySet()) {
-	 ent.getValue().report(ent.getKey(),xw);
+         ent.getValue().report(ent.getKey(),xw);
        }
     }
 
@@ -211,9 +211,9 @@ private void handleStackItem(long now,StackTraceElement te,String nm,int depth,
 
 
 /********************************************************************************/
-/*										*/
-/*	PerfCounter class							*/
-/*										*/
+/*                                                                              */
+/*      PerfCounter class                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class PerfCounter {
@@ -244,13 +244,13 @@ private static class PerfCounter {
       xw.end();
     }
 
-}	// end of subclass PerfCounter
+}       // end of subclass PerfCounter
 
 
 
 
 
-}	 // end of class BandaidAgentCpu
+}        // end of class BandaidAgentCpu
 
 
 

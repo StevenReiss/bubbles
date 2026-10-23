@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaTest.java							*/
-/*										*/
-/*	BUblles Display Area test program					*/
-/*										*/
+/*                                                                              */
+/*              BudaTest.java                                                   */
+/*                                                                              */
+/*      BUblles Display Area test program                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -47,9 +47,9 @@ public final class BudaTest implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -63,17 +63,17 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BudaTest(String [] args)
@@ -84,9 +84,9 @@ private BudaTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Test methods								*/
-/*										*/
+/*                                                                              */
+/*      Test methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -101,9 +101,9 @@ private void runTest()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble frame test							*/
-/*										*/
+/*                                                                              */
+/*      Bubble frame test                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void test01()
@@ -114,19 +114,19 @@ private void test01()
 
    for (int i = 0; i < 100; ++i) {
       for (int j = 0; j < 4; ++j) {
-	 BudaBubble bb = new EditorBubble();
-	 if (bct < bbls.length) bbls[bct++] = bb;
+         BudaBubble bb = new EditorBubble();
+         if (bct < bbls.length) bbls[bct++] = bb;
 
-	 root.add(bb,new BudaConstraint(100+i*300+BUBBLE_DISPLAY_START_X,100+j*200+BUBBLE_DISPLAY_START_Y));
+         root.add(bb,new BudaConstraint(100+i*300+BUBBLE_DISPLAY_START_X,100+j*200+BUBBLE_DISPLAY_START_Y));
        }
     }
 
    BudaBubble sb = bbls[9];
    for (int i = 12; i < 16; ++i) {
       BudaBubbleLink lnk = new BudaBubbleLink(sb,
-						 new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
-						 bbls[i],
-						 new BudaDefaultPort(BudaPortPosition.BORDER_W,true));
+                                                 new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
+                                                 bbls[i],
+                                                 new BudaDefaultPort(BudaPortPosition.BORDER_W,true));
       root.addLink(lnk);
     }
 
@@ -154,9 +154,9 @@ private void test01()
 
 
 /********************************************************************************/
-/*										*/
-/*	Test editor bubble							*/
-/*										*/
+/*                                                                              */
+/*      Test editor bubble                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public static class EditorBubble extends BudaBubble {
@@ -181,7 +181,7 @@ public static class EditorBubble extends BudaBubble {
       getContentPane().setFont(f1);
     }
 
-}	// end of inner class EditorBubble
+}       // end of inner class EditorBubble
 
 
 
@@ -219,10 +219,10 @@ public static class BubbleEditor extends SwingEditorPane {
     }
 
 
-}	// end of inner class BubbleEditor
+}       // end of inner class BubbleEditor
 
 
-}	// end of class BudaTest
+}       // end of class BudaTest
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtStopTraceBubble.java					*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool history viewer		*/
-/*										*/
+/*                                                                              */
+/*              BddtStopTraceBubble.java                                        */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool history viewer                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -61,33 +61,33 @@ import java.util.Set;
 
 
 class BddtStopTraceBubble extends BudaBubble implements BddtConstants, BumpConstants,
-		BudaConstants, BumpConstants.BumpRunEventHandler, ChangeListener
+                BudaConstants, BumpConstants.BumpRunEventHandler, ChangeListener
 {
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private StopTracePanel	draw_area;
-private JScrollPane	scroll_pane;
-private JSlider 	time_slider;
-private BumpThread	for_thread;
-private boolean 	have_data;
-private RootNode	tree_root;
-private long		base_time;
+private StopTracePanel  draw_area;
+private JScrollPane     scroll_pane;
+private JSlider         time_slider;
+private BumpThread      for_thread;
+private boolean         have_data;
+private RootNode        tree_root;
+private long            base_time;
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtStopTraceBubble(BddtLaunchControl ctrl,BumpThread thrd)
@@ -115,9 +115,9 @@ BddtStopTraceBubble(BddtLaunchControl ctrl,BumpThread thrd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup the display						*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup the display                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -147,9 +147,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle user actions							*/
-/*										*/
+/*                                                                              */
+/*      Handle user actions                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -161,34 +161,34 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Run Event management							*/
-/*										*/
+/*                                                                              */
+/*      Run Event management                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleThreadEvent(BumpRunEvent evt)
 {
    if (evt.getEventType() == BumpRunEventType.THREAD_HISTORY) {
       if (!have_data && evt.getThread() == for_thread) {
-	 have_data = true;
-	 Element xml = (Element) evt.getEventData();
-	 System.err.println("DISPLAY TRACES: " + IvyXml.convertXmlToString(xml));
-	 tree_root.setup(xml);
-	 long start = IvyXml.getAttrLong(xml,"START");
-	 long end = IvyXml.getAttrLong(xml,"STOP");
-	 base_time = start;
-	 time_slider.setMinimum(0);
-	 time_slider.setMaximum((int) (end-start));
-	 time_slider.setValue((int) ((end - start)/2));
+         have_data = true;
+         Element xml = (Element) evt.getEventData();
+         System.err.println("DISPLAY TRACES: " + IvyXml.convertXmlToString(xml));
+         tree_root.setup(xml);
+         long start = IvyXml.getAttrLong(xml,"START");
+         long end = IvyXml.getAttrLong(xml,"STOP");
+         base_time = start;
+         time_slider.setMinimum(0);
+         time_slider.setMaximum((int) (end-start));
+         time_slider.setValue((int) ((end - start)/2));
        }
     }
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Slider event management 						*/
-/*										*/
+/*                                                                              */
+/*      Slider event management                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void stateChanged(ChangeEvent e)
@@ -206,9 +206,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel for drawing history						*/
-/*										*/
+/*                                                                              */
+/*      Panel for drawing history                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class StopTracePanel extends JTree implements TreeExpansionListener {
@@ -239,13 +239,13 @@ private class StopTracePanel extends JTree implements TreeExpansionListener {
       Object [] elts = new Object[2];
       elts[0] = tree_root;
       for (Enumeration<?> e = tree_root.children(); e.hasMoreElements(); ) {
-	 ThreadNode tn = (ThreadNode) e.nextElement();
-	 if (oexp.contains(tn.getThreadName())) {
-	    elts[1] = tn;
-	    TreePath tp = new TreePath(elts);
-	    expandPath(tp);
-	    expanded_threads.add(tn.getThreadName());
-	  }
+         ThreadNode tn = (ThreadNode) e.nextElement();
+         if (oexp.contains(tn.getThreadName())) {
+            elts[1] = tn;
+            TreePath tp = new TreePath(elts);
+            expandPath(tp);
+            expanded_threads.add(tn.getThreadName());
+          }
        }
    }
 
@@ -259,15 +259,15 @@ private class StopTracePanel extends JTree implements TreeExpansionListener {
       expanded_threads.add(tn.getThreadName());
     }
 
-}	// end of inner class StopTracePanel
+}       // end of inner class StopTracePanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*     Tree Model for stacks							*/
-/*										*/
+/*                                                                              */
+/*     Tree Model for stacks                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class RootNode implements TreeNode {
@@ -280,8 +280,8 @@ private class RootNode implements TreeNode {
 
    void setup(Element xml) {
       for (Element td : IvyXml.children(xml,"THREAD")) {
-	 ThreadNode tn = new ThreadNode(this,td);
-	 thread_nodes.add(tn);
+         ThreadNode tn = new ThreadNode(this,td);
+         thread_nodes.add(tn);
        }
     }
 
@@ -289,24 +289,24 @@ private class RootNode implements TreeNode {
       for (ThreadNode tn : thread_nodes) tn.updateStack(when);
     }
 
-   @Override public Enumeration<ThreadNode> children()	{ return Collections.enumeration(thread_nodes); }
-   @Override public boolean getAllowsChildren() 	{ return true; }
-   @Override public TreeNode getChildAt(int idx)	{ return thread_nodes.get(idx); }
-   @Override public int getChildCount() 		{ return thread_nodes.size(); }
-   @Override public int getIndex(TreeNode tn)		{ return thread_nodes.indexOf(tn); }
-   @Override public TreeNode getParent()		{ return null; }
-   @Override public boolean isLeaf()			{ return false; }
+   @Override public Enumeration<ThreadNode> children()  { return Collections.enumeration(thread_nodes); }
+   @Override public boolean getAllowsChildren()         { return true; }
+   @Override public TreeNode getChildAt(int idx)        { return thread_nodes.get(idx); }
+   @Override public int getChildCount()                 { return thread_nodes.size(); }
+   @Override public int getIndex(TreeNode tn)           { return thread_nodes.indexOf(tn); }
+   @Override public TreeNode getParent()                { return null; }
+   @Override public boolean isLeaf()                    { return false; }
 
-}	// end of inner class RootNode
+}       // end of inner class RootNode
 
 
 
 private static class ThreadNode implements TreeNode {
 
-   private RootNode	     parent_node;
-   private Element	     thread_data;
+   private RootNode          parent_node;
+   private Element           thread_data;
    private List<StackNode>   stack_nodes;
-   private String	     last_state;
+   private String            last_state;
 
    ThreadNode(RootNode rn,Element xml) {
       parent_node = rn;
@@ -320,30 +320,30 @@ private static class ThreadNode implements TreeNode {
       last_state = null;
       long best = 0;
       for (Element td : IvyXml.children(thread_data,"TRACE")) {
-	 long w = IvyXml.getAttrLong(td,"WHEN");
-	 if (w >= when && (best == 0 || w < best)) {
-	    trace = td;
-	    best = w;
-	  }
+         long w = IvyXml.getAttrLong(td,"WHEN");
+         if (w >= when && (best == 0 || w < best)) {
+            trace = td;
+            best = w;
+          }
        }
       if (trace != null) {
-	 last_state = IvyXml.getAttrString(trace,"STATE");
-	 for (Element c : IvyXml.children(trace,"STACK")) {
-	    StackNode sn = new StackNode(this,c);
-	    stack_nodes.add(sn);
-	  }
+         last_state = IvyXml.getAttrString(trace,"STATE");
+         for (Element c : IvyXml.children(trace,"STACK")) {
+            StackNode sn = new StackNode(this,c);
+            stack_nodes.add(sn);
+          }
        }
     }
 
-   String getThreadName()				{ return IvyXml.getAttrString(thread_data,"NAME"); }
+   String getThreadName()                               { return IvyXml.getAttrString(thread_data,"NAME"); }
 
-   @Override public Enumeration<StackNode> children()	{ return Collections.enumeration(stack_nodes); }
-   @Override public boolean getAllowsChildren() 	{ return true; }
-   @Override public TreeNode getChildAt(int idx)	{ return stack_nodes.get(idx); }
-   @Override public int getChildCount() 		{ return stack_nodes.size(); }
-   @Override public int getIndex(TreeNode tn)		{ return stack_nodes.indexOf(tn); }
-   @Override public TreeNode getParent()		{ return parent_node; }
-   @Override public boolean isLeaf()			{ return false; }
+   @Override public Enumeration<StackNode> children()   { return Collections.enumeration(stack_nodes); }
+   @Override public boolean getAllowsChildren()         { return true; }
+   @Override public TreeNode getChildAt(int idx)        { return stack_nodes.get(idx); }
+   @Override public int getChildCount()                 { return stack_nodes.size(); }
+   @Override public int getIndex(TreeNode tn)           { return stack_nodes.indexOf(tn); }
+   @Override public TreeNode getParent()                { return parent_node; }
+   @Override public boolean isLeaf()                    { return false; }
 
    @Override public String toString() {
       String nm = getThreadName();
@@ -351,7 +351,7 @@ private static class ThreadNode implements TreeNode {
       return nm;
    }
 
-}	// end of inner class ThreadNode
+}       // end of inner class ThreadNode
 
 
 
@@ -366,24 +366,24 @@ private static class StackNode implements TreeNode {
     }
 
    @Override public Enumeration<? extends TreeNode> children() { return null; }
-   @Override public boolean getAllowsChildren() 	{ return false; }
-   @Override public TreeNode getChildAt(int idx)	{ return null; }
-   @Override public int getChildCount() 		{ return 0; }
-   @Override public int getIndex(TreeNode tn)		{ return -1; }
-   @Override public TreeNode getParent()		{ return stack_thread; }
-   @Override public boolean isLeaf()			{ return true; }
+   @Override public boolean getAllowsChildren()         { return false; }
+   @Override public TreeNode getChildAt(int idx)        { return null; }
+   @Override public int getChildCount()                 { return 0; }
+   @Override public int getIndex(TreeNode tn)           { return -1; }
+   @Override public TreeNode getParent()                { return stack_thread; }
+   @Override public boolean isLeaf()                    { return true; }
 
    @Override public String toString() {
       return IvyXml.getAttrString(stack_data,"CLASS") + "." +
-	   IvyXml.getAttrString(stack_data,"METHOD") + "(" +
-	      IvyXml.getAttrString(stack_data,"LINE") + ")";
+           IvyXml.getAttrString(stack_data,"METHOD") + "(" +
+              IvyXml.getAttrString(stack_data,"LINE") + ")";
    }
 
-}	// end of inner class StackNode
+}       // end of inner class StackNode
 
 
 
-}	// end of class BddtStopTraceBubble
+}       // end of class BddtStopTraceBubble
 
 
 

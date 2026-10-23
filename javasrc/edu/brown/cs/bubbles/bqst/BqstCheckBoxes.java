@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstCheckBoxes.java						*/
-/*										*/
-/*	Bubbles questions and forms check box implementation			*/
-/*										*/
+/*                                                                              */
+/*              BqstCheckBoxes.java                                             */
+/*                                                                              */
+/*      Bubbles questions and forms check box implementation                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,15 +42,15 @@ class BqstCheckBoxes extends BqstQuestion implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String[]	     q_options;
+private String[]             q_options;
 private ArrayList<JCheckBox> q_buttons;
-private boolean 	     q_others;
-private JTextField	     q_field;
+private boolean              q_others;
+private JTextField           q_field;
 
 private static final long    serialVersionUID = 1L;
 
@@ -58,13 +58,13 @@ private static final long    serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstCheckBoxes(String qst,String help,String[] options,boolean required,
-			    boolean others)
+                            boolean others)
 {
    super(qst,QuestionType.CHECKBOX,help);
    setRequired(required);
@@ -76,9 +76,9 @@ protected BqstCheckBoxes(String qst,String help,String[] options,boolean require
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void setup()
@@ -108,15 +108,15 @@ protected BqstCheckBoxes(String qst,String help,String[] options,boolean require
     }
 
    setPreferredSize(new Dimension(CHECKBOX_SIZE.width,CHECKBOX_SIZE.height *
-				     q_buttons.size() + 90 + extra));
+                                     q_buttons.size() + 90 + extra));
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Get answer methods							*/
-/*										*/
+/*                                                                              */
+/*      Get answer methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override String getAnswer()
@@ -125,7 +125,7 @@ protected BqstCheckBoxes(String qst,String help,String[] options,boolean require
 
    for (int i = 0; i < q_buttons.size(); i++) {
       if (q_buttons.get(i).isSelected()) {
-	 answer += q_buttons.get(i).getText() + " ";
+         answer += q_buttons.get(i).getText() + " ";
        }
     }
 
@@ -139,9 +139,9 @@ protected BqstCheckBoxes(String qst,String help,String[] options,boolean require
 
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void reset()

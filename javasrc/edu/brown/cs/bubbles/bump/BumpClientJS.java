@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpClientJS.java						*/
-/*										*/
-/*	BUbbles Mint Partnership main class for using Node/JS			*/
-/*										*/
+/*                                                                              */
+/*              BumpClientJS.java                                               */
+/*                                                                              */
+/*      BUbbles Mint Partnership main class for using Node/JS                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -46,12 +46,12 @@ class BumpClientJS extends BumpClient
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	nobase_starting;
+private boolean         nobase_starting;
 
 private static String [] nobase_libs = new String [] {
    "json.jar",
@@ -62,9 +62,9 @@ private static String [] nobase_libs = new String [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpClientJS()
@@ -77,24 +77,24 @@ BumpClientJS()
 
 
 /********************************************************************************/
-/*										*/
-/*	Nobase interaction methods						*/
-/*										*/
+/*                                                                              */
+/*      Nobase interaction methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the name of the back end.
+ *      Return the name of the back end.
  **/
 
-@Override public String getName()		{ return "Node/JS"; }
-@Override public String getServerName() 	{ return "NOBASE"; }
+@Override public String getName()               { return "Node/JS"; }
+@Override public String getServerName()         { return "NOBASE"; }
 
 
 
 
 /**
- *	Start the back end running.  This routine will return immediately.  If the user
- *	actually needs to use the backend, they should use waitForIDE.
+ *      Start the back end running.  This routine will return immediately.  If the user
+ *      actually needs to use the backend, they should use waitForIDE.
  **/
 
 @Override void localStartIDE()
@@ -116,8 +116,8 @@ private void ensureRunning()
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
       BoardLog.logE("BUMP","Client mode with no Node/JS Back End found");
       JOptionPane.showMessageDialog(null,
-	    "Server must be running and accessible before client can be run",
-	    "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+            "Server must be running and accessible before client can be run",
+            "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
     }
 
@@ -132,8 +132,8 @@ private void ensureRunning()
    String cp = System.getProperty("java.class.path");
    for (String s : nobase_libs) {
       if (s.equals("eclipsejar")) {
-	 cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
-	 continue;
+         cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
+         continue;
        }
       String lib = BoardSetup.getSetup().getLibraryPath(s);
       if (lib == null) continue;
@@ -175,28 +175,28 @@ private void ensureRunning()
        }
       boolean eok = false;
       for (int i = 0; i < 200; ++i) {
-	 synchronized (this) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (tryPing()) {
-	    BoardLog.logI("BUMP","Node/JS Base started successfully");
-	    eok = true;
-	    break;
-	  }
-	 if (ex != null && !ex.isRunning()) {
-	    BoardLog.logE("BUMP","Problem starting javascript back end");
-	    JOptionPane.showMessageDialog(null,
-		  "Node/JS (Nobase) could not be started.",
-		  "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	    System.exit(1);
-	  }
+         synchronized (this) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
+         if (tryPing()) {
+            BoardLog.logI("BUMP","Node/JS Base started successfully");
+            eok = true;
+            break;
+          }
+         if (ex != null && !ex.isRunning()) {
+            BoardLog.logE("BUMP","Problem starting javascript back end");
+            JOptionPane.showMessageDialog(null,
+                  "Node/JS (Nobase) could not be started.",
+                  "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+          }
        }
       if (!eok) {
-	 BoardLog.logE("BUMP","Node/JS doesn't seem to start");
-	 System.exit(1);
+         BoardLog.logE("BUMP","Node/JS doesn't seem to start");
+         System.exit(1);
        }
     }
    catch (IOException e) {
@@ -255,7 +255,7 @@ private static class NobaseThread extends Thread {
 
 
 
-}	// end of class BumpClientJS
+}       // end of class BumpClientJS
 
 
 

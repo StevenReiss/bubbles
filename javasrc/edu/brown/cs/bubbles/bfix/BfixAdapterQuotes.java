@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterQuotes.java						*/
-/*										*/
-/*	Handle problesm with mistyped quotes					*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterQuotes.java                                          */
+/*                                                                              */
+/*      Handle problesm with mistyped quotes                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,18 +43,18 @@ class BfixAdapterQuotes extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static List<BfixErrorPattern> quote_patterns;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterQuotes()
@@ -73,9 +73,9 @@ BfixAdapterQuotes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract method implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract method implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
@@ -101,9 +101,9 @@ BfixAdapterQuotes()
 
 
 /********************************************************************************/
-/*										*/
-/*	Find potential fixes							*/
-/*										*/
+/*                                                                              */
+/*      Find potential fixes                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
@@ -162,9 +162,9 @@ private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Potential quote fix							*/
-/*										*/
+/*                                                                              */
+/*      Potential quote fix                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class QuoteFix implements BfixEdit {
@@ -227,15 +227,15 @@ private static class QuoteFix implements BfixEdit {
       return rslt;
     }
 
-}	// end of inner class QuoteFix
+}       // end of inner class QuoteFix
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Quote error fixer							*/
-/*										*/
+/*                                                                              */
+/*      Quote error fixer                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class QuoteFixer extends BfixFixer {
@@ -267,14 +267,14 @@ private class QuoteFixer extends BfixFixer {
       return sd;
     }
 
-}	// end of inner class QuoteFixer
+}       // end of inner class QuoteFixer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to fix the quote error						*/
-/*										*/
+/*                                                                              */
+/*      Class to fix the quote error                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class QuoteDoer extends BfixFixDoer {
@@ -293,10 +293,10 @@ private class QuoteDoer extends BfixFixDoer {
 
    @Override public double getRegionOrder()                { return 0; } 
    
-}	// end of inner class QuoteDoer
+}       // end of inner class QuoteDoer
 
 
-}	// end of class BfixAdapterQuotes
+}       // end of class BfixAdapterQuotes
 
 
 

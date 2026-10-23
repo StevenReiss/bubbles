@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseValue.java						*/
-/*										*/
-/*	Representation of a javascript value					*/
-/*										*/
+/*                                                                              */
+/*              NobaseValue.java                                                */
+/*                                                                              */
+/*      Representation of a javascript value                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -41,16 +41,16 @@ class NobaseValue implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseType	value_type;
-protected Object	known_value;
+private NobaseType      value_type;
+protected Object        known_value;
 
 
-private static Map<Object,NobaseValue>	value_map = new WeakHashMap<Object,NobaseValue>();
+private static Map<Object,NobaseValue>  value_map = new WeakHashMap<Object,NobaseValue>();
 private static Map<NobaseType,NobaseValue> any_map = new WeakHashMap<NobaseType,NobaseValue>();
 
 
@@ -71,23 +71,23 @@ private static NobaseValue unknown_value = new UnknownValue();
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
-static NobaseValue createUndefined()		{ return undef_value; }
+static NobaseValue createUndefined()            { return undef_value; }
 
-static NobaseValue createNull() 		{ return null_value; }
+static NobaseValue createNull()                 { return null_value; }
 
-static NobaseValue createBoolean()		{ return bool_value; }
+static NobaseValue createBoolean()              { return bool_value; }
 
 static NobaseValue createBoolean(boolean fg)
 {
    return (fg ? true_value : false_value);
 }
 
-static NobaseValue createNumber()		{ return number_value; }
+static NobaseValue createNumber()               { return number_value; }
 
 static synchronized NobaseValue createNumber(Number n)
 {
@@ -110,7 +110,7 @@ static NobaseValue createNumber(Character c)
    return createNumber(l);
 }
 
-static NobaseValue createString()		{ return string_value; }
+static NobaseValue createString()               { return string_value; }
 
 static synchronized NobaseValue createString(String s)
 {
@@ -125,9 +125,9 @@ static synchronized NobaseValue createString(String s)
 }
 
 
-static NobaseValue createObject()		{ return new ObjectValue(); }
+static NobaseValue createObject()               { return new ObjectValue(); }
 
-static NobaseValue createFunction()		{ return function_value; }
+static NobaseValue createFunction()             { return function_value; }
 
 static NobaseValue createNewFunction()
 {
@@ -170,14 +170,14 @@ static NobaseValue createAnyValue(NobaseType typ)
    synchronized (any_map) {
       NobaseValue nv = any_map.get(typ);
       if (nv == null) {
-	 nv = new AnyValue(typ);
-	 any_map.put(typ,nv);
+         nv = new AnyValue(typ);
+         any_map.put(typ,nv);
        }
       return nv;
     }
 }
 
-static NobaseValue createUnknownValue() 	{ return unknown_value; }
+static NobaseValue createUnknownValue()         { return unknown_value; }
 
 static NobaseValue createArrayValue()
 {
@@ -223,9 +223,9 @@ static NobaseValue mergeValues(NobaseValue t1,NobaseValue t2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected NobaseValue(NobaseType typ)
@@ -237,46 +237,46 @@ protected NobaseValue(NobaseType typ)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-NobaseType getType()					{ return value_type; }
+NobaseType getType()                                    { return value_type; }
 
 long getHashValue()
 {
    return hashCode();
 }
 
-void setBaseValue(NobaseValue typ)			{ }
+void setBaseValue(NobaseValue typ)                      { }
 
-boolean addProperty(Object prop,NobaseValue val)		{ return false; }
-boolean addGetterProperty(Object prop,NobaseValue val)		{ return false; }
-boolean addSetterProperty(Object prop,NobaseValue val)		{ return false; }
-void setHasOtherProperties()				{ }
-NobaseValue getProperty(Object name,boolean lhs)	{ return null; }
-boolean mergeProperties(NobaseValue nv) 		   { return false; }
+boolean addProperty(Object prop,NobaseValue val)                { return false; }
+boolean addGetterProperty(Object prop,NobaseValue val)          { return false; }
+boolean addSetterProperty(Object prop,NobaseValue val)          { return false; }
+void setHasOtherProperties()                            { }
+NobaseValue getProperty(Object name,boolean lhs)        { return null; }
+boolean mergeProperties(NobaseValue nv)                    { return false; }
 
-void addDefinition(ASTNode fct) 	{ }
-Collection<NobaseSymbol> getDefinitions()		{ return new ArrayList<NobaseSymbol>(); }
+void addDefinition(ASTNode fct)         { }
+Collection<NobaseSymbol> getDefinitions()               { return new ArrayList<NobaseSymbol>(); }
 NobaseScope getAssociatedScope()                        { return null; }
-void setEvaluator(Evaluator eval)			{ }
+void setEvaluator(Evaluator eval)                       { }
 NobaseValue evaluate(NobaseFile forfile,List<NobaseValue> args,NobaseValue thisval) {
    return createUnknownValue();
 }
 
-void setReturnValue(NobaseValue value)			{ }
+void setReturnValue(NobaseValue value)                  { }
 
-Collection<Object> getKnownProperties() 		{ return new ArrayList<Object>(); }
+Collection<Object> getKnownProperties()                 { return new ArrayList<Object>(); }
 
-void setConstructor()					{ }
+void setConstructor()                                   { }
 
 
-Object getKnownValue()					{ return known_value; }
-boolean isKnown()					{ return known_value != null; }
-boolean isAnyValue()					{ return false; }
-boolean isFunction()					{ return false; }
+Object getKnownValue()                                  { return known_value; }
+boolean isKnown()                                       { return known_value != null; }
+boolean isAnyValue()                                    { return false; }
+boolean isFunction()                                    { return false; }
 boolean isClass()                                       { return false; }
 
 String toShortString()                                  { return toString(); }
@@ -284,9 +284,9 @@ String toShortString()                                  { return toString(); }
 
 
 /********************************************************************************/
-/*										*/
-/*	Any Value								*/
-/*										*/
+/*                                                                              */
+/*      Any Value                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AnyValue extends NobaseValue {
@@ -296,20 +296,20 @@ private static class AnyValue extends NobaseValue {
       known_value = KnownValue.ANY;
     }
 
-   @Override boolean isAnyValue()				{ return true; }
+   @Override boolean isAnyValue()                               { return true; }
    
    @Override public String toString()                           { return "*ANY*"; }
 
-}	// end of inner class AnyValue
+}       // end of inner class AnyValue
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Unknown Value								*/
-/*										*/
+/*                                                                              */
+/*      Unknown Value                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class UnknownValue extends NobaseValue {
@@ -321,16 +321,16 @@ private static class UnknownValue extends NobaseValue {
    
    @Override public String toString()                           { return "*UNKNOWN*"; }
 
-}	// end of inner class AnyValue
+}       // end of inner class AnyValue
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Undefined type								*/
-/*										*/
+/*                                                                              */
+/*      Undefined type                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class UndefinedValue extends NobaseValue {
@@ -342,14 +342,14 @@ private static class UndefinedValue extends NobaseValue {
    
    @Override public String toString()                           { return "*UNDEFINED*"; }
    
-}	// end of inner class UndefinedValue
+}       // end of inner class UndefinedValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Null type								*/
-/*										*/
+/*                                                                              */
+/*      Null type                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NullValue extends NobaseValue {
@@ -361,14 +361,14 @@ private static class NullValue extends NobaseValue {
    
    @Override public String toString()                           { return "*NULL*"; }
    
-}	// end of inner class NullValue
+}       // end of inner class NullValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Boolean type								*/
-/*										*/
+/*                                                                              */
+/*      Boolean type                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BooleanValue extends NobaseValue {
@@ -387,14 +387,14 @@ private static class BooleanValue extends NobaseValue {
       else return "*" + known_value.toString().toUpperCase() + "*";
     }
 
-}	// end of inner class BooleanValue
+}       // end of inner class BooleanValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	String Value								*/
-/*										*/
+/*                                                                              */
+/*      String Value                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class StringValue extends NobaseValue {
@@ -413,14 +413,14 @@ private static class StringValue extends NobaseValue {
       else return "*::" + known_value.toString() + "::*";
     }
    
-}	// end of inner class StringValue
+}       // end of inner class StringValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Numeric Values								*/
-/*										*/
+/*                                                                              */
+/*      Numeric Values                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class NumberValue extends NobaseValue {
@@ -440,14 +440,14 @@ private static class NumberValue extends NobaseValue {
     }
    
    
-}	// end of inner class NumberValue
+}       // end of inner class NumberValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Object Values								 */
-/*										*/
+/*                                                                              */
+/*      Object Values                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ObjectValue extends NobaseValue {
@@ -513,42 +513,42 @@ private static class ObjectValue extends NobaseValue {
 
    @Override boolean addGetterProperty(Object name,NobaseValue val) {
       if (val != null) {
-	 if (content_type == null) content_type = val.getType();
-	 else content_type = content_type.mergeWith(val.getType());
+         if (content_type == null) content_type = val.getType();
+         else content_type = content_type.mergeWith(val.getType());
        }
       if (name == null) {
-	 if (!has_other) {
-	    setHasOtherProperties();
-	    return true;
-	  }
+         if (!has_other) {
+            setHasOtherProperties();
+            return true;
+          }
        }
       else {
-	 if (get_properties == null) get_properties = new HashMap<>();
-	 NobaseValue oval = get_properties.get(name);
-	 NobaseValue nval = mergeValues(val,oval);
-	 get_properties.put(name,nval);
-	 if (nval != oval) return true;
+         if (get_properties == null) get_properties = new HashMap<>();
+         NobaseValue oval = get_properties.get(name);
+         NobaseValue nval = mergeValues(val,oval);
+         get_properties.put(name,nval);
+         if (nval != oval) return true;
        }
       return false;
     }
 
    @Override boolean addSetterProperty(Object name,NobaseValue val) {
       if (val != null) {
-	 if (content_type == null) content_type = val.getType();
-	 else content_type = content_type.mergeWith(val.getType());
+         if (content_type == null) content_type = val.getType();
+         else content_type = content_type.mergeWith(val.getType());
        }
       if (name == null) {
-	 if (!has_other) {
-	    setHasOtherProperties();
-	    return true;
-	  }
+         if (!has_other) {
+            setHasOtherProperties();
+            return true;
+          }
        }
       else {
-	 if (set_properties == null) set_properties = new HashMap<>();
-	 NobaseValue oval = set_properties.get(name);
-	 NobaseValue nval = mergeValues(val,oval);
-	 set_properties.put(name,nval);
-	 if (nval != oval) return true;
+         if (set_properties == null) set_properties = new HashMap<>();
+         NobaseValue oval = set_properties.get(name);
+         NobaseValue nval = mergeValues(val,oval);
+         set_properties.put(name,nval);
+         if (nval != oval) return true;
        }
       return false;
     }
@@ -633,15 +633,15 @@ private static class ObjectValue extends NobaseValue {
       return buf.toString();
     }
 
-}	// end of inner class ObjectValue
+}       // end of inner class ObjectValue
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Array value								*/
-/*										*/
+/*                                                                              */
+/*      Array value                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ArrayValue extends ObjectValue {
@@ -655,15 +655,15 @@ private static class ArrayValue extends ObjectValue {
 
     }
 
-}	// end of inner class ArrayValue
+}       // end of inner class ArrayValue
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Function value								*/
-/*										*/
+/*                                                                              */
+/*      Function value                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FunctionValue extends ObjectValue {
@@ -684,12 +684,12 @@ private static class FunctionValue extends ObjectValue {
    FunctionValue(ASTNode fc) {
       this();
       if (fc != null) {
-	 addDefinition(fc);
-	 arg_values = new ArrayList<NobaseValue>();
+         addDefinition(fc);
+         arg_values = new ArrayList<NobaseValue>();
        }
     }
 
-   @Override boolean isFunction()			{ return true; }
+   @Override boolean isFunction()                       { return true; }
 
    @Override void addDefinition(ASTNode fc) {
       if (function_defs == null) function_defs = new HashSet<>();
@@ -703,10 +703,10 @@ private static class FunctionValue extends ObjectValue {
    @Override Collection<NobaseSymbol> getDefinitions() {
       List<NobaseSymbol> rslt = new ArrayList<>();
       if (function_defs != null) {
-	 for (ASTNode fc : function_defs) {
-	    NobaseSymbol ns = NobaseAst.getDefinition(fc);
-	    if (ns != null) rslt.add(ns);
-	 }
+         for (ASTNode fc : function_defs) {
+            NobaseSymbol ns = NobaseAst.getDefinition(fc);
+            if (ns != null) rslt.add(ns);
+         }
       }
       return rslt;
    }
@@ -743,9 +743,9 @@ private static class FunctionValue extends ObjectValue {
                NobaseValue ovalue = arg_values.get(i);
                NobaseValue nvalue = mergeValues(arg,ovalue);
                if (nvalue != null && !nvalue.equals(ovalue)) {
-        	  arg_values.set(i,nvalue);
-        	  chng = true;
-        	}
+                  arg_values.set(i,nvalue);
+                  chng = true;
+                }
              }
           }
        }
@@ -764,14 +764,14 @@ private static class FunctionValue extends ObjectValue {
       return "*FUNCTION*";
     }
 
-}	// end of inner class FunctionValue
+}       // end of inner class FunctionValue
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class value								*/
-/*										*/
+/*                                                                              */
+/*      Class value                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ClassValue extends ObjectValue {
@@ -790,7 +790,7 @@ private static class ClassValue extends ObjectValue {
        }
     }
    
-   @Override boolean isClass()			{ return true; }
+   @Override boolean isClass()                  { return true; }
    
    @Override void addDefinition(ASTNode fc) {
       if (class_defs == null) class_defs = new HashSet<>();
@@ -822,12 +822,12 @@ private static class ClassValue extends ObjectValue {
       return "*CLASS*";
     }
    
-}	// end of inner class FunctionValue
+}       // end of inner class FunctionValue
 
 
 
 
-}	// end of class NobaseValue
+}       // end of class NobaseValue
 
 
 

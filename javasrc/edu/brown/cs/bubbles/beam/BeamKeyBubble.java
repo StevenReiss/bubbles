@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamKeyBubble.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items key bindings bubble	*/
-/*										*/
+/*                                                                              */
+/*              BeamKeyBubble.java                                              */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items key bindings bubble       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -53,12 +53,12 @@ class BeamKeyBubble extends BudaBubble implements BeamConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static TableModel	table_model = null;
+private static TableModel       table_model = null;
 
 private static Map<String,String> where_labels;
 
@@ -81,9 +81,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructor								*/
-/*										*/
+/*                                                                              */
+/*      Constructor                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 BeamKeyBubble()
@@ -101,9 +101,9 @@ BeamKeyBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup the table model					*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup the table model                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static synchronized void setupTableModel()
@@ -168,9 +168,9 @@ private static Vector<String> vector(String... data)
 
 
 /********************************************************************************/
-/*										*/
-/*	Table									*/
-/*										*/
+/*                                                                              */
+/*      Table                                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static class KeyTable extends JTable {
@@ -186,11 +186,11 @@ private static class KeyTable extends JTable {
       setAutoCreateRowSorter(true);
     }
 
-}	// end of inner class KeyTable
+}       // end of inner class KeyTable
 
 
 
-}	// end of class BeamKeyBubble
+}       // end of class BeamKeyBubble
 
 
 

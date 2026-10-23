@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardProperties.java						*/
-/*										*/
-/*	Bubbles attribute and property management property handling		*/
-/*										*/
+/*                                                                              */
+/*              BoardProperties.java                                            */
+/*                                                                              */
+/*      Bubbles attribute and property management property handling             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,21 +57,21 @@ public class BoardProperties extends Properties implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/* Private Storage								*/
-/*										*/
+/*                                                                              */
+/* Private Storage                                                              */
+/*                                                                              */
 /********************************************************************************/
 
-private String	prop_name;
-private File	prop_file;
+private String  prop_name;
+private File    prop_file;
 
-private static File			   base_directory;
+private static File                        base_directory;
 private static Map<String,BoardProperties> loaded_properties;
-private static String			   prop_base;
-private static IvyFileLocker		   file_locker;
+private static String                      prop_base;
+private static IvyFileLocker               file_locker;
 
 
-private static final long		   serialVersionUID = 1;
+private static final long                  serialVersionUID = 1;
 
 
 
@@ -91,9 +91,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Property Set Access methods						*/
-/*										*/
+/*                                                                              */
+/*      Property Set Access methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -119,9 +119,9 @@ public static synchronized BoardProperties getProperties(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Library access methods							*/
-/*										*/
+/*                                                                              */
+/*      Library access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -139,10 +139,10 @@ public static InputStream getResourceFile(String name)
    if (dir0.exists()) {
       File f3 = new File(dir0,pname);
       if (f3.exists() && f3.canRead()) {
-	 try {
-	    return new FileInputStream(f3);
-	  }
-	 catch (IOException e) {}
+         try {
+            return new FileInputStream(f3);
+          }
+         catch (IOException e) {}
        }
     }
 
@@ -176,9 +176,9 @@ public static InputStream getResourceFile(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Property reset methods							*/
-/*										*/
+/*                                                                              */
+/*      Property reset methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -205,9 +205,9 @@ public static synchronized void resetDefaultProperties()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardProperties(String id)
@@ -232,9 +232,9 @@ BoardProperties(InputStream ins) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -249,7 +249,7 @@ public String getName()
 
 
 /**
- *	Set the directory containing user property files
+ *      Set the directory containing user property files
  **/
 
 public static void setPropertyDirectory(String dir)
@@ -264,8 +264,8 @@ public static void setPropertyDirectory(File base)
 {
    if (!base.exists()) {
       if (!base.mkdirs()) {
-	 BoardLog.logE("BOARD", "Unable to use user property directory " + base);
-	 return;
+         BoardLog.logE("BOARD", "Unable to use user property directory " + base);
+         return;
        }
     }
 
@@ -288,9 +288,9 @@ public static File getPropertyDirectory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Value access methods							*/
-/*										*/
+/*                                                                              */
+/*      Value access methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -370,7 +370,7 @@ public int getInt(String prop,int dflt)
    String s = getProperty(prop);
    if (s != null && s.length() > 0) {
       try {
-	 return Integer.parseInt(s);
+         return Integer.parseInt(s);
        }
       catch (NumberFormatException e) {}
     }
@@ -398,7 +398,7 @@ public long getLong(String prop,long dflt)
    String s = getProperty(prop);
    if (s != null && s.length() > 0) {
       try {
-	 return Long.parseLong(s);
+         return Long.parseLong(s);
        }
       catch (NumberFormatException e) {}
     }
@@ -426,7 +426,7 @@ public float getFloat(String prop,float dflt)
    String s = getProperty(prop);
    if (s != null && s.length() > 0) {
       try {
-	 return Float.parseFloat(s);
+         return Float.parseFloat(s);
        }
       catch (NumberFormatException e) {}
     }
@@ -454,7 +454,7 @@ public double getDouble(String prop,double dflt)
    String s = getProperty(prop);
    if (s != null && s.length() > 0) {
       try {
-	 return Double.parseDouble(s);
+         return Double.parseDouble(s);
        }
       catch (NumberFormatException e) {}
     }
@@ -521,8 +521,8 @@ public Font getFont(String prop,Font dflt)
 
 
 /**
- *	Return the value of an enum of the given type.	Prefix allows a shortened
- *	form of the enum
+ *      Return the value of an enum of the given type.  Prefix allows a shortened
+ *      form of the enum
  **/
 
 @SuppressWarnings("unchecked")
@@ -537,8 +537,8 @@ public <T extends Enum<T>> T getEnum(String prop,String prefix,T dflt)
    for (int i = 0; i < vals.length; ++i) {
       Enum<?> e = (Enum<?>) vals[i];
       if (e.name().equalsIgnoreCase(s)) {
-	 v = e;
-	 break;
+         v = e;
+         break;
        }
     }
 
@@ -552,8 +552,8 @@ public Set<String> getStringSet(String prop)
    String s = getProperty(prop);
    if (s != null) {
       for (StringTokenizer tok = new StringTokenizer(s," \t\n,;:"); tok.hasMoreTokens(); ) {
-	 String p = tok.nextToken();
-	 rslt.add(p);
+         String p = tok.nextToken();
+         rslt.add(p);
        }
     }
 
@@ -562,9 +562,9 @@ public Set<String> getStringSet(String prop)
 
 
 /********************************************************************************/
-/*										*/
-/*	Options values access methods -- recorded as user options		*/
-/*										*/
+/*                                                                              */
+/*      Options values access methods -- recorded as user options               */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -630,7 +630,7 @@ public int getIntOption(String prop,int dflt)
    String s = getOptionProperty(prop);
    if (s != null && s.length() > 0) {
       try {
-	 return Integer.parseInt(s);
+         return Integer.parseInt(s);
        }
       catch (NumberFormatException e) {}
     }
@@ -700,9 +700,9 @@ private String getOptionProperty(String prop)
 
 
 /********************************************************************************/
-/*										*/
-/*	Value setting methods							*/
-/*										*/
+/*                                                                              */
+/*      Value setting methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -758,9 +758,9 @@ public void setProperty(String prop,Font val)
 
 
 /********************************************************************************/
-/*										*/
-/*	Default setting methods 						*/
-/*										*/
+/*                                                                              */
+/*      Default setting methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -787,9 +787,9 @@ public void setDefaultProperty(String prop,int val)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -821,9 +821,9 @@ public void save() throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Property loading from resource files					*/
-/*										*/
+/*                                                                              */
+/*      Property loading from resource files                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadProperties(String id)
@@ -844,12 +844,12 @@ private void loadProperties(String id)
 
       String cnm = BoardSetup.getSetup().getCourseName();
       if (cnm != null) {
-	 loadIfPossible(id + "." + cnm);
+         loadIfPossible(id + "." + cnm);
        }
       String anm = BoardSetup.getSetup().getCourseAssignment();
       if (anm != null) {
-	 loadIfPossible(id + "." + cnm + "." + anm);
-	 loadIfPossible(id + "." + cnm + "@" + anm);
+         loadIfPossible(id + "." + cnm + "." + anm);
+         loadIfPossible(id + "." + cnm + "@" + anm);
        }
     }
    finally {

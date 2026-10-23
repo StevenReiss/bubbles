@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseUtil.java 						*/
-/*										*/
-/*	Utility and output methods for NOBASE					*/
-/*										*/
+/*                                                                              */
+/*              NobaseUtil.java                                                 */
+/*                                                                              */
+/*      Utility and output methods for NOBASE                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -42,9 +42,9 @@ abstract class NobaseUtil implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem output methods							*/
-/*										*/
+/*                                                                              */
+/*      Problem output methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputProblem(NobaseMessage m,ISemanticData isd,IvyXmlWriter xw)
@@ -96,9 +96,9 @@ static void outputProblem(NobaseMessage m,ISemanticData isd,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Symbol otuput methods							*/
-/*										*/
+/*                                                                              */
+/*      Symbol otuput methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputProjectSymbol(NobaseProject pp,IvyXmlWriter xw)
@@ -166,20 +166,20 @@ static void outputName(NobaseSymbol nm,IvyXmlWriter xw)
    xw.field("NAME",dnm);
    switch (nm.getNameType()) {
       case MODULE :
-	 xw.field("TYPE","Module");
-	 break;
+         xw.field("TYPE","Module");
+         break;
       case FUNCTION :
-	 xw.field("TYPE","Function");
-	 break;
+         xw.field("TYPE","Function");
+         break;
       case CLASS :
          xw.field("TYPE","Class");
          break;
       case LOCAL :
-	 xw.field("TYPE","Local");
-	 break;
+         xw.field("TYPE","Local");
+         break;
       case VARIABLE :
-	 xw.field("TYPE","Variable");
-	 break;
+         xw.field("TYPE","Variable");
+         break;
     }
    ASTNode root = nm.getDefNode();
    if (root != null) {
@@ -209,15 +209,15 @@ static void outputName(NobaseSymbol nm,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search support								*/
-/*										*/
+/*                                                                              */
+/*      Search support                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /********************************************************************************/
-/*										*/
-/*	Handle matching 							*/
-/*										*/
+/*                                                                              */
+/*      Handle matching                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static String convertWildcardToRegex(String s)
@@ -237,15 +237,15 @@ static String convertWildcardToRegex(String s)
    for (int i = 0; i < s.length(); ++i) {
       char c = s.charAt(i);
       if (bkfg) {
-	 if (c == '\\') qtfg = true;
-	 else if (!qtfg && c == ']') bkfg = false;
-	 else {
-	    nb.append(c); qtfg = false; continue;
-	 }
+         if (c == '\\') qtfg = true;
+         else if (!qtfg && c == ']') bkfg = false;
+         else {
+            nb.append(c); qtfg = false; continue;
+         }
        }
       if (c == '/' || c == '\\') {
-	 if (File.separatorChar == '\\') nb.append("\\\\");
-	 else nb.append(File.separatorChar);
+         if (File.separatorChar == '\\') nb.append("\\\\");
+         else nb.append(File.separatorChar);
        }
       else if (c == '@') {
          nb.append(".*");
@@ -326,7 +326,7 @@ static Number convertStringToNumber(String nv)
 
 
 
-}	// end of class NobaseUtil
+}       // end of class NobaseUtil
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtProcessView.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool process bubble table		*/
-/*										*/
+/*                                                                              */
+/*              BddtProcessView.java                                            */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool process bubble table          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,9 +70,9 @@ class BddtProcessView extends BudaBubble implements BddtConstants, BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpRunModel run_model;
@@ -112,9 +112,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtProcessView()
@@ -142,9 +142,9 @@ BddtProcessView()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 List<BumpProcess> getProcesses()
@@ -156,9 +156,9 @@ List<BumpProcess> getProcesses()
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -179,9 +179,9 @@ List<BumpProcess> getProcesses()
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handlng classes						*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handlng classes                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class StopAction extends AbstractAction {
@@ -204,7 +204,7 @@ private static class StopAction extends AbstractAction {
       return the_launch.isRunning();
     }
 
-}	// end of inner class StopAction
+}       // end of inner class StopAction
 
 
 
@@ -227,16 +227,16 @@ private class ConsoleAction extends AbstractAction {
       return true;
     }
 
-}	// end of inner class ConsoleAction
+}       // end of inner class ConsoleAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ProcessHandler implements BumpRunEventHandler
@@ -265,16 +265,16 @@ private final class ProcessHandler implements BumpRunEventHandler
       process_model.fireTableDataChanged();
    }
 
-}	// end of inner class ProcessHandler
+}       // end of inner class ProcessHandler
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle table sorting 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle table sorting                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpProcess getActualProcess(int idx)
@@ -283,8 +283,8 @@ private BumpProcess getActualProcess(int idx)
 
    synchronized (active_processes) {
       if (process_table != null) {
-	 RowSorter<?> rs = process_table.getRowSorter();
-	 if (rs != null) idx = rs.convertRowIndexToModel(idx);
+         RowSorter<?> rs = process_table.getRowSorter();
+         if (rs != null) idx = rs.convertRowIndexToModel(idx);
        }
 
       return active_processes.get(idx);
@@ -295,9 +295,9 @@ private BumpProcess getActualProcess(int idx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration table model						*/
-/*										*/
+/*                                                                              */
+/*      Configuration table model                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProcessModel extends AbstractTableModel {
@@ -306,39 +306,39 @@ private class ProcessModel extends AbstractTableModel {
 
    ProcessModel() { }
 
-   @Override public int getColumnCount()		{ return col_names.length; }
-   @Override public String getColumnName(int idx)	{ return col_names[idx]; }
-   @Override public Class<?> getColumnClass(int idx)	{ return col_types[idx]; }
+   @Override public int getColumnCount()                { return col_names.length; }
+   @Override public String getColumnName(int idx)       { return col_names[idx]; }
+   @Override public Class<?> getColumnClass(int idx)    { return col_types[idx]; }
    @Override public boolean isCellEditable(int r,int c) {   return false;  }
-   @Override public int getRowCount()			{ return active_processes.size(); }
+   @Override public int getRowCount()                   { return active_processes.size(); }
 
    @Override public Object getValueAt(int r,int c) {
       BumpProcess blp;
       synchronized (active_processes) {
-	 if (r < 0 || r >= active_processes.size()) return null;
-	 blp = active_processes.get(r);
+         if (r < 0 || r >= active_processes.size()) return null;
+         blp = active_processes.get(r);
        }
       switch (c) {
-	 case 0 :
-	    return blp.getLaunch().getConfiguration().getProject();
-	 case 1 :
-	    return blp.getLaunch().getConfiguration().getConfigName();
-	 case 2 :
-	    return blp.getLaunch().isDebug();
-	 case 3 :
-	    return !blp.isRunning();
+         case 0 :
+            return blp.getLaunch().getConfiguration().getProject();
+         case 1 :
+            return blp.getLaunch().getConfiguration().getConfigName();
+         case 2 :
+            return blp.getLaunch().isDebug();
+         case 3 :
+            return !blp.isRunning();
        }
       return null;
     }
 
-}	// end of inner class ConfigModel
+}       // end of inner class ConfigModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration table							*/
-/*										*/
+/*                                                                              */
+/*      Configuration table                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProcessTable extends JTable implements BudaConstants.BudaBubbleOutputer
@@ -355,15 +355,15 @@ private class ProcessTable extends JTable implements BudaConstants.BudaBubbleOut
       setToolTipText("");
       setOpaque(false);
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
       cell_drawer = new CellDrawer[col_names.length];
     }
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
        }
       return cell_drawer[c];
     }
@@ -380,27 +380,27 @@ private class ProcessTable extends JTable implements BudaConstants.BudaBubbleOut
 
    @Override protected void paintComponent(Graphics g) {
       synchronized (active_processes) {
-	 Dimension sz = getSize();
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 Graphics2D g2 = (Graphics2D) g.create();
+         Dimension sz = getSize();
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         Graphics2D g2 = (Graphics2D) g.create();
          Color tc = BoardColors.getColor(BDDT_PROCESS_TOP_COLOR_PROP);
          Color bc = BoardColors.getColor(BDDT_PROCESS_BOTTOM_COLOR_PROP);
-	 if (tc.getRGB() != bc.getRGB()) {
-	    Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
-	    g2.setPaint(p);
-	  }
-	 else {
-	    g2.setColor(tc);
-	  }
-	 g2.fill(r);
-	 super.paintComponent(g);
+         if (tc.getRGB() != bc.getRGB()) {
+            Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
+            g2.setPaint(p);
+          }
+         else {
+            g2.setColor(tc);
+          }
+         g2.fill(r);
+         super.paintComponent(g);
        }
     }
 
-   @Override public String getConfigurator()			{ return "BDDT"; }
-   @Override public void outputXml(BudaXmlWriter xw)		{ }
+   @Override public String getConfigurator()                    { return "BDDT"; }
+   @Override public void outputXml(BudaXmlWriter xw)            { }
 
-}	// end of inner class ProcessTable
+}       // end of inner class ProcessTable
 
 
 
@@ -424,9 +424,9 @@ private final class ProcessMouser extends BoardMouser {
 }
 
 /********************************************************************************/
-/*										*/
-/*	Renderers								*/
-/*										*/
+/*                                                                              */
+/*      Renderers                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderDrawer implements TableCellRenderer {
@@ -440,18 +440,18 @@ private static class HeaderDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (bold_font == null) {
-	 bold_font = cmp.getFont();
-	 bold_font = bold_font.deriveFont(Font.BOLD);
+         bold_font = cmp.getFont();
+         bold_font = bold_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class HeaderRenderer
+}       // end of inner class HeaderRenderer
 
 
 
@@ -465,17 +465,17 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class ErrorRenderer
+}       // end of inner class ErrorRenderer
 
 
 
-}	// end of class BddtProcessView
+}       // end of class BddtProcessView
 
 
 

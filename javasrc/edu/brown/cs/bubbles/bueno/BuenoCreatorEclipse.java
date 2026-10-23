@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoCreatorEclipse.java					*/
-/*										*/
-/*	BUbbles Environment New Objects creator simple creation methods 	*/
-/*										*/
+/*                                                                              */
+/*              BuenoCreatorEclipse.java                                        */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator simple creation methods         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -31,17 +31,17 @@ class BuenoCreatorEclipse extends BuenoCreator implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoCreatorEclipse()
@@ -50,7 +50,7 @@ BuenoCreatorEclipse()
 
 
 
-}	// end of class BuenoCreatorEclipse
+}       // end of class BuenoCreatorEclipse
 
 
 

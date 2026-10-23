@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattAgent.java							*/
-/*										*/
-/*	Bubble Automated Testing Tool javaagent manager 			*/
-/*										*/
+/*                                                                              */
+/*              BattAgent.java                                                  */
+/*                                                                              */
+/*      Bubble Automated Testing Tool javaagent manager                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,9 +55,9 @@ public final class BattAgent implements BattConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Agent entry points							*/
-/*										*/
+/*                                                                              */
+/*      Agent entry points                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public static void premain(String args,Instrumentation inst)
@@ -77,30 +77,30 @@ public static void agentmain(String args,Instrumentation inst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Instrumentation 	class_inst;
-private BattInstrument		our_instrumenter;
-private int			id_counter;
-private String			active_test;
-private IndexTable		index_table;
-private Map<Thread,ThreadData>	thread_stack;
-private OutputStream		result_stream;
+private Instrumentation         class_inst;
+private BattInstrument          our_instrumenter;
+private int                     id_counter;
+private String                  active_test;
+private IndexTable              index_table;
+private Map<Thread,ThreadData>  thread_stack;
+private OutputStream            result_stream;
 private boolean                 simple_stats;
 private PrintStream             error_str;
 
-private static BattAgent	the_agent;
+private static BattAgent        the_agent;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BattAgent(String args,Instrumentation inst)
@@ -119,11 +119,11 @@ private BattAgent(String args,Instrumentation inst)
    
    if (class_inst != null) {
       try {
-	 our_instrumenter = new BattInstrument(this);
-	 class_inst.addTransformer(our_instrumenter,true);
+         our_instrumenter = new BattInstrument(this);
+         class_inst.addTransformer(our_instrumenter,true);
        }
       catch (Throwable t) {
-	 error_str.println("BATTAGENT: Problem adding instrumenter: " + t);
+         error_str.println("BATTAGENT: Problem adding instrumenter: " + t);
        }
     }
    else {
@@ -134,9 +134,9 @@ private BattAgent(String args,Instrumentation inst)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to scan arguments						*/
-/*										*/
+/*                                                                              */
+/*      Methods to scan arguments                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String args)
@@ -151,11 +151,11 @@ private void scanArgs(String args)
       String val = null;
       int idx = arg.indexOf("=");
       if (idx >= 0) {
-	 val = arg.substring(idx+1);
-	 arg = arg.substring(0,idx);
+         val = arg.substring(idx+1);
+         arg = arg.substring(0,idx);
        }
       if (arg.equals("COUNTS")) {
-	 cntf = val;
+         cntf = val;
        }
       else if (arg.equals("FULL")) {
          simple_stats = false;
@@ -173,27 +173,27 @@ private void scanArgs(String args)
           }
        }
       else {
-	 error_str.println("BATTAGENT: Illegal argument: " + arg);
+         error_str.println("BATTAGENT: Illegal argument: " + arg);
        }
     }
 
    if (cntf != null) {
       try {
-	 int idx = cntf.indexOf("@");              // port@host for socket
-	 if (idx > 0) {
-	    String host = cntf.substring(idx+1);
-	    int port = Integer.parseInt(cntf.substring(0,idx));
-	    host = fixHost(host);
-	    @SuppressWarnings("resource")
-	    Socket s = new Socket(host,port);
-	    result_stream = s.getOutputStream();
-	  }
-	 else {
-	    result_stream = new FileOutputStream(cntf);
-	  }
+         int idx = cntf.indexOf("@");              // port@host for socket
+         if (idx > 0) {
+            String host = cntf.substring(idx+1);
+            int port = Integer.parseInt(cntf.substring(0,idx));
+            host = fixHost(host);
+            @SuppressWarnings("resource")
+            Socket s = new Socket(host,port);
+            result_stream = s.getOutputStream();
+          }
+         else {
+            result_stream = new FileOutputStream(cntf);
+          }
        }
       catch (IOException e) {
-	 error_str.println("BATT: Unable to open output file " + cntf + ": " + e);
+         error_str.println("BATT: Unable to open output file " + cntf + ": " + e);
        }
     }
 }
@@ -210,7 +210,7 @@ private static String fixHost(String h)
       String h3 = InetAddress.getLocalHost().getCanonicalHostName();
 
       if (h.equals(h1) || h.equals(h2) || h.equals(h3)) {
-	 return "127.0.0.1";
+         return "127.0.0.1";
        }
    }
    catch (UnknownHostException e) { }
@@ -252,9 +252,9 @@ private void handleProblemLoads()
 
 
 /********************************************************************************/
-/*										*/
-/*	Entry points from instrumentation					*/
-/*										*/
+/*                                                                              */
+/*      Entry points from instrumentation                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public static void handleStartTest(String test)
@@ -305,9 +305,9 @@ public static void handleUserClasses(String [] clsset)
 
 
 /********************************************************************************/
-/*										*/
-/*	Instrumentation management methods					*/
-/*										*/
+/*                                                                              */
+/*      Instrumentation management methods                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void startTest(String test)
@@ -334,12 +334,12 @@ private void finishTest(String test)
 
    if (xw != null) {
       try {
-	 outputTestResult(test,xw);
-	 xw.flush();
-	 result_stream.flush();
+         outputTestResult(test,xw);
+         xw.flush();
+         result_stream.flush();
        }
       catch (Exception e) {
-	 error_str.println("BATT: Problem with output file for test: " + e);
+         error_str.println("BATT: Problem with output file for test: " + e);
        }
     }
 
@@ -351,7 +351,7 @@ private void finishRun()
 {
    if (result_stream != null) {
       try {
-	 result_stream.close();
+         result_stream.close();
        }
       catch (IOException e) { }
     }
@@ -415,9 +415,9 @@ void logD(String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for setting up id numbers					*/
-/*										*/
+/*                                                                              */
+/*      Methods for setting up id numbers                                       */
+/*                                                                              */
 /********************************************************************************/
 
 int getMethodId(String clsname,String name,String desc)
@@ -456,9 +456,9 @@ void noteLineNumber(int lno,int off,int mid,int bid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void outputTestResult(String nm,XMLStreamWriter xw) throws XMLStreamException
@@ -472,14 +472,14 @@ private void outputTestResult(String nm,XMLStreamWriter xw) throws XMLStreamExce
 
 
 /********************************************************************************/
-/*										*/
-/*	Index into run time elements by id					*/
-/*										*/
+/*                                                                              */
+/*      Index into run time elements by id                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class IndexTable {
 
-   private RtItem []	the_table;
+   private RtItem []    the_table;
 
    IndexTable() {
       the_table = new RtItem[10240];
@@ -488,16 +488,16 @@ private static class IndexTable {
 
    void setElement(int idx,RtItem itm) {
       if (idx >= the_table.length) {
-	 int nln = the_table.length * 2;
-	 if (idx >= nln) nln = the_table.length + idx;
-	 the_table = Arrays.copyOf(the_table,nln);
+         int nln = the_table.length * 2;
+         if (idx >= nln) nln = the_table.length + idx;
+         the_table = Arrays.copyOf(the_table,nln);
        }
       the_table[idx] = itm;
     }
 
-   RtMethod getMethod(int idx)		{ return (RtMethod) the_table[idx]; }
-   RtBlock getBlock(int idx)		{ return (RtBlock) the_table[idx]; }
-   RtItem getItem(int idx)		{ return the_table[idx]; }
+   RtMethod getMethod(int idx)          { return (RtMethod) the_table[idx]; }
+   RtBlock getBlock(int idx)            { return (RtBlock) the_table[idx]; }
+   RtItem getItem(int idx)              { return the_table[idx]; }
 
    void outputCounts(XMLStreamWriter xw) throws XMLStreamException {
       for (int i = 0; i < the_table.length; ++i) {
@@ -508,16 +508,16 @@ private static class IndexTable {
        }
     }
 
-}	// end of innder class IndexTable
+}       // end of innder class IndexTable
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Run Time Generic Item							*/
-/*										*/
+/*                                                                              */
+/*      Run Time Generic Item                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class RtItem {
@@ -532,7 +532,7 @@ private abstract static class RtItem {
       end_line = -1;
     }
 
-   int getIndex()			{ return item_index; }
+   int getIndex()                       { return item_index; }
 
    void noteLine(int lno) {
       if (start_line < 0 || lno < start_line) start_line = lno;
@@ -541,15 +541,15 @@ private abstract static class RtItem {
        } 
    }
 
-}	// end of inner class RtItem
+}       // end of inner class RtItem
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of a method						*/
-/*										*/
+/*                                                                              */
+/*      Representation of a method                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class RtMethod extends RtItem {
@@ -575,9 +575,9 @@ private static class RtMethod extends RtItem {
       calls_count = null;
     }
 
-   void addBlock(RtBlock rb)		{ basic_blocks.add(rb); }
+   void addBlock(RtBlock rb)            { basic_blocks.add(rb); }
 
-   void markEntry()			{ ++entry_count; }
+   void markEntry()                     { ++entry_count; }
 
    void markCall(RtMethod rm) {
       if (calls_count == null) calls_count = new HashMap<RtMethod,Counter>();
@@ -589,7 +589,7 @@ private static class RtMethod extends RtItem {
       c.incr();
     }
 
-   void markTop()			{ ++top_count; }
+   void markTop()                       { ++top_count; }
 
    void outputCounts(XMLStreamWriter xw) throws XMLStreamException {
       if (entry_count == 0) return;
@@ -598,17 +598,17 @@ private static class RtMethod extends RtItem {
       xw.writeAttribute("COUNT",Integer.toString(entry_count));
       xw.writeAttribute("TOP",Integer.toString(top_count));
       if (calls_count != null) {
-	 for (Map.Entry<RtMethod,Counter> ent : calls_count.entrySet()) {
-	    RtMethod cm = ent.getKey();
-	    Counter c = ent.getValue();
-	    xw.writeStartElement("CALLS");
-	    cm.outputFields(xw);
-	    xw.writeAttribute("CALLCOUNT",Integer.toString(c.getValue()));
-	    xw.writeEndElement();
-	  }
+         for (Map.Entry<RtMethod,Counter> ent : calls_count.entrySet()) {
+            RtMethod cm = ent.getKey();
+            Counter c = ent.getValue();
+            xw.writeStartElement("CALLS");
+            cm.outputFields(xw);
+            xw.writeAttribute("CALLCOUNT",Integer.toString(c.getValue()));
+            xw.writeEndElement();
+          }
        }
       for (RtBlock rb : basic_blocks) {
-	 rb.outputCounts(xw);
+         rb.outputCounts(xw);
        }
       xw.writeEndElement();
       entry_count = 0;
@@ -619,20 +619,20 @@ private static class RtMethod extends RtItem {
       xw.writeAttribute("NAME",class_name.replace('/','.') + "." + method_name);
       xw.writeAttribute("SIGNATURE",method_desc);
       if (start_line > 0) {
-	 xw.writeAttribute("START",Integer.toString(start_line));
-	 xw.writeAttribute("END",Integer.toString(end_line));
+         xw.writeAttribute("START",Integer.toString(start_line));
+         xw.writeAttribute("END",Integer.toString(end_line));
        }
     }
 
-}	// end of inner class RtMethod
+}       // end of inner class RtMethod
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of a block						*/
-/*										*/
+/*                                                                              */
+/*      Representation of a block                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class RtBlock extends RtItem {
@@ -658,27 +658,27 @@ private static class RtBlock extends RtItem {
       other_blocks = null;
     }
 
-   void markEntry()				{ ++use_count; }
+   void markEntry()                             { ++use_count; }
 
    void markBranch(RtBlock tb) {
       if (tb == next_block) ++next_count;
       else if (tb == alt_block) ++alt_count;
       else if (next_block == null) {
-	 next_block = tb;
-	 next_count = 1;
+         next_block = tb;
+         next_count = 1;
        }
       else if (alt_block == null) {
-	 alt_block = tb;
-	 alt_count = 1;
+         alt_block = tb;
+         alt_count = 1;
        }
       else {
-	 if (other_blocks == null) other_blocks = new HashMap<RtBlock,Counter>();
-	 Counter c = other_blocks.get(tb);
-	 if (c == null) {
-	    c = new Counter();
-	    other_blocks.put(tb,c);
-	  }
-	 c.incr();
+         if (other_blocks == null) other_blocks = new HashMap<RtBlock,Counter>();
+         Counter c = other_blocks.get(tb);
+         if (c == null) {
+            c = new Counter();
+            other_blocks.put(tb,c);
+          }
+         c.incr();
        }
     }
 
@@ -689,18 +689,18 @@ private static class RtBlock extends RtItem {
       xw.writeAttribute("INDEX",Integer.toString(getIndex()));
       xw.writeAttribute("OFFSET",Integer.toString(code_offset));
       if (start_line > 0) {
-	 xw.writeAttribute("START",Integer.toString(start_line));
-	 xw.writeAttribute("END",Integer.toString(end_line));
+         xw.writeAttribute("START",Integer.toString(start_line));
+         xw.writeAttribute("END",Integer.toString(end_line));
        }
       xw.writeAttribute("COUNT",Integer.toString(use_count));
       if (next_block != null) outputBranch(xw,next_block,next_count);
       if (alt_block != null) outputBranch(xw,alt_block,alt_count);
       if (other_blocks != null) {
-	 for (Map.Entry<RtBlock,Counter> ent : other_blocks.entrySet()) {
-	    RtBlock nb = ent.getKey();
-	    Counter c = ent.getValue();
-	    outputBranch(xw,nb,c.getValue());
-	  }
+         for (Map.Entry<RtBlock,Counter> ent : other_blocks.entrySet()) {
+            RtBlock nb = ent.getKey();
+            Counter c = ent.getValue();
+            outputBranch(xw,nb,c.getValue());
+          }
        }
       xw.writeEndElement();
 
@@ -718,35 +718,35 @@ private static class RtBlock extends RtItem {
       xw.writeEndElement();
     }
 
-}	// end of inner class RtBlock
+}       // end of inner class RtBlock
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mutable counter 							*/
-/*										*/
+/*                                                                              */
+/*      Mutable counter                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Counter {
 
    private int count_value;
 
-   Counter()				{ count_value = 0; }
+   Counter()                            { count_value = 0; }
 
-   void incr()				{ ++count_value; }
+   void incr()                          { ++count_value; }
 
-   int getValue()			{ return count_value; }
+   int getValue()                       { return count_value; }
 
-}	// end of inner class Counter
+}       // end of inner class Counter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trace information by thread						*/
-/*										*/
+/*                                                                              */
+/*      Trace information by thread                                             */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -756,8 +756,8 @@ private ThreadData getThreadData()
    ThreadData td = thread_stack.get(th);
    if (td == null) {
       synchronized (thread_stack) {
-	 td = new ThreadData();
-	 thread_stack.put(th,td);
+         td = new ThreadData();
+         thread_stack.put(th,td);
        }
     }
    return td;
@@ -786,7 +786,7 @@ private static class ThreadData {
       call_level = 0;
     }
 
-   int getLevel()			{ return call_level; }
+   int getLevel()                       { return call_level; }
 
    RtMethod enterMethod(RtMethod rm) {
       from_data = new ThreadData(rm,block_id,from_data);
@@ -799,10 +799,10 @@ private static class ThreadData {
 
    void exitMethod() {
       if (from_data != null) {
-	 method_id = from_data.method_id;
-	 block_id = from_data.block_id;
-	 from_data = from_data.from_data;
-	 --call_level;
+         method_id = from_data.method_id;
+         block_id = from_data.block_id;
+         from_data = from_data.from_data;
+         --call_level;
        }
     }
 
@@ -812,12 +812,12 @@ private static class ThreadData {
       return orb;
     }
 
-}	// end of inner class ThreadData
+}       // end of inner class ThreadData
 
 
 
 
-}	// end of class BattAgent
+}       // end of class BattAgent
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstFactory.java						*/
-/*										*/
-/*	Bubbles questions and forms factory					*/
-/*										*/
+/*                                                                              */
+/*              BqstFactory.java                                                */
+/*                                                                              */
+/*      Bubbles questions and forms factory                                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -35,9 +35,9 @@ public class BqstFactory implements BqstConstants {
 
  
 /********************************************************************************/
-/*										*/
-/*	Factory methods 							*/
-/*										*/
+/*                                                                              */
+/*      Factory methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -51,7 +51,7 @@ public static BqstPanel createBqstPanel(JFrame root,String formtitle)
 
 
 
-}	// end of class BqstFactory
+}       // end of class BqstFactory
 
 
 

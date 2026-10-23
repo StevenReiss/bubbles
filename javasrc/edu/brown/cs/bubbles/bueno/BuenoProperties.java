@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoProperties.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator property handling		*/
-/*										*/
+/*                                                                              */
+/*              BuenoProperties.java                                            */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator property handling               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,9 +39,9 @@ public class BuenoProperties extends HashMap<String,Object> implements BuenoCons
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -49,9 +49,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BuenoProperties()
@@ -62,9 +62,9 @@ public BuenoProperties()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public String getStringProperty(BuenoKey k)
@@ -178,11 +178,11 @@ private void addModifier(StringBuffer buf,String txt,boolean fg)
 }
 
 
-public String [] getParameters()	{ return getArrayProperty(BuenoKey.KEY_PARAMETERS); }
-public String [] getExtends()		{ return getArrayProperty(BuenoKey.KEY_EXTENDS); }
-public String [] getImplements()	{ return getArrayProperty(BuenoKey.KEY_IMPLEMENTS); }
-public String [] getThrows()		{ return getArrayProperty(BuenoKey.KEY_THROWS); }
-public String [] getImports()		{ return getArrayProperty(BuenoKey.KEY_IMPORTS); }
+public String [] getParameters()        { return getArrayProperty(BuenoKey.KEY_PARAMETERS); }
+public String [] getExtends()           { return getArrayProperty(BuenoKey.KEY_EXTENDS); }
+public String [] getImplements()        { return getArrayProperty(BuenoKey.KEY_IMPLEMENTS); }
+public String [] getThrows()            { return getArrayProperty(BuenoKey.KEY_THROWS); }
+public String [] getImports()           { return getArrayProperty(BuenoKey.KEY_IMPORTS); }
 
 
 public String [] getArrayProperty(BuenoKey k)
@@ -203,7 +203,7 @@ public String [] getArrayProperty(String k)
       String [] rslt = new String[tok.countTokens()];
       int idx = 0;
       while (tok.hasMoreTokens()) {
-	 rslt[idx++] = tok.nextToken();
+         rslt[idx++] = tok.nextToken();
        }
       return rslt;
     }
@@ -213,7 +213,7 @@ public String [] getArrayProperty(String k)
       String [] rslt = new String[l.size()];
       int idx = 0;
       for (Object o : l) {
-	 rslt[idx++] = o.toString();
+         rslt[idx++] = o.toString();
        }
       return rslt;
     }
@@ -244,7 +244,7 @@ public void addToArrayProperty(String k,String v)
       rslt = new ArrayList<String>();
       StringTokenizer tok = new StringTokenizer((String) ov,",");
       while (tok.hasMoreTokens()) {
-	 rslt.add(tok.nextToken());
+         rslt.add(tok.nextToken());
        }
     }
    else if (ov instanceof List) {
@@ -259,8 +259,8 @@ public void addToArrayProperty(String k,String v)
 
 
 
-String getIndentString()		{ return getIndentProperty(BuenoKey.KEY_INDENT,-1); }
-String getInitialIndentString() 	{ return getIndentProperty(BuenoKey.KEY_INITIAL_INDENT,0); }
+String getIndentString()                { return getIndentProperty(BuenoKey.KEY_INDENT,-1); }
+String getInitialIndentString()         { return getIndentProperty(BuenoKey.KEY_INITIAL_INDENT,0); }
 
 String getIndentProperty(BuenoKey k,int dflt)
 {
@@ -297,9 +297,9 @@ String getFullText()
 
 
 /********************************************************************************/
-/*										*/
-/*	Key access methods							*/
-/*										*/
+/*                                                                              */
+/*      Key access methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public void put(BuenoKey k,Object v)
@@ -320,7 +320,7 @@ public Object remove(BuenoKey k)
 }
 
 
-}	// end of class BuenoProperties
+}       // end of class BuenoProperties
 
 
 

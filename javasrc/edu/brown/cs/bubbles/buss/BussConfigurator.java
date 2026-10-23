@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BussConfigurator.java						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack configuration handler		*/
-/*										*/
+/*                                                                              */
+/*              BussConfigurator.java                                           */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack configuration handler              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -46,9 +46,9 @@ class BussConfigurator implements BussConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -69,7 +69,7 @@ class BussConfigurator implements BussConstants, BudaConstants.BubbleConfigurato
 @Override public boolean matchBubble(BudaBubble bb,Element xml)         { return false; }
 
 
-}	// end of class BussConfigurator
+}       // end of class BussConfigurator
 
 
 

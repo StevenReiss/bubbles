@@ -1,9 +1,9 @@
 /********************************************************************************/
-/*										*/
-/*		BhelpContext.java						*/
-/*										*/
-/*	Global context for actions						*/
-/*										*/
+/*                                                                              */
+/*              BhelpContext.java                                               */
+/*                                                                              */
+/*      Global context for actions                                              */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -33,25 +33,25 @@ class BhelpContext implements BhelpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storag								*/
-/*										*/
+/*                                                                              */
+/*      Private Storag                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-private BhelpDemo		for_demo;
-private Map<String,Object>	value_map;
-private BudaBubbleArea		buda_area;
-private BudaRoot		buda_root;
-private Robot			event_robot;
-private Point			current_mouse;
-private boolean 		is_stopped;
+private BhelpDemo               for_demo;
+private Map<String,Object>      value_map;
+private BudaBubbleArea          buda_area;
+private BudaRoot                buda_root;
+private Robot                   event_robot;
+private Point                   current_mouse;
+private boolean                 is_stopped;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BhelpContext(BudaBubbleArea bba,BhelpDemo demo)
@@ -82,17 +82,17 @@ BhelpContext(BudaBubbleArea bba,BhelpDemo demo)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BudaBubbleArea getBubbleArea()		{ return buda_area; }
-BudaRoot getBudaRoot()			{ return buda_root; }
-Point getMouse()			{ return new Point(current_mouse); }
+BudaBubbleArea getBubbleArea()          { return buda_area; }
+BudaRoot getBudaRoot()                  { return buda_root; }
+Point getMouse()                        { return new Point(current_mouse); }
 
-void setStopped()			{ is_stopped = true; }
-boolean isStopped()			{ return is_stopped; }
+void setStopped()                       { is_stopped = true; }
+boolean isStopped()                     { return is_stopped; }
 
 
 
@@ -108,9 +108,9 @@ private void setMouse(double x,double y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Robot methods								*/
-/*										*/
+/*                                                                              */
+/*      Robot methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void mouseMove(int x,int y) throws BhelpException
@@ -219,9 +219,9 @@ private void convertPointToScreen(Point pt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Value methods								*/
-/*										*/
+/*                                                                              */
+/*      Value methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void setValue(String name,BudaBubble bbl)
@@ -251,9 +251,9 @@ void setValue(String name,Component c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 Point getPoint(String var)
@@ -315,9 +315,9 @@ Component getComponent(String var)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void reset()
@@ -330,8 +330,8 @@ void reset()
       if (pt != null) mouseMove(pt.x,pt.y);
       BudaBubbleArea bbac = buda_root.getCurrentBubbleArea();
       if (bba == bbac && r != null) {
-	 Rectangle r1 = bbac.getViewport();
-	 if (!r.equals(r1)) buda_root.setViewport(r.x,r.y);
+         Rectangle r1 = bbac.getViewport();
+         if (!r.equals(r1)) buda_root.setViewport(r.x,r.y);
        }
     }
    catch (BhelpException e) { }
@@ -343,7 +343,7 @@ void reset()
 
 
 
-}	// end of class BhelpContext
+}       // end of class BhelpContext
 
 
 

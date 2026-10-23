@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleTest.java							*/
-/*										*/
-/*	Bubble Annotated Language Editor test program				*/
-/*										*/
+/*                                                                              */
+/*              BaleTest.java                                                   */
+/*                                                                              */
+/*      Bubble Annotated Language Editor test program                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -48,9 +48,9 @@ public final class BaleTest implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -63,9 +63,9 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleTest()
@@ -75,9 +75,9 @@ private BaleTest()
 
 
 /********************************************************************************/
-/*										*/
-/*	Test code								*/
-/*										*/
+/*                                                                              */
+/*      Test code                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void test()
@@ -117,12 +117,12 @@ private static class CreateEditor implements Runnable {
       for_root.add(bb,new BudaConstraint(100,300));
     }
 
-}	// end of inner class CreateEditor
+}       // end of inner class CreateEditor
 
 
 
 
-}	// end of class BaleTest
+}       // end of class BaleTest
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleIndenterLsp.java						*/
-/*										*/
-/*	Indenter that uses back end (LSPBASE) to compute indents		*/
-/*										*/
+/*                                                                              */
+/*              BaleIndenterLsp.java                                            */
+/*                                                                              */
+/*      Indenter that uses back end (LSPBASE) to compute indents                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -35,9 +35,9 @@ class BaleIndenterLsp extends BaleIndenter implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 enum LineIndentMode { ALL, EMPTY, NON_EMPTY, NONE }
@@ -52,9 +52,9 @@ private LineIndentMode indent_mode;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleIndenterLsp(BaleDocument bd)
@@ -66,9 +66,9 @@ BaleIndenterLsp(BaleDocument bd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Method Implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override int getUnindentSize()
@@ -146,9 +146,9 @@ private int getIndent(int offset,boolean split)
 
    BumpClient bc = BumpClient.getBump();
    Element rslt = bc.computeIndent(bale_document.getProjectName(),
-	 bale_document.getFile(),
-	 bale_document.getEditCounter(),
-	 eoff,split);
+         bale_document.getFile(),
+         bale_document.getEditCounter(),
+         eoff,split);
 
    Element ind = IvyXml.getChild(rslt,"INDENT");
    return IvyXml.getAttrInt(ind,"TARGET");
@@ -157,9 +157,9 @@ private int getIndent(int offset,boolean split)
 
 
 /********************************************************************************/
-/*										*/
-/*	Compute default indentation						*/
-/*										*/
+/*                                                                              */
+/*      Compute default indentation                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class DefaultIndenter {
@@ -484,9 +484,9 @@ private class DefaultIndenter {
           }
        }
       
-      int l4 = indent_space;		// default indent
-      int l5 = indent_space;		// indent with no last significant char
-      int l6 = rbr_indent;		// indent for }
+      int l4 = indent_space;            // default indent
+      int l5 = indent_space;            // indent with no last significant char
+      int l6 = rbr_indent;              // indent for }
       
       int rslt = last_sig;
       if (last_sig < 0 && nest_pos < 0) rslt = 0;
@@ -505,14 +505,14 @@ private class DefaultIndenter {
       
       return rslt;
    }
-	
+        
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadProperties()
@@ -563,7 +563,7 @@ private void loadProperties()
 
 
 
-}	// end of class BaleIndenterLsp
+}       // end of class BaleIndenterLsp
 
 
 

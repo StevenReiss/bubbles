@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockUtil.java						*/
-/*										*/
-/*	Utility methods for Bubbles - Eclipse interface 			*/
-/*										*/
+/*                                                                              */
+/*              BedrockUtil.java                                                */
+/*                                                                              */
+/*      Utility methods for Bubbles - Eclipse interface                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -157,12 +157,12 @@ class BedrockUtil implements BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static Set<String>	sources_sent;
+private static Set<String>      sources_sent;
 private static Map<ILaunchConfiguration,String>  launch_ids;
 
 private static Map<String,Integer> resource_types;
@@ -174,7 +174,7 @@ private static Map<String,Integer> access_flags;
 
 private static int edit_counter = 1;
 
-private static Random		random_gen = new Random();
+private static Random           random_gen = new Random();
 
 
 static {
@@ -263,16 +263,16 @@ static {
 }
 
 
-private static final int	MAX_PROBLEM = 4096;
-private static final int	MAX_VALUE_SIZE = 40960;
+private static final int        MAX_PROBLEM = 4096;
+private static final int        MAX_VALUE_SIZE = 40960;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to convert ints to strings for output				*/
-/*										*/
+/*                                                                              */
+/*      Methods to convert ints to strings for output                           */
+/*                                                                              */
 /********************************************************************************/
 
 static void fieldValue(IvyXmlWriter xw,String nm,int val,Map<String,Integer> vals)
@@ -281,8 +281,8 @@ static void fieldValue(IvyXmlWriter xw,String nm,int val,Map<String,Integer> val
 
    for (Map.Entry<String,Integer> ent : vals.entrySet()) {
       if (ent.getValue() == val) {
-	 r = ent.getKey();
-	 break;
+         r = ent.getKey();
+         break;
        }
     }
    if (r == null && val == 0) return;
@@ -298,8 +298,8 @@ static void fieldFlags(IvyXmlWriter xw,String nm,int val,Map<String,Integer> val
 
    for (Map.Entry<String,Integer> ent : vals.entrySet()) {
       if ((ent.getValue() & val) != 0) {
-	 if (r == null) r = ent.getKey();
-	 else r += "," + ent.getKey();
+         if (r == null) r = ent.getKey();
+         else r += "," + ent.getKey();
        }
     }
    if (r == null && val == 0) return;
@@ -310,9 +310,9 @@ static void fieldFlags(IvyXmlWriter xw,String nm,int val,Map<String,Integer> val
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for IProblem						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for IProblem                                             */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputProblem(IProject proj,IProblem ip,IvyXmlWriter xw)
@@ -339,12 +339,12 @@ static void outputProblem(IProject proj,IProblem ip,IvyXmlWriter xw)
    if (ip.isError()) xw.field("ERROR",true);
    else {
       switch (ip.getID()) {
-	 case IProblem.Task :
+         case IProblem.Task :
             xw.field("TODO",true);
-	    break;
-	 default :
-	    xw.field("WARNING",true);
-	    break;
+            break;
+         default :
+            xw.field("WARNING",true);
+            break;
        }
     }
 
@@ -385,11 +385,11 @@ static void outputMarkers(IProject proj,Iterable<IMarker> mrks,IvyXmlWriter xw)
 
       for (IMarker xmk : mrks) {
 //       BedrockPlugin.logD("CHECK MARKER " + xmk + " " + xmk.getResource() + " " + irc);
-	 if (xmk != mrk && done.contains(xmk)) continue;
-	 if (xmk.getResource() != irc) continue;
-	 done.add(xmk);
-	 outputMarker(xmk,fil,xw);
-	 ++ctr;
+         if (xmk != mrk && done.contains(xmk)) continue;
+         if (xmk.getResource() != irc) continue;
+         done.add(xmk);
+         outputMarker(xmk,fil,xw);
+         ++ctr;
        }
       if (ctr > MAX_PROBLEM) break;
     }
@@ -405,7 +405,7 @@ static void outputMarker(IMarker xmk,File fil,IvyXmlWriter xw)
    else {
       String mtyp = null;
       try {
-	 mtyp = xmk.getType();
+         mtyp = xmk.getType();
        }
       catch (CoreException e) {
          return; 
@@ -420,9 +420,9 @@ static void outputMarker(IMarker xmk,File fil,IvyXmlWriter xw)
       else if (sev == IMarker.SEVERITY_WARNING) xw.field("WARNING",true);
       int lno = xmk.getAttribute(IMarker.LINE_NUMBER,-1);
       if (lno >= 0) {
-	 xw.field("LINE",lno);
-	 xw.field("START",xmk.getAttribute(IMarker.CHAR_START,0));
-	 xw.field("END",xmk.getAttribute(IMarker.CHAR_END,0));
+         xw.field("LINE",lno);
+         xw.field("START",xmk.getAttribute(IMarker.CHAR_START,0));
+         xw.field("END",xmk.getAttribute(IMarker.CHAR_END,0));
        }
       xw.field("MSGID",xmk.getAttribute(IJavaModelMarker.ID,0));
       xw.field("FLAGS",xmk.getAttribute(IJavaModelMarker.FLAGS,0));
@@ -432,11 +432,11 @@ static void outputMarker(IMarker xmk,File fil,IvyXmlWriter xw)
       xw.textElement("MESSAGE",msg);
       String args = xmk.getAttribute(IJavaModelMarker.ARGUMENTS,null);
       if (args != null) {
-	 StringTokenizer tok = new StringTokenizer(args,":#");
-	 if (tok.hasMoreTokens()) tok.nextToken();   // skip count
-	 while (tok.hasMoreTokens()) {
-	    xw.cdataElement("ARG",tok.nextToken());
-	  }
+         StringTokenizer tok = new StringTokenizer(args,":#");
+         if (tok.hasMoreTokens()) tok.nextToken();   // skip count
+         while (tok.hasMoreTokens()) {
+            xw.cdataElement("ARG",tok.nextToken());
+          }
        }
       BedrockPlugin.getPlugin().addFixes(xmk,xw);
       xw.end("PROBLEM");
@@ -447,9 +447,9 @@ static void outputMarker(IMarker xmk,File fil,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for IBreakpoint						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for IBreakpoint                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
@@ -466,122 +466,122 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
       xw.field("ENABLED",bp.isEnabled());
 
       if (mk != null && mk.exists()) {
-	 if (bp.getHitCount() >= 0) xw.field("HITCOUNT",bp.getHitCount());
-	 if (bp.getSuspendPolicy() == IJavaBreakpoint.SUSPEND_THREAD) xw.field("SUSPEND","THREAD");
-	 else xw.field("SUSPEND","VM");
-	 if (bp.getTypeName() != null) {
-	    xw.field("CLASS",bp.getTypeName());
-	    String fnm = findFileForClass(bp.getTypeName());
-	    if (fnm != null) xw.field("FILE",fnm);
-	  }
-	 if (bp instanceof IJavaLineBreakpoint) {
-	    IJavaLineBreakpoint lb = (IJavaLineBreakpoint) bp;
-	    xw.field("LINE",lb.getLineNumber());
-	    if (lb.getCharStart() >= 0) {
-	       xw.field("STARTPOS",lb.getCharStart());
-	       xw.field("ENDPOS",lb.getCharEnd());
-	     }
-	    if (mk != null && mk.getAttribute("TRACEPOINT",false)) {
-	       xw.field("TRACEPOINT",true);
-	     }
-	  }
+         if (bp.getHitCount() >= 0) xw.field("HITCOUNT",bp.getHitCount());
+         if (bp.getSuspendPolicy() == IJavaBreakpoint.SUSPEND_THREAD) xw.field("SUSPEND","THREAD");
+         else xw.field("SUSPEND","VM");
+         if (bp.getTypeName() != null) {
+            xw.field("CLASS",bp.getTypeName());
+            String fnm = findFileForClass(bp.getTypeName());
+            if (fnm != null) xw.field("FILE",fnm);
+          }
+         if (bp instanceof IJavaLineBreakpoint) {
+            IJavaLineBreakpoint lb = (IJavaLineBreakpoint) bp;
+            xw.field("LINE",lb.getLineNumber());
+            if (lb.getCharStart() >= 0) {
+               xw.field("STARTPOS",lb.getCharStart());
+               xw.field("ENDPOS",lb.getCharEnd());
+             }
+            if (mk != null && mk.getAttribute("TRACEPOINT",false)) {
+               xw.field("TRACEPOINT",true);
+             }
+          }
 
-	 if (bp instanceof IJavaClassPrepareBreakpoint) {
-	    IJavaClassPrepareBreakpoint cpb = (IJavaClassPrepareBreakpoint) bp;
-	    xw.field("TYPE","CLASSPREPARE");
-	    typed = true;
-	    if (cpb.getMemberType() == IJavaClassPrepareBreakpoint.TYPE_INTERFACE)
-	       xw.field("INTERFACE",true);
-	  }
-	 else if (bp instanceof IJavaExceptionBreakpoint) {
-	    IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
-	    xw.field("TYPE","EXCEPTION");
-	    typed = true;
-	    xw.field("ISCAUGHT",eb.isCaught());
-	    xw.field("ISCHECKED",eb.isChecked());
-	    xw.field("ISUNCAUGHT",eb.isUncaught());
-	    xw.field("EXCEPTION",eb.getExceptionTypeName());
-	    Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
-	    if (val != null) xw.field("ISSUBCLASSES",val);
-	    else {
-	       eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
-	       xw.field("ISSUBCLASSES",true);
-	     }
-	    for (String ef : eb.getExclusionFilters()) {
-	       xw.textElement("EXCLUDE",ef);
-	     }
-	    for (String ef : eb.getInclusionFilters()) {
-	       xw.textElement("INCLUDE",ef);
-	     }
-	  }
-	 else if (bp instanceof IJavaMethodBreakpoint) {
-	    IJavaMethodBreakpoint mp = (IJavaMethodBreakpoint) bp;
-	    xw.field("TYPE","METHOD");
-	    typed = true;
-	    xw.field("ENTRY",mp.isEntry());
-	    xw.field("EXIT",mp.isExit());
-	    xw.field("NATIVE",mp.isNativeOnly());
-	    xw.begin("METHOD");
-	    xw.field("CLASS",mp.getTypeName());
-	    xw.field("NAME",mp.getMethodName());
-	    xw.text(mp.getMethodSignature());
-	    xw.end("METHOD");
-	  }
-	 else if (bp instanceof IJavaMethodEntryBreakpoint) {
-	    IJavaMethodEntryBreakpoint mp = (IJavaMethodEntryBreakpoint) bp;
-	    xw.field("TYPE","METHODENTRY");
-	    typed = true;
-	    xw.begin("METHOD");
-	    xw.field("NAME",mp.getMethodName());
-	    xw.text(mp.getMethodSignature());
-	    xw.end("METHOD");
-	  }
-	 else if (bp instanceof IJavaStratumLineBreakpoint) {
-	    IJavaStratumLineBreakpoint slb = (IJavaStratumLineBreakpoint) bp;
-	    xw.field("TYPE","STRATUMLINE");
-	    typed = true;
-	    xw.begin("SOURCE");
-	    xw.field("NAME",slb.getSourceName());
-	    xw.text(slb.getSourcePath());
-	    xw.end("SOURCE");
-	    xw.textElement("PATTERN",slb.getPattern());
-	    if (slb.getStratum() != null) xw.textElement("STRATUM",slb.getStratum());
-	  }
-	 else if (bp instanceof IJavaTargetPatternBreakpoint) {
-	    IJavaTargetPatternBreakpoint tb = (IJavaTargetPatternBreakpoint) bp;
-	    xw.field("TYPE","TARGETPATTERN");
-	    typed = true;
-	    xw.field("SOURCE",tb.getSourceName());
-	  }
-	 else if (bp instanceof IJavaWatchpoint) {
-	    IJavaWatchpoint wp = (IJavaWatchpoint) bp;
-	    xw.field("TYPE","WATCHPOINT");
-	    typed = true;
-	    xw.field("FIELD",wp.getFieldName());
-	  }
+         if (bp instanceof IJavaClassPrepareBreakpoint) {
+            IJavaClassPrepareBreakpoint cpb = (IJavaClassPrepareBreakpoint) bp;
+            xw.field("TYPE","CLASSPREPARE");
+            typed = true;
+            if (cpb.getMemberType() == IJavaClassPrepareBreakpoint.TYPE_INTERFACE)
+               xw.field("INTERFACE",true);
+          }
+         else if (bp instanceof IJavaExceptionBreakpoint) {
+            IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
+            xw.field("TYPE","EXCEPTION");
+            typed = true;
+            xw.field("ISCAUGHT",eb.isCaught());
+            xw.field("ISCHECKED",eb.isChecked());
+            xw.field("ISUNCAUGHT",eb.isUncaught());
+            xw.field("EXCEPTION",eb.getExceptionTypeName());
+            Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
+            if (val != null) xw.field("ISSUBCLASSES",val);
+            else {
+               eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
+               xw.field("ISSUBCLASSES",true);
+             }
+            for (String ef : eb.getExclusionFilters()) {
+               xw.textElement("EXCLUDE",ef);
+             }
+            for (String ef : eb.getInclusionFilters()) {
+               xw.textElement("INCLUDE",ef);
+             }
+          }
+         else if (bp instanceof IJavaMethodBreakpoint) {
+            IJavaMethodBreakpoint mp = (IJavaMethodBreakpoint) bp;
+            xw.field("TYPE","METHOD");
+            typed = true;
+            xw.field("ENTRY",mp.isEntry());
+            xw.field("EXIT",mp.isExit());
+            xw.field("NATIVE",mp.isNativeOnly());
+            xw.begin("METHOD");
+            xw.field("CLASS",mp.getTypeName());
+            xw.field("NAME",mp.getMethodName());
+            xw.text(mp.getMethodSignature());
+            xw.end("METHOD");
+          }
+         else if (bp instanceof IJavaMethodEntryBreakpoint) {
+            IJavaMethodEntryBreakpoint mp = (IJavaMethodEntryBreakpoint) bp;
+            xw.field("TYPE","METHODENTRY");
+            typed = true;
+            xw.begin("METHOD");
+            xw.field("NAME",mp.getMethodName());
+            xw.text(mp.getMethodSignature());
+            xw.end("METHOD");
+          }
+         else if (bp instanceof IJavaStratumLineBreakpoint) {
+            IJavaStratumLineBreakpoint slb = (IJavaStratumLineBreakpoint) bp;
+            xw.field("TYPE","STRATUMLINE");
+            typed = true;
+            xw.begin("SOURCE");
+            xw.field("NAME",slb.getSourceName());
+            xw.text(slb.getSourcePath());
+            xw.end("SOURCE");
+            xw.textElement("PATTERN",slb.getPattern());
+            if (slb.getStratum() != null) xw.textElement("STRATUM",slb.getStratum());
+          }
+         else if (bp instanceof IJavaTargetPatternBreakpoint) {
+            IJavaTargetPatternBreakpoint tb = (IJavaTargetPatternBreakpoint) bp;
+            xw.field("TYPE","TARGETPATTERN");
+            typed = true;
+            xw.field("SOURCE",tb.getSourceName());
+          }
+         else if (bp instanceof IJavaWatchpoint) {
+            IJavaWatchpoint wp = (IJavaWatchpoint) bp;
+            xw.field("TYPE","WATCHPOINT");
+            typed = true;
+            xw.field("FIELD",wp.getFieldName());
+          }
 
-	 if (bp instanceof IJavaLineBreakpoint) {
-	    IJavaLineBreakpoint lb = (IJavaLineBreakpoint) bp;
-	    if (!typed) xw.field("TYPE","LINE");
-	    if (lb.getCondition() != null) {
-	       xw.begin("CONDITION");
-	       xw.field("ENABLED",lb.isConditionEnabled());
-	       xw.field("SUSPEND",lb.isConditionSuspendOnTrue());
-	       xw.text(lb.getCondition());
-	       xw.end("CONDITION");
-	     }
-	  }
+         if (bp instanceof IJavaLineBreakpoint) {
+            IJavaLineBreakpoint lb = (IJavaLineBreakpoint) bp;
+            if (!typed) xw.field("TYPE","LINE");
+            if (lb.getCondition() != null) {
+               xw.begin("CONDITION");
+               xw.field("ENABLED",lb.isConditionEnabled());
+               xw.field("SUSPEND",lb.isConditionSuspendOnTrue());
+               xw.text(lb.getCondition());
+               xw.end("CONDITION");
+             }
+          }
 
-	 if (mk != null) {
-	    // TODO: Need to dump marker as components
-	    // xw.textElement("MARKER",mk.toString());
-	  }
-	 IJavaObject [] iflt = bp.getInstanceFilters();
-	 for (IJavaObject jo : iflt) {
-	    xw.begin("FILTER");
-	    xw.text(jo.toString());
-	    xw.end();
-	  }
+         if (mk != null) {
+            // TODO: Need to dump marker as components
+            // xw.textElement("MARKER",mk.toString());
+          }
+         IJavaObject [] iflt = bp.getInstanceFilters();
+         for (IJavaObject jo : iflt) {
+            xw.begin("FILTER");
+            xw.text(jo.toString());
+            xw.end();
+          }
        }
     }
    catch (Throwable e) {
@@ -605,26 +605,26 @@ static String findFileForClass(String cls)
       IJavaProject ijp = JavaCore.create(ip);
       if (ijp == null) continue;
       try {
-	 IType ity = ijp.findType(cls,(BedrockProgressMonitor) null);
+         IType ity = ijp.findType(cls,(BedrockProgressMonitor) null);
 
-	 if (ity == null && cls.indexOf("$") > 0) {
-	    ity = ijp.findType(cls.replace('$','.'));
-	    if (ity == null) {
-	       int idx = cls.indexOf("$");
-	       ity = ijp.findType(cls.substring(0,idx));
-	     }
-	  }
-	 if (ity != null) {
-	    IPath pt = ity.getPath();
-	    File f = getFileForPath(pt,ip);
-	    if (f.exists()) {
-	       if (result == null) result = f;
-	       else if (f.getName().endsWith(".java") &&
-		     result.getName().endsWith(".class")) {
-		  result = f;
-		}
-	     }
-	  }
+         if (ity == null && cls.indexOf("$") > 0) {
+            ity = ijp.findType(cls.replace('$','.'));
+            if (ity == null) {
+               int idx = cls.indexOf("$");
+               ity = ijp.findType(cls.substring(0,idx));
+             }
+          }
+         if (ity != null) {
+            IPath pt = ity.getPath();
+            File f = getFileForPath(pt,ip);
+            if (f.exists()) {
+               if (result == null) result = f;
+               else if (f.getName().endsWith(".java") &&
+                     result.getName().endsWith(".class")) {
+                  result = f;
+                }
+             }
+          }
          else {
 //          BedrockPlugin.logD("Can't find type " + cls + " in " + ip.getName());
           }
@@ -645,9 +645,9 @@ static String findFileForClass(String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for resources						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for resources                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputResource(IResource ir,IvyXmlWriter xw)
@@ -690,23 +690,23 @@ static int outputResource(IResourceDelta rd,IvyXmlWriter xw)
       outputResource(rd.getResource(),xw);
 
       for (IMarkerDelta md : rd.getMarkerDeltas()) {
-	 xw.begin("MARKER");
-	 xw.field("ID",md.getId());
-	 BedrockUtil.fieldValue(xw,"KIND",md.getKind(),delta_kinds);
-	 xw.field("TYPE",md.getType());
-	 if (md.getKind() == IResourceDelta.REMOVED) {
-	    Map<?,?> attrs = md.getAttributes();
-	    for (Map.Entry<?,?> ent : attrs.entrySet()) {
-	       xw.begin("ATTRIBUTE");
-	       xw.field("NAME",ent.getKey());
-	       xw.field("VALUE",ent.getValue());
-	       xw.end();
-	     }
-	  }
-	 else {
-	    outputMarker(md.getMarker(),fp,xw);
-	  }
-	 xw.end("MARKER");
+         xw.begin("MARKER");
+         xw.field("ID",md.getId());
+         BedrockUtil.fieldValue(xw,"KIND",md.getKind(),delta_kinds);
+         xw.field("TYPE",md.getType());
+         if (md.getKind() == IResourceDelta.REMOVED) {
+            Map<?,?> attrs = md.getAttributes();
+            for (Map.Entry<?,?> ent : attrs.entrySet()) {
+               xw.begin("ATTRIBUTE");
+               xw.field("NAME",ent.getKey());
+               xw.field("VALUE",ent.getValue());
+               xw.end();
+             }
+          }
+         else {
+            outputMarker(md.getMarker(),fp,xw);
+          }
+         xw.end("MARKER");
        }
 
       xw.end("DELTA");
@@ -722,9 +722,9 @@ static int outputResource(IResourceDelta rd,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for processes						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for processes                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputProcess(IProcess rp,IvyXmlWriter xw,boolean showtarget)
@@ -739,14 +739,14 @@ static void outputProcess(IProcess rp,IvyXmlWriter xw,boolean showtarget)
    IDebugTarget tgt = lnch.getDebugTarget();
    if (tgt != null) {
       try {
-	 xw.field("NAME",tgt.getName());
+         xw.field("NAME",tgt.getName());
        }
       catch (DebugException e) { }
     }
    if (rp.isTerminated()) {
       try {
-	 xw.field("TERMINATED",true);
-	 xw.field("EXITVALUE",rp.getExitValue());
+         xw.field("TERMINATED",true);
+         xw.field("EXITVALUE",rp.getExitValue());
        }
       catch (DebugException e) { }
     }
@@ -766,9 +766,9 @@ static void outputProcess(IProcess rp,IvyXmlWriter xw,boolean showtarget)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for debug targets					*/
-/*										*/
+/*                                                                              */
+/*      Output methods for debug targets                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputDebugTarget(IJavaDebugTarget tgt,IvyXmlWriter xw)
@@ -807,9 +807,9 @@ static void outputDebugTarget(IJavaDebugTarget tgt,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for threads						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for threads                                              */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputThread(IJavaThread trd,IvyXmlWriter xw)
@@ -835,8 +835,8 @@ static void outputThread(IJavaThread trd,IvyXmlWriter xw)
    try {
       boolean fg = trd.hasStackFrames();
       if (fg) {
-	 xw.field("STACK",true);
-	 xw.field("FRAMES",trd.getFrameCount());
+         xw.field("STACK",true);
+         xw.field("FRAMES",trd.getFrameCount());
        }
       else xw.field("STACK",false);
     }
@@ -886,7 +886,7 @@ static void outputThread(IJavaThread trd,IvyXmlWriter xw)
 
    for (IBreakpoint ipt : trd.getBreakpoints()) {
       if (ipt instanceof IJavaBreakpoint) {
-	 BedrockUtil.outputBreakpoint(ipt,xw);
+         BedrockUtil.outputBreakpoint(ipt,xw);
        }
     }
 
@@ -896,9 +896,9 @@ static void outputThread(IJavaThread trd,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for possible completions 				*/
-/*										*/
+/*                                                                              */
+/*      Output methods for possible completions                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputCompletion(CompletionProposal cp,IvyXmlWriter xw)
@@ -920,13 +920,13 @@ static void outputCompletion(CompletionProposal cp,IvyXmlWriter xw)
       case CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER :
       case CompletionProposal.METHOD_DECLARATION :
       case CompletionProposal.POTENTIAL_METHOD_DECLARATION :
-	 xw.field("DECLSIGN",cp.getDeclarationSignature());
-	 break;
+         xw.field("DECLSIGN",cp.getDeclarationSignature());
+         break;
       case CompletionProposal.PACKAGE_REF :
       case CompletionProposal.TYPE_IMPORT :
       case CompletionProposal.TYPE_REF :
-	 xw.field("DOTNAME",cp.getDeclarationSignature());
-	 break;
+         xw.field("DOTNAME",cp.getDeclarationSignature());
+         break;
     }
    fieldFlags(xw,"ACCESS",cp.getFlags(),access_flags);
    xw.field("FLAGS",cp.getFlags());
@@ -947,7 +947,7 @@ static void outputCompletion(CompletionProposal cp,IvyXmlWriter xw)
    if (CompletionFlags.isStaticImport(cp.getAdditionalFlags())) xw.field("STATICIMPORT",true);
 
    if (cp.getKind() == CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER ||
-	  cp.getKind() == CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER) {
+          cp.getKind() == CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER) {
       xw.field("RECEIVER_SIGN",cp.getReceiverSignature());
       xw.field("RECEIVER_START",cp.getReceiverStart());
       xw.field("RECEIVER_END",cp.getReceiverEnd());
@@ -970,9 +970,9 @@ static void outputCompletion(CompletionProposal cp,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods for text edits						*/
-/*										*/
+/*                                                                              */
+/*      Output methods for text edits                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputTextEdit(TextEdit te,IvyXmlWriter xw)
@@ -1033,7 +1033,7 @@ static void outputTextEdit(TextEdit te,IvyXmlWriter xw)
 
    if (te.hasChildren()) {
       for (TextEdit cte : te.getChildren()) {
-	 outputTextEdit(cte,xw);
+         outputTextEdit(cte,xw);
        }
     }
    xw.end("EDIT");
@@ -1043,9 +1043,9 @@ static void outputTextEdit(TextEdit te,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Symbol output methods							*/
-/*										*/
+/*                                                                              */
+/*      Symbol output methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputJavaElement(IJavaElement elt,IvyXmlWriter xw)
@@ -1078,7 +1078,7 @@ static void outputJavaElement(IJavaElement elt,Set<String> files,boolean childre
 
 
 private static void outputJavaElementImpl(IJavaElement elt,Set<String> files,boolean children,
-					     IvyXmlWriter xw)
+                                             IvyXmlWriter xw)
 {
    if (elt == null) return;
 
@@ -1086,91 +1086,91 @@ private static void outputJavaElementImpl(IJavaElement elt,Set<String> files,boo
 
    switch (elt.getElementType()) {
       case IJavaElement.CLASS_FILE :
-	 return;
+         return;
       case IJavaElement.PACKAGE_FRAGMENT :
-	 IOpenable opn = (IOpenable) elt;
-	 if (!opn.isOpen()) {
-	    try {
-	       opn.open(null);
-	     }
-	    catch (JavaModelException e) {
-	       BedrockPlugin.logE("Package framgent " + elt.getElementName() + " not open");
-	       return;
-	     }
-	  }
-	 try {
-	    outputNameDetails((IPackageFragment) elt,xw);
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         IOpenable opn = (IOpenable) elt;
+         if (!opn.isOpen()) {
+            try {
+               opn.open(null);
+             }
+            catch (JavaModelException e) {
+               BedrockPlugin.logE("Package framgent " + elt.getElementName() + " not open");
+               return;
+             }
+          }
+         try {
+            outputNameDetails((IPackageFragment) elt,xw);
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	 IPackageFragmentRoot pfr = (IPackageFragmentRoot) elt;
-	 try {
-	    if (!pfr.isOpen() && pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
-	       pfr.open(null);
-	     }
-	  }
-	 catch (JavaModelException e) {
-	    return;
-	  }
-	 outputNameDetails(pfr,xw);
-	 break;
+         IPackageFragmentRoot pfr = (IPackageFragmentRoot) elt;
+         try {
+            if (!pfr.isOpen() && pfr.getKind() == IPackageFragmentRoot.K_SOURCE) {
+               pfr.open(null);
+             }
+          }
+         catch (JavaModelException e) {
+            return;
+          }
+         outputNameDetails(pfr,xw);
+         break;
       case IJavaElement.JAVA_PROJECT :
-	 IJavaProject ijp = (IJavaProject) elt;
-	 outputNameDetails(ijp,xw);
-	 break;
+         IJavaProject ijp = (IJavaProject) elt;
+         outputNameDetails(ijp,xw);
+         break;
       case IJavaElement.JAVA_MODEL :
       case IJavaElement.IMPORT_CONTAINER :
       case IJavaElement.IMPORT_DECLARATION :
       case IJavaElement.TYPE_PARAMETER :
       default :
-	 break;
+         break;
       case IJavaElement.COMPILATION_UNIT :
-	 IProject ip = elt.getJavaProject().getProject();
-	 File f = getFileForPath(elt.getPath(),ip);
-	 if (files != null && !files.contains(f.getPath()) && !files.contains(f.getAbsolutePath())) {
-	    return;
-	  }
-	 xw.begin("FILE");
-	 xw.textElement("PATH",f.getAbsolutePath());
-	 String root = getRootForPath(elt.getPath(),ip);
-	 if (root != null) xw.textElement("PATHROOT",root);
-	 close = "FILE";
-	 break;
+         IProject ip = elt.getJavaProject().getProject();
+         File f = getFileForPath(elt.getPath(),ip);
+         if (files != null && !files.contains(f.getPath()) && !files.contains(f.getAbsolutePath())) {
+            return;
+          }
+         xw.begin("FILE");
+         xw.textElement("PATH",f.getAbsolutePath());
+         String root = getRootForPath(elt.getPath(),ip);
+         if (root != null) xw.textElement("PATHROOT",root);
+         close = "FILE";
+         break;
       case IJavaElement.TYPE :
-	 try {
-	    outputNameDetails((IType) elt,xw);
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         try {
+            outputNameDetails((IType) elt,xw);
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.FIELD :
-	 try {
-	    outputNameDetails((IField) elt,xw);
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         try {
+            outputNameDetails((IField) elt,xw);
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.METHOD :
-	 try {
-	    outputNameDetails((IMethod) elt,xw);
-	  }
-	 catch (JavaModelException e) { }
-	 break;
+         try {
+            outputNameDetails((IMethod) elt,xw);
+          }
+         catch (JavaModelException e) { }
+         break;
       case IJavaElement.INITIALIZER :
-	 outputNameDetails((IInitializer) elt,xw);
-	 break;
+         outputNameDetails((IInitializer) elt,xw);
+         break;
       case IJavaElement.PACKAGE_DECLARATION :
-	 outputNameDetails((IPackageDeclaration) elt,xw);
-	 break;
+         outputNameDetails((IPackageDeclaration) elt,xw);
+         break;
       case IJavaElement.LOCAL_VARIABLE :
-	 outputNameDetails((ILocalVariable) elt,xw);
-	 break;
+         outputNameDetails((ILocalVariable) elt,xw);
+         break;
     }
 
    if (children && elt instanceof IParent) {
       try {
-	 for (IJavaElement c : ((IParent) elt).getChildren()) {
-	    outputJavaElementImpl(c,files,children,xw);
-	  }
+         for (IJavaElement c : ((IParent) elt).getChildren()) {
+            outputJavaElementImpl(c,files,children,xw);
+          }
        }
       catch (JavaModelException e) { }
     }
@@ -1187,29 +1187,29 @@ private static void outputNameDetails(IType typ,IvyXmlWriter xw) throws JavaMode
       if (typ.isInterface()) tnm = "Interface";
       else if (typ.isEnum()) tnm = "Enum";
       else {
-	 boolean check = false;
-	 String supnm = typ.getFullyQualifiedName();
-	 if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-	    check = true;
-	 else {
-	    supnm = typ.getSuperclassName();
-	    if (supnm != null) {
-	       if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-		  check = true;
-	     }
-	  }
-	 if (check) {
-	    try {
-	       ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
-	       for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
-		  if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
-		     tnm = "Throwable";
-		     break;
-		   }
-		}
-	     }
-	    catch (JavaModelException ex) { }
-	  }
+         boolean check = false;
+         String supnm = typ.getFullyQualifiedName();
+         if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+            check = true;
+         else {
+            supnm = typ.getSuperclassName();
+            if (supnm != null) {
+               if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+                  check = true;
+             }
+          }
+         if (check) {
+            try {
+               ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
+               for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
+                  if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
+                     tnm = "Throwable";
+                     break;
+                   }
+                }
+             }
+            catch (JavaModelException ex) { }
+          }
        }
     }
    catch (Throwable t) {
@@ -1310,15 +1310,15 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 
    if (elt instanceof ISourceReference) {
       try {
-	 ISourceRange rng = ((ISourceReference) elt).getSourceRange();
-	 if (rng != null) {
-	    xw.field("STARTOFFSET",rng.getOffset());
-	    xw.field("ENDOFFSET",rng.getOffset() + rng.getLength());
-	    xw.field("LENGTH",rng.getLength());
-	  }
+         ISourceRange rng = ((ISourceReference) elt).getSourceRange();
+         if (rng != null) {
+            xw.field("STARTOFFSET",rng.getOffset());
+            xw.field("ENDOFFSET",rng.getOffset() + rng.getLength());
+            xw.field("LENGTH",rng.getLength());
+          }
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem getting source range: " + e);
+         BedrockPlugin.logE("Problem getting source range: " + e);
        }
     }
 
@@ -1329,34 +1329,34 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 
    if (elt instanceof IMember) {
       try {
-	 IMember mem = ((IMember) elt);
-	 int fgs = mem.getFlags();
-	 if (mem.getParent() instanceof IType && !(elt instanceof IType)) {
-	    IType par = (IType) mem.getParent();
-	    if (par.isInterface()) {
-	       if (elt instanceof IMethod) {
-		  if ((fgs & Flags.AccDefaultMethod) == 0) fgs |= Flags.AccAbstract;
-		}
-	       fgs |= Flags.AccPublic;
-	    }
-	    xw.field("QNAME",par.getFullyQualifiedName() + "." + nm);
-	  }
-	 xw.field("FLAGS",fgs);
+         IMember mem = ((IMember) elt);
+         int fgs = mem.getFlags();
+         if (mem.getParent() instanceof IType && !(elt instanceof IType)) {
+            IType par = (IType) mem.getParent();
+            if (par.isInterface()) {
+               if (elt instanceof IMethod) {
+                  if ((fgs & Flags.AccDefaultMethod) == 0) fgs |= Flags.AccAbstract;
+                }
+               fgs |= Flags.AccPublic;
+            }
+            xw.field("QNAME",par.getFullyQualifiedName() + "." + nm);
+          }
+         xw.field("FLAGS",fgs);
        }
       catch (JavaModelException e) { }
     }
 
    if (elt instanceof IPackageFragment || elt instanceof IType) {
       try {
-	 JavadocUrl ju = new JavadocUrl(elt);
-	 ju.run();
-	 URL u = ju.getResult();
-	 if (u != null) {
-	    xw.field("JAVADOC",u.toString());
-	  }
+         JavadocUrl ju = new JavadocUrl(elt);
+         ju.run();
+         URL u = ju.getResult();
+         if (u != null) {
+            xw.field("JAVADOC",u.toString());
+          }
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem getting javadoc element",t);
+         BedrockPlugin.logE("Problem getting javadoc element",t);
        }
     }
 
@@ -1366,11 +1366,11 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    boolean havepath = false;
    for (IJavaElement pe = elt.getParent(); pe != null; pe = pe.getParent()) {
       if (pe.getElementType() == IJavaElement.COMPILATION_UNIT) {
-	 IProject ip = elt.getJavaProject().getProject();
-	 File f = BedrockUtil.getFileForPath(elt.getPath(),ip);
-	 xw.field("PATH",f.getAbsolutePath());
-	 havepath = true;
-	 break;
+         IProject ip = elt.getJavaProject().getProject();
+         File f = BedrockUtil.getFileForPath(elt.getPath(),ip);
+         xw.field("PATH",f.getAbsolutePath());
+         havepath = true;
+         break;
        }
     }
    IJavaProject ijp = elt.getJavaProject();
@@ -1379,16 +1379,16 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    if (p != null) {
       xw.field("XPATH",p);
       if (!havepath) {
-	 IProject ip = elt.getJavaProject().getProject();
-	 File f = getFileForPath(elt.getPath(),ip);
-	 xw.field("PATH",f.getAbsolutePath());
+         IProject ip = elt.getJavaProject().getProject();
+         File f = getFileForPath(elt.getPath(),ip);
+         xw.field("PATH",f.getAbsolutePath());
        }
     }
 
    if (elt instanceof IField) {
       IField ifld = (IField) elt;
       try {
-	 xw.field("RETURNTYPE",ifld.getTypeSignature());
+         xw.field("RETURNTYPE",ifld.getTypeSignature());
        }
       catch (JavaModelException e) { }
     }
@@ -1396,21 +1396,21 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    if (elt instanceof IMethod) {
       IMethod m = (IMethod) elt;
       try {
-	 xw.field("RESOLVED",m.isResolved());
-	 ISourceRange rng = m.getNameRange();
-	 if (rng != null) {
-	    xw.field("NAMEOFFSET",rng.getOffset());
-	    xw.field("NAMELENGTH",rng.getLength());
-	  }
-	 xw.field("RETURNTYPE",m.getReturnType());
-	 StringBuffer pbuf = new StringBuffer();
-	 pbuf.append("(");
-	 String [] ptys = m.getParameterTypes();
-	 for (int i = 0; i < ptys.length; ++i) {
-	    pbuf.append(ptys[i]);
-	  }
-	 pbuf.append(")");
-	 xw.field("PARAMETERS",pbuf.toString());
+         xw.field("RESOLVED",m.isResolved());
+         ISourceRange rng = m.getNameRange();
+         if (rng != null) {
+            xw.field("NAMEOFFSET",rng.getOffset());
+            xw.field("NAMELENGTH",rng.getLength());
+          }
+         xw.field("RETURNTYPE",m.getReturnType());
+         StringBuffer pbuf = new StringBuffer();
+         pbuf.append("(");
+         String [] ptys = m.getParameterTypes();
+         for (int i = 0; i < ptys.length; ++i) {
+            pbuf.append(ptys[i]);
+          }
+         pbuf.append(")");
+         xw.field("PARAMETERS",pbuf.toString());
        }
       catch (JavaModelException e) { }
     }
@@ -1420,23 +1420,23 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    if (elt instanceof IAnnotatable) {
       IAnnotatable ann = (IAnnotatable) elt;
       try {
-	 IAnnotation [] ans = ann.getAnnotations();
-	 for (IAnnotation an : ans) {
-	    xw.begin("ANNOTATION");
-	    xw.field("NAME",an.getElementName());
-	    xw.field("COUNT",an.getOccurrenceCount());
-	    try {
-	       for (IMemberValuePair mvp : an.getMemberValuePairs()) {
-		  xw.begin("VALUE");
-		  xw.field("NAME",mvp.getMemberName());
-		  if (mvp.getValue() != null) xw.field("VALUE",mvp.getValue().toString());
-		  xw.field("KIND",mvp.getValueKind());
-		  xw.end("VALUE");
-		}
-	     }
-	    catch (JavaModelException e) { }
-	    xw.end("ANNOTATION");
-	  }
+         IAnnotation [] ans = ann.getAnnotations();
+         for (IAnnotation an : ans) {
+            xw.begin("ANNOTATION");
+            xw.field("NAME",an.getElementName());
+            xw.field("COUNT",an.getOccurrenceCount());
+            try {
+               for (IMemberValuePair mvp : an.getMemberValuePairs()) {
+                  xw.begin("VALUE");
+                  xw.field("NAME",mvp.getMemberName());
+                  if (mvp.getValue() != null) xw.field("VALUE",mvp.getValue().toString());
+                  xw.field("KIND",mvp.getValueKind());
+                  xw.end("VALUE");
+                }
+             }
+            catch (JavaModelException e) { }
+            xw.end("ANNOTATION");
+          }
        }
       catch (JavaModelException e) { }
     }
@@ -1456,23 +1456,23 @@ private static class JavadocUrl implements Runnable {
       result_url = null;
     }
 
-   URL getResult()			{ return result_url; }
+   URL getResult()                      { return result_url; }
 
    @Override public void run() {
       try {
-	 result_url = JavaUI.getJavadocBaseLocation(java_element);
+         result_url = JavaUI.getJavadocBaseLocation(java_element);
        }
       catch (Throwable e) { }
     }
 
-}	// end of inner class JavadocUrl
+}       // end of inner class JavadocUrl
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Search Match output							*/
-/*										*/
+/*                                                                              */
+/*      Search Match output                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputSearchMatch(SearchMatch mat,IvyXmlWriter xw)
@@ -1486,18 +1486,18 @@ static void outputSearchMatch(SearchMatch mat,IvyXmlWriter xw)
    if (irc != null) {
       File f = mat.getResource().getLocation().toFile();
       switch (irc.getType()) {
-	 case IResource.FILE:
-	    xw.field("FILE",f.toString());
-	    break;
-	 case IResource.PROJECT :
-	    xw.field("PROJECT",f.toString());
-	    break;
-	 case IResource.FOLDER :
-	    xw.field("FOLDER",f.toString());
-	    break;
-	 case IResource.ROOT :
-	    xw.field("ROOT",f.toString());
-	    break;
+         case IResource.FILE:
+            xw.field("FILE",f.toString());
+            break;
+         case IResource.PROJECT :
+            xw.field("PROJECT",f.toString());
+            break;
+         case IResource.FOLDER :
+            xw.field("FOLDER",f.toString());
+            break;
+         case IResource.ROOT :
+            xw.field("ROOT",f.toString());
+            break;
        }
     }
    xw.field("ACCURACY",mat.getAccuracy());
@@ -1519,9 +1519,9 @@ static void outputSearchMatch(SearchMatch mat,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to output a type hierarchy					*/
-/*										*/
+/*                                                                              */
+/*      Methods to output a type hierarchy                                      */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputTypeHierarchy(ITypeHierarchy th,IvyXmlWriter xw)
@@ -1531,57 +1531,57 @@ static void outputTypeHierarchy(ITypeHierarchy th,IvyXmlWriter xw)
    for (IType typ : typs) {
       xw.begin("TYPE");
       try {
-	 xw.field("NAME",typ.getFullyQualifiedName());
-	 xw.field("QNAME",typ.getTypeQualifiedName());
-	 xw.field("PNAME",typ.getFullyQualifiedParameterizedName());
-	 if (typ.isClass()) xw.field("KIND","CLASS");
-	 else if (typ.isEnum()) xw.field("KIND","ENUM");
-	 else if (typ.isInterface()) xw.field("KIND","INTERFACE");
-	 xw.field("LOCAL",typ.isLocal());
-	 xw.field("MEMBER",typ.isMember());
-	 xw.field("KEY",typ.getKey());
-	 IType [] subs = th.getAllSubtypes(typ);
-	 for (IType styp : subs) {
-	    xw.begin("SUBTYPE");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("SUBTYPE");
-	  }
-	 IType [] sups = th.getAllSuperclasses(typ);
-	 for (IType styp : sups) {
-	    xw.begin("SUPERCLASS");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("SUPERCLASS");
-	  }
-	 sups = th.getAllSuperInterfaces(typ);
-	 for (IType styp : sups) {
-	    xw.begin("SUPERIFACE");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("SUPERIFACE");
-	  }
-	 sups = th.getAllSupertypes(typ);
-	 for (IType styp : sups) {
-	    xw.begin("SUPERTYPE");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("SUPERTYPE");
-	  }
-	 sups = th.getExtendingInterfaces(typ);
-	 for (IType styp : sups) {
-	    xw.begin("EXTENDIFACE");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("EXTENDIFACE");
-	  }
-	 sups = th.getImplementingClasses(typ);
-	 for (IType styp : sups) {
-	    xw.begin("IMPLEMENTOR");
-	    xw.field("NAME",styp.getFullyQualifiedName());
-	    xw.field("KEY",styp.getKey());
-	    xw.end("IMPLEMENTOR");
-	  }
+         xw.field("NAME",typ.getFullyQualifiedName());
+         xw.field("QNAME",typ.getTypeQualifiedName());
+         xw.field("PNAME",typ.getFullyQualifiedParameterizedName());
+         if (typ.isClass()) xw.field("KIND","CLASS");
+         else if (typ.isEnum()) xw.field("KIND","ENUM");
+         else if (typ.isInterface()) xw.field("KIND","INTERFACE");
+         xw.field("LOCAL",typ.isLocal());
+         xw.field("MEMBER",typ.isMember());
+         xw.field("KEY",typ.getKey());
+         IType [] subs = th.getAllSubtypes(typ);
+         for (IType styp : subs) {
+            xw.begin("SUBTYPE");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("SUBTYPE");
+          }
+         IType [] sups = th.getAllSuperclasses(typ);
+         for (IType styp : sups) {
+            xw.begin("SUPERCLASS");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("SUPERCLASS");
+          }
+         sups = th.getAllSuperInterfaces(typ);
+         for (IType styp : sups) {
+            xw.begin("SUPERIFACE");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("SUPERIFACE");
+          }
+         sups = th.getAllSupertypes(typ);
+         for (IType styp : sups) {
+            xw.begin("SUPERTYPE");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("SUPERTYPE");
+          }
+         sups = th.getExtendingInterfaces(typ);
+         for (IType styp : sups) {
+            xw.begin("EXTENDIFACE");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("EXTENDIFACE");
+          }
+         sups = th.getImplementingClasses(typ);
+         for (IType styp : sups) {
+            xw.begin("IMPLEMENTOR");
+            xw.field("NAME",styp.getFullyQualifiedName());
+            xw.field("KEY",styp.getKey());
+            xw.end("IMPLEMENTOR");
+          }
        }
       catch (JavaModelException e) { }
 
@@ -1594,9 +1594,9 @@ static void outputTypeHierarchy(ITypeHierarchy th,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to output launch configuration					*/
-/*										*/
+/*                                                                              */
+/*      Methods to output launch configuration                                  */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputLaunch(ILaunch ln,IvyXmlWriter xw)
@@ -1636,7 +1636,7 @@ static void outputLaunch(ILaunchConfiguration cfg,IvyXmlWriter xw)
       attrs = cfg.getAttributes();
       typ = cfg.getType();
     }
-   catch (CoreException e) {		// if deleted, these fail
+   catch (CoreException e) {            // if deleted, these fail
       xw.end("CONFIGURATION");
       return;
     }
@@ -1654,7 +1654,7 @@ static void outputLaunch(ILaunchConfiguration cfg,IvyXmlWriter xw)
    for (Iterator<?> it = attrs.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<?,?> ent =  (Map.Entry<?,?>) it.next();
       if (ent.getKey().toString().equals(BEDROCK_LAUNCH_IGNORE_PROP)) {
-	 xw.field("IGNORE",true);
+         xw.field("IGNORE",true);
        }
     }
 
@@ -1665,23 +1665,23 @@ static void outputLaunch(ILaunchConfiguration cfg,IvyXmlWriter xw)
       key = BedrockRuntime.getExternalPropertyName(key);
       if (key == null || val == null) continue;
       if (val instanceof ArrayList<?>) {
-	 ArrayList<?> al = (ArrayList<?>) val;
-	 for (int j = 0; j < al.size(); ++j) {
-	    Object v1 = al.get(j);
-	    xw.begin("ATTRIBUTE");
-	    xw.field("NAME",key);
-	    xw.field("INDEX",j+1);
-	    xw.field("TYPE",v1.getClass().getName());
-	    xw.cdata(v1.toString());
-	    xw.end("ATTRIBUTE");
-	  }
+         ArrayList<?> al = (ArrayList<?>) val;
+         for (int j = 0; j < al.size(); ++j) {
+            Object v1 = al.get(j);
+            xw.begin("ATTRIBUTE");
+            xw.field("NAME",key);
+            xw.field("INDEX",j+1);
+            xw.field("TYPE",v1.getClass().getName());
+            xw.cdata(v1.toString());
+            xw.end("ATTRIBUTE");
+          }
        }
       else {
-	 xw.begin("ATTRIBUTE");
-	 xw.field("NAME",key);
-	 xw.field("TYPE",val.getClass().getName());
-	 xw.cdata(val.toString());
-	 xw.end("ATTRIBUTE");
+         xw.begin("ATTRIBUTE");
+         xw.field("NAME",key);
+         xw.field("TYPE",val.getClass().getName());
+         xw.cdata(val.toString());
+         xw.end("ATTRIBUTE");
        }
     }
 
@@ -1707,8 +1707,8 @@ static String getId(ILaunchConfiguration li)
    if (atr == null) {
       atr = launch_ids.get(li);
       if (atr == null) {
-	 atr = Integer.toString(random_gen.nextInt(Integer.MAX_VALUE));
-	 launch_ids.put(li,atr);
+         atr = Integer.toString(random_gen.nextInt(Integer.MAX_VALUE));
+         launch_ids.put(li,atr);
        }
     }
    else {
@@ -1721,13 +1721,13 @@ static String getId(ILaunchConfiguration li)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to output a stack frame 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to output a stack frame                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputStackFrame(IJavaStackFrame jsf,int lvl,int vdepth,int arraysz,IvyXmlWriter xw)
-	throws DebugException
+        throws DebugException
 {
    xw.begin("STACKFRAME");
    xw.field("NAME", jsf.getName());
@@ -1754,47 +1754,47 @@ static void outputStackFrame(IJavaStackFrame jsf,int lvl,int vdepth,int arraysz,
    resource = loc.getSourceElement(jsf);
    if (resource != null) {
       if (resource instanceof IClassFile) {
-	 IClassFile cf = (IClassFile) resource;
-	 xw.field("FILETYPE","CLASSFILE");
-	 try {
-	    String fnm = cf.findPrimaryType().getFullyQualifiedParameterizedName();
-	    xw.field("FILE",fnm);
-	    xw.field("FILEPATH",cf.getPath().toOSString());
-	    if (cf.getSource() != null) {
-	       ISourceRange rng = cf.getSourceRange();
-	       byte [] data = cf.getSource().getBytes();
-	       xw.field("SOURCELEN",rng.getLength());
-	       xw.field("SOURCEOFF",rng.getOffset());
-	       if (!sources_sent.contains(fnm)) {
-		  sources_sent.add(fnm);
-		  xw.bytesElement("SOURCE",data);
-		}
-	     }
-	  }
-	 catch (JavaModelException e) { }
+         IClassFile cf = (IClassFile) resource;
+         xw.field("FILETYPE","CLASSFILE");
+         try {
+            String fnm = cf.findPrimaryType().getFullyQualifiedParameterizedName();
+            xw.field("FILE",fnm);
+            xw.field("FILEPATH",cf.getPath().toOSString());
+            if (cf.getSource() != null) {
+               ISourceRange rng = cf.getSourceRange();
+               byte [] data = cf.getSource().getBytes();
+               xw.field("SOURCELEN",rng.getLength());
+               xw.field("SOURCEOFF",rng.getOffset());
+               if (!sources_sent.contains(fnm)) {
+                  sources_sent.add(fnm);
+                  xw.bytesElement("SOURCE",data);
+                }
+             }
+          }
+         catch (JavaModelException e) { }
        }
       else if (resource instanceof IFile) {
-	 IFile f = (IFile) resource;
-	 xw.field("FILE",f.getLocation().makeAbsolute().toOSString());
-	 xw.field("FILETYPE","JAVAFILE");
+         IFile f = (IFile) resource;
+         xw.field("FILE",f.getLocation().makeAbsolute().toOSString());
+         xw.field("FILETYPE","JAVAFILE");
        }
     }
 
    try {
       for (IVariable var : jsf.getVariables()) {
-	 IJavaVariable ivj = (IJavaVariable) var;
-	 outputValue(ivj.getValue(),ivj,null,vdepth,arraysz,xw);
+         IJavaVariable ivj = (IJavaVariable) var;
+         outputValue(ivj.getValue(),ivj,null,vdepth,arraysz,xw);
        }
     }
-   catch (DebugException e) { } 	// native methods, etc don't have variables
+   catch (DebugException e) { }         // native methods, etc don't have variables
 
    try {
       List<?> l = jsf.getArgumentTypeNames();
       for (Iterator<?> it = l.iterator(); it.hasNext(); ) {
-	 String nm = (String) it.next();
-	 xw.begin("ARG");
-	 xw.field("TYPE",nm);
-	 xw.end("ARG");
+         String nm = (String) it.next();
+         xw.begin("ARG");
+         xw.field("TYPE",nm);
+         xw.end("ARG");
        }
     }
    catch (DebugException e) { }
@@ -1804,9 +1804,9 @@ static void outputStackFrame(IJavaStackFrame jsf,int lvl,int vdepth,int arraysz,
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to output a value						*/
-/*										*/
+/*                                                                              */
+/*      Methods to output a value                                               */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int arraysz,
@@ -1823,11 +1823,11 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 
    try {
       if (name == null && var != null) {
-	 name = var.getName();
-	 if (name.startsWith("no method return value")) {
-	    BedrockPlugin.logD("VALUE without name " + name + " :" + var + ": " + val);
-	    return;
-	  }
+         name = var.getName();
+         if (name.startsWith("no method return value")) {
+            BedrockPlugin.logD("VALUE without name " + name + " :" + var + ": " + val);
+            return;
+          }
        }
 
       String dtyp = null;
@@ -1837,15 +1837,15 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
       boolean stat = false;
 
       if (var != null && var instanceof IJavaFieldVariable) {
-	 IJavaFieldVariable jfv = (IJavaFieldVariable) var;
-	 dtyp = jfv.getDeclaringType().getName();
-	 stat = jfv.isStatic();
+         IJavaFieldVariable jfv = (IJavaFieldVariable) var;
+         dtyp = jfv.getDeclaringType().getName();
+         stat = jfv.isStatic();
        }
       if (var != null) lcl = var.isLocal();
 
       if (dtyp != null && donestatics.contains(dtyp) && stat) {
-	 BedrockPlugin.logD("SKIP STATIC " + var);
-	 return;
+         BedrockPlugin.logD("SKIP STATIC " + var);
+         return;
        }
 
       xw.begin("VALUE");
@@ -1856,94 +1856,94 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
       xw.field("TYPE",typ);
 
       try {
-	 if (val instanceof IJavaArray) {
-	    IJavaArray arr = (IJavaArray) val;
-	    int len = arr.getLength();
-	    xw.field("KIND","ARRAY");
-	    xw.field("LENGTH",len);
-	    xw.field("HASVARS",len > 0);
-	    int sz = arraysz;
-	    if (sz == 0) sz = 100;
-	    else if (sz < 0) sz = len+1;
-	    if (len <= sz && lvls > 0) {
-	       for (int i = 0; i < len; ++i) {
-		  try {
-		     outputValue(arr.getValue(i),null,"[" + i + "]",
+         if (val instanceof IJavaArray) {
+            IJavaArray arr = (IJavaArray) val;
+            int len = arr.getLength();
+            xw.field("KIND","ARRAY");
+            xw.field("LENGTH",len);
+            xw.field("HASVARS",len > 0);
+            int sz = arraysz;
+            if (sz == 0) sz = 100;
+            else if (sz < 0) sz = len+1;
+            if (len <= sz && lvls > 0) {
+               for (int i = 0; i < len; ++i) {
+                  try {
+                     outputValue(arr.getValue(i),null,"[" + i + "]",
                            lvls-1,arraysz,donestatics,xw);
-		   }
-		  catch (DebugException e) {
+                   }
+                  catch (DebugException e) {
                      break; 
                    }
-		}
-	     }
-	    else if (lvls > 0) {
-	       // TODO: Need to handle large arrays
-	       for (int i = 0; i < sz; ++i) {
-		  try {
-		     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,
+                }
+             }
+            else if (lvls > 0) {
+               // TODO: Need to handle large arrays
+               for (int i = 0; i < sz; ++i) {
+                  try {
+                     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,
                            arraysz,donestatics,xw);
-		   }
-		  catch (DebugException e) { 
+                   }
+                  catch (DebugException e) { 
                      break; 
                    }
-		}
-	     }
-	  }
-	 else if (val instanceof IJavaPrimitiveValue) {
-	    xw.field("KIND","PRIMITIVE");
-	  }
-	 else if (val instanceof IJavaClassObject) {
-	    IJavaClassObject cobj = (IJavaClassObject) val;
-	    IJavaType ctyp = cobj.getInstanceType();
-	    xw.field("KIND","CLASS");
-	    xw.field("TYPENAME",ctyp.getName());
-	  }
-	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
-	    xw.field("KIND","STRING");
-	    boolean chars = false;
-	    for (int i = 0; i < txt.length(); ++i) {
-	       if (isBadChar(txt.charAt(i))) {
-		  chars = true;
-		  break;
-		}
-	     }
-	    if (chars) {
-	       xw.field("CHARS",true);
-	       xw.field("LENGTH",txt.length());
-	       txt = IvyXml.encodeCharacters(txt);
-	     }
-	  }
+                }
+             }
+          }
+         else if (val instanceof IJavaPrimitiveValue) {
+            xw.field("KIND","PRIMITIVE");
+          }
+         else if (val instanceof IJavaClassObject) {
+            IJavaClassObject cobj = (IJavaClassObject) val;
+            IJavaType ctyp = cobj.getInstanceType();
+            xw.field("KIND","CLASS");
+            xw.field("TYPENAME",ctyp.getName());
+          }
+         else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
+            xw.field("KIND","STRING");
+            boolean chars = false;
+            for (int i = 0; i < txt.length(); ++i) {
+               if (isBadChar(txt.charAt(i))) {
+                  chars = true;
+                  break;
+                }
+             }
+            if (chars) {
+               xw.field("CHARS",true);
+               xw.field("LENGTH",txt.length());
+               txt = IvyXml.encodeCharacters(txt);
+             }
+          }
 
-	 else if (val instanceof IJavaObject) {
-	    IJavaObject obj = (IJavaObject) val;
-	    IVariable [] vars = obj.getVariables();
-	    xw.field("KIND","OBJECT");
-	    // if (obj.getJavaType() != null) xw.field("OBJTYPE",obj.getJavaType().getName());
-	    xw.field("HASVARS",vars.length > 0);
-	    if (lvls > 0) {
-	       for (IVariable nvar : vars) {
-		  try {
-		     if (nvar instanceof IJavaVariable) {
-			IJavaVariable nvj = (IJavaVariable) nvar;
-			outputValue(nvj.getValue(),nvj,null,lvls-1,arraysz,donestatics,xw);
-		      }
-		     else {
-			outputValue(nvar.getValue(),null,nvar.getName(),
-			   lvls-1,arraysz,donestatics,xw);
-		      }
-		   }
-		  catch (DebugException e) { }
-		}
-	     }
-	    if (dtyp != null) donestatics.add(dtyp);
-	  }
-	 if (txt.length() >= MAX_VALUE_SIZE) {
-	    txt = txt.substring(0,MAX_VALUE_SIZE) + "...";
-	  }
-	 xw.cdataElement("DESCRIPTION",txt);
+         else if (val instanceof IJavaObject) {
+            IJavaObject obj = (IJavaObject) val;
+            IVariable [] vars = obj.getVariables();
+            xw.field("KIND","OBJECT");
+            // if (obj.getJavaType() != null) xw.field("OBJTYPE",obj.getJavaType().getName());
+            xw.field("HASVARS",vars.length > 0);
+            if (lvls > 0) {
+               for (IVariable nvar : vars) {
+                  try {
+                     if (nvar instanceof IJavaVariable) {
+                        IJavaVariable nvj = (IJavaVariable) nvar;
+                        outputValue(nvj.getValue(),nvj,null,lvls-1,arraysz,donestatics,xw);
+                      }
+                     else {
+                        outputValue(nvar.getValue(),null,nvar.getName(),
+                           lvls-1,arraysz,donestatics,xw);
+                      }
+                   }
+                  catch (DebugException e) { }
+                }
+             }
+            if (dtyp != null) donestatics.add(dtyp);
+          }
+         if (txt.length() >= MAX_VALUE_SIZE) {
+            txt = txt.substring(0,MAX_VALUE_SIZE) + "...";
+          }
+         xw.cdataElement("DESCRIPTION",txt);
        }
       finally {
-	 xw.end("VALUE");
+         xw.end("VALUE");
        }
     }
    catch (DebugException e) {
@@ -1977,7 +1977,7 @@ static void outputValue(IEvaluationResult rslt,int lvl,int arraysz,IvyXmlWriter 
    if (ex != null) {
       String cause = ex.toString();
       for (Throwable ex1 = ex.getCause(); ex1 != null; ex1 = ex1.getCause()) {
-	 cause += " caused by " + ex1.toString();
+         cause += " caused by " + ex1.toString();
        }
       xw.textElement("EXCEPTION",cause);
       BedrockPlugin.logE("Problem with evaluation",ex);
@@ -1993,7 +1993,7 @@ static void outputValue(IEvaluationResult rslt,int lvl,int arraysz,IvyXmlWriter 
             continue;
           }
          ++ct;
-	 xw.textElement("ERROR",s);
+         xw.textElement("ERROR",s);
        }
       if (ct == 0) {
          xw.textElement("ERROR","Bad experession");
@@ -2014,9 +2014,9 @@ static void outputValue(IEvaluationResult rslt,int lvl,int arraysz,IvyXmlWriter 
 
 
 /********************************************************************************/
-/*										*/
-/*	Refactoring output methods						*/
-/*										*/
+/*                                                                              */
+/*      Refactoring output methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 static void outputStatus(RefactoringStatus sts,IvyXmlWriter xw)
@@ -2053,37 +2053,37 @@ static void outputChange(Change chng,IvyXmlWriter xw)
    else if (chng instanceof ResourceChange) {
       ResourceChange rc = (ResourceChange) chng;
       if (chng instanceof DeleteResourceChange) {
-	 xw.field("TYPE","DELETERESOURCE");
+         xw.field("TYPE","DELETERESOURCE");
        }
       else if (chng instanceof MoveResourceChange) {
-	 xw.field("TYPE","MOVERESOURCE");
+         xw.field("TYPE","MOVERESOURCE");
        }
       else if (chng instanceof RenameResourceChange) {
-	 RenameResourceChange rrc = (RenameResourceChange) chng;
-	 xw.field("TYPE","RENAMERESOURCE");
-	 xw.field("NEWNAME",rrc.getNewName());
+         RenameResourceChange rrc = (RenameResourceChange) chng;
+         xw.field("TYPE","RENAMERESOURCE");
+         xw.field("NEWNAME",rrc.getNewName());
        }
       else {
-	 String typ = rc.getName();
-	 Pattern p1 = Pattern.compile("Rename compilation unit '([^']*)' to '([^']*)'");
-	 Matcher m1 = p1.matcher(typ);
-	 if (m1.matches()) {
-	    xw.field("TYPE","RENAMERESOURCE");
-	    xw.field("OLDNAME",m1.group(1));
-	    xw.field("NEWNAME",m1.group(2));
-	  }
-	 else {
-	    BedrockPlugin.logD("UNKNOWN RESOURCE CHANGE: " + typ + " " + chng.getClass().getName());
-	  }
+         String typ = rc.getName();
+         Pattern p1 = Pattern.compile("Rename compilation unit '([^']*)' to '([^']*)'");
+         Matcher m1 = p1.matcher(typ);
+         if (m1.matches()) {
+            xw.field("TYPE","RENAMERESOURCE");
+            xw.field("OLDNAME",m1.group(1));
+            xw.field("NEWNAME",m1.group(2));
+          }
+         else {
+            BedrockPlugin.logD("UNKNOWN RESOURCE CHANGE: " + typ + " " + chng.getClass().getName());
+          }
        }
       Object o = rc.getModifiedElement();
       if (o instanceof IResource) {
-	 IResource ir = (IResource) o;
-	 BedrockUtil.outputResource(ir,xw);
+         IResource ir = (IResource) o;
+         BedrockUtil.outputResource(ir,xw);
        }
       else if (o instanceof ICompilationUnit) {
-	 IResource ir = ((ICompilationUnit) o).getResource();
-	 BedrockUtil.outputResource(ir,xw);
+         IResource ir = ((ICompilationUnit) o).getResource();
+         BedrockUtil.outputResource(ir,xw);
        }
     }
    else if (chng instanceof TextEditBasedChange) {
@@ -2091,9 +2091,9 @@ static void outputChange(Change chng,IvyXmlWriter xw)
       xw.field("TYPE","EDIT");
       xw.field("TEXTTYPE",tec.getTextType());
       for (TextEditBasedChangeGroup cg : tec.getChangeGroups()) {
-	 for (TextEdit te : cg.getTextEdits()) {
-	    BedrockUtil.outputTextEdit(te,xw);
-	  }
+         for (TextEdit te : cg.getTextEdits()) {
+            BedrockUtil.outputTextEdit(te,xw);
+          }
        }
     }
    else if (chng instanceof UndoTextFileChange) {
@@ -2106,17 +2106,17 @@ static void outputChange(Change chng,IvyXmlWriter xw)
    Object [] aff = chng.getAffectedObjects();
    if (aff != null) {
       for (Object o : aff) {
-	 if (o instanceof IResource) {
-	    IResource ir = (IResource) o;
-	    BedrockUtil.outputResource(ir,xw);
-	  }
-	 else if (o instanceof ICompilationUnit) {
-	    IResource ir = ((ICompilationUnit) o).getResource();
-	    BedrockUtil.outputResource(ir,xw);
-	  }
-	 else {
-	    BedrockPlugin.logD("UNKNOWN CHANGE " + chng.getName() + " OBJECT " + o.getClass() + " " + o);
-	  }
+         if (o instanceof IResource) {
+            IResource ir = (IResource) o;
+            BedrockUtil.outputResource(ir,xw);
+          }
+         else if (o instanceof ICompilationUnit) {
+            IResource ir = ((ICompilationUnit) o).getResource();
+            BedrockUtil.outputResource(ir,xw);
+          }
+         else {
+            BedrockPlugin.logD("UNKNOWN CHANGE " + chng.getName() + " OBJECT " + o.getClass() + " " + o);
+          }
        }
     }
 
@@ -2126,9 +2126,9 @@ static void outputChange(Change chng,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	File management routines						*/
-/*										*/
+/*                                                                              */
+/*      File management routines                                                */
+/*                                                                              */
 /********************************************************************************/
 
 static File getFileForPath(IPath p,IProject proj)
@@ -2139,9 +2139,9 @@ static File getFileForPath(IPath p,IProject proj)
       String seg0 = p.segment(0);
       IPath pfx = JavaCore.getClasspathVariable(seg0);
       if (pfx != null) {
-	 IPath p1 = pfx.append(p.removeFirstSegments(1));
-	 File f1 = getFileForPath(p1.toFile(),proj);
-	 if (f1.exists()) return f1;
+         IPath p1 = pfx.append(p.removeFirstSegments(1));
+         File f1 = getFileForPath(p1.toFile(),proj);
+         if (f1.exists()) return f1;
        }
     }
 
@@ -2155,12 +2155,12 @@ static File getFileForPath(File f,IProject proj)
    if (!f.exists() && proj == null) {
       Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
-      pars.pop();		// /
+      pars.pop();               // /
       String pnm = pars.pop().getName();
       try {
-	 BedrockPlugin bp = BedrockPlugin.getPlugin();
-	 BedrockProject bpp = bp.getProjectManager();
-	 proj = bpp.findProject(pnm);
+         BedrockPlugin bp = BedrockPlugin.getPlugin();
+         BedrockProject bpp = bp.getProjectManager();
+         proj = bpp.findProject(pnm);
        }
       catch (BedrockException e) { }
     }
@@ -2169,13 +2169,13 @@ static File getFileForPath(File f,IProject proj)
       Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       if (pars.size() >= 3) {
-	 pars.pop();		   // /
-	 pars.pop();		   // /project
-	 File f0 = proj.getLocation().toFile();
-	 while (!pars.empty()) {
-	    f0 = new File(f0,pars.pop().getName());
-	  }
-	 if (f0.exists()) f = f0;
+         pars.pop();               // /
+         pars.pop();               // /project
+         File f0 = proj.getLocation().toFile();
+         while (!pars.empty()) {
+            f0 = new File(f0,pars.pop().getName());
+          }
+         if (f0.exists()) f = f0;
        }
     }
 
@@ -2183,21 +2183,21 @@ static File getFileForPath(File f,IProject proj)
       Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       if (pars.size() >= 3) {
-	 pars.pop();		   // /
-	 pars.pop();		   // /project
-	 IFolder lnk = proj.getFolder(pars.pop().getName());
-	 if (lnk != null && lnk.getLocation() != null) {
-	    File f0 = lnk.getLocation().toFile();
-	    while (!pars.empty()) {
-	       f0 = new File(f0,pars.pop().getName());
-	     }
-	    if (f0.exists()) f = f0;
-	  }
+         pars.pop();               // /
+         pars.pop();               // /project
+         IFolder lnk = proj.getFolder(pars.pop().getName());
+         if (lnk != null && lnk.getLocation() != null) {
+            File f0 = lnk.getLocation().toFile();
+            while (!pars.empty()) {
+               f0 = new File(f0,pars.pop().getName());
+             }
+            if (f0.exists()) f = f0;
+          }
        }
       else if (pars.size() == 2) {
-	 IPath ip = proj.getLocation();
-	 File f1 = ip.toFile();
-	 if (f1.exists()) f = f1;
+         IPath ip = proj.getLocation();
+         File f1 = ip.toFile();
+         if (f1.exists()) f = f1;
        }
     }
 
@@ -2207,9 +2207,9 @@ static File getFileForPath(File f,IProject proj)
       File f0 = new File(wr.getLocation().toOSString());
       Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
-      pars.pop();		// /
+      pars.pop();               // /
       while (!pars.empty()) {
-	 f0 = new File(f0,pars.pop().getName());
+         f0 = new File(f0,pars.pop().getName());
        }
       if (f0.exists()) f = f0;
     }
@@ -2229,7 +2229,7 @@ static String getRootForPath(IPath p,IProject proj)
 
 
 
-}	// end of class BedrockUtil
+}       // end of class BedrockUtil
 
 
 

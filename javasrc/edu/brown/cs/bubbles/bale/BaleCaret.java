@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleCaret.java							*/
-/*										*/
-/*	Bubble Annotated Language Editor caret implementation			*/
-/*										*/
+/*                                                                              */
+/*              BaleCaret.java                                                  */
+/*                                                                              */
+/*      Bubble Annotated Language Editor caret implementation                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,23 +55,23 @@ class BaleCaret extends DefaultCaret implements Caret, BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleCaretStyle	caret_style;
-private int		last_width;
-private boolean 	active_region;
+private BaleCaretStyle  caret_style;
+private int             last_width;
+private boolean         active_region;
 
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleCaret()
@@ -85,9 +85,9 @@ BaleCaret()
 
 
 /********************************************************************************/
-/*										*/
-/*	Style setting methods							*/
-/*										*/
+/*                                                                              */
+/*      Style setting methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void setCaretStyle(BaleCaretStyle cs)
@@ -120,23 +120,23 @@ private void setStyleForComponent(JTextComponent c)
    switch (caret_style) {
       case BLOCK_CARET :
       case LINE_CARET :
-	 c.putClientProperty("caretWidth",Integer.valueOf(BALE_LINE_CARET_WIDTH));
-	 break;
+         c.putClientProperty("caretWidth",Integer.valueOf(BALE_LINE_CARET_WIDTH));
+         break;
       case THIN_LINE_CARET :
-	 c.putClientProperty("caretWidth",Integer.valueOf(BALE_THIN_CARET_WIDTH));
-	 break;
+         c.putClientProperty("caretWidth",Integer.valueOf(BALE_THIN_CARET_WIDTH));
+         break;
       case THICK_LINE_CARET :
-	 c.putClientProperty("caretWidth",Integer.valueOf(BALE_THICK_CARET_WIDTH));
-	 break;
+         c.putClientProperty("caretWidth",Integer.valueOf(BALE_THICK_CARET_WIDTH));
+         break;
     }
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -155,9 +155,9 @@ private void setStyleForComponent(JTextComponent c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Block cursor painting methods						*/
-/*										*/
+/*                                                                              */
+/*      Block cursor painting methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void paintBlock(Graphics g)
@@ -201,9 +201,9 @@ private void damageBlock(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse actions								*/
-/*										*/
+/*                                                                              */
+/*      Mouse actions                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void mousePressed(MouseEvent e)
@@ -212,8 +212,8 @@ private void damageBlock(Rectangle r)
    if (c instanceof BaleEditorPane) {
       BaleEditorPane bep = (BaleEditorPane) c;
       if (bep.handleActiveClick(e)) {
-	 active_region = true;
-	 return;
+         active_region = true;
+         return;
        }
       BaleDocument bd = bep.getBaleDocument();
       if (bd.isOrphan()) return;
@@ -259,9 +259,9 @@ private void damageBlock(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling click on elision					*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling click on elision                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void positionCaret(MouseEvent e)
@@ -276,21 +276,21 @@ private void damageBlock(Rectangle r)
       
       BaleElement be = bd.getCharacterElement(pos);
       if (be != null && be.isElided()) {
-	 try {
-	    Rectangle r = SwingText.modelToView2D(c,pos);
-	    if (pt.x > r.x + BALE_ELLIPSES_INSIDE_DELTA &&
-		   pt.x < r.x + r.width - BALE_ELLIPSES_INSIDE_DELTA) {
-	       be.setElided(false);
-	       bd.handleElisionChange();
-	       if (c instanceof BaleEditorPane) {
-		  BaleEditorPane bep = (BaleEditorPane) c;
-		  bep.increaseSizeForElidedElement(be);
-		}
-	       BoardMetrics.noteCommand("BALE","CaretRemoveElision");
-	       BaleEditorBubble.noteElision(c);
-	     }
-	  }
-	 catch (BadLocationException ex) { }
+         try {
+            Rectangle r = SwingText.modelToView2D(c,pos);
+            if (pt.x > r.x + BALE_ELLIPSES_INSIDE_DELTA &&
+                   pt.x < r.x + r.width - BALE_ELLIPSES_INSIDE_DELTA) {
+               be.setElided(false);
+               bd.handleElisionChange();
+               if (c instanceof BaleEditorPane) {
+                  BaleEditorPane bep = (BaleEditorPane) c;
+                  bep.increaseSizeForElidedElement(be);
+                }
+               BoardMetrics.noteCommand("BALE","CaretRemoveElision");
+               BaleEditorBubble.noteElision(c);
+             }
+          }
+         catch (BadLocationException ex) { }
        }
 
       if (pos >= 0) setDot(pos);
@@ -300,9 +300,9 @@ private void damageBlock(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Keep caret in bounds							*/
-/*										*/
+/*                                                                              */
+/*      Keep caret in bounds                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void moveDot(int dot,Position.Bias bias)
@@ -334,9 +334,9 @@ private void damageBlock(Rectangle r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparison methods							*/
-/*										*/
+/*                                                                              */
+/*      Comparison methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean equals(Object obj)
@@ -361,7 +361,7 @@ private void damageBlock(Rectangle r)
 
 
 
-}	// end of class BaleCaret
+}       // end of class BaleCaret
 
 
 

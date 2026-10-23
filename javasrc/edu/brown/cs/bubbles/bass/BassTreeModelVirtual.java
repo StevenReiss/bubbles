@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassTreeModelVirtual.java					*/
-/*										*/
-/*	Bubble Augmented Search Strategies tree model for a search box		*/
-/*										*/
+/*                                                                              */
+/*              BassTreeModelVirtual.java                                       */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies tree model for a search box          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,24 +50,24 @@ import java.util.StringTokenizer;
 
 
 final class BassTreeModelVirtual implements BassConstants, TreeModel, BassTreeModel,
-		BassTreeModel.BassTreeUpdateListener
+                BassTreeModel.BassTreeUpdateListener
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BassTreeModelBase	base_model;
-private ActiveNodes		active_nodes;
-private String			initial_project;
-private String			initial_prefix;
-private String			cur_prefix;
-private int			leaf_count;
-private boolean 		case_sensitive;
+private BassTreeModelBase       base_model;
+private ActiveNodes             active_nodes;
+private String                  initial_project;
+private String                  initial_prefix;
+private String                  cur_prefix;
+private int                     leaf_count;
+private boolean                 case_sensitive;
 private Collection<TreeModelListener>  listener_set;
 
 private static final BassTreeBase [] EMPTY = new BassTreeBase[0];
@@ -75,9 +75,9 @@ private static final BassTreeBase [] EMPTY = new BassTreeBase[0];
 
 
 /********************************************************************************/
-/*										*/
-/*	Activation methods							*/
-/*										*/
+/*                                                                              */
+/*      Activation methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 static BassTreeModelVirtual create(BassRepository br,String proj,String clspfx)
@@ -89,9 +89,9 @@ static BassTreeModelVirtual create(BassRepository br,String proj,String clspfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
@@ -112,8 +112,8 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
       String pfx = null;
       if (initial_project != null) pfx = "E:" + initial_project + " N:";
       if (initial_prefix != null) {
-	 if (pfx == null) pfx = initial_prefix;
-	 else pfx = pfx + initial_prefix;
+         if (pfx == null) pfx = initial_prefix;
+         else pfx = pfx + initial_prefix;
        }
       prune(pfx,false);
     }
@@ -122,9 +122,9 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	TreeModel methods							*/
-/*										*/
+/*                                                                              */
+/*      TreeModel methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addTreeModelListener(TreeModelListener l)
@@ -132,7 +132,7 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
    synchronized (listener_set) {
       listener_set.add(l);
       if (listener_set.size() == 1) {
-	 base_model.addUpdateListener(this);
+         base_model.addUpdateListener(this);
        }
     }
 }
@@ -144,7 +144,7 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
    synchronized (listener_set) {
       listener_set.remove(l);
       if (listener_set.isEmpty()) {
-	 base_model.removeUpdateListener(this);
+         base_model.removeUpdateListener(this);
        }
     }
 }
@@ -170,7 +170,7 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
 
 
 
-@Override public void valueForPathChanged(TreePath tp,Object nv)	{ }
+@Override public void valueForPathChanged(TreePath tp,Object nv)        { }
 
 
 
@@ -189,9 +189,9 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to restrict the set with further text				*/
-/*										*/
+/*                                                                              */
+/*      Methods to restrict the set with further text                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void prune(String txt,boolean upd)
@@ -230,16 +230,16 @@ private boolean prune(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
    for (int i = 0; i < ln; ++i) {
       BassTreeBase chld = active_nodes.getChild(node,i);
       if (!prune(pars,chld,pat,upd)) {
-	 if (removed == null) removed = new HashMap<>();
-	 removed.put(chld,i);
+         if (removed == null) removed = new HashMap<>();
+         removed.put(chld,i);
        }
     }
 
    pars.pop();
 
-   if (removed == null) return true;		// nothing happened
+   if (removed == null) return true;            // nothing happened
 
-   if (removed.size() == ln && pars.size() > 0) {			// all removed
+   if (removed.size() == ln && pars.size() > 0) {                       // all removed
       active_nodes.setChildren(node,EMPTY);
       return false;
     }
@@ -258,11 +258,11 @@ private boolean prune(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
    for (int i = 0; i < ln; ++i) {
       BassTreeBase chld = active_nodes.getChild(node,i);
       if (removed.containsKey(chld)) {
-	 idxs[j] = i;
-	 itms[j++] = chld;
+         idxs[j] = i;
+         itms[j++] = chld;
        }
       else {
-	 keep[k++] = chld;
+         keep[k++] = chld;
        }
     }
 
@@ -270,9 +270,9 @@ private boolean prune(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
    if (upd) {
       TreeModelEvent evt = new TreeModelEvent(this,path,idxs,itms);
       synchronized (listener_set) {
-	 for (TreeModelListener tml : listener_set) {
-	    tml.treeNodesRemoved(evt);
-	  }
+         for (TreeModelListener tml : listener_set) {
+            tml.treeNodesRemoved(evt);
+          }
        }
     }
 
@@ -283,9 +283,9 @@ private boolean prune(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
 
 
 /********************************************************************************/
-/*										*/
-/*	Top level methods for BASS						*/
-/*										*/
+/*                                                                              */
+/*      Top level methods for BASS                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void reset(String txt,boolean upd)
@@ -326,12 +326,12 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
    for (int i = 0; i < ln; ++i) {
       BassTreeBase chld = node.getChildAt(i);
       if (!reset(pars,chld,pat,upd)) {
-	 if (removed == null) removed = new HashMap<BassTreeBase,Integer>();
-	 removed.put(chld,-i-1);
+         if (removed == null) removed = new HashMap<BassTreeBase,Integer>();
+         removed.put(chld,-i-1);
        }
       else {
-	 if (keep == null) keep = new ArrayList<BassTreeBase>();
-	 keep.add(chld);
+         if (keep == null) keep = new ArrayList<BassTreeBase>();
+         keep.add(chld);
        }
     }
 
@@ -345,28 +345,28 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
    for (int i = 0; i < aln; ++i) {
       BassTreeBase chld = active_nodes.getChild(node,i);
       if (removed != null && removed.containsKey(chld)) {
-	 removed.put(chld,i);
-	 ++rct;
+         removed.put(chld,i);
+         ++rct;
        }
       else cur.add(chld);
     }
 
    if (rct > 0 && removed != null) {
       if (path == null) {
-	 path = new BassTreeBase[pars.size() + 1];
-	 path = pars.toArray(path);
-	 path[pars.size()] = node;
+         path = new BassTreeBase[pars.size() + 1];
+         path = pars.toArray(path);
+         path[pars.size()] = node;
        }
       int [] idxs = new int[rct];
       Object [] itms = new Object[rct];
       int j = 0;
       for (int i = 0; i < aln; ++i) {
-	 BassTreeBase chld = active_nodes.getChild(node,i);
-	 Integer ivl = removed.get(chld);
-	 if (ivl != null && ivl >= 0) {
-	    idxs[j] = i;
-	    itms[j++] = chld;
-	  }
+         BassTreeBase chld = active_nodes.getChild(node,i);
+         Integer ivl = removed.get(chld);
+         if (ivl != null && ivl >= 0) {
+            idxs[j] = i;
+            itms[j++] = chld;
+          }
        }
       revt = new TreeModelEvent(this,path,idxs,itms);
     }
@@ -378,19 +378,19 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
       nitms = new BassTreeBase[keep.size()];
       int i = 0;
       for (BassTreeBase chld : keep) {
-	 if (!cur.contains(chld)) {
-	    if (adds == null) adds = new ArrayList<Integer>();
-	    adds.add(i);
-	  }
-	 nitms[i++] = chld;
+         if (!cur.contains(chld)) {
+            if (adds == null) adds = new ArrayList<Integer>();
+            adds.add(i);
+          }
+         nitms[i++] = chld;
        }
     }
 
    if (adds != null) {
       if (path == null) {
-	 path = new BassTreeBase[pars.size() + 1];
-	 path = pars.toArray(path);
-	 path[pars.size()] = node;
+         path = new BassTreeBase[pars.size() + 1];
+         path = pars.toArray(path);
+         path[pars.size()] = node;
        }
       int [] idxs = new int[adds.size()];
       int j = 0;
@@ -404,22 +404,22 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
 
    if (upd && nitms != null) {
       synchronized (listener_set) {
-	 for (TreeModelListener tml : listener_set) {
-	    if (revt != null) tml.treeNodesRemoved(revt);
-	    if (ievt != null) tml.treeNodesInserted(ievt);
-	    if (adds != null) {
-	       BassTreeBase [] spath = new BassTreeBase[pars.size() + 2];
-	       spath = pars.toArray(spath);
-	       spath[pars.size()] = node;
-	       for (Integer ivl : adds) {
-		  if (!nitms[ivl].isLeaf()) {
-		     spath[pars.size()+1] = nitms[ivl];
-		     TreeModelEvent cevt = new TreeModelEvent(this,spath);
-		     tml.treeStructureChanged(cevt);
-		   }
-		}
-	     }
-	  }
+         for (TreeModelListener tml : listener_set) {
+            if (revt != null) tml.treeNodesRemoved(revt);
+            if (ievt != null) tml.treeNodesInserted(ievt);
+            if (adds != null) {
+               BassTreeBase [] spath = new BassTreeBase[pars.size() + 2];
+               spath = pars.toArray(spath);
+               spath[pars.size()] = node;
+               for (Integer ivl : adds) {
+                  if (!nitms[ivl].isLeaf()) {
+                     spath[pars.size()+1] = nitms[ivl];
+                     TreeModelEvent cevt = new TreeModelEvent(this,spath);
+                     tml.treeStructureChanged(cevt);
+                   }
+                }
+             }
+          }
        }
     }
 
@@ -443,7 +443,7 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
 
    synchronized (listener_set) {
       for (TreeModelListener tml : listener_set) {
-	 tml.treeStructureChanged(cevt);
+         tml.treeStructureChanged(cevt);
        }
     }
 }
@@ -451,9 +451,9 @@ private boolean reset(Stack<BassTreeBase> pars,BassTreeBase node,BassNamePattern
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree model changes							*/
-/*										*/
+/*                                                                              */
+/*      Tree model changes                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleTreeUpdated(BassTreeUpdateEvent evt)
@@ -480,9 +480,9 @@ private void updateAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get a singleton if one exists						*/
-/*										*/
+/*                                                                              */
+/*      Get a singleton if one exists                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int getLeafCount()
@@ -497,10 +497,10 @@ private void updateAll()
    base_model.readLock();
    try {
       for (BassTreeBase p = base_model.getRoot();
-	   active_nodes.getChildCount(p) <= 1;
-	   p = active_nodes.getChild(p,0)) {
-	 if (p.isLeaf()) return p.getBassName();
-	 if (active_nodes.getChildCount(p) == 0) break;
+           active_nodes.getChildCount(p) <= 1;
+           p = active_nodes.getChild(p,0)) {
+         if (p.isLeaf()) return p.getBassName();
+         if (active_nodes.getChildCount(p) == 0) break;
        }
     }
    finally { base_model.readUnlock(); }
@@ -532,21 +532,21 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
    for (int i = 0; i < ln; ++i) {
       BassTreeBase p0 = active_nodes.getChild(p,i);
       if (p0.isLeaf()) {
-	 BassName bn = p0.getBassName();
-	 if (bn.getNameType() == BassNameType.METHOD || bn.getNameType() == BassNameType.CONSTRUCTOR) {
-	    list.add(i);
-	    return true;
-	  }
+         BassName bn = p0.getBassName();
+         if (bn.getNameType() == BassNameType.METHOD || bn.getNameType() == BassNameType.CONSTRUCTOR) {
+            list.add(i);
+            return true;
+          }
        }
     }
 
    for (int i = 0; i < ln; ++i) {
       BassTreeBase p0 = active_nodes.getChild(p,i);
       if (!p0.isLeaf()) {
-	 if (getIndicesOfFirstMethod(p0,list)) {
-	    list.add(i+1);
-	    return true;
-	  }
+         if (getIndicesOfFirstMethod(p0,list)) {
+            list.add(i+1);
+            return true;
+          }
        }
     }
 
@@ -559,9 +559,9 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree Path creation							*/
-/*										*/
+/*                                                                              */
+/*      Tree Path creation                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public TreePath getTreePath(String nm)
@@ -578,11 +578,11 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
       int ct = active_nodes.getChildCount(tn);
       BassTreeBase ctn = null;
       for (int i = 0; i < ct; ++i) {
-	 BassTreeBase btn = active_nodes.getChild(tn,i);
-	 if (btn.getLocalName().equals(snm)) {
-	    ctn = btn;
-	    break;
-	  }
+         BassTreeBase btn = active_nodes.getChild(tn,i);
+         if (btn.getLocalName().equals(snm)) {
+            ctn = btn;
+            break;
+          }
        }
       elts[ect++] = ctn;
       tn = ctn;
@@ -596,9 +596,9 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -612,9 +612,9 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
 
 
 /********************************************************************************/
-/*										*/
-/*	Holder of which nodes are active					*/
-/*										*/
+/*                                                                              */
+/*      Holder of which nodes are active                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ActiveNodes {
@@ -655,19 +655,19 @@ private static class ActiveNodes {
       int ct = 0;
       int ln = getChildCount(nd);
       for (int i = 0; i < ln; ++i) {
-	 BassTreeBase chld = getChild(nd,i);
-	 ct += getLeafCount(chld);
+         BassTreeBase chld = getChild(nd,i);
+         ct += getLeafCount(chld);
        }
       return ct;
     }
 
 
-}	// end of inner class ActiveNodes
+}       // end of inner class ActiveNodes
 
 
 
 
-}	// end of class BassTreeModelVirtual
+}       // end of class BassTreeModelVirtual
 
 
 

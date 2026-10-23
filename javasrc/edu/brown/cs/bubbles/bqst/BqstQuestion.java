@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstQuestion.java						*/
-/*										*/
-/*	Bubbles questions and forms generic widget implementation		*/
-/*										*/
+/*                                                                              */
+/*              BqstQuestion.java                                               */
+/*                                                                              */
+/*      Bubbles questions and forms generic widget implementation               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,15 +40,15 @@ abstract class BqstQuestion extends JPanel implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		q_title;
-private String		q_help;
-protected boolean	q_required	 = true;
-private JLabel		q_label;
+private String          q_title;
+private String          q_help;
+protected boolean       q_required       = true;
+private JLabel          q_label;
 protected GridBagConstraints q_cons;
 
 private static final long    serialVersionUID = 1L;
@@ -57,9 +57,9 @@ private static final long    serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstQuestion(String qst,QuestionType qt,String help)
@@ -76,9 +76,9 @@ protected BqstQuestion(String qst,QuestionType qt,String help)
 
 
 /********************************************************************************/
-/*										*/
-/*	Help methods for setting up						*/
-/*										*/
+/*                                                                              */
+/*      Help methods for setting up                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -129,9 +129,9 @@ abstract void reset();
 
 
 /********************************************************************************/
-/*										*/
-/*	Set and get methods							*/
-/*										*/
+/*                                                                              */
+/*      Set and get methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -159,9 +159,9 @@ abstract String getAnswer();
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for changing the label color					*/
-/*										*/
+/*                                                                              */
+/*      Methods for changing the label color                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void markUnfilled()
@@ -179,7 +179,7 @@ void markFilled()
 }
 
 
-}	// end of BqstQuestion
+}       // end of BqstQuestion
 
 
 

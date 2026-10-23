@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrFileManager.java						*/
-/*										*/
-/*	Handle file updates and annotations					*/
-/*										*/
+/*                                                                              */
+/*              BvcrFileManager.java                                            */
+/*                                                                              */
+/*      Handle file updates and annotations                                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -62,22 +62,22 @@ class BvcrFileManager implements BvcrConstants, BumpConstants.BumpChangeHandler
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Set<File>	active_files;
-private DifferenceMap	difference_map;
+private Set<File>       active_files;
+private DifferenceMap   difference_map;
 private List<BvcrAnnotation> active_annots;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrFileManager()
@@ -91,9 +91,9 @@ BvcrFileManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	File handling methods							*/
-/*										*/
+/*                                                                              */
+/*      File handling methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleFileStarted(String proj,String file)
@@ -106,9 +106,9 @@ BvcrFileManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for setting up annotations					*/
-/*										*/
+/*                                                                              */
+/*      Methods for setting up annotations                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupAnnotations(String proj,File f)
@@ -117,8 +117,8 @@ private void setupAnnotations(String proj,File f)
    for (Iterator<BvcrAnnotation> it = active_annots.iterator(); it.hasNext(); ) {
       BvcrAnnotation ba = it.next();
       if (ba.getFile().equals(f)) {
-	 it.remove();
-	 bf.removeAnnotation(ba);
+         it.remove();
+         bf.removeAnnotation(ba);
        }
     }
 
@@ -127,25 +127,25 @@ private void setupAnnotations(String proj,File f)
    BitSet lineset = new BitSet();
    for (BvcrDifferenceFile bdf : diffs.values()) {
       for (BvcrFileChange bfc : bdf.getChanges()) {
-	 int ln = bfc.getSourceLine();
-	 if (ln <= 0) continue;
-	 String [] dels = bfc.getDeletedLines();
-	 int ct = (dels == null ? 1 : dels.length);
-	 if (ct == 0) ct = 1;
-	 for (int i = 0; i < ct; ++i) {
-	    lineset.set(ln+i);
-	  }
+         int ln = bfc.getSourceLine();
+         if (ln <= 0) continue;
+         String [] dels = bfc.getDeletedLines();
+         int ct = (dels == null ? 1 : dels.length);
+         if (ct == 0) ct = 1;
+         for (int i = 0; i < ct; ++i) {
+            lineset.set(ln+i);
+          }
        }
     }
 
    for (int ln = lineset.nextSetBit(0); ln >= 0; ln = lineset.nextSetBit(ln+1)) {
       try {
-	 BvcrAnnotation annot = new BvcrAnnotation(proj,f,ln);
-	 active_annots.add(annot);
-	 bf.addAnnotation(annot);
+         BvcrAnnotation annot = new BvcrAnnotation(proj,f,ln);
+         active_annots.add(annot);
+         bf.addAnnotation(annot);
        }
       catch (BadLocationException e) {
-	 BoardLog.logD("BVCR","Problem setting up annotation: " + e);
+         BoardLog.logD("BVCR","Problem setting up annotation: " + e);
        }
     }
 }
@@ -153,9 +153,9 @@ private void setupAnnotations(String proj,File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private String computeToolTipText(String proj,File f,int lno)
@@ -170,24 +170,24 @@ private String computeToolTipText(String proj,File f,int lno)
       BvcrDifferenceFile bdf = ent.getValue();
 
       for (BvcrFileChange bfc : bdf.getChanges()) {
-	 int ln = bfc.getSourceLine();
-	 String [] dels = bfc.getDeletedLines();
-	 int ct = (dels == null ? 1 : dels.length);
-	 if (ct == 0) ct = 1;
-	 if (lno >= ln && lno < lno+ct) {
-	    if (buf.length() > 0) buf.append("<br>");
-	    buf.append("Change by user " + user);
-	    String [] ins = bfc.getAddedLines();
-	    if (dels != null && ins != null) {
-	       buf.append(" Replaced " + dels.length + " with " + ins.length);
-	     }
-	    else if (dels != null) {
-	       buf.append(" Deleted " + dels.length);
-	     }
-	    else if (ins != null) {
-	       buf.append(" Inserted " + ins.length);
-	     }
-	  }
+         int ln = bfc.getSourceLine();
+         String [] dels = bfc.getDeletedLines();
+         int ct = (dels == null ? 1 : dels.length);
+         if (ct == 0) ct = 1;
+         if (lno >= ln && lno < lno+ct) {
+            if (buf.length() > 0) buf.append("<br>");
+            buf.append("Change by user " + user);
+            String [] ins = bfc.getAddedLines();
+            if (dels != null && ins != null) {
+               buf.append(" Replaced " + dels.length + " with " + ins.length);
+             }
+            else if (dels != null) {
+               buf.append(" Deleted " + dels.length);
+             }
+            else if (ins != null) {
+               buf.append(" Inserted " + ins.length);
+             }
+          }
        }
     }
 
@@ -199,9 +199,9 @@ private String computeToolTipText(String proj,File f,int lno)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle getting update information on a file				*/
-/*										*/
+/*                                                                              */
+/*      Handle getting update information on a file                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class Updater implements Runnable {
@@ -238,14 +238,14 @@ private class Updater implements Runnable {
        }
     }
 
-}	// end of inner class Updater
+}       // end of inner class Updater
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Holder of all difference						*/
-/*										*/
+/*                                                                              */
+/*      Holder of all difference                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class DifferenceMap extends HashMap<File,Map<String,BvcrDifferenceFile>> {
@@ -264,15 +264,15 @@ private class DifferenceMap extends HashMap<File,Map<String,BvcrDifferenceFile>>
       m1.put(user,dif);
     }
 
-}	// end of inner class DifferenceMap
+}       // end of inner class DifferenceMap
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Annotation definition							*/
-/*										*/
+/*                                                                              */
+/*      Annotation definition                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class BvcrAnnotation implements BaleAnnotation {
@@ -292,14 +292,14 @@ private class BvcrAnnotation implements BaleAnnotation {
       file_pos = bfo.createPosition(off);
     }
 
-   @Override public File getFile()		        { return for_file; }
-   @Override public int getDocumentOffset()	        { return file_pos.getOffset(); }
+   @Override public File getFile()                      { return for_file; }
+   @Override public int getDocumentOffset()             { return file_pos.getOffset(); }
    @Override public Icon getIcon(BudaBubble b)          { return null; }
-   @Override public Color getLineColor(BudaBubble b)	{ return null; }
-   @Override public int getPriority()		        { return 5; }
+   @Override public Color getLineColor(BudaBubble b)    { return null; }
+   @Override public int getPriority()                   { return 5; }
 
 
-   @Override public boolean getForceVisible(BudaBubble bb)	{ return false; }
+   @Override public boolean getForceVisible(BudaBubble bb)      { return false; }
    @Override public void addPopupButtons(Component c,JPopupMenu m) { }
 
    @Override public Color getBackgroundColor() {
@@ -311,11 +311,11 @@ private class BvcrAnnotation implements BaleAnnotation {
       return computeToolTipText(for_project,for_file,line_number);
     }
 
-}	// end of inner class BvcrAnnotation
+}       // end of inner class BvcrAnnotation
 
 
 
-}	// end of class BvcrFileManager
+}       // end of class BvcrFileManager
 
 
 

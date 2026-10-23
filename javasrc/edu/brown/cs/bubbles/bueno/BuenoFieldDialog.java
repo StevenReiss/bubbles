@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoFieldDialog.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator new method dialog		*/
-/*										*/
+/*                                                                              */
+/*              BuenoFieldDialog.java                                           */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator new method dialog               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -41,14 +41,14 @@ public class BuenoFieldDialog extends BuenoAbstractDialog implements BuenoConsta
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BuenoFieldDialog(BudaBubble source,Point locale,
-			    BuenoProperties known,BuenoLocation insert,
-			    BuenoBubbleCreator newer)
+                            BuenoProperties known,BuenoLocation insert,
+                            BuenoBubbleCreator newer)
 {
    super(source,locale,known,insert,newer,BuenoType.NEW_FIELD);
 }
@@ -56,9 +56,9 @@ public BuenoFieldDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Field dialog panel setup					       */
-/*										*/
+/*                                                                              */
+/*      Field dialog panel setup                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void setupPanel(SwingGridPanel pnl)
@@ -89,9 +89,9 @@ public BuenoFieldDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void doCreate(BudaBubbleArea bba,Point p)
@@ -125,9 +125,9 @@ public BuenoFieldDialog(BudaBubble source,Point locale,
 
 
 /********************************************************************************/
-/*										*/
-/*	Get the full name of the new method					*/
-/*										*/
+/*                                                                              */
+/*      Get the full name of the new method                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private String getFieldName()
@@ -144,7 +144,7 @@ private String getFieldName()
 
 
 
-}	// end of class BuenoFieldDialog
+}       // end of class BuenoFieldDialog
 
 
 

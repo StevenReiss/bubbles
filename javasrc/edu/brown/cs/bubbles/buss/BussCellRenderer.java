@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BussCellRenderer.java						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack cell display			*/
-/*										*/
+/*                                                                              */
+/*              BussCellRenderer.java                                           */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack cell display                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,9 +49,9 @@ class BussCellRenderer implements BussConstants, BudaConstants, TreeCellRenderer
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private int content_width;
@@ -62,9 +62,9 @@ private BussBubble buss_bubble;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BussCellRenderer(int contentwidth, BussBubble bussbubble)
@@ -77,21 +77,21 @@ BussCellRenderer(int contentwidth, BussBubble bussbubble)
 
 
 /********************************************************************************/
-/*										*/
-/*	Return component for the cell						*/
-/*										*/
+/*                                                                              */
+/*      Return component for the cell                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Component getTreeCellRendererComponent(JTree t,Object val,
-							   boolean sel,boolean exp,
-							   boolean leaf,int row,boolean focus)
+                                                           boolean sel,boolean exp,
+                                                           boolean leaf,int row,boolean focus)
 {
    if (!leaf) {
       if (sel) {
-	 if (buss_bubble.getEditorBubble() != null) {
-	    buss_bubble.getLayeredPane().remove(buss_bubble.getEditorBubble());
-	  }
-	 buss_bubble.setEditorBubble(null);
+         if (buss_bubble.getEditorBubble() != null) {
+            buss_bubble.getLayeredPane().remove(buss_bubble.getEditorBubble());
+          }
+         buss_bubble.setEditorBubble(null);
        }
       return simpleComponent(t,val,sel,exp,leaf,row,focus);
     }
@@ -127,10 +127,10 @@ BussCellRenderer(int contentwidth, BussBubble bussbubble)
       buss_bubble.getLayeredPane().remove(buss_bubble.getEditorBubble());
 
       if (buss_bubble.getEditorBubble().getLocation().y < selectedItemRect.y) {
-	 Component c = buss_bubble.getSelectedEntry().getCompactComponent();
-	 int h1 = 12;
-	 if (c != null) h1 = c.getPreferredSize().height;
-	 diffY = -buss_bubble.getEditorBubble().getPreferredSize().height + h1;
+         Component c = buss_bubble.getSelectedEntry().getCompactComponent();
+         int h1 = 12;
+         if (c != null) h1 = c.getPreferredSize().height;
+         diffY = -buss_bubble.getEditorBubble().getPreferredSize().height + h1;
       }
     }
 
@@ -157,13 +157,13 @@ BussCellRenderer(int contentwidth, BussBubble bussbubble)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle simple components						*/
-/*										*/
+/*                                                                              */
+/*      Handle simple components                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
-				boolean leaf,int row,boolean focus)
+                                boolean leaf,int row,boolean focus)
 {
    String s = t.convertValueToText(val,sel,exp,leaf,row,focus);
 
@@ -215,7 +215,7 @@ private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
 
 
 
-}	// end of class BussCellRenderer
+}       // end of class BussCellRenderer
 
 
 

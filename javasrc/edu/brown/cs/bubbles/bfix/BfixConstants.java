@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixConstants.java						*/
-/*										*/
-/*	Constants for automatic correction package				*/
-/*										*/
+/*                                                                              */
+/*              BfixConstants.java                                              */
+/*                                                                              */
+/*      Constants for automatic correction package                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -40,12 +40,12 @@ public interface BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Ordering Constants							*/
-/*										*/
+/*                                                                              */
+/*      Ordering Constants                                                      */
+/*                                                                              */
 /********************************************************************************/
 
-String	ORDER_FILE = "bfixorder.xml";
+String  ORDER_FILE = "bfixorder.xml";
 
 enum OrderContext {
    CLASS,
@@ -58,9 +58,9 @@ enum OrderContext {
 
 
 /********************************************************************************/
-/*										*/
-/*	Buttons 								*/
-/*										*/
+/*                                                                              */
+/*      Buttons                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 String BFIX_CHORE_MANAGER_BUTTON = "Bubbles.Show Chore Manager";
@@ -69,9 +69,9 @@ String BFIX_MODEL_UPDATE_BUTTON = "Admin.Admin.Update Fix Models";
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparator for region sort order					*/
-/*										*/
+/*                                                                              */
+/*      Comparator for region sort order                                        */
+/*                                                                              */
 /********************************************************************************/
 
 class ElementComparator implements Comparator<BfixOrderElement> {
@@ -83,22 +83,22 @@ class ElementComparator implements Comparator<BfixOrderElement> {
       return v;
     }
 
-}	// end of inner class ElementComparator
+}       // end of inner class ElementComparator
 
 
 /********************************************************************************/
-/*										*/
-/*	Token interface 							*/
-/*										*/
+/*                                                                              */
+/*      Token interface                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 enum BfixTokenType {
-   EOL, 			// end of line
-   BLOCK_CMMT,			// /* ... */ comment; may only be part of a
-				//	 comment if split
-   DOC_CMMT,			// /** ... comment for documentation
-   LINE_CMMT,			// // comment
-   OTHER,			// any other token
+   EOL,                         // end of line
+   BLOCK_CMMT,                  // /* ... */ comment; may only be part of a
+                                //       comment if split
+   DOC_CMMT,                    // /** ... comment for documentation
+   LINE_CMMT,                   // // comment
+   OTHER,                       // any other token
 }
 
 
@@ -112,23 +112,23 @@ interface BfixToken {
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface for multiple fixes						*/
-/*										*/
+/*                                                                              */
+/*      Interface for multiple fixes                                            */
+/*                                                                              */
 /********************************************************************************/
 
 interface CanFixCallback {
 
    void canFix(boolean fg);
 
-}	// end of inner interface CanFixCallback
+}       // end of inner interface CanFixCallback
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Adapter to handle nested or multiple fixes				*/
-/*										*/
+/*                                                                              */
+/*      Adapter to handle nested or multiple fixes                              */
+/*                                                                              */
 /********************************************************************************/
 
 interface FixAdapter {
@@ -178,7 +178,7 @@ class BfixCheckAreas {
 }       // end of inner class CheckAreas+
 
 
-}	// end of interface BfixConstants
+}       // end of interface BfixConstants
 
 
 

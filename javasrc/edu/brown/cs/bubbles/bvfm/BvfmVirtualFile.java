@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvfmVirtualFile.java						*/
-/*										*/
-/*	Holder of information about a virtual file (group)			*/
-/*										*/
+/*                                                                              */
+/*              BvfmVirtualFile.java                                            */
+/*                                                                              */
+/*      Holder of information about a virtual file (group)                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,22 +39,22 @@ class BvfmVirtualFile implements BvfmConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private List<BvfmFileElement> file_elements;
-private String		      group_name;
-private Point		      group_center;
-private Color		      group_color;
+private String                group_name;
+private Point                 group_center;
+private Color                 group_color;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvfmVirtualFile(Element xml)
@@ -62,7 +62,7 @@ BvfmVirtualFile(Element xml)
    this();
    group_name = IvyXml.getAttrString(xml,"NAME");
    group_center = new Point(IvyXml.getAttrInt(xml,"CENTERX"),
-	 IvyXml.getAttrInt(xml,"CENTERY"));
+         IvyXml.getAttrInt(xml,"CENTERY"));
    group_color = IvyXml.getAttrColor(xml,"COLOR");
    for (Element fexml : IvyXml.children(xml,"ELEMENT")) {
       BvfmFileElement bfe = BvfmFileElement.createFileElement(fexml);
@@ -99,25 +99,25 @@ private BvfmVirtualFile()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-boolean isEmpty()				{ return file_elements.isEmpty(); }
+boolean isEmpty()                               { return file_elements.isEmpty(); }
 
-int size()					{ return file_elements.size(); }
+int size()                                      { return file_elements.size(); }
 
-String getName()				{ return group_name; }
+String getName()                                { return group_name; }
 
 Iterable<BvfmFileElement> getElements()       { return file_elements; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Find common location of all bubbles in group				*/
-/*										*/
+/*                                                                              */
+/*      Find common location of all bubbles in group                            */
+/*                                                                              */
 /********************************************************************************/
 
 String getCommonLocation()
@@ -128,27 +128,27 @@ String getCommonLocation()
       if (s == null) continue;
       if (pfx == null) pfx = s;
       else {
-	 int match = -1;
-	 for (int i = 0; i <= pfx.length(); ++i) {
-	    char c = 0;
-	    if (i == pfx.length()) c = '.';
-	    else c = pfx.charAt(i);
-	    char c1 = 0;
-	    if (i == s.length()) c1 = '.';
-	    else if (i > s.length()) break;
-	    else c1 = s.charAt(i);
-	    if (c != c1) break;
-	    if (c == '.' || c == ':') match = i;
-	  }
-	 if (match < 0) return null;
-	 pfx = pfx.substring(0,match);
+         int match = -1;
+         for (int i = 0; i <= pfx.length(); ++i) {
+            char c = 0;
+            if (i == pfx.length()) c = '.';
+            else c = pfx.charAt(i);
+            char c1 = 0;
+            if (i == s.length()) c1 = '.';
+            else if (i > s.length()) break;
+            else c1 = s.charAt(i);
+            if (c != c1) break;
+            if (c == '.' || c == ':') match = i;
+          }
+         if (match < 0) return null;
+         pfx = pfx.substring(0,match);
        }
     }
    if (pfx != null) {
       int idx = pfx.indexOf("(");
       if (idx > 0) {
-	 int idx1 = pfx.lastIndexOf(".",idx);
-	 pfx = pfx.substring(0,idx1);
+         int idx1 = pfx.lastIndexOf(".",idx);
+         pfx = pfx.substring(0,idx1);
        }
       if (!pfx.endsWith(".")) pfx += ".";
     }
@@ -160,9 +160,9 @@ String getCommonLocation()
 
 
 /********************************************************************************/
-/*										*/
-/*	Ouptut methods								*/
-/*										*/
+/*                                                                              */
+/*      Ouptut methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -180,7 +180,7 @@ void outputXml(IvyXmlWriter xw)
 
 
 
-}	// end of class BvfmVirtualFile
+}       // end of class BvfmVirtualFile
 
 
 

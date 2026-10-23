@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidXmlWriter.java						*/
-/*										*/
-/*	Bubbles ANalsysis DynAmic Information Data xml output class		*/
-/*										*/
+/*                                                                              */
+/*              BandaidXmlWriter.java                                           */
+/*                                                                              */
+/*      Bubbles ANalsysis DynAmic Information Data xml output class             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,15 +39,15 @@ class BandaidXmlWriter extends PrintWriter
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Vector<String>	element_stack;
-private OpenState	open_state;
-private String		indent_string;
-private Writer		base_writer;
+private Vector<String>  element_stack;
+private OpenState       open_state;
+private String          indent_string;
+private Writer          base_writer;
 
 
 enum OpenState {
@@ -61,9 +61,9 @@ enum OpenState {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidXmlWriter(Writer w)
@@ -72,7 +72,7 @@ BandaidXmlWriter(Writer w)
    base_writer = w;
    element_stack = new Vector<String>();
    // indent_string = "  ";
-   indent_string = null;	     // save space
+   indent_string = null;             // save space
    open_state = OpenState.DONE;
 }
 
@@ -88,23 +88,23 @@ BandaidXmlWriter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void begin(String elt)
 {
    switch (open_state) {
       case DONE :
-	 break;
+         break;
       case OPEN :
-	 println(">");
-	 break;
+         println(">");
+         break;
       case CLOSED :
-	 break;
+         break;
       default:
-	 break;
+         break;
     }
 
    indent();
@@ -153,10 +153,10 @@ void field(String elt,String val)
 
 
 
-void field(String elt,boolean fg)		     { field(elt,String.valueOf(fg)); }
-void field(String elt,int v)			     { field(elt,String.valueOf(v)); }
-void field(String elt,long v)			     { field(elt,Long.toString(v)); }
-void field(String elt,double v) 		     { field(elt,Double.toString(v)); }
+void field(String elt,boolean fg)                    { field(elt,String.valueOf(fg)); }
+void field(String elt,int v)                         { field(elt,String.valueOf(v)); }
+void field(String elt,long v)                        { field(elt,Long.toString(v)); }
+void field(String elt,double v)                      { field(elt,Double.toString(v)); }
 
 
 
@@ -166,14 +166,14 @@ void xmlText(String t)
 
    switch (open_state) {
       case DONE :
-	 break;
+         break;
       case OPEN :
-	 print(">");
-	 break;
+         print(">");
+         break;
       case CLOSED :
-	 break;
+         break;
       default:
-	 break;
+         break;
     }
    open_state = OpenState.TEXT;
 
@@ -185,9 +185,9 @@ void xmlText(String t)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public CharSequence getContents()
@@ -208,9 +208,9 @@ public CharSequence getContents()
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void indent()
@@ -230,24 +230,24 @@ private void outputXmlString(String s)
    for (int i = 0; i < s.length(); ++i) {
       char c = s.charAt(i);
       switch (c) {
-	 case '&' :
-	    print("&amp;");
-	    break;
-	 case '<' :
-	    print("&lt;");
-	    break;
-	 case '>' :
-	    print("&gt;");
-	    break;
-	 case '"' :
-	    print("&quot;");
-	    break;
-	 case '\'' :
-	    print("&apos;");
-	    break;
-	 default :
-	    print(c);
-	    break;
+         case '&' :
+            print("&amp;");
+            break;
+         case '<' :
+            print("&lt;");
+            break;
+         case '>' :
+            print("&gt;");
+            break;
+         case '"' :
+            print("&quot;");
+            break;
+         case '\'' :
+            print("&apos;");
+            break;
+         default :
+            print(c);
+            break;
        }
     }
 }
@@ -255,7 +255,7 @@ private void outputXmlString(String s)
 
 
 
-}	// end of class BandaidXmlWriter
+}       // end of class BandaidXmlWriter
 
 
 

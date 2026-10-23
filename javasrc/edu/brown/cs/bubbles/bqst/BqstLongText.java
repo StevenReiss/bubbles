@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstLongText.java						*/
-/*										*/
-/*	Bubbles questions and forms long text field implementation		*/
-/*										*/
+/*                                                                              */
+/*              BqstLongText.java                                               */
+/*                                                                              */
+/*      Bubbles questions and forms long text field implementation              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,12 +40,12 @@ class BqstLongText extends BqstQuestion implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextArea	 longtext_area;
+private JTextArea        longtext_area;
 
 private static final long serialVersionUID = 1L;
 
@@ -53,9 +53,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstLongText(String qst,String help,boolean required)
@@ -66,9 +66,9 @@ protected BqstLongText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void setup()
@@ -87,9 +87,9 @@ protected BqstLongText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Answer methods							*/
-/*										*/
+/*                                                                              */
+/*      Get Answer methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override String getAnswer()
@@ -101,9 +101,9 @@ protected BqstLongText(String qst,String help,boolean required)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void reset()
@@ -114,7 +114,7 @@ protected BqstLongText(String qst,String help,boolean required)
 
 
 
-}	// end of class BqstLongText
+}       // end of class BqstLongText
 
 
 

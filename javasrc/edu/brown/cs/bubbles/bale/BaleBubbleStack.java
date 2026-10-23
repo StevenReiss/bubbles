@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleBubbleStack.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor bubble stack for bale editors		*/
-/*										*/
+/*                                                                              */
+/*              BaleBubbleStack.java                                            */
+/*                                                                              */
+/*      Bubble Annotated Language Editor bubble stack for bale editors          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -65,9 +65,9 @@ final class BaleBubbleStack implements BaleConstants, BudaConstants, BussConstan
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create new bubbles or bubble stack from location set 	*/
-/*										*/
+/*                                                                              */
+/*      Methods to create new bubbles or bubble stack from location set         */
+/*                                                                              */
 /********************************************************************************/
 
 static void createBubbles(Component src,Position p,Point pt,boolean near,
@@ -78,7 +78,7 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,
 
 
 static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,BaleStackType stktyp,
-			     Collection<BumpLocation> locs,BudaLinkStyle link)
+                             Collection<BumpLocation> locs,BudaLinkStyle link)
 {
    if (locs == null) return null;
    
@@ -102,55 +102,55 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
       BumpLocation bl = it.next();
       File f = bl.getFile();
       if (f == null || f.getName().endsWith(".jar")) {
-	 it.remove();
-	 continue;
+         it.remove();
+         continue;
        }
       if (!f.exists()) {
-	 it.remove();
-	 continue;
+         it.remove();
+         continue;
        }
       String key = null;
       switch (bl.getSymbolType()) {
-	 default :
-	    break;
-	 case FUNCTION :
-	 case CONSTRUCTOR :
-	    key = bl.getKey();
-	    break;
-	 case FIELD :
-	 case ENUM_CONSTANT :
-	    key = bl.getSymbolName();
-	    int idx = key.lastIndexOf(".");
-	    key = key.substring(0,idx+1) + ".<FIELDS>";
-	    break;
+         default :
+            break;
+         case FUNCTION :
+         case CONSTRUCTOR :
+            key = bl.getKey();
+            break;
+         case FIELD :
+         case ENUM_CONSTANT :
+            key = bl.getSymbolName();
+            int idx = key.lastIndexOf(".");
+            key = key.substring(0,idx+1) + ".<FIELDS>";
+            break;
          case GLOBAL :
          case LOCAL :
             key = bl.getSymbolName();
-	    idx = key.lastIndexOf(".");
-	    key = key.substring(0,idx+1) + ".<VARIABLES>";
-	    break;
-	 case STATIC_INITIALIZER :
-	    key = bl.getSymbolName();
-	    idx = key.lastIndexOf(".");
-	    key = key.substring(0,idx+1) + ".<INITIALIZER>";
-	    break;
-	 case MAIN_PROGRAM :
-	    key = bl.getSymbolName();
-	    idx = key.lastIndexOf(".");
-	    key = key.substring(0,idx+1) + ".<MAIN>";
-	    break;
+            idx = key.lastIndexOf(".");
+            key = key.substring(0,idx+1) + ".<VARIABLES>";
+            break;
+         case STATIC_INITIALIZER :
+            key = bl.getSymbolName();
+            idx = key.lastIndexOf(".");
+            key = key.substring(0,idx+1) + ".<INITIALIZER>";
+            break;
+         case MAIN_PROGRAM :
+            key = bl.getSymbolName();
+            idx = key.lastIndexOf(".");
+            key = key.substring(0,idx+1) + ".<MAIN>";
+            break;
          case MODULE :
             key = bl.getSymbolName();
             key += ".<MODULE>";
             break;
-	 case CLASS :
-	 case INTERFACE :
-	 case ENUM :
-	 case THROWABLE :
-	    key = bl.getSymbolName();
-	    key = key + ".<PREFIX>";
-	    break;
-	 case UNKNOWN :
+         case CLASS :
+         case INTERFACE :
+         case ENUM :
+         case THROWABLE :
+            key = bl.getSymbolName();
+            key = key + ".<PREFIX>";
+            break;
+         case UNKNOWN :
             File f1 = IvyFile.getCanonical(f);
             Set<Integer> offs = used.get(f1);
             if (offs != null) {
@@ -161,20 +161,20 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
                   continue;
                 }
              }
-	    key = f.getPath() + ".<FILE>";
-	    break;
+            key = f.getPath() + ".<FILE>";
+            break;
        }
       if (key != null) {
-	 List<BumpLocation> lbl = keys.get(key);
-	 if (lbl != null) {
+         List<BumpLocation> lbl = keys.get(key);
+         if (lbl != null) {
             BoardLog.logD("BALE","Remove duplicate " + lbl);
             it.remove();
           }
-	 else {
-	    lbl = new ArrayList<BumpLocation>();
-	    keys.put(key,lbl);
-	  }
-	 lbl.add(bl);
+         else {
+            lbl = new ArrayList<BumpLocation>();
+            keys.put(key,lbl);
+          }
+         lbl.add(bl);
        }
     }
    
@@ -183,24 +183,24 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
    if (locs.size() == 2 && stktyp == BaleStackType.DROP_SOURCE && src != null) {
       BudaBubble bbl = BudaRoot.findBudaBubble(src);
       if (bbl != null) {
-	 File bfl = bbl.getContentFile();
-	 Document bbd = bbl.getContentDocument();
-	 if (bfl != null && bbd instanceof BaleDocument) {
-	    BaleDocument bd = (BaleDocument) bbd;
-	    int off0 = bd.mapOffsetToEclipse(0);
-	    int off1 = bd.mapOffsetToEclipse(bd.getLength()-1);
-	    for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
-	       BumpLocation bloc = it.next();
-	       if (bloc.getFile().equals(bfl)) {
-		  int diff = Math.abs(bloc.getDefinitionOffset() - off0) +
-		  Math.abs(bloc.getDefinitionEndOffset() - off1);
-		  if (diff < 4) {
-		     it.remove();
-		     break;
-		   }
-		}
-	     }
-	  }
+         File bfl = bbl.getContentFile();
+         Document bbd = bbl.getContentDocument();
+         if (bfl != null && bbd instanceof BaleDocument) {
+            BaleDocument bd = (BaleDocument) bbd;
+            int off0 = bd.mapOffsetToEclipse(0);
+            int off1 = bd.mapOffsetToEclipse(bd.getLength()-1);
+            for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
+               BumpLocation bloc = it.next();
+               if (bloc.getFile().equals(bfl)) {
+                  int diff = Math.abs(bloc.getDefinitionOffset() - off0) +
+                  Math.abs(bloc.getDefinitionEndOffset() - off1);
+                  if (diff < 4) {
+                     it.remove();
+                     break;
+                   }
+                }
+             }
+          }
        }
     }
 
@@ -215,12 +215,12 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
       if (bb == null) continue;
       Component bepc = bb.getContentPane();
       if (bepc instanceof BaleFragmentEditor) {
-	BaleFragmentEditor bfe = (BaleFragmentEditor) bepc;
-	BaleEditorPane bep = bfe.getEditor();
-	int locstart = bl.getDefinitionOffset();
-	BaleDocument bd = bep.getBaleDocument();
-	int bstart = bd.mapOffsetToJava(locstart);
-	if (bstart >= 0) bep.setCaretPosition(bstart);
+        BaleFragmentEditor bfe = (BaleFragmentEditor) bepc;
+        BaleEditorPane bep = bfe.getEditor();
+        int locstart = bl.getDefinitionOffset();
+        BaleDocument bd = bep.getBaleDocument();
+        int bstart = bd.mapOffsetToJava(locstart);
+        if (bstart >= 0) bep.setCaretPosition(bstart);
       }
     }
    
@@ -230,19 +230,19 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Component			source_bubble;
-private Position			source_position;
-private Point				source_point;
-private boolean 			place_near;
-private int				title_width;
-private Map<String,List<BumpLocation>>	location_set;
-private BudaLinkStyle			link_style;
-private BudaBubbleArea			bubble_area;
+private Component                       source_bubble;
+private Position                        source_position;
+private Point                           source_point;
+private boolean                         place_near;
+private int                             title_width;
+private Map<String,List<BumpLocation>>  location_set;
+private BudaLinkStyle                   link_style;
+private BudaBubbleArea                  bubble_area;
 
 private static final int DEFAULT_TITLE_WIDTH = 150;
 private static final int DEFAULT_CONTENT_WIDTH = 300;
@@ -251,13 +251,13 @@ private static final int MAX_ENTRIES = 40;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleBubbleStack(Component src,Position p,Point pt,boolean near,BudaLinkStyle link,
-			   Map<String,List<BumpLocation>> locs)
+                           Map<String,List<BumpLocation>> locs)
 {
    source_bubble = src;
    source_position = p;
@@ -273,9 +273,9 @@ private BaleBubbleStack(Component src,Position p,Point pt,boolean near,BudaLinkS
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup the bubble stack					*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup the bubble stack                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private BussBubble setupStack(BudaLinkStyle link)
@@ -291,41 +291,41 @@ private BussBubble setupStack(BudaLinkStyle link)
       BumpLocation loc0 = locs.get(0);
       if (entries.size() > MAX_ENTRIES) continue;
       switch (loc0.getSymbolType()) {
-	 case FUNCTION :
-	 case CONSTRUCTOR :
-	    MethodStackEntry se = new MethodStackEntry(locs);
-	    entries.add(se);
-	    break;
-	 case FIELD :
-	 case ENUM_CONSTANT :
-	 case GLOBAL :
-	    FieldStackEntry fe = new FieldStackEntry(locs);
-	    entries.add(fe);
-	    break;
-	 case STATIC_INITIALIZER :
-	    InitializerStackEntry ie = new InitializerStackEntry(locs);
-	    entries.add(ie);
-	    break;
-	 case MAIN_PROGRAM :
-	    MainProgramStackEntry me = new MainProgramStackEntry(locs);
-	    entries.add(me);
-	    break;
-	 case CLASS :
-	 case INTERFACE :
-	 case ENUM :
-	 case THROWABLE :
-	 case MODULE :
-	    TypeStackEntry te = new TypeStackEntry(locs);
-	    entries.add(te);
-	    break;
-	 case UNKNOWN :
-	    FileStackEntry fileent = new FileStackEntry(locs);
-	    entries.add(fileent);
-	    break;
-	 default :
+         case FUNCTION :
+         case CONSTRUCTOR :
+            MethodStackEntry se = new MethodStackEntry(locs);
+            entries.add(se);
+            break;
+         case FIELD :
+         case ENUM_CONSTANT :
+         case GLOBAL :
+            FieldStackEntry fe = new FieldStackEntry(locs);
+            entries.add(fe);
+            break;
+         case STATIC_INITIALIZER :
+            InitializerStackEntry ie = new InitializerStackEntry(locs);
+            entries.add(ie);
+            break;
+         case MAIN_PROGRAM :
+            MainProgramStackEntry me = new MainProgramStackEntry(locs);
+            entries.add(me);
+            break;
+         case CLASS :
+         case INTERFACE :
+         case ENUM :
+         case THROWABLE :
+         case MODULE :
+            TypeStackEntry te = new TypeStackEntry(locs);
+            entries.add(te);
+            break;
+         case UNKNOWN :
+            FileStackEntry fileent = new FileStackEntry(locs);
+            entries.add(fileent);
+            break;
+         default :
             BoardLog.logD("BALE","Unknown symbol type " + loc0.getSymbolType() + " " + loc0);
-	    createBubble(source_bubble,source_position,source_point,false,loc0,true,link);
-	    break;
+            createBubble(source_bubble,source_position,source_point,false,loc0,true,link);
+            break;
        }
     }
 
@@ -358,9 +358,9 @@ private BussBubble setupStack(BudaLinkStyle link)
       BudaConstants.LinkPort p1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
       BudaBubble obbl = BudaRoot.findBudaBubble(source_bubble);
       if (obbl != null) {
-	 BudaBubbleLink lnk = new BudaBubbleLink(obbl,p0,bb,p1,true,link_style);
-	 bba.addLink(lnk);
-	 bb.setSourceBubbleInfomation(obbl, p0);
+         BudaBubbleLink lnk = new BudaBubbleLink(obbl,p0,bb,p1,true,link_style);
+         bba.addLink(lnk);
+         bb.setSourceBubbleInfomation(obbl, p0);
        }
     }
 
@@ -373,13 +373,13 @@ private BussBubble setupStack(BudaLinkStyle link)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to create a bubble for a location				*/
-/*										*/
+/*                                                                              */
+/*      Methods to create a bubble for a location                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static BudaBubble createBubble(Component src,Position p,Point pt,boolean near,
-					  BumpLocation bl,boolean add,BudaLinkStyle link)
+                                          BumpLocation bl,boolean add,BudaLinkStyle link)
 {
    if (link == BudaLinkStyle.NONE || link == null)
       return BaleFactory.getFactory().createLocationEditorBubble(src,p,pt,near,bl,false,add,true);
@@ -391,9 +391,9 @@ private static BudaBubble createBubble(Component src,Position p,Point pt,boolean
 
 
 /********************************************************************************/
-/*										*/
-/*	Stack entry representation						*/
-/*										*/
+/*                                                                              */
+/*      Stack entry representation                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class GenericStackEntry implements BussEntry {
@@ -413,13 +413,13 @@ private abstract class GenericStackEntry implements BussEntry {
       compact_fragment = new BaleCompactFragment(bd,entry_locations,title_width);
     }
 
-   @Override public Component getCompactComponent()	{ return compact_fragment; }
+   @Override public Component getCompactComponent()     { return compact_fragment; }
 
    @Override public Component getExpandComponent() {
       if (full_fragment == null) full_fragment = createFullFragment();
       return full_fragment;
     }
-   @Override public String getExpandText()		{ return null; }
+   @Override public String getExpandText()              { return null; }
    
    @Override public Collection<BumpLocation> getLocations() {
       return new ArrayList<>(entry_locations);
@@ -446,7 +446,7 @@ private abstract class GenericStackEntry implements BussEntry {
       if (item_bubble != null) item_bubble.disposeBubble();
     }
 
-}	// end of inner class GenericMethodEntry
+}       // end of inner class GenericMethodEntry
 
 
 
@@ -469,7 +469,7 @@ private class MethodStackEntry extends GenericStackEntry {
       return ed;
     }
 
-}	// end of inner class MethodStackEntry
+}       // end of inner class MethodStackEntry
 
 
 
@@ -491,12 +491,12 @@ private class FieldStackEntry extends GenericStackEntry {
 
    @Override protected BaleFragmentEditor createFullFragment() {
       BaleFragmentEditor ed = BaleFactory.getFactory().createFieldFragmentEditor(
-	 def_location.getSymbolProject(),def_location.getFile(),class_name);
+         def_location.getSymbolProject(),def_location.getFile(),class_name);
       ed.setInitialSize(new Dimension(BALE_STACK_INITIAL_WIDTH,BALE_STACK_INITIAL_HEIGHT));
       return ed;
     }
 
-}	// end of inner class FieldStackEntry
+}       // end of inner class FieldStackEntry
 
 
 
@@ -518,12 +518,12 @@ private class InitializerStackEntry extends GenericStackEntry {
 
    @Override protected BaleFragmentEditor createFullFragment() {
       BaleFragmentEditor ed = BaleFactory.getFactory().createStaticsFragmentEditor(
-	 def_location.getSymbolProject(),class_name,def_location.getFile());
+         def_location.getSymbolProject(),class_name,def_location.getFile());
       ed.setInitialSize(new Dimension(BALE_STACK_INITIAL_WIDTH,BALE_STACK_INITIAL_HEIGHT));
       return ed;
     }
 
-}	// end of inner class InitializerStackEntry
+}       // end of inner class InitializerStackEntry
 
 
 
@@ -549,7 +549,7 @@ private class FileStackEntry extends GenericStackEntry {
       return ed;
     }
 
-}	// end of inner class FileStackEntry
+}       // end of inner class FileStackEntry
 
 
 
@@ -571,12 +571,12 @@ private class MainProgramStackEntry extends GenericStackEntry {
 
    @Override protected BaleFragmentEditor createFullFragment() {
       BaleFragmentEditor ed = BaleFactory.getFactory().createStaticsFragmentEditor(
-	    def_location.getSymbolProject(),class_name,def_location.getFile());
+            def_location.getSymbolProject(),class_name,def_location.getFile());
       ed.setInitialSize(new Dimension(BALE_STACK_INITIAL_WIDTH,BALE_STACK_INITIAL_HEIGHT));
       return ed;
     }
 
-}	// end of inner class MainProgramStackEntry
+}       // end of inner class MainProgramStackEntry
 
 
 
@@ -596,17 +596,17 @@ private class TypeStackEntry extends GenericStackEntry {
 
    @Override protected BaleFragmentEditor createFullFragment() {
       BaleFragmentEditor ed = BaleFactory.getFactory().createClassPrefixFragmentEditor(
-	 def_location.getSymbolProject(),def_location.getFile(),class_name);
+         def_location.getSymbolProject(),def_location.getFile(),class_name);
       ed.setInitialSize(new Dimension(BALE_STACK_INITIAL_WIDTH,BALE_STACK_INITIAL_HEIGHT));
       return ed;
     }
 
-}	// end of inner class TypeStackEntry
+}       // end of inner class TypeStackEntry
 
 
 
 
-}	// end of class BaleBubbleStack
+}       // end of class BaleBubbleStack
 
 
 

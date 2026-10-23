@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoCreatorTemplate.java					*/
-/*										*/
-/*	BUbbles Environment New Objects creator simple creation methods 	*/
-/*										*/
+/*                                                                              */
+/*              BuenoCreatorTemplate.java                                       */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator simple creation methods         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -36,17 +36,17 @@ class BuenoCreatorTemplate extends BuenoCreator implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoCreatorTemplate()
@@ -55,9 +55,9 @@ BuenoCreatorTemplate()
 
 
 /********************************************************************************/
-/*										*/
-/*	Template usage methods							*/
-/*										*/
+/*                                                                              */
+/*      Template usage methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void classText(StringBuffer buf,BuenoProperties props)
@@ -73,8 +73,8 @@ BuenoCreatorTemplate()
    if (r == null) r = findTemplate("type",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -88,8 +88,8 @@ BuenoCreatorTemplate()
    Reader r = findTemplate("module",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -111,8 +111,8 @@ BuenoCreatorTemplate()
    if (r == null) r = findTemplate("innertype",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -130,8 +130,8 @@ BuenoCreatorTemplate()
    if (r == null) r = findTemplate("method",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -145,8 +145,8 @@ BuenoCreatorTemplate()
    Reader r = findTemplate("field",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -160,8 +160,8 @@ BuenoCreatorTemplate()
    Reader r = findTemplate("marquis",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -175,8 +175,8 @@ BuenoCreatorTemplate()
    Reader r = findTemplate("block",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -192,8 +192,8 @@ BuenoCreatorTemplate()
    Reader r = findTemplate("javadoc",props);
    if (r != null) {
       try {
-	 expand(r,props,buf);
-	 return;
+         expand(r,props,buf);
+         return;
        }
       catch (IOException e) { }
     }
@@ -203,7 +203,7 @@ BuenoCreatorTemplate()
 
 
 
-}	// end of class BuenoCreatorTemplate
+}       // end of class BuenoCreatorTemplate
 
 
 

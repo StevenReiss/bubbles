@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleElementBuilder.java 					*/
-/*										*/
-/*	Bubble Annotated Language Editor ast integration into elements		*/
-/*										*/
+/*                                                                              */
+/*              BaleElementBuilder.java                                         */
+/*                                                                              */
+/*      Bubble Annotated Language Editor ast integration into elements          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,9 +43,9 @@ class BaleElementBuilder implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleDocument for_document;
@@ -56,7 +56,7 @@ private BaleElement.LineNode cur_line;
 private BaleAstNode cur_ast;
 private BaleElement.Branch cur_parent;
 private BaleTokenState token_state;
-private int		num_blank;
+private int             num_blank;
 
 
 private static boolean inside_elements = false;
@@ -64,9 +64,9 @@ private static boolean inside_elements = false;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleElementBuilder(BaleElement.Branch be,BaleAstNode ast)
@@ -87,9 +87,9 @@ BaleElementBuilder(BaleElement.Branch be,BaleAstNode ast)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set the contents to be scanned				*/
-/*										*/
+/*                                                                              */
+/*      Methods to set the contents to be scanned                               */
+/*                                                                              */
 /********************************************************************************/
 
 void addChild(BaleElement be)
@@ -97,15 +97,15 @@ void addChild(BaleElement be)
    if (be.isLeaf()) {
       line_elements.add(be);
       if (be.isEndOfLine()) {
-	 addLine();
-	 line_elements.clear();
+         addLine();
+         line_elements.clear();
        }
     }
    else {
       for (int i = 0; i < be.getElementCount(); ++i) {
-	 BaleElement ce = be.getBaleElement(i);
-	 if (ce.getStartOffset() >= 0)
-	    addChild(ce);
+         BaleElement ce = be.getBaleElement(i);
+         if (ce.getStartOffset() >= 0)
+            addChild(ce);
        }
     }
 }
@@ -113,9 +113,9 @@ void addChild(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to finish up scanning and update the element tree		*/
-/*										*/
+/*                                                                              */
+/*      Methods to finish up scanning and update the element tree               */
+/*                                                                              */
 /********************************************************************************/
 
 BaleElementEvent fixup()
@@ -134,9 +134,9 @@ BaleElementEvent fixup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle the actual element-ast construction			*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle the actual element-ast construction                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void addLine()
@@ -148,8 +148,8 @@ private void addLine()
    for (BaleElement ce : line_elements) {
       eol = ce;
       if (!ce.isEmpty() && !ce.isComment()) {
-	 if (first == null) first = ce;
-	 last = ce;
+         if (first == null) first = ce;
+         last = ce;
        }
       else if (ce.isComment()) havecmmt = true;
     }
@@ -165,11 +165,11 @@ private void addLine()
    BaleElement.Branch cpar = null;
    if (first == null) {
       if (!cur_parent.isComment() && (havecmmt || num_blank >= 2)) {
-	 cpar = new BaleElement.BlockCommentNode(for_document,cur_parent);
-	 addElementNode(cpar,num_blank);
-	 cpar.setAstNode(cur_ast);
-	 cpar.setStartTokenState(token_state);
-	 cur_parent = cpar;
+         cpar = new BaleElement.BlockCommentNode(for_document,cur_parent);
+         addElementNode(cpar,num_blank);
+         cpar.setAstNode(cur_ast);
+         cpar.setStartTokenState(token_state);
+         cur_parent = cpar;
        }
     }
 
@@ -213,29 +213,29 @@ private void fixOuterParent(BaleElement fbe,BaleElement lbe,BaleElement eol)
    if (lbe == null && eol != null) {
       BaleElement relt = cur_parent;
       while (relt != null && relt.getBubbleType() == BaleFragmentType.NONE) {
-	 relt = relt.getBaleParent();
+         relt = relt.getBaleParent();
        }
       if (relt != null) {
-	 if (eol.getDocumentEndOffset() >= relt.getAstNode().getEnd()) {
-	    cur_parent = relt.getBaleParent();
-	    cur_ast = cur_parent.getAstNode();
-	    num_blank = 0;
-	  }
+         if (eol.getDocumentEndOffset() >= relt.getAstNode().getEnd()) {
+            cur_parent = relt.getBaleParent();
+            cur_ast = cur_parent.getAstNode();
+            num_blank = 0;
+          }
        }
     }
 
-   if (lbe == null) {			// nothing significant on the line
-      if (cur_ast != null) {		// ensure comments aren't included in prior block
-	 int epos = cur_ast.getEnd();
-	 int tpos = eol.getDocumentEndOffset();
-	 while (tpos > epos) {
-	    if (cur_parent == root_element) break;
-	    cur_parent = cur_parent.getBaleParent();
-	    cur_ast = cur_parent.getAstNode();
-	    num_blank = 0;
-	    if (cur_ast == null) break;
-	    epos = cur_ast.getEnd();
-	  }
+   if (lbe == null) {                   // nothing significant on the line
+      if (cur_ast != null) {            // ensure comments aren't included in prior block
+         int epos = cur_ast.getEnd();
+         int tpos = eol.getDocumentEndOffset();
+         while (tpos > epos) {
+            if (cur_parent == root_element) break;
+            cur_parent = cur_parent.getBaleParent();
+            cur_ast = cur_parent.getAstNode();
+            num_blank = 0;
+            if (cur_ast == null) break;
+            epos = cur_ast.getEnd();
+          }
        }
       return;
     }
@@ -252,8 +252,8 @@ private void fixOuterParent(BaleElement fbe,BaleElement lbe,BaleElement eol)
    // next start any external elements that span multiple lines
    BaleAstNode fsn = getAstChild(fbe);
    while (fsn != null &&
-	     (fsn != cur_ast || cur_parent.isDeclSet()) &&
-	     (fsn == lsn || fsn.getLineLength() > 1)) {
+             (fsn != cur_ast || cur_parent.isDeclSet()) &&
+             (fsn == lsn || fsn.getLineLength() > 1)) {
       BaleElement.Branch nbe = createOuterBranch(fsn);
       if (nbe == null) break;
       addElementNode(nbe,0);
@@ -293,42 +293,42 @@ private void fixInnerParent(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Node creation methods based on ast node type				*/
-/*										*/
+/*                                                                              */
+/*      Node creation methods based on ast node type                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleElement.Branch createOuterBranch(BaleAstNode sn)
 {
    switch (sn.getNodeType()) {
       case FILE :
-	 return new BaleElement.CompilationUnitNode(for_document,cur_parent);
+         return new BaleElement.CompilationUnitNode(for_document,cur_parent);
       case CLASS :
-	 return new BaleElement.ClassNode(for_document,cur_parent);
+         return new BaleElement.ClassNode(for_document,cur_parent);
       case METHOD :
-	 return new BaleElement.MethodNode(for_document,cur_parent);
+         return new BaleElement.MethodNode(for_document,cur_parent);
       case FIELD :
-	 return new BaleElement.FieldNode(for_document,cur_parent);
+         return new BaleElement.FieldNode(for_document,cur_parent);
       case VARIABLE :
-	 return new BaleElement.VariableNode(for_document,cur_parent);
+         return new BaleElement.VariableNode(for_document,cur_parent);
       case ANNOTATION :
-	 return new BaleElement.AnnotationNode(for_document,cur_parent);
+         return new BaleElement.AnnotationNode(for_document,cur_parent);
       case STATEMENT :
-	 return new BaleElement.SplitStatementNode(for_document,cur_parent);
+         return new BaleElement.SplitStatementNode(for_document,cur_parent);
       case EXPRESSION :
       case CALL_EXPR :
-	 return new BaleElement.SplitExpressionNode(for_document,cur_parent);
+         return new BaleElement.SplitExpressionNode(for_document,cur_parent);
       case BLOCK :
-	 return new BaleElement.BlockNode(for_document,cur_parent);
+         return new BaleElement.BlockNode(for_document,cur_parent);
       case SWITCH_BLOCK :
-	 return new BaleElement.SwitchBlockNode(for_document,cur_parent);
+         return new BaleElement.SwitchBlockNode(for_document,cur_parent);
       case INITIALIZER :
-	 return new BaleElement.InitializerNode(for_document,cur_parent);
+         return new BaleElement.InitializerNode(for_document,cur_parent);
       case SET :
-	 // return new BaleElement.DeclSet(for_document,cur_parent);
-	 break;
+         // return new BaleElement.DeclSet(for_document,cur_parent);
+         break;
       default:
-	 break;
+         break;
     }
    return null;
 }
@@ -341,16 +341,16 @@ private BaleElement.Branch createInnerBranch(BaleAstNode sn)
    if (sn.getLineLength() != 0) return null;
    if (inside_elements) {
       switch (sn.getNodeType()) {
-	 case STATEMENT :
-	    return new BaleElement.StatementNode(for_document,cur_parent);
-	 case EXPRESSION :
-	 case CALL_EXPR :
-	    return new BaleElement.ExpressionNode(for_document,cur_parent);
-	 case BLOCK :
-	 case SWITCH_BLOCK :
-	    return new BaleElement.InternalBlockNode(for_document,cur_parent);
-	 default :
-	    break;
+         case STATEMENT :
+            return new BaleElement.StatementNode(for_document,cur_parent);
+         case EXPRESSION :
+         case CALL_EXPR :
+            return new BaleElement.ExpressionNode(for_document,cur_parent);
+         case BLOCK :
+         case SWITCH_BLOCK :
+            return new BaleElement.InternalBlockNode(for_document,cur_parent);
+         default :
+            break;
        }
     }
    return null;
@@ -359,9 +359,9 @@ private BaleElement.Branch createInnerBranch(BaleAstNode sn)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to fix up leaf nodes (identifiers mainly)			*/
-/*										*/
+/*                                                                              */
+/*      Methods to fix up leaf nodes (identifiers mainly)                       */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleElement fixLeafElement(BaleElement be,boolean first)
@@ -371,114 +371,114 @@ private BaleElement fixLeafElement(BaleElement be,boolean first)
 
    if (be.isEmpty() && !be.isEndOfLine()) {
       if (first && be instanceof BaleElement.Space) {
-	 be = new BaleElement.Indent(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+         be = new BaleElement.Indent(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
        }
       else if (!first && be instanceof BaleElement.Indent) {
-	 be = new BaleElement.Space(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+         be = new BaleElement.Space(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
        }
     }
    else if (be.isIdentifier()) {
       BaleAstIdType ityp = BaleAstIdType.NONE;
       if (sn != null) ityp = sn.getIdType();
       switch (ityp) {
-	 case FIELD :
-	    if (!(be instanceof BaleElement.FieldId)) {
-	       be = new BaleElement.FieldId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case FIELD_STATIC :
-	    if (!(be instanceof BaleElement.StaticFieldId)) {
-	       be = new BaleElement.StaticFieldId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CALL :
-	    if (!(be instanceof BaleElement.CallId)) {
-	       be = new BaleElement.CallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CALL_STATIC :
-	    if (!(be instanceof BaleElement.StaticCallId)) {
-	       be = new BaleElement.StaticCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CALL_UNDEF :
-	    if (!(be instanceof BaleElement.UndefCallId)) {
-	       be = new BaleElement.UndefCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CALL_DEPRECATED :
-	    if (!(be instanceof BaleElement.DeprecatedCallId)) {
-	       be = new BaleElement.DeprecatedCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case TYPE :
-	    if (!(be instanceof BaleElement.TypeId)) {
-	       be = new BaleElement.TypeId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case ENUMC :
-	 case FIELDC :
-	    if (!(be instanceof BaleElement.ConstId)) {
-	       be = new BaleElement.ConstId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CLASS_DECL :
-	    if (!(be instanceof BaleElement.ClassDeclId)) {
-	       be = new BaleElement.ClassDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case CLASS_DECL_MEMBER :
-	    if (!(be instanceof BaleElement.ClassDeclMemberId)) {
-	       be = new BaleElement.ClassDeclMemberId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case METHOD_DECL :
-	    if (!(be instanceof BaleElement.MethodDeclId)) {
-	       be = new BaleElement.MethodDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case EXCEPTION_DECL :
-	 case LOCAL_DECL :
-	    if (!(be instanceof BaleElement.LocalDeclId)) {
-	       be = new BaleElement.LocalDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case FIELD_DECL :
-	    if (!(be instanceof BaleElement.FieldDeclId)) {
-	       be = new BaleElement.FieldDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case ANNOT :
-	    if (!(be instanceof BaleElement.AnnotationId)) {
-	       be = new BaleElement.AnnotationId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case UNDEF :
-	    if (!(be instanceof BaleElement.UndefId)) {
-	       be = new BaleElement.UndefId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case BUILTIN :
-	    if (!(be instanceof BaleElement.BuiltinId)) {
-	       be = new BaleElement.BuiltinId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case LABEL :
-	    if (!(be instanceof BaleElement.LabelId)) {
-	       be = new BaleElement.LabelId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
-	 case KEYWORD :
-	    if (!(be instanceof BaleElement.Keyword)) {
-	       be = new BaleElement.Keyword(for_document,cur_parent,be.getStartOffset(),be.getEndOffset(),
-					       BaleTokenType.KEYWORD);
-	     }
-	    break;
-	 default :
-	    if (be.getClass() != BaleElement.Identifier.class) {
-	       be = new BaleElement.Identifier(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
-	     }
-	    break;
+         case FIELD :
+            if (!(be instanceof BaleElement.FieldId)) {
+               be = new BaleElement.FieldId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case FIELD_STATIC :
+            if (!(be instanceof BaleElement.StaticFieldId)) {
+               be = new BaleElement.StaticFieldId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CALL :
+            if (!(be instanceof BaleElement.CallId)) {
+               be = new BaleElement.CallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CALL_STATIC :
+            if (!(be instanceof BaleElement.StaticCallId)) {
+               be = new BaleElement.StaticCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CALL_UNDEF :
+            if (!(be instanceof BaleElement.UndefCallId)) {
+               be = new BaleElement.UndefCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CALL_DEPRECATED :
+            if (!(be instanceof BaleElement.DeprecatedCallId)) {
+               be = new BaleElement.DeprecatedCallId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case TYPE :
+            if (!(be instanceof BaleElement.TypeId)) {
+               be = new BaleElement.TypeId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case ENUMC :
+         case FIELDC :
+            if (!(be instanceof BaleElement.ConstId)) {
+               be = new BaleElement.ConstId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CLASS_DECL :
+            if (!(be instanceof BaleElement.ClassDeclId)) {
+               be = new BaleElement.ClassDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case CLASS_DECL_MEMBER :
+            if (!(be instanceof BaleElement.ClassDeclMemberId)) {
+               be = new BaleElement.ClassDeclMemberId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case METHOD_DECL :
+            if (!(be instanceof BaleElement.MethodDeclId)) {
+               be = new BaleElement.MethodDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case EXCEPTION_DECL :
+         case LOCAL_DECL :
+            if (!(be instanceof BaleElement.LocalDeclId)) {
+               be = new BaleElement.LocalDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case FIELD_DECL :
+            if (!(be instanceof BaleElement.FieldDeclId)) {
+               be = new BaleElement.FieldDeclId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case ANNOT :
+            if (!(be instanceof BaleElement.AnnotationId)) {
+               be = new BaleElement.AnnotationId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case UNDEF :
+            if (!(be instanceof BaleElement.UndefId)) {
+               be = new BaleElement.UndefId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case BUILTIN :
+            if (!(be instanceof BaleElement.BuiltinId)) {
+               be = new BaleElement.BuiltinId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case LABEL :
+            if (!(be instanceof BaleElement.LabelId)) {
+               be = new BaleElement.LabelId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
+         case KEYWORD :
+            if (!(be instanceof BaleElement.Keyword)) {
+               be = new BaleElement.Keyword(for_document,cur_parent,be.getStartOffset(),be.getEndOffset(),
+                                               BaleTokenType.KEYWORD);
+             }
+            break;
+         default :
+            if (be.getClass() != BaleElement.Identifier.class) {
+               be = new BaleElement.Identifier(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+             }
+            break;
        }
     }
 
@@ -489,9 +489,9 @@ private BaleElement fixLeafElement(BaleElement be,boolean first)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree management methods 						*/
-/*										*/
+/*                                                                              */
+/*      Tree management methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void addElementNode(BaleElement nbe,int prior)
@@ -499,44 +499,44 @@ private void addElementNode(BaleElement nbe,int prior)
    if (nbe.getBubbleType() != BaleFragmentType.NONE) {
       BaleElement.Branch bbe = (BaleElement.Branch) nbe;
       if (cur_parent == root_element) {
-	 int j = -1;
-	 for (int i = new_children.size() - 1; i >= 0; --i) {
-	    BaleElement celt = new_children.get(i);
-	    if (celt.isComment() || celt.isEmpty()) j = i;
-	    else break;
-	  }
-	 if (j >= 0) {
-	    while (j < new_children.size()) {
-	       BaleElement celt = new_children.remove(j);
-	       bbe.add(celt);
-	     }
-	  }
+         int j = -1;
+         for (int i = new_children.size() - 1; i >= 0; --i) {
+            BaleElement celt = new_children.get(i);
+            if (celt.isComment() || celt.isEmpty()) j = i;
+            else break;
+          }
+         if (j >= 0) {
+            while (j < new_children.size()) {
+               BaleElement celt = new_children.remove(j);
+               bbe.add(celt);
+             }
+          }
        }
       else {
-	 int j = -1;
-	 for (int i = cur_parent.getElementCount() - 1; i >= 0; --i) {
-	    BaleElement celt = cur_parent.getBaleElement(i);
-	    if (celt.isComment() || celt.isEmpty()) j = i;
-	    else break;
-	  }
-	 if (j >= 0) {
-	    while (j < cur_parent.getElementCount()) {
-	       BaleElement celt = cur_parent.getBaleElement(j);
-	       cur_parent.remove(j,j);
-	       bbe.add(celt);
-	     }
-	  }
+         int j = -1;
+         for (int i = cur_parent.getElementCount() - 1; i >= 0; --i) {
+            BaleElement celt = cur_parent.getBaleElement(i);
+            if (celt.isComment() || celt.isEmpty()) j = i;
+            else break;
+          }
+         if (j >= 0) {
+            while (j < cur_parent.getElementCount()) {
+               BaleElement celt = cur_parent.getBaleElement(j);
+               cur_parent.remove(j,j);
+               bbe.add(celt);
+             }
+          }
        }
     }
    else if (nbe.isComment() && prior > 0 && cur_parent != root_element) {
       BaleElement.Branch bbe = (BaleElement.Branch) nbe;
       int n = cur_parent.getElementCount();
-      prior -= 1;			// is this what we want?
+      prior -= 1;                       // is this what we want?
       int j = n-prior;
       for (int i = 0; i < prior; ++i) {
-	 BaleElement celt = cur_parent.getBaleElement(j);
-	 cur_parent.remove(j,j);
-	 bbe.add(celt);
+         BaleElement celt = cur_parent.getBaleElement(j);
+         cur_parent.remove(j,j);
+         bbe.add(celt);
       }
    }
    else if (nbe.isComment() && prior > 0 && cur_parent == root_element) {
@@ -544,9 +544,9 @@ private void addElementNode(BaleElement nbe,int prior)
       int n = new_children.size();
       int j = n-prior+1;
       for (int i = 0; i < prior-1; ++i) {
-	 BaleElement celt = new_children.get(j);
-	 new_children.remove(j);
-	 bbe.add(celt);
+         BaleElement celt = new_children.get(j);
+         new_children.remove(j);
+         bbe.add(celt);
       }
    }
 
@@ -570,7 +570,7 @@ private BaleAstNode getAstChild(BaleElement be)
 
 
 
-}	// end of class BaleElementBuilder
+}       // end of class BaleElementBuilder
 
 
 

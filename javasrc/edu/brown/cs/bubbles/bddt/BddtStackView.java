@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtStackView.java						*/
-/*										*/
-/*	Bubbles Environment dynamic debugger tool stack/frame/value bubble	*/
-/*										*/
+/*                                                                              */
+/*              BddtStackView.java                                              */
+/*                                                                              */
+/*      Bubbles Environment dynamic debugger tool stack/frame/value bubble      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -106,33 +106,33 @@ class BddtStackView extends BudaBubble implements BddtConstants, BumpConstants, 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BddtLaunchControl	launch_control;
-private BumpThread		for_thread;
-private boolean 		is_frozen;
-private boolean 		is_extinct;
-private boolean 		is_valid;
-private BddtStackModel	value_model;
-private ValueTable		value_component;
-private RunEventHandler 	event_handler;
-private Expander		tree_expander;
-private LabelUpdater		label_updater;
-private ValueUpdater		value_updater;
-private Selector		node_selector;
-private JLabel			title_bar;
-private JTextArea		value_area;
+private BddtLaunchControl       launch_control;
+private BumpThread              for_thread;
+private boolean                 is_frozen;
+private boolean                 is_extinct;
+private boolean                 is_valid;
+private BddtStackModel  value_model;
+private ValueTable              value_component;
+private RunEventHandler         event_handler;
+private Expander                tree_expander;
+private LabelUpdater            label_updater;
+private ValueUpdater            value_updater;
+private Selector                node_selector;
+private JLabel                  title_bar;
+private JTextArea               value_area;
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtStackView(BddtLaunchControl ctrl,BumpThread thr)
@@ -196,21 +196,21 @@ BddtStackView(BddtLaunchControl ctrl,BumpRunValue val,boolean freeze)
       Object root = pmdl.getRoot();
       ValueTreeNode frame = null;
       for (int i = 0; i < pmdl.getChildCount(root); ++i) {
-	 ValueTreeNode vtn = (ValueTreeNode) pmdl.getChild(root,i);
-	 if (vtn.getKey().equals(fnd.getKey())) {
-	    frame = vtn;
-	    break;
-	  }
+         ValueTreeNode vtn = (ValueTreeNode) pmdl.getChild(root,i);
+         if (vtn.getKey().equals(fnd.getKey())) {
+            frame = vtn;
+            break;
+          }
        }
       if (frame != null) {
-	 for (int i = 0; i < pmdl.getChildCount(frame); ++i) {
-	    ValueTreeNode vtn = (ValueTreeNode) pmdl.getChild(frame,i);
-	    if (vtn.getKey().equals(xtn.getKey())) {
-	       is_frozen = false;
-	       value_model = new BddtStackModel(pmdl,vtn);
-	       break;
-	    }
-	  }
+         for (int i = 0; i < pmdl.getChildCount(frame); ++i) {
+            ValueTreeNode vtn = (ValueTreeNode) pmdl.getChild(frame,i);
+            if (vtn.getKey().equals(xtn.getKey())) {
+               is_frozen = false;
+               value_model = new BddtStackModel(pmdl,vtn);
+               break;
+            }
+          }
        }
     }
    else if (xtn == null || val == null) is_valid = false;
@@ -325,12 +325,12 @@ private void detachHandler()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-boolean isStackValid()				{ return is_valid; }
+boolean isStackValid()                          { return is_valid; }
 
 
 void expandFirst()
@@ -343,11 +343,11 @@ void expandFrame(BumpStackFrame frm)
    for (int i = 1; i < value_component.getRowCount(); ++i) {
       Object o = value_component.getValueAt(i,-1);
       if (o instanceof ValueTreeNode) {
-	 ValueTreeNode vtn = (ValueTreeNode) o;
-	 if (vtn.getFrame() == frm) {
-	    value_component.getTree().expandRow(i);
-	    break;
-	  }
+         ValueTreeNode vtn = (ValueTreeNode) o;
+         if (vtn.getFrame() == frm) {
+            value_component.getTree().expandRow(i);
+            break;
+          }
        }
     }
 }
@@ -355,9 +355,9 @@ void expandFrame(BumpStackFrame frm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu and mouse handler methods					*/
-/*										*/
+/*                                                                              */
+/*      Popup menu and mouse handler methods                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -412,15 +412,15 @@ private final class ClickHandler extends BoardMouser {
        }
     }
 
-}	// end of inner class ClickHandler
+}       // end of inner class ClickHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void makeFrozen(int lvls)
@@ -476,7 +476,7 @@ private class FreezeAction extends AbstractAction implements Runnable {
       doing_freeze = false;
     }
 
-}	// end of inner class FreezeAction
+}       // end of inner class FreezeAction
 
 
 
@@ -497,7 +497,7 @@ private class ExtractAction extends AbstractAction {
       BddtStackView sv = new BddtStackView(BddtStackView.this,for_node);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtStackView.this);
       bba.addBubble(sv,BddtStackView.this,null,
-	    PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+            PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
    }
    
 }       // end of inner class ExtractAction
@@ -564,9 +564,9 @@ private class SourceAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Run event handler							*/
-/*										*/
+/*                                                                              */
+/*      Run event handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class RunEventHandler implements BumpRunEventHandler {
@@ -582,16 +582,16 @@ private final class RunEventHandler implements BumpRunEventHandler {
        }
     }
 
-}	// end of inner class RunEventHandler
+}       // end of inner class RunEventHandler
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Value Table implementation						*/
-/*										*/
+/*                                                                              */
+/*      Value Table implementation                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBubbleOutputer
@@ -629,7 +629,7 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
 
    @Override protected void paintComponent(Graphics g) {
       if (!is_frozen && !is_extinct && value_model.hasBeenFrozen())
-	 is_frozen = true;
+         is_frozen = true;
 
       Dimension sz = getSize();
       Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
@@ -637,31 +637,31 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       Color top = BoardColors.getColor(BDDT_STACK_TOP_COLOR_PROP);
       Color bot = BoardColors.getColor(BDDT_STACK_BOTTOM_COLOR_PROP);
       if (is_frozen) {
-	 top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
-	 bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
+         top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
+         bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
        }
       else if (is_extinct) {
-	 top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
-	 bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
+         top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
+         bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
        }
       if (top.getRGB() != bot.getRGB()) {
-	 Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
-	 g2.setPaint(p);
+         Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
+         g2.setPaint(p);
        }
       else {
-	 g2.setColor(top);
+         g2.setColor(top);
        }
       g2.fill(r);
       value_model.lock();
       try {
-	 super.paintComponent(g);
+         super.paintComponent(g);
        }
       finally { value_model.unlock(); }
     }
 
-   @Override public String getConfigurator()		{ return "BDDT"; }
+   @Override public String getConfigurator()            { return "BDDT"; }
 
-   @Override public void outputXml(BudaXmlWriter xw)	{ }
+   @Override public void outputXml(BudaXmlWriter xw)    { }
 
    @Override public JToolTip createToolTip() {
       BudaToolTip btt = new BudaToolTip();
@@ -695,15 +695,15 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       return null;
     }
 
-}	// end of inner class ValueTable
+}       // end of inner class ValueTable
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Renderers								*/
-/*										*/
+/*                                                                              */
+/*      Renderers                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderDrawer implements TableCellRenderer {
@@ -717,18 +717,18 @@ private static class HeaderDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (bold_font == null) {
-	 bold_font = cmp.getFont();
-	 bold_font = bold_font.deriveFont(Font.BOLD);
+         bold_font = cmp.getFont();
+         bold_font = bold_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class HeaderRenderer
+}       // end of inner class HeaderRenderer
 
 
 
@@ -742,13 +742,13 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of innerclass CellRenderer
+}       // end of innerclass CellRenderer
 
 
 
@@ -762,25 +762,25 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-							      Object value,
-							      boolean sel,
-							      boolean expanded,
-							      boolean leaf,
-							      int row,
-							      boolean hasfocus) {
+                                                              Object value,
+                                                              boolean sel,
+                                                              boolean expanded,
+                                                              boolean leaf,
+                                                              int row,
+                                                              boolean hasfocus) {
       Component c = super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasfocus);
       return c;
    }
 
-}	// end of inner class TreeCellRenderer
+}       // end of inner class TreeCellRenderer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree Update Management							*/
-/*										*/
+/*                                                                              */
+/*      Tree Update Management                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private final class LabelUpdater implements TreeModelListener {
@@ -800,7 +800,7 @@ private final class LabelUpdater implements TreeModelListener {
       title_bar.setText(value_model.getLabel());
     }
 
-}	// end of inner class LabelUpdaer
+}       // end of inner class LabelUpdaer
 
 
 
@@ -817,7 +817,7 @@ private final class ValueUpdater implements TreeModelListener {
       updateValueArea();
     }
 
-}	// end of inner class ValueUpdater
+}       // end of inner class ValueUpdater
 
 
 
@@ -843,9 +843,9 @@ private static class Expander implements TreeExpansionListener, TreeModelListene
       expand_set.add(tn.getKey());
     }
 
-   @Override public void treeNodesChanged(TreeModelEvent e)	{ }
-   @Override public void treeNodesInserted(TreeModelEvent e)	{ }
-   @Override public void treeNodesRemoved(TreeModelEvent e)	{ }
+   @Override public void treeNodesChanged(TreeModelEvent e)     { }
+   @Override public void treeNodesInserted(TreeModelEvent e)    { }
+   @Override public void treeNodesRemoved(TreeModelEvent e)     { }
    @Override public void treeStructureChanged(TreeModelEvent e) {
       SwingUtilities.invokeLater(new ExpandNodes(this));
     }
@@ -862,21 +862,21 @@ private static class Expander implements TreeExpansionListener, TreeModelListene
       else if (expand_set.contains(vn.getKey())) exp = true;
 
       if (exp) {
-	 if (tp == null) tp = new TreePath(vn);
-	 else tp = tp.pathByAddingChild(vn);
-	 try {
-	    for_tree.expandPath(tp);
-	  }
-	 catch (ArrayIndexOutOfBoundsException e) {
-	    return;
-	  }
-	 for (int i = 0; i < vn.getChildCount(); ++i) {
-	    checkNode(tp,(ValueTreeNode) vn.getChildAt(i));
-	  }
+         if (tp == null) tp = new TreePath(vn);
+         else tp = tp.pathByAddingChild(vn);
+         try {
+            for_tree.expandPath(tp);
+          }
+         catch (ArrayIndexOutOfBoundsException e) {
+            return;
+          }
+         for (int i = 0; i < vn.getChildCount(); ++i) {
+            checkNode(tp,(ValueTreeNode) vn.getChildAt(i));
+          }
        }
     }
 
-}	// end of inner class Expander
+}       // end of inner class Expander
 
 
 
@@ -892,7 +892,7 @@ private static class ExpandNodes implements Runnable {
       for_expander.checkNodes();
     }
 
-}	// end of inner class ExpandNodes
+}       // end of inner class ExpandNodes
 
 
 
@@ -904,21 +904,21 @@ private final class Selector implements ListSelectionListener {
       ValueTreeNode tn = null;
       if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
       if (tn != null) {
-	 BumpStackFrame frm = tn.getFrame();
-	 if (frm != null) {
-	    launch_control.setActiveFrame(frm);
-	  }
+         BumpStackFrame frm = tn.getFrame();
+         if (frm != null) {
+            launch_control.setActiveFrame(frm);
+          }
        }
     }
 
-}	// end of inner class Selector
+}       // end of inner class Selector
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle value area management						*/
-/*										*/
+/*                                                                              */
+/*      Handle value area management                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void updateValueArea()
@@ -942,9 +942,9 @@ private void updateValueArea()
     try {
        HTMLDocument doc = (HTMLDocument) value_area.getDocument();
        if (doc.getParser() == null) {
-	  HTMLEditorKit.Parser p = new ParserDelegator();
-	  doc.setParser(p);
-	}
+          HTMLEditorKit.Parser p = new ParserDelegator();
+          doc.setParser(p);
+        }
        int len = doc.getLength();
        doc.remove(0,len);
        doc.insertAfterStart(doc.getDefaultRootElement(),txt);
@@ -960,9 +960,9 @@ private void updateValueArea()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to pull out a stack bubble					*/
-/*										*/
+/*                                                                              */
+/*      Methods to pull out a stack bubble                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Transferer extends TransferHandler {
@@ -992,7 +992,7 @@ private final class Transferer extends TransferHandler {
       return COPY;
     }
 
-}	// end of inner class Transferer
+}       // end of inner class Transferer
 
 
 
@@ -1003,12 +1003,12 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
    TransferBubble(TreePath [] sels) {
       value_entries = new ArrayList<ValueTreeNode>();
       for (int i = 0; i < sels.length; ++i) {
-	 ValueTreeNode tn = (ValueTreeNode) sels[i].getLastPathComponent();
-	 if (tn != null) value_entries.add(tn);
+         ValueTreeNode tn = (ValueTreeNode) sels[i].getLastPathComponent();
+         if (tn != null) value_entries.add(tn);
        }
     }
 
-   boolean isValid()				{ return value_entries.size() > 0; }
+   boolean isValid()                            { return value_entries.size() > 0; }
 
    @Override public Object getTransferData(DataFlavor df) {
       if (df == BudaRoot.getBubbleTransferFlavor()) return this;
@@ -1033,13 +1033,13 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
       return rslt;
     }
 
-}	// end of inner class TransferBubble
+}       // end of inner class TransferBubble
 
 
 
 
 
-}	// end of class BddtStackView
+}       // end of class BddtStackView
 
 
 

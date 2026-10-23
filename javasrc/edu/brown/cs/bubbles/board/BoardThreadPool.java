@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardThreadPool.java						*/
-/*										*/
-/*	Bubbles attribute and property management worker thread pool support	*/
-/*										*/
+/*                                                                              */
+/*              BoardThreadPool.java                                            */
+/*                                                                              */
+/*      Bubbles attribute and property management worker thread pool support    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -33,36 +33,36 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- *	This class provides a thread pool to handle background tasks without
- *	the overhead of continually creating new threads.
+ *      This class provides a thread pool to handle background tasks without
+ *      the overhead of continually creating new threads.
  **/
 
 public final class BoardThreadPool extends ThreadPoolExecutor
-	implements BoardConstants, ThreadFactory
+        implements BoardConstants, ThreadFactory
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private static BoardThreadPool	the_pool = new BoardThreadPool();
-private static int		thread_counter = 0;
+private static BoardThreadPool  the_pool = new BoardThreadPool();
+private static int              thread_counter = 0;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Static entries								*/
-/*										*/
+/*                                                                              */
+/*      Static entries                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Execute a background task using our thread pool.
+ *      Execute a background task using our thread pool.
  **/
 
 public static void start(Runnable r)
@@ -88,7 +88,7 @@ public static void start(Runnable r)
 
 
 /**
- *	Remove a task if possible
+ *      Remove a task if possible
  **/
 
 public static void finish(Runnable r)
@@ -100,16 +100,16 @@ public static void finish(Runnable r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardThreadPool()
 {
    super(BOARD_CORE_POOL_SIZE,BOARD_MAX_POOL_SIZE,
-	    BOARD_POOL_KEEP_ALIVE_TIME,TimeUnit.MILLISECONDS,
-	    new SynchronousQueue<Runnable>());
+            BOARD_POOL_KEEP_ALIVE_TIME,TimeUnit.MILLISECONDS,
+            new SynchronousQueue<Runnable>());
 
    setThreadFactory(this);
 }
@@ -118,9 +118,9 @@ private BoardThreadPool()
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Thread creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Thread newThread(Runnable r)
@@ -131,9 +131,9 @@ private BoardThreadPool()
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging methods 							*/
-/*										*/
+/*                                                                              */
+/*      Logging methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void beforeExecute(Thread t,Runnable r)
@@ -155,7 +155,7 @@ private BoardThreadPool()
 
 
 
-}	// end of class BoardThreadPool
+}       // end of class BoardThreadPool
 
 
 

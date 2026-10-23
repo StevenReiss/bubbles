@@ -1,26 +1,26 @@
 /********************************************************************************/
-/*										*/
-/*		BaleDocumentIde.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor IDE-based document			*/
-/*										*/
-/*	This represents a document without an editor.  It supports a set of	*/
-/*	fragment documents that are informed of any edit to this document.	*/
-/*	The fragment documents should handle edits by calling the appropriate	*/
-/*	editing method on this document.					*/
-/*										*/
+/*                                                                              */
+/*              BaleDocumentIde.java                                            */
+/*                                                                              */
+/*      Bubble Annotated Language Editor IDE-based document                     */
+/*                                                                              */
+/*      This represents a document without an editor.  It supports a set of     */
+/*      fragment documents that are informed of any edit to this document.      */
+/*      The fragment documents should handle edits by calling the appropriate   */
+/*      editing method on this document.                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -86,36 +86,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 class BaleDocumentIde extends BaleDocumentBase implements BaleConstants,
-	BumpConstants.BumpFileHandler, BumpConstants.BumpProblemHandler,
-	BaleConstants.BaleFileOverview, BumpConstants.BumpChangeHandler
+        BumpConstants.BumpFileHandler, BumpConstants.BumpProblemHandler,
+        BaleConstants.BaleFileOverview, BumpConstants.BumpChangeHandler
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		project_name;
-private File		file_name;
-private BoardLanguage	file_language;
-private boolean 	doing_load;
-private boolean 	doing_remote;
-private boolean 	doing_eload;
-private boolean 	is_dirty;
-private int		checkpoint_counter;
-private boolean 	is_readonly;
+private String          project_name;
+private File            file_name;
+private BoardLanguage   file_language;
+private boolean         doing_load;
+private boolean         doing_remote;
+private boolean         doing_eload;
+private boolean         is_dirty;
+private int             checkpoint_counter;
+private boolean         is_readonly;
 private transient Element elision_data; // for readonly files
-private int		num_import;
+private int             num_import;
 private BaleFragmentEditor dummy_editor;
 private boolean         is_removed;
 
 private transient Map<BaleFragment,FragmentData> fragment_map;
 
-private String			newline_string;
-private int			newline_adjust;
+private String                  newline_string;
+private int                     newline_adjust;
 private transient BaleLineOffsetsNew line_offsets;
 
 private transient Set<BumpProblem> problem_set;
@@ -131,20 +131,20 @@ private static BumpClient      bump_client = null;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocumentIde()
 {
    synchronized (BaleDocumentIde.class) {
       if (bump_client == null) {
-	 bump_client = BumpClient.getBump();
-	 bump_client.waitForIDE();
-	 bump_client.setEditParameter("AUTOELIDE","TRUE");
-	 int edelay = BALE_PROPERTIES.getInt(BALE_TYPEIN_DELAY,250);
-	 bump_client.setEditParameter("ELIDEDELAY",Integer.toString(edelay));
+         bump_client = BumpClient.getBump();
+         bump_client.waitForIDE();
+         bump_client.setEditParameter("AUTOELIDE","TRUE");
+         int edelay = BALE_PROPERTIES.getInt(BALE_TYPEIN_DELAY,250);
+         bump_client.setEditParameter("ELIDEDELAY",Integer.toString(edelay));
        }
     }
 
@@ -213,33 +213,33 @@ BaleDocumentIde(String proj,File file,boolean local)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProjectName()	{ return project_name; }
+@Override public String getProjectName()        { return project_name; }
 
 void checkProjectName(String name)
 {
    if (name != null) {
       if (!name.equals(project_name)) {
-	 project_name = name;
+         project_name = name;
        }
     }
 }
 
-@Override public File getFile() 		{ return file_name; }
+@Override public File getFile()                 { return file_name; }
 @Override public BoardLanguage getLanguage()
 {
    if (file_language != null) return file_language;
    return super.getLanguage();
 }
 
-@Override boolean isEditable()		{ return !is_readonly; }
-Element getReadonlyElisionData()	{ return elision_data; }
+@Override boolean isEditable()          { return !is_readonly; }
+Element getReadonlyElisionData()        { return elision_data; }
 
-String getLineSeparator()		{ return newline_string; }
+String getLineSeparator()               { return newline_string; }
 
 void setReadonly()
 {
@@ -261,11 +261,11 @@ private void setFile(String proj,File file)
       BudaRoot br = BaleFactory.getFactory().getBudaRoot();
       proj = br.findProjectForFile(file);
       if (proj == null) { 
-	 File f1 = IvyFile.getCanonical(file);
-	 if (!f1.equals(file)) {
-	    proj = br.findProjectForFile(f1);
-	    if (proj != null) file = f1;
-	  }
+         File f1 = IvyFile.getCanonical(file);
+         if (!f1.equals(file)) {
+            proj = br.findProjectForFile(f1);
+            if (proj != null) file = f1;
+          }
        }
     }
    if (proj == null && file != null && !file.getName().contains("BUBBLES_")) {
@@ -340,20 +340,20 @@ private void setLocalFile(String proj,File file)
 
    try (FileReader fr = new FileReader(file)) {
       for ( ; ; ) {
-	 int ch = fr.read();
-	 if (ch < 0) break;
-	 if (ch == '\r') {
-	    ch = fr.read();
-	    if (ch == '\n') linesep = "\r\n";
-	    else linesep = "\r";
-	    break;
-	  }
-	 else if (ch == '\n') {
-	    ch = fr.read();
-	    if (ch == '\r') linesep = "\n\r";
-	    else linesep = "\n";
-	    break;
-	  }
+         int ch = fr.read();
+         if (ch < 0) break;
+         if (ch == '\r') {
+            ch = fr.read();
+            if (ch == '\n') linesep = "\r\n";
+            else linesep = "\r";
+            break;
+          }
+         else if (ch == '\n') {
+            ch = fr.read();
+            if (ch == '\r') linesep = "\n\r";
+            else linesep = "\n";
+            break;
+          }
        }
     }
    catch (IOException e) { }
@@ -392,10 +392,10 @@ private void setLanguage()
    String f = file_name.getName();
    if (f != null) {
       for (BoardLanguage bl : BoardLanguage.values()) {
-	 if (bl.isSourceFile(f)) {
-	    file_language = bl;
-	    break;
-	  }
+         if (bl.isSourceFile(f)) {
+            file_language = bl;
+            break;
+          }
        }
     }
 }
@@ -422,17 +422,17 @@ private void setLanguage()
    if (is_dirty && BALE_PROPERTIES.getBoolean("Bale.format.onsave")) {
       boolean err = false;
       for (BumpProblem bp : problem_set) {
-	 switch (bp.getErrorType()) {
-	    case FATAL :
-	    case ERROR :
-	       err = true;
-	       break;
-	    default :
-	       break;
-	  }
+         switch (bp.getErrorType()) {
+            case FATAL :
+            case ERROR :
+               err = true;
+               break;
+            default :
+               break;
+          }
        }
       if (!err) {
-	 format(0,0);
+         format(0,0);
        }
     }
    try {
@@ -479,10 +479,10 @@ private void setLanguage()
 
 @Override void checkpoint()
 {
-   if (!canSave()) return;			// not dirty
+   if (!canSave()) return;                      // not dirty
    if (is_removed) return;
    int id = getEditCounter();
-   if (checkpoint_counter == id) return;	// no change since last checkpoint
+   if (checkpoint_counter == id) return;        // no change since last checkpoint
    checkpoint_counter = id;
 
    File otf = null;
@@ -524,13 +524,13 @@ private void setLanguage()
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit methods								*/
-/*										*/
+/*                                                                              */
+/*      Edit methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void insertString(int off,String st,AttributeSet a)
-	throws BadLocationException
+        throws BadLocationException
 {
    writeLock();
    try {
@@ -568,9 +568,9 @@ private void setLanguage()
 
 
 /********************************************************************************/
-/*										*/
-/*	Fragment management methods						*/
-/*										*/
+/*                                                                              */
+/*      Fragment management methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void createFragment(BaleFragment owner,Collection<BaleRegion> regions)
@@ -626,7 +626,7 @@ private void fixupElision()
    if (fragment_map.size() > 0) {
       IvyXmlWriter xw = new IvyXmlWriter();
       for (FragmentData fd : fragment_map.values()) {
-	 fd.dumpRegions(this,xw);
+         fd.dumpRegions(this,xw);
        }
       rgns = xw.toString();
       bump_client.removeFileHandler(this);
@@ -651,9 +651,9 @@ private void fixupElision()
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for asynchonous notifications for formatting			*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for asynchonous notifications for formatting                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleElisionData(File f,int id,Element d)
@@ -683,7 +683,7 @@ private void fixupElision()
    else num_import = -1;
 
    if (id != getEditCounter()) return;
-   ast_nodes = nodes;								
+   ast_nodes = nodes;                                                           
 
    List<FragmentElisionUpdater> runs = new ArrayList<>();
 
@@ -692,22 +692,22 @@ private void fixupElision()
       FragmentData fd = ent.getValue();
       List<BaleAstNode> rgnnodes = null;
       for (BaleRegion br : fd.getRegions()) {
-	 for (BaleAstNode bn : ast_nodes) {
-	    int pos = br.getStart();
-	    BaleAstNode cn = bn.getChild(pos);
-	    if (cn == null) {
-	       // if the text has errors, it might not extend to include comments
-	       if (bn.getStart() >= br.getStart() && bn.getEnd() <= br.getEnd()) cn = bn;
-	     }
-	    if (cn != null) {
-	       if (rgnnodes == null) rgnnodes = new ArrayList<BaleAstNode>();
-	       // should this add bn or cn: bn
-	       rgnnodes.add(bn);
-	     }
-	  }
+         for (BaleAstNode bn : ast_nodes) {
+            int pos = br.getStart();
+            BaleAstNode cn = bn.getChild(pos);
+            if (cn == null) {
+               // if the text has errors, it might not extend to include comments
+               if (bn.getStart() >= br.getStart() && bn.getEnd() <= br.getEnd()) cn = bn;
+             }
+            if (cn != null) {
+               if (rgnnodes == null) rgnnodes = new ArrayList<BaleAstNode>();
+               // should this add bn or cn: bn
+               rgnnodes.add(bn);
+             }
+          }
        }
       if (rgnnodes != null) {
-	 runs.add(new FragmentElisionUpdater(bf,rgnnodes,id));
+         runs.add(new FragmentElisionUpdater(bf,rgnnodes,id));
        }
     }
 
@@ -720,10 +720,10 @@ private void fixupElision()
 //    BoardThreadPool.start(feu);
 //    try {
 //       if (SwingUtilities.isEventDispatchThread()) feu.run();
-//	 else SwingUtilities.invokeAndWait(feu);
+//       else SwingUtilities.invokeAndWait(feu);
 //     }
 //    catch (Exception e) {
-//	 BoardLog.logE("BALE","Problem with elision update",e);
+//       BoardLog.logE("BALE","Problem with elision update",e);
 //     }
 //  }
 }
@@ -747,7 +747,7 @@ private class FragmentElisionUpdater implements Runnable {
       for_fragment.handleAstUpdated(local_nodes);
     }
 
-}	// end of inner class FragmentElisionUpdater
+}       // end of inner class FragmentElisionUpdater
 
 
 private class FragmentUpdater implements Runnable {
@@ -770,9 +770,9 @@ private class FragmentUpdater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle remote edits							*/
-/*										*/
+/*                                                                              */
+/*      Handle remote edits                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleRemoteEdit(File f,int len,int off,String txt)
@@ -806,10 +806,10 @@ private void waitForRemoteEdits()
 
    synchronized (remote_edits) {
       while (!remote_edits.isEmpty()) {
-	 try {
-	    remote_edits.wait(500);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            remote_edits.wait(500);
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -839,28 +839,28 @@ private class RemoteEditor implements Runnable {
       BoardLog.logD("BALE","Start remote edits " + remote_edits.size());
       RemoteEdit re = null;
       for ( ; ; ) {
-	 synchronized (remote_edits) {
-	    if (!remote_edits.isEmpty()) {
-	       re = remote_edits.peek();
-	     }
-	    else {
-	       remote_edits.notifyAll();
-	       break;
-	     }
-	  }
+         synchronized (remote_edits) {
+            if (!remote_edits.isEmpty()) {
+               re = remote_edits.peek();
+             }
+            else {
+               remote_edits.notifyAll();
+               break;
+             }
+          }
 
-	 re.run();
+         re.run();
 
-	 synchronized (remote_edits) {
-	    // ensure queue not empty until edits are run
-	    remote_edits.remove(re);
-	  }
+         synchronized (remote_edits) {
+            // ensure queue not empty until edits are run
+            remote_edits.remove(re);
+          }
        }
 
       fixupElision();
     }
 
-}	// end of class RemoteEditor
+}       // end of class RemoteEditor
 
 
 
@@ -880,40 +880,40 @@ private class RemoteEdit implements Runnable {
    @Override public void run() {
       BoardLog.logD("BALE","Remote edit update " + edit_offset + " " + edit_len);
       if (edit_offset == 0 && edit_len < 0)
-	 reload();
+         reload();
       else
-	 doEdit();
+         doEdit();
       BoardLog.logD("BALE","Done remote edit");
     }
 
    private void doEdit() {
       writeLock();
       try {
-	 doing_remote = true;	     // prevent edit from going back to eclipse
-	 try {
-	    if (edit_len != 0) {
-	       if (edit_offset+edit_len >= getLength()) {
-		  edit_len = getLength() - edit_offset;
-		}
-	       BoardLog.logD("BALE","REMOVE TEXT " + edit_offset + " " +
-		     edit_len + " " +
-		     IvyFormat.formatString(getText(edit_offset,edit_len)));
-	       remove(edit_offset,edit_len);
-	     }
-	    if (edit_text != null && edit_text.length() > 0) {
-	       BoardLog.logD("BALE","INSERT TEXT " + edit_offset + " " +
-		     IvyFormat.formatString(edit_text));
-	       insertString(edit_offset,edit_text,null);
-	     }
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Bad location for remote edit: " + e);
-	    return;
-	  }
+         doing_remote = true;        // prevent edit from going back to eclipse
+         try {
+            if (edit_len != 0) {
+               if (edit_offset+edit_len >= getLength()) {
+                  edit_len = getLength() - edit_offset;
+                }
+               BoardLog.logD("BALE","REMOVE TEXT " + edit_offset + " " +
+                     edit_len + " " +
+                     IvyFormat.formatString(getText(edit_offset,edit_len)));
+               remove(edit_offset,edit_len);
+             }
+            if (edit_text != null && edit_text.length() > 0) {
+               BoardLog.logD("BALE","INSERT TEXT " + edit_offset + " " +
+                     IvyFormat.formatString(edit_text));
+               insertString(edit_offset,edit_text,null);
+             }
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Bad location for remote edit: " + e);
+            return;
+          }
        }
       finally {
-	 doing_remote = false;
-	 writeUnlock();
+         doing_remote = false;
+         writeUnlock();
        }
     }
 
@@ -972,7 +972,7 @@ private class RemoteEdit implements Runnable {
             catch (IOException e) {
                BoardLog.logE("BALE","I/O exception from string reader",e);
              }
-            ntxt = getText(0,getLength());		// for debugging
+            ntxt = getText(0,getLength());              // for debugging
             in = new StringReader(edit_text);
             setupLineOffsets(in,newline_string);
           }
@@ -1007,7 +1007,7 @@ private class RemoteEdit implements Runnable {
       fixupElision();
     }
 
-}	// end of inner class RemoteEdit
+}       // end of inner class RemoteEdit
 
 
 
@@ -1016,9 +1016,9 @@ private class RemoteEdit implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle asynchronous notifications for errors				*/
-/*										*/
+/*                                                                              */
+/*      Handle asynchronous notifications for errors                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleProblemAdded(BumpProblem bp)
@@ -1036,7 +1036,7 @@ private class RemoteEdit implements Runnable {
 
    for (FragmentData fd : fragment_map.values()) {
       if (fd.overlaps(soff,eoff)) {
-	 fd.setProblemsChanged(true);
+         fd.setProblemsChanged(true);
        }
     }
 }
@@ -1057,7 +1057,7 @@ private class RemoteEdit implements Runnable {
 
    for (FragmentData fd : fragment_map.values()) {
       if (fd.overlaps(soff,eoff)) {
-	 fd.setProblemsChanged(true);
+         fd.setProblemsChanged(true);
        }
     }
 }
@@ -1086,10 +1086,10 @@ private class RemoteEdit implements Runnable {
       BaleFragment bf = ent.getKey();
       FragmentData fd = ent.getValue();
       if (fd.getProblemsChanged()) {
-	 fd.setProblemsChanged(false);
+         fd.setProblemsChanged(false);
          BoardLog.logD("BALE","Problems done " + bf);
          ErrorUpdater eud = new ErrorUpdater(bf);
-	 SwingUtilities.invokeLater(eud);
+         SwingUtilities.invokeLater(eud);
        }
     }
 }
@@ -1107,15 +1107,15 @@ Iterable<BumpProblem> getProblems(BaleDocument doc)
    readLock();
    try {
       synchronized (problem_set) {
-	 ArrayList<BumpProblem> rslt = new ArrayList<BumpProblem>();
-	 for (BumpProblem bp : problem_set) {
-	    // BoardLog.logD("BALE","LOOK AT PROBLEM " + bp.getProblemId());
-	    if (inRange(bp,doc)) {
-	       // if (bp.getEditId() == getEditCounter() || bp.getEditId() < 0)
-	       rslt.add(bp);
-	     }
-	  }
-	 return rslt;
+         ArrayList<BumpProblem> rslt = new ArrayList<BumpProblem>();
+         for (BumpProblem bp : problem_set) {
+            // BoardLog.logD("BALE","LOOK AT PROBLEM " + bp.getProblemId());
+            if (inRange(bp,doc)) {
+               // if (bp.getEditId() == getEditCounter() || bp.getEditId() < 0)
+               rslt.add(bp);
+             }
+          }
+         return rslt;
        }
     }
    finally { readUnlock(); }
@@ -1150,15 +1150,15 @@ private static class ErrorUpdater implements Runnable {
       for_fragment.handleProblemsUpdated();
     }
 
-}	// end of inner class ErrorUpdater
+}       // end of inner class ErrorUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle location mapping 						*/
-/*										*/
+/*                                                                              */
+/*      Handle location mapping                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override BaleRegion getRegionFromEclipse(int soff,int eoff)
@@ -1180,16 +1180,16 @@ private static class ErrorUpdater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling new line characters				*/
-/*										*/
-/*	Note that this assumes that all the new lines in a file are consistent	*/
-/*	in that they are all \n or \r\n or \r.	It fails in the case where	*/
-/*	the file contains different types of newlines, e.g. \r\n and \r\r\n.	*/
-/*										*/
-/*	Fixing this to handle the general case and still be fast is going	*/
-/*	to be difficult.							*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling new line characters                                */
+/*                                                                              */
+/*      Note that this assumes that all the new lines in a file are consistent  */
+/*      in that they are all \n or \r\n or \r.  It fails in the case where      */
+/*      the file contains different types of newlines, e.g. \r\n and \r\r\n.    */
+/*                                                                              */
+/*      Fixing this to handle the general case and still be fast is going       */
+/*      to be difficult.                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int mapOffsetToEclipse(int off)
@@ -1302,17 +1302,17 @@ private void setupLineOffsets(Reader r,String nl)
 
 private final class LineOffsetListener implements DocumentListener {
 
-   @Override public void changedUpdate(DocumentEvent e) 	{ }
+   @Override public void changedUpdate(DocumentEvent e)         { }
 
    @Override public void insertUpdate(DocumentEvent e) {
       int off = e.getOffset();
       int len = e.getLength();
       try {
-	 String txt = getText(off,len);
-	 fixNewLines(off,off,txt);
+         String txt = getText(off,len);
+         fixNewLines(off,off,txt);
        }
       catch (BadLocationException ex) {
-	 BoardLog.logE("BALE","Problem getting insertion text",ex);
+         BoardLog.logE("BALE","Problem getting insertion text",ex);
        }
     }
 
@@ -1322,14 +1322,14 @@ private final class LineOffsetListener implements DocumentListener {
       fixNewLines(off,off+len,null);
     }
 
-}	// end of inner class LineOffsetListener
+}       // end of inner class LineOffsetListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Information for a document fragment					*/
-/*										*/
+/*                                                                              */
+/*      Information for a document fragment                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FragmentData {
@@ -1351,43 +1351,43 @@ private static class FragmentData {
 
    void dumpRegions(BaleDocument bd,IvyXmlWriter xw) {
       for (BaleRegion br : active_regions) {
-	 xw.begin("REGION");
-	 xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
-	 xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
-	 xw.end("REGION");
+         xw.begin("REGION");
+         xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
+         xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
+         xw.end("REGION");
        }
       for (Map.Entry<BaleRegion,Double> ent : priority_regions.entrySet()) {
-	 BaleRegion br = ent.getKey();
-	 double p = ent.getValue();
-	 xw.begin("REGION");
-	 xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
-	 xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
-	 xw.field("PRIORITY",p);
-	 xw.end("REGION");
+         BaleRegion br = ent.getKey();
+         double p = ent.getValue();
+         xw.begin("REGION");
+         xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
+         xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
+         xw.field("PRIORITY",p);
+         xw.end("REGION");
        }
     }
 
-   Collection<BaleRegion> getRegions()		{ return active_regions; }
+   Collection<BaleRegion> getRegions()          { return active_regions; }
 
    boolean overlaps(int start,int end) {
       for (BaleRegion br : active_regions) {
-	 if (end >= br.getStart() && start <= br.getEnd()) return true;
+         if (end >= br.getStart() && start <= br.getEnd()) return true;
        }
       return false;
     }
 
-   void setProblemsChanged(boolean fg)		{ problems_changed = fg; }
-   boolean getProblemsChanged() 		{ return problems_changed; }
+   void setProblemsChanged(boolean fg)          { problems_changed = fg; }
+   boolean getProblemsChanged()                 { return problems_changed; }
 
-}	// end of inner class FragmentData
+}       // end of inner class FragmentData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener for handling eclipse updates					*/
-/*										*/
+/*                                                                              */
+/*      Listener for handling eclipse updates                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private final class EclipseUpdater implements DocumentListener {
@@ -1421,14 +1421,14 @@ private final class EclipseUpdater implements DocumentListener {
        }
     }
 
-}	// end of inner class EclipseUpdater
+}       // end of inner class EclipseUpdater
 
 
 
 /********************************************************************************/
-/*										*/
-/*	File change handler methods						*/
-/*										*/
+/*                                                                              */
+/*      File change handler methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleFileChanged(String proj,String file)
@@ -1473,9 +1473,9 @@ private final class EclipseUpdater implements DocumentListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle history if there is no editor					*/
-/*										*/
+/*                                                                              */
+/*      Handle history if there is no editor                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override synchronized void setupDummyEditor()
@@ -1495,13 +1495,13 @@ private final class EclipseUpdater implements DocumentListener {
     }
 
    BaleFragmentEditor bde = new BaleFragmentEditor(getProjectName(),getFile(),"<DUMMY FILE>",
-	 this,BaleFragmentType.FILE,rgns);
+         this,BaleFragmentType.FILE,rgns);
    dummy_editor = bde;
 }
 
 
 
-}	// end of class BaleDocumentIde
+}       // end of class BaleDocumentIde
 
 
 

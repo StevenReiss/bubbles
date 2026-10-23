@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassTreeModelBase.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies tree model for a repository		*/
-/*										*/
+/*                                                                              */
+/*              BassTreeModelBase.java                                          */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies tree model for a repository          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -62,27 +62,27 @@ class BassTreeModelBase implements BassConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BassRepository	for_repository;
-private Branch		root_node;
-private int		leaf_count;
-private int		max_childcount;
-private ReadWriteLock	tree_lock;
+private BassRepository  for_repository;
+private Branch          root_node;
+private int             leaf_count;
+private int             max_childcount;
+private ReadWriteLock   tree_lock;
 private SwingEventListenerList<BassTreeUpdateListener> listener_set;
-private Rebuilder	cur_rebuilder;
+private Rebuilder       cur_rebuilder;
 
 private static final long REBUILD_DELAY = BASS_PROPERTIES.getLong("Bass.rebuild.delay",500);
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassTreeModelBase(BassRepository br)
@@ -104,15 +104,15 @@ BassTreeModelBase(BassRepository br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BassTreeBase getRoot()				{ return root_node; }
+BassTreeBase getRoot()                          { return root_node; }
 
-int getLeafCount()				{ return leaf_count; }
-int getMaxChildCount()				{ return max_childcount; }
+int getLeafCount()                              { return leaf_count; }
+int getMaxChildCount()                          { return max_childcount; }
 
 void addUpdateListener(BassTreeUpdateListener ul)
 {
@@ -155,9 +155,9 @@ void writeUnlock()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupInitial()
@@ -182,7 +182,7 @@ private TreeLeaf insertNode(BassName nm,TreeLeaf last)
    String [] comps = nm.getNameComponents();
    int ncomp = comps.length;
 
-   int idx = ncomp-2;			// ignore actual name
+   int idx = ncomp-2;                   // ignore actual name
 
    Branch p = null;
 
@@ -202,21 +202,21 @@ private TreeLeaf insertNode(BassName nm,TreeLeaf last)
    if (idx >= 0 && last != null) {
       p = last.getBassParent();
       for ( ; ; ) {
-	 if (p.getLocalName().equals(comps[idx])) break;
-	 --idx;
-	 if (idx < 0) break;
-	 p = p.getBassParent();
-	 if (p == null) break;
+         if (p.getLocalName().equals(comps[idx])) break;
+         --idx;
+         if (idx < 0) break;
+         p = p.getBassParent();
+         if (p == null) break;
        }
     }
    if (idx > 0 && p != null) {
       Branch q = p.getBassParent();
       for (int nidx = idx-1; nidx >= 0; --nidx) {
-	 if (q == null || !q.getLocalName().equals(comps[nidx])) {
-	    idx = -1;
-	    break;
-	 }
-	 q = q.getBassParent();
+         if (q == null || !q.getLocalName().equals(comps[nidx])) {
+            idx = -1;
+            break;
+         }
+         q = q.getBassParent();
       }
    }
    if (idx < 0 || p == null) {
@@ -228,14 +228,14 @@ private TreeLeaf insertNode(BassName nm,TreeLeaf last)
       int n = p.getChildCount();
       Branch cn = null;
       if (n > 0) {
-	 BassTreeImpl bti = p.getChildAt(n-1);
-	 if (!bti.isLeaf() && bti.getLocalName().equals(comps[i])) {
-	    cn = (Branch) bti;
-	  }
+         BassTreeImpl bti = p.getChildAt(n-1);
+         if (!bti.isLeaf() && bti.getLocalName().equals(comps[i])) {
+            cn = (Branch) bti;
+          }
        }
       if (cn == null) {
-	 cn = new Branch(comps[i],p);
-	 p.addChild(cn);
+         cn = new Branch(comps[i],p);
+         p.addChild(cn);
        }
       p = cn;
     }
@@ -260,29 +260,29 @@ private static void computeBranchType(BassName nm,Branch p)
 {
    switch (nm.getNameType()) {
       case INTERFACE :
-	 p.setBranchType(BranchNodeType.INTERFACE);
-	 break;
+         p.setBranchType(BranchNodeType.INTERFACE);
+         break;
       case ENUM :
-	 p.setBranchType(BranchNodeType.ENUM);
-	 break;
+         p.setBranchType(BranchNodeType.ENUM);
+         break;
       case THROWABLE :
-	 p.setBranchType(BranchNodeType.THROWABLE);
-	 break;
+         p.setBranchType(BranchNodeType.THROWABLE);
+         break;
       case PACKAGE :
-	 p.setBranchType(BranchNodeType.PACKAGE);
-	 break;
+         p.setBranchType(BranchNodeType.PACKAGE);
+         break;
       case PROJECT :
-	 p.setBranchType(BranchNodeType.PROJECT);
-	 break;
+         p.setBranchType(BranchNodeType.PROJECT);
+         break;
       case METHOD :
-	 p.setBranchType(BranchNodeType.METHOD);
-	 break;
+         p.setBranchType(BranchNodeType.METHOD);
+         break;
       case ANNOTATION :
-	 p.setBranchType(BranchNodeType.ANNOTATION);
-	 break;
+         p.setBranchType(BranchNodeType.ANNOTATION);
+         break;
       default :
-	 p.setBranchType(BranchNodeType.CLASS);
-	 break;
+         p.setBranchType(BranchNodeType.CLASS);
+         break;
     }
 }
 
@@ -320,22 +320,22 @@ private static final class TreeSorter implements Comparator<BassName> {
       return b1.getFullName().compareTo(b2.getFullName());
     }
 
-}	// end of inner class TreeSorter
+}       // end of inner class TreeSorter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Rebuild request methods 						*/
-/*										*/
+/*                                                                              */
+/*      Rebuild request methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void requestRebuild()
 {
    synchronized (this) {
       if (cur_rebuilder != null) {
-	 if (cur_rebuilder.requestRebuild()) return;
+         if (cur_rebuilder.requestRebuild()) return;
        }
       cur_rebuilder = new Rebuilder();
       BoardThreadPool.start(cur_rebuilder);
@@ -346,9 +346,9 @@ void requestRebuild()
 
 private class Rebuilder implements Runnable {
 
-   private long 	start_time;
-   private long 	begin_time;
-   private boolean	is_active;
+   private long         start_time;
+   private long         begin_time;
+   private boolean      is_active;
 
    Rebuilder() {
       start_time = System.currentTimeMillis() + REBUILD_DELAY;
@@ -366,42 +366,42 @@ private class Rebuilder implements Runnable {
 
    @Override public void run() {
       for ( ; ; ) {
-	 synchronized (this) {
-	    for ( ; ; ) {
-	       long delta = start_time - System.currentTimeMillis();
-	       if (delta <= 0) break;
-	       try {
-		  wait(delta);
-		}
-	       catch (InterruptedException e) { }
-	     }
-	    begin_time = start_time;
-	  }
-	 BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
+         synchronized (this) {
+            for ( ; ; ) {
+               long delta = start_time - System.currentTimeMillis();
+               if (delta <= 0) break;
+               try {
+                  wait(delta);
+                }
+               catch (InterruptedException e) { }
+             }
+            begin_time = start_time;
+          }
+         BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
 
-	 rebuild();
+         rebuild();
 
-	 BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
+         BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
 
-	 synchronized (this) {
-	    if (begin_time == start_time) {
-	       is_active = false;
-	       break;
-	     }
-	  }
+         synchronized (this) {
+            if (begin_time == start_time) {
+               is_active = false;
+               break;
+             }
+          }
        }
     }
 
-}	// end of inner class Rebuilder
+}       // end of inner class Rebuilder
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void rebuild()
@@ -414,14 +414,14 @@ void rebuild()
       root_node.addAllNames(dels);
 
       for (BassName ba : for_repository.getAllNames()) {
-	 if (dels.remove(ba)) continue;
-	 adds.add(ba);
+         if (dels.remove(ba)) continue;
+         adds.add(ba);
        }
       for (BassName ba : dels) {
-	 removeNode(ba);
+         removeNode(ba);
        }
       for (BassName ba : adds) {
-	 root_node.addNode(ba,true);
+         root_node.addNode(ba,true);
        }
 
       max_childcount = root_node.getMaxCount();
@@ -432,7 +432,7 @@ void rebuild()
 
       UpdateEvent evt = new UpdateEvent(adds,dels);
       for (BassTreeUpdateListener ul : listener_set) {
-	 ul.handleTreeUpdated(evt);
+         ul.handleTreeUpdated(evt);
        }
     }
    finally { writeUnlock(); }
@@ -466,18 +466,18 @@ private static class UpdateEvent implements BassTreeUpdateEvent {
       names_removed = nr;
     }
 
-   @Override public Collection<BassName> getNamesRemoved()	{ return names_removed; }
-   @Override public Collection<BassName> getNamesAdded()	{ return names_added; }
+   @Override public Collection<BassName> getNamesRemoved()      { return names_removed; }
+   @Override public Collection<BassName> getNamesAdded()        { return names_added; }
 
-}	// end of inner class UpdateEvent
+}       // end of inner class UpdateEvent
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree node representation						*/
-/*										*/
+/*                                                                              */
+/*      Tree node representation                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class BassTreeImpl implements BassTreeBase, BassTreeNode {
@@ -488,23 +488,23 @@ private abstract static class BassTreeImpl implements BassTreeBase, BassTreeNode
       parent_node = par;
     }
 
-   Branch getBassParent()				{ return parent_node; }
+   Branch getBassParent()                               { return parent_node; }
 
    @Override public abstract int getChildCount();
    @Override public abstract BassTreeBase getChildAt(int idx);
-   @Override public int getIndex(BassTreeBase chld)	{ return -1; }
+   @Override public int getIndex(BassTreeBase chld)     { return -1; }
 
    @Override public abstract String getLocalName();
    @Override public abstract boolean isLeaf();
-   @Override public BassName getBassName()		{ return null; }
-   @Override public Icon getExpandIcon()		{ return null; }
-   @Override public Icon getCollapseIcon()		{ return null; }
-   BranchNodeType getBranchType()			{ return BranchNodeType.NONE; }
+   @Override public BassName getBassName()              { return null; }
+   @Override public Icon getExpandIcon()                { return null; }
+   @Override public Icon getCollapseIcon()              { return null; }
+   BranchNodeType getBranchType()                       { return BranchNodeType.NONE; }
 
-   void collapseSingletons()				{ }
-   boolean removeEmptyNodes()				{ return false; }
+   void collapseSingletons()                            { }
+   boolean removeEmptyNodes()                           { return false; }
 
-   @Override public String toString()			{ return getLocalName(); }
+   @Override public String toString()                   { return getLocalName(); }
 
    abstract int getSortPriority();
    abstract void addAllNames(Collection<BassName> rslt);
@@ -513,7 +513,7 @@ private abstract static class BassTreeImpl implements BassTreeBase, BassTreeNode
    @Override public abstract int getLeafCount();
 
 
-}	// end of inner class BassTreeImpl
+}       // end of inner class BassTreeImpl
 
 
 
@@ -529,22 +529,22 @@ private static class TreeLeaf extends BassTreeImpl {
       short_name = fixDisplayName();
     }
 
-   @Override public int getChildCount() 		{ return 0; }
-   @Override public BassTreeBase getChildAt(int idx)	{ return null; }
-   @Override public boolean isLeaf()			{ return true; }
+   @Override public int getChildCount()                 { return 0; }
+   @Override public BassTreeBase getChildAt(int idx)    { return null; }
+   @Override public boolean isLeaf()                    { return true; }
 
-   @Override public BassName getBassName()		{ return for_name; }
-   @Override public String getLocalName()		{ return for_name.getDisplayName(); }
+   @Override public BassName getBassName()              { return for_name; }
+   @Override public String getLocalName()               { return for_name.getDisplayName(); }
    @Override public String getFullName() {
       return for_name.getFullName();
     }
 
-   @Override public String toString()			{ return short_name; }
+   @Override public String toString()                   { return short_name; }
 
-   @Override int getSortPriority()			{ return for_name.getSortPriority(); }
+   @Override int getSortPriority()                      { return for_name.getSortPriority(); }
 
-   @Override int getMaxCount()				{ return 0; }
-   @Override public int getLeafCount()			{ return 1; }
+   @Override int getMaxCount()                          { return 0; }
+   @Override public int getLeafCount()                  { return 1; }
 
    @Override void addAllNames(Collection<BassName> rslt) {
       if (for_name != null) rslt.add(for_name);
@@ -559,32 +559,32 @@ private static class TreeLeaf extends BassTreeImpl {
       StringBuffer pbuf = null;
       int prm = 0;
       for (int i = 0; i < nm.length(); ++i) {
-	 char ch = nm.charAt(i);
-	 if (ch == '(' || ch == '<') {
-	    if (prm > 0) addParam(pbuf,buf);
-	    pbuf = null;
-	    buf.append(ch);
-	    ++prm;
-	  }
-	 else if (prm > 0) {
-	    if (ch == ',' || ch == ')' || ch == '>') {
-	       addParam(pbuf,buf);
-	       pbuf = null;
-	       buf.append(ch);
-	       if (ch == ')' || ch == '>') --prm;
-	     }
-	    else if (pbuf == null && ch == ' ') ;
-	    else if (ch == ' ' && pbuf != null) {
-	       addParam(pbuf,buf);
-	       pbuf = new StringBuffer();
-	       buf.append(ch);
-	     }
-	    else {
-	       if (pbuf == null) pbuf = new StringBuffer();
-	       pbuf.append(ch);
-	     }
-	  }
-	 else buf.append(ch);
+         char ch = nm.charAt(i);
+         if (ch == '(' || ch == '<') {
+            if (prm > 0) addParam(pbuf,buf);
+            pbuf = null;
+            buf.append(ch);
+            ++prm;
+          }
+         else if (prm > 0) {
+            if (ch == ',' || ch == ')' || ch == '>') {
+               addParam(pbuf,buf);
+               pbuf = null;
+               buf.append(ch);
+               if (ch == ')' || ch == '>') --prm;
+             }
+            else if (pbuf == null && ch == ' ') ;
+            else if (ch == ' ' && pbuf != null) {
+               addParam(pbuf,buf);
+               pbuf = new StringBuffer();
+               buf.append(ch);
+             }
+            else {
+               if (pbuf == null) pbuf = new StringBuffer();
+               pbuf.append(ch);
+             }
+          }
+         else buf.append(ch);
        }
       return buf.toString();
     }
@@ -596,17 +596,17 @@ private static class TreeLeaf extends BassTreeImpl {
 
    private void addParam(String pnm,StringBuffer buf) {
       if (pnm.endsWith("...")) {
-	 pnm = pnm.substring(0,pnm.length()-3);
-	 addParam(pnm,buf);
-	 buf.append("...");
-	 return;
+         pnm = pnm.substring(0,pnm.length()-3);
+         addParam(pnm,buf);
+         buf.append("...");
+         return;
        }
       int idx = pnm.lastIndexOf(".");
       if (idx >= 0) pnm = pnm.substring(idx+1);
       buf.append(pnm);
     }
 
-}	// end of inner class TreeLeaf
+}       // end of inner class TreeLeaf
 
 
 
@@ -628,12 +628,12 @@ private static class Branch extends BassTreeImpl {
       child_nodes = new Vector<>();
       int idx = name.indexOf("#");
       if (idx > 0) {
-	 display_name = name.substring(idx+1);
+         display_name = name.substring(idx+1);
        }
       leaf_count = -1;
       if (par != null) {
-	 if (par.getBassParent() == null) full_name = local_name;
-	 else full_name = par.getFullName() + "." + local_name;
+         if (par.getBassParent() == null) full_name = local_name;
+         else full_name = par.getFullName() + "." + local_name;
        }
       else full_name = local_name;
       display_name = display_name.replace(DOT_SUBSTITUTE,".");
@@ -643,10 +643,10 @@ private static class Branch extends BassTreeImpl {
       if (idx < 0 || idx > child_nodes.size()) return null;
       return child_nodes.get(idx);
     }
-   @Override public int getChildCount() 		{ return child_nodes.size(); }
-   @Override public int getIndex(BassTreeBase tn)	{ return child_nodes.indexOf(tn); }
-   @Override public boolean isLeaf()			{ return false; }
-   @Override BranchNodeType getBranchType()			{ return branch_type; }
+   @Override public int getChildCount()                 { return child_nodes.size(); }
+   @Override public int getIndex(BassTreeBase tn)       { return child_nodes.indexOf(tn); }
+   @Override public boolean isLeaf()                    { return false; }
+   @Override BranchNodeType getBranchType()                     { return branch_type; }
 
    void addChild(BassTreeImpl n) {
       child_nodes.add(n);
@@ -655,26 +655,26 @@ private static class Branch extends BassTreeImpl {
    void setBranchType(BranchNodeType type) {
       if (branch_type == type) return;
       switch (branch_type) {
-	 case PROJECT :
-	 case PACKAGE :
-	 case METHOD :
-	    branch_type = type;
-	    break;
-	 case CLASS:
-	 case THROWABLE :
-	    if (type == BranchNodeType.INTERFACE) branch_type = type;
-	    if (type == BranchNodeType.ENUM) branch_type = type;
-	    if (type == BranchNodeType.THROWABLE) branch_type = type;
-	    if (type == BranchNodeType.ANNOTATION) branch_type = type;
-	    break;
-	 case INTERFACE :
-	 case ANNOTATION :
-	    break;
-	 case ENUM :
-	    if (type == BranchNodeType.INTERFACE) branch_type = type;
-	    break;
-	 case NONE:
-	    break;
+         case PROJECT :
+         case PACKAGE :
+         case METHOD :
+            branch_type = type;
+            break;
+         case CLASS:
+         case THROWABLE :
+            if (type == BranchNodeType.INTERFACE) branch_type = type;
+            if (type == BranchNodeType.ENUM) branch_type = type;
+            if (type == BranchNodeType.THROWABLE) branch_type = type;
+            if (type == BranchNodeType.ANNOTATION) branch_type = type;
+            break;
+         case INTERFACE :
+         case ANNOTATION :
+            break;
+         case ENUM :
+            if (type == BranchNodeType.INTERFACE) branch_type = type;
+            break;
+         case NONE:
+            break;
        }
     }
 
@@ -703,93 +703,93 @@ private static class Branch extends BassTreeImpl {
 
    @Override public Icon getCollapseIcon() {
       switch (branch_type) {
-	 case CLASS :
-	 case METHOD :
-	    return BoardImage.getIcon("class_collapse");
-	 case THROWABLE :
-	    return BoardImage.getIcon("throw_collapse");
-	 case PACKAGE :
-	    return BoardImage.getIcon("package_collapse");
-	 case PROJECT :
-	    return BoardImage.getIcon("project_collapse");
-	 case INTERFACE :
-	    return BoardImage.getIcon("interface_collapse");
-	 case ENUM :
-	    return BoardImage.getIcon("enum_collapse");
-	 case ANNOTATION :
-	    return BoardImage.getIcon("annot_collapse");
-	 default:
-	    break;
+         case CLASS :
+         case METHOD :
+            return BoardImage.getIcon("class_collapse");
+         case THROWABLE :
+            return BoardImage.getIcon("throw_collapse");
+         case PACKAGE :
+            return BoardImage.getIcon("package_collapse");
+         case PROJECT :
+            return BoardImage.getIcon("project_collapse");
+         case INTERFACE :
+            return BoardImage.getIcon("interface_collapse");
+         case ENUM :
+            return BoardImage.getIcon("enum_collapse");
+         case ANNOTATION :
+            return BoardImage.getIcon("annot_collapse");
+         default:
+            break;
        }
       return null;
     }
 
-   @Override int getSortPriority()			{ return BASS_DEFAULT_INTERIOR_PRIORITY; }
+   @Override int getSortPriority()                      { return BASS_DEFAULT_INTERIOR_PRIORITY; }
 
    @Override void addAllNames(Collection<BassName> rslt) {
       for (BassTreeImpl tn : child_nodes) tn.addAllNames(rslt);
     }
 
-   @Override public String getLocalName()		{ return local_name; }
-   @Override public String toString()			{ return display_name; }
-   @Override public String getFullName()		{ return full_name; }
-   @Override Branch getBassParent()			{ return parent_node; }
+   @Override public String getLocalName()               { return local_name; }
+   @Override public String toString()                   { return display_name; }
+   @Override public String getFullName()                { return full_name; }
+   @Override Branch getBassParent()                     { return parent_node; }
 
    @Override void collapseSingletons() {
       if (parent_node != null) {
-	 Branch cn = this;
-	 StringBuffer buf = null;
-	 while (cn.child_nodes.size() == 1) {
-	    BassTreeImpl tn = cn.getChildAt(0);
-	    if (tn.isLeaf()) break;
-	    if (tn.getBranchType() == BranchNodeType.CLASS) break;
-	    if (tn.getBranchType() == BranchNodeType.THROWABLE) break;
-	    if (tn.getBranchType() == BranchNodeType.INTERFACE) break;
-	    if (tn.getBranchType() == BranchNodeType.ENUM) break;
-	    if (tn.getBranchType() == BranchNodeType.METHOD) break;
-	    if (buf == null) {
-	       buf = new StringBuffer();
-	       buf.append(cn.getLocalName());
-	     }
-	    else {
-	       if (buf.length() > 0 && buf.charAt(buf.length()-1) != ':') buf.append(".");
-	       buf.append(cn.getLocalName());
-	     }
-	    cn = (Branch) tn;
-	  }
-	 if (cn != this && buf != null) {
-	    int idx = parent_node.getIndex(this);
-	    if (buf.charAt(buf.length()-1) != ':')
-	       cn.local_name = buf.toString() + "." + cn.local_name;
-	    else
-	       cn.local_name = buf.toString() + cn.local_name;
-	    cn.setDisplayName();
-	    cn.parent_node = parent_node;
-	    parent_node.child_nodes.set(idx,cn);
-	    cn.collapseSingletons();
-	    return;
-	  }
+         Branch cn = this;
+         StringBuffer buf = null;
+         while (cn.child_nodes.size() == 1) {
+            BassTreeImpl tn = cn.getChildAt(0);
+            if (tn.isLeaf()) break;
+            if (tn.getBranchType() == BranchNodeType.CLASS) break;
+            if (tn.getBranchType() == BranchNodeType.THROWABLE) break;
+            if (tn.getBranchType() == BranchNodeType.INTERFACE) break;
+            if (tn.getBranchType() == BranchNodeType.ENUM) break;
+            if (tn.getBranchType() == BranchNodeType.METHOD) break;
+            if (buf == null) {
+               buf = new StringBuffer();
+               buf.append(cn.getLocalName());
+             }
+            else {
+               if (buf.length() > 0 && buf.charAt(buf.length()-1) != ':') buf.append(".");
+               buf.append(cn.getLocalName());
+             }
+            cn = (Branch) tn;
+          }
+         if (cn != this && buf != null) {
+            int idx = parent_node.getIndex(this);
+            if (buf.charAt(buf.length()-1) != ':')
+               cn.local_name = buf.toString() + "." + cn.local_name;
+            else
+               cn.local_name = buf.toString() + cn.local_name;
+            cn.setDisplayName();
+            cn.parent_node = parent_node;
+            parent_node.child_nodes.set(idx,cn);
+            cn.collapseSingletons();
+            return;
+          }
        }
       for (BassTreeImpl ti : child_nodes) {
-	 ti.collapseSingletons();
+         ti.collapseSingletons();
        }
     }
 
    @Override boolean removeEmptyNodes() {
       boolean chng = true;
       while (chng) {
-	 chng = false;
-	 for (BassTreeImpl ti : child_nodes) {
-	    if (ti.removeEmptyNodes()) {
-	       chng = true;
-	       break;
-	    }
-	 }
+         chng = false;
+         for (BassTreeImpl ti : child_nodes) {
+            if (ti.removeEmptyNodes()) {
+               chng = true;
+               break;
+            }
+         }
       }
 
       if (!isLeaf() && parent_node != null && getChildCount() == 0) {
-	 parent_node.child_nodes.remove(this);
-	 return true;
+         parent_node.child_nodes.remove(this);
+         return true;
       }
 
       return false;
@@ -798,19 +798,19 @@ private static class Branch extends BassTreeImpl {
    private void setDisplayName() {
       String dnm = local_name.replace(DOT_SUBSTITUTE,".");
       if (dnm.length() < 32) {
-	 display_name = dnm;
-	 return;
+         display_name = dnm;
+         return;
        }
       int idx2 = dnm.indexOf("#");
       if (idx2 > 0) {
-	 dnm = dnm.substring(idx2+1);
+         dnm = dnm.substring(idx2+1);
        }
       int idx1 = dnm.indexOf(":");
       if (idx1 >= 0) {
-	 String dnm1 = dnm.substring(0,idx1+1);
-	 if (local_name.equals(dnm1+orig_name)) display_name = local_name;
-	 else display_name = dnm1 + ".." + orig_name;
-	 display_name = display_name.replace(DOT_SUBSTITUTE,".");
+         String dnm1 = dnm.substring(0,idx1+1);
+         if (local_name.equals(dnm1+orig_name)) display_name = local_name;
+         else display_name = dnm1 + ".." + orig_name;
+         display_name = display_name.replace(DOT_SUBSTITUTE,".");
       }
       else display_name = ".." + orig_name;
     }
@@ -848,44 +848,44 @@ private static class Branch extends BassTreeImpl {
             String comps1 = comps[cidx];
             if (bt.getLocalName().equals(comps1)) {
                if (bt instanceof Branch) {
-        	  np = (Branch) bt;
-        	  cidx++;
-        	  break;
-        	}
+                  np = (Branch) bt;
+                  cidx++;
+                  break;
+                }
                else {
-        	  if (cidx == comps.length-1 && !force) return bt;
-        	  break;
-        	}
+                  if (cidx == comps.length-1 && !force) return bt;
+                  break;
+                }
              }
             else if (subsetName(bt.getLocalName(),comps1)) {
                String nm = comps[cidx];
                int fnd = -1;
                for (int i = cidx+1; i < comps.length; ++i) {
-        	  if (nm.endsWith(":")) nm += comps[i];
-        	  else nm += "." + comps[i];
-        	  if (bt.getLocalName().equals(nm)) {
-        	     np = (Branch) bt;
-        	     fnd = i;
-        	     break;
-        	   }
-        	}
+                  if (nm.endsWith(":")) nm += comps[i];
+                  else nm += "." + comps[i];
+                  if (bt.getLocalName().equals(nm)) {
+                     np = (Branch) bt;
+                     fnd = i;
+                     break;
+                   }
+                }
                if (fnd >= 0) {
-        	  cidx = fnd+1;
-        	  break;
-        	}
+                  cidx = fnd+1;
+                  break;
+                }
                // need to split the local name
                nm = comps[cidx];
                fnd = cidx;
                String nm1 = nm;
                for (int i = cidx+1; i < comps.length; ++i) {
-        	  if (nm.endsWith(":")) nm += comps[i];
-        	  else nm += "." + comps[i];
-        	  if (!subsetName(bt.getLocalName(),nm)) {
-        	     fnd = i;
-        	     break;
-        	   }
-        	  nm1 += "." + comps[i];
-        	}
+                  if (nm.endsWith(":")) nm += comps[i];
+                  else nm += "." + comps[i];
+                  if (!subsetName(bt.getLocalName(),nm)) {
+                     fnd = i;
+                     break;
+                   }
+                  nm1 += "." + comps[i];
+                }
                splitNode((Branch) bt,nm1);
                np = (Branch) bt;
                cidx = fnd;
@@ -977,8 +977,8 @@ private static class Branch extends BassTreeImpl {
       String txt = nm.getNameWithParameters();
       int idx = 0;
       for (BassTreeImpl bt : child_nodes) {
-	 if (txt.compareTo(bt.getLocalName()) <= 0) break;
-	 ++idx;
+         if (txt.compareTo(bt.getLocalName()) <= 0) break;
+         ++idx;
        }
       TreeLeaf tl = new TreeLeaf(nm,this);
       child_nodes.insertElementAt(tl,idx);
@@ -991,30 +991,30 @@ private static class Branch extends BassTreeImpl {
       List<Integer> rem = null;
       int idx = 0;
       for (BassTreeImpl bt : child_nodes) {
-	 if (bt.getLocalName().equals(bn.getDisplayName())) {
-	    if (rem == null) rem = new ArrayList<Integer>();
-	    rem.add(idx);
-	  }
-	 ++idx;
+         if (bt.getLocalName().equals(bn.getDisplayName())) {
+            if (rem == null) rem = new ArrayList<Integer>();
+            rem.add(idx);
+          }
+         ++idx;
        }
-      if (rem == null) return false;		// nothing changed;
+      if (rem == null) return false;            // nothing changed;
 
       int [] chng = new int[rem.size()];
       Object [] chld = new Object[rem.size()];
       int ct = 0;
       for (Integer iv : rem) {
-	 chng[ct++] = iv;
+         chng[ct++] = iv;
        }
       idx = 0;
       ct = 0;
       for (Iterator<BassTreeImpl> it = child_nodes.iterator(); it.hasNext(); ) {
-	 BassTreeImpl tn = it.next();
-	 if (ct < chng.length && idx == chng[ct]) {
-	    it.remove();
-	    chld[ct] = tn;
-	    ++ct;
-	  }
-	 ++idx;
+         BassTreeImpl tn = it.next();
+         if (ct < chng.length && idx == chng[ct]) {
+            it.remove();
+            chld[ct] = tn;
+            ++ct;
+          }
+         ++idx;
        }
 
       return true;
@@ -1023,24 +1023,24 @@ private static class Branch extends BassTreeImpl {
    @Override int getMaxCount() {
       int ct = child_nodes.size();
       for (BassTreeImpl bti : child_nodes) {
-	 ct = Math.max(ct,bti.getMaxCount());
+         ct = Math.max(ct,bti.getMaxCount());
        }
       return ct;
     }
 
    @Override public int getLeafCount() {
       if (leaf_count < 0) {
-	 leaf_count = 0;
-	 for (BassTreeImpl bti : child_nodes) leaf_count += bti.getLeafCount();
+         leaf_count = 0;
+         for (BassTreeImpl bti : child_nodes) leaf_count += bti.getLeafCount();
        }
       return leaf_count;
     }
 
-}	// end of inner class Branch
+}       // end of inner class Branch
 
 
 
-}	// end of class BassTreeModelBase
+}       // end of class BassTreeModelBase
 
 
 

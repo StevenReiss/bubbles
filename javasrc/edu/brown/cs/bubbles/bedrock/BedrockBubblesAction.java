@@ -511,7 +511,7 @@ private class Downloader extends Thread {
        }
     }
    
-}	// end of inner class Downloader
+}       // end of inner class Downloader
 
 
 }       // end of class BedrockBubblesAction

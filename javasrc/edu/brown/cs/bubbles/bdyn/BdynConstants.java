@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynConstants.java						*/
-/*										*/
-/*	Constants for dynamic visualizations in Bubbles 			*/
-/*										*/
+/*                                                                              */
+/*              BdynConstants.java                                              */
+/*                                                                              */
+/*      Constants for dynamic visualizations in Bubbles                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -42,9 +42,9 @@ public interface BdynConstants extends BumpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Trie Node access							*/
-/*										*/
+/*                                                                              */
+/*      Trie Node access                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 interface TrieNode {
@@ -68,9 +68,9 @@ interface TrieNode {
 
 
 /********************************************************************************/
-/*										*/
-/*     Array elements for counts						*/
-/*										*/
+/*                                                                              */
+/*     Array elements for counts                                                */
+/*                                                                              */
 /********************************************************************************/
 
 int OP_RUN = 0;
@@ -81,15 +81,15 @@ int OP_COUNT = 3;
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback data								*/
-/*										*/
+/*                                                                              */
+/*      Callback data                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 enum CallbackType {
    UNKNOWN,
-   EVENT,		// event handler
-   CONSTRUCTOR, 	// constructor for event recognition
+   EVENT,               // event handler
+   CONSTRUCTOR,         // constructor for event recognition
    KEY,                 // key routine (significant time spent here
    MAIN,                // main program
 };
@@ -117,9 +117,9 @@ interface BdynCallback {
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph data								*/
-/*										*/
+/*                                                                              */
+/*      Graph data                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 interface BdynEntry {
@@ -177,16 +177,16 @@ interface BdynOptions {
 
 
 /********************************************************************************/
-/*										*/
-/*	Files									*/
-/*										*/
+/*                                                                              */
+/*      Files                                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 String BDYN_CALLBACK_FILE = "callbacks.xml";
 String BDYN_BANDAID_FILE = "tracedata.bandaid";
 
 
-}	// end of interface BdynConstants
+}       // end of interface BdynConstants
 
 
 

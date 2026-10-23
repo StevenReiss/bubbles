@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconOverviewClass.java						*/
-/*										*/
-/*	Bubbles Environment Context Viewer class information for overview	*/
-/*										*/
+/*                                                                              */
+/*              BconOverviewClass.java                                          */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer class information for overview       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,27 +57,27 @@ class BconOverviewClass implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String			for_class;
-private File			for_file;
+private String                  for_class;
+private File                    for_file;
 private BaleConstants.BaleFileOverview bale_file;
-private BumpClient		bump_client;
-private boolean 		lines_valid;
-private Collection<BconRegion>	region_set;
-private ArrayList<BconLine>	line_set;
-private boolean 		is_vertical;
+private BumpClient              bump_client;
+private boolean                 lines_valid;
+private Collection<BconRegion>  region_set;
+private ArrayList<BconLine>     line_set;
+private boolean                 is_vertical;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconOverviewClass(BconOverviewPanel pnl,String proj,File f,String cls,boolean vert)
@@ -102,13 +102,13 @@ BconOverviewClass(BconOverviewPanel pnl,String proj,File f,String cls,boolean ve
    for (BudaBubble bb : pnl.getActiveBubbles()) {
       File bf = bb.getContentFile();
       if (bf == for_file) {
-	 Collection<BconRegion> rgns = findRegions(bb.getContentType(),bb.getContentName());
-	 if (rgns != null) {
-	    for (BconRegion br : rgns) {
-	       br.setHasBubble(true);
-	       if (bb.hasFocus()) br.setHasFocus(true);
-	     }
-	  }
+         Collection<BconRegion> rgns = findRegions(bb.getContentType(),bb.getContentName());
+         if (rgns != null) {
+            for (BconRegion br : rgns) {
+               br.setHasBubble(true);
+               if (bb.hasFocus()) br.setHasFocus(true);
+             }
+          }
        }
     }
 
@@ -119,9 +119,9 @@ BconOverviewClass(BconOverviewPanel pnl,String proj,File f,String cls,boolean ve
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BconRegion findRegion(BudaConstants.BudaContentNameType typ,String name)
@@ -131,24 +131,24 @@ BconRegion findRegion(BudaConstants.BudaContentNameType typ,String name)
    for (BconRegion br : region_set) {
       boolean ok = true;
       switch (br.getRegionType()) {
-	 case REGION_UNKNOWN :
-	    ok = false;
-	    break;
-	 case REGION_CLASS :
-	    ok = (typ == BudaConstants.BudaContentNameType.CLASS);
-	    break;
-	 case REGION_FIELD :
-	    ok = (typ == BudaConstants.BudaContentNameType.FIELD);
-	    break;
-	 case REGION_CONSTRUCTOR :
-	 case REGION_METHOD :
-	    ok = (typ == BudaConstants.BudaContentNameType.METHOD);
-	    break;
-	 case REGION_INITIALIZER :
-	    ok = (typ == BudaConstants.BudaContentNameType.CLASS_ITEM);
-	    break;
-	 default:
-	    break;
+         case REGION_UNKNOWN :
+            ok = false;
+            break;
+         case REGION_CLASS :
+            ok = (typ == BudaConstants.BudaContentNameType.CLASS);
+            break;
+         case REGION_FIELD :
+            ok = (typ == BudaConstants.BudaContentNameType.FIELD);
+            break;
+         case REGION_CONSTRUCTOR :
+         case REGION_METHOD :
+            ok = (typ == BudaConstants.BudaContentNameType.METHOD);
+            break;
+         case REGION_INITIALIZER :
+            ok = (typ == BudaConstants.BudaContentNameType.CLASS_ITEM);
+            break;
+         default:
+            break;
        }
       if (!ok) continue;
 
@@ -175,41 +175,41 @@ Collection<BconRegion> findRegions(BudaConstants.BudaContentNameType typ,String 
       boolean outer = false;
       boolean nameok = false;
       switch (br.getRegionType()) {
-	 case REGION_UNKNOWN :
-	    ok = false;
-	    break;
-	 case REGION_CLASS :
-	    ok = (typ == BudaConstants.BudaContentNameType.CLASS);
-	    break;
-	 case REGION_FIELD :
-	    ok = (typ == BudaConstants.BudaContentNameType.FIELD);
-	    if (typ == BudaConstants.BudaContentNameType.CLASS_ITEM && name.endsWith("< FIELDS >")) {
-	       ok = true;
-	       nameok = true;
-	     }
-	    break;
-	 case REGION_CONSTRUCTOR :
-	 case REGION_METHOD :
-	    ok = (typ == BudaConstants.BudaContentNameType.METHOD);
-	    break;
-	 case REGION_INITIALIZER :
-	    ok = (typ == BudaConstants.BudaContentNameType.CLASS_ITEM);
-	    break;
-	 default:
-	    break;
+         case REGION_UNKNOWN :
+            ok = false;
+            break;
+         case REGION_CLASS :
+            ok = (typ == BudaConstants.BudaContentNameType.CLASS);
+            break;
+         case REGION_FIELD :
+            ok = (typ == BudaConstants.BudaContentNameType.FIELD);
+            if (typ == BudaConstants.BudaContentNameType.CLASS_ITEM && name.endsWith("< FIELDS >")) {
+               ok = true;
+               nameok = true;
+             }
+            break;
+         case REGION_CONSTRUCTOR :
+         case REGION_METHOD :
+            ok = (typ == BudaConstants.BudaContentNameType.METHOD);
+            break;
+         case REGION_INITIALIZER :
+            ok = (typ == BudaConstants.BudaContentNameType.CLASS_ITEM);
+            break;
+         default:
+            break;
        }
 
       switch (typ) {
-	 case CLASS :
-	    ok = true;
-	    outer = true;
-	    break;
-	 case FILE :
-	    ok = true;
-	    nameok = true;
-	    break;
-	 default:
-	    break;
+         case CLASS :
+            ok = true;
+            outer = true;
+            break;
+         case FILE :
+            ok = true;
+            nameok = true;
+            break;
+         default:
+            break;
        }
 
       if (!ok) continue;
@@ -236,15 +236,15 @@ int getLineCount()
 
 
 
-String getClassName()			{ return for_class; }
+String getClassName()                   { return for_class; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void addAllRegions(String proj,String cls)
@@ -252,11 +252,11 @@ private void addAllRegions(String proj,String cls)
    List<BumpLocation> locs = bump_client.findAllDeclarations(proj,null,cls,false);
    if (locs != null) {
       for (BumpLocation bl : locs) {
-	 BconRegion br = new BconRegionLocation(bale_file,bl);
-	 if (br.getRegionType() != RegionType.REGION_UNKNOWN) region_set.add(br);
-	 if (br.getRegionType() == RegionType.REGION_CLASS) {
-	    addAllRegions(proj,br.getRegionName());
-	  }
+         BconRegion br = new BconRegionLocation(bale_file,bl);
+         if (br.getRegionType() != RegionType.REGION_UNKNOWN) region_set.add(br);
+         if (br.getRegionType() == RegionType.REGION_CLASS) {
+            addAllRegions(proj,br.getRegionName());
+          }
        }
     }
 }
@@ -264,9 +264,9 @@ private void addAllRegions(String proj,String cls)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void handleMousePress(MouseEvent e,int ln)
@@ -283,17 +283,17 @@ void handleMousePress(MouseEvent e,int ln)
 private BconRegion findRegionForLine(int ln)
 {
    //TODO: if the regions are ordered by start line, then a start line > ln
-   //	can end the search
+   //   can end the search
 
    BconRegion rgn = null;
    int delta = -1;
    for (BconRegion br : region_set) {
       if (ln >= br.getStartLine() && ln <= br.getEndLine()) {
-	 int d0 = br.getEndLine() - br.getStartLine();
-	 if (rgn == null || d0 < delta) {
-	    rgn = br;
-	    delta = d0;
-	  }
+         int d0 = br.getEndLine() - br.getStartLine();
+         if (rgn == null || d0 < delta) {
+            rgn = br;
+            delta = d0;
+          }
        }
     }
 
@@ -304,9 +304,9 @@ private BconRegion findRegionForLine(int ln)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set up internal structures					*/
-/*										*/
+/*                                                                              */
+/*      Methods to set up internal structures                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupLines()
@@ -329,23 +329,23 @@ private void setupLines()
    for (int i = 0; i < ln; ++i) {
       char c = s.charAt(i);
       if (c == '\n') {
-	 if (lt == LineType.LINE_UNKNOWN) lt = LineType.LINE_EMPTY;
-	 line_set.add(new BconLine(lt,pos));
-	 pos = 0;
-	 lt = LineType.LINE_UNKNOWN;
+         if (lt == LineType.LINE_UNKNOWN) lt = LineType.LINE_EMPTY;
+         line_set.add(new BconLine(lt,pos));
+         pos = 0;
+         lt = LineType.LINE_UNKNOWN;
        }
       else if (c == '\t') {
-	 pos = (pos + 8) & ~7;
+         pos = (pos + 8) & ~7;
        }
       else if (Character.isWhitespace(c)) pos += 1;
       else {
-	 if (lt == LineType.LINE_UNKNOWN) {
-	    if (c == '/' && (s.charAt(i+1) == '/' || s.charAt(i+1) == '*')) {
-	       lt = LineType.LINE_COMMENT;
-	     }
-	    else lt = LineType.LINE_CODE;
-	  }
-	 ++pos;
+         if (lt == LineType.LINE_UNKNOWN) {
+            if (c == '/' && (s.charAt(i+1) == '/' || s.charAt(i+1) == '*')) {
+               lt = LineType.LINE_COMMENT;
+             }
+            else lt = LineType.LINE_CODE;
+          }
+         ++pos;
        }
     }
 
@@ -356,9 +356,9 @@ private void setupLines()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void paint(Graphics2D g,double x0,double y0,double wd,double ht)
@@ -386,19 +386,19 @@ void paint(Graphics2D g,double x0,double y0,double wd,double ht)
       double len = ld.getLineLength();
       len /= 80.0;
       if (len > 0) {
-	 if (len > 1) len = 1;
-	 setLine(r,idx,len,x0,y0,wd,ht);
-	 switch (ld.getLineType()) {
-	    case LINE_UNKNOWN :
-	    case LINE_EMPTY :
-	    case LINE_CODE :
-	       g.setColor(codecolor);
-	       break;
-	    case LINE_COMMENT :
-	       g.setColor(cmmtcolor);
-	       break;
-	  }
-	 g.fill(r);
+         if (len > 1) len = 1;
+         setLine(r,idx,len,x0,y0,wd,ht);
+         switch (ld.getLineType()) {
+            case LINE_UNKNOWN :
+            case LINE_EMPTY :
+            case LINE_CODE :
+               g.setColor(codecolor);
+               break;
+            case LINE_COMMENT :
+               g.setColor(cmmtcolor);
+               break;
+          }
+         g.fill(r);
        }
       ++idx;
     }
@@ -448,9 +448,9 @@ private void setLine(Rectangle2D r,int line,double length,double x0,double y0,do
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 String computeToolTip(int ln0,int ln1)
@@ -483,9 +483,9 @@ String computeToolTip(int ln0,int ln1)
 
 
 /********************************************************************************/
-/*										*/
-/*	File listener								*/
-/*										*/
+/*                                                                              */
+/*      File listener                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class FileListener implements DocumentListener {
@@ -502,12 +502,12 @@ private static final class FileListener implements DocumentListener {
       // update data
     }
 
-}	// end of inner class FileListener
+}       // end of inner class FileListener
 
 
 
 
-}	// end of class BconOverviewClass
+}       // end of class BconOverviewClass
 
 
 

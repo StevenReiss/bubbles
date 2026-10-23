@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassImportProjectAction.java							*/
-/*										*/
-/*	Action for importing an external project				*/
-/*										*/
+/*                                                                              */
+/*              BassImportProjectAction.java                                                    */
+/*                                                                              */
+/*      Action for importing an external project                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Andrew Kovacs			*/
+/*      Copyright 2011 Brown University -- Andrew Kovacs                        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 package edu.brown.cs.bubbles.bass;
@@ -60,21 +60,21 @@ class BassImportProjectAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1L;
 
-private File	      proj_dir;
-private Component	 the_source;
+private File          proj_dir;
+private Component        the_source;
 
 
 /********************************************************************************/
-/*										*/
-/*     Constructors								*/
-/*										*/
+/*                                                                              */
+/*     Constructors                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 BassImportProjectAction()
@@ -84,9 +84,9 @@ BassImportProjectAction()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -160,19 +160,19 @@ private class WorkingSetConfirmDialog extends BudaBubble implements ActionListen
          add(noB);
        }
 
-    }	    // end of inner class ConfirmContentPane
+    }       // end of inner class ConfirmContentPane
 
 
 
    @Override public void actionPerformed(ActionEvent e)
       {
       if (e.getActionCommand().equals("Yes")) {
-	 loadWorkingSets();
+         loadWorkingSets();
        }
       this.setVisible(false);
     }
 
-}	// end of inner class WorkingSetConfirmDialog
+}       // end of inner class WorkingSetConfirmDialog
 
 
 
@@ -184,12 +184,12 @@ private void loadWorkingSets()
    for (String filename : wsdir.list()) {
       File wsf = fsv.createFileObject(wsdir,filename);
       if (wsf.getName().contains(".") &&
-	     wsf.getName().substring(wsf.getName().lastIndexOf('.')).equals(".xml")) {
-	 Element xml = IvyXml.loadXmlFromFile(wsf);
-	 fixFilePaths(xml, proj_dir.getName());
+             wsf.getName().substring(wsf.getName().lastIndexOf('.')).equals(".xml")) {
+         Element xml = IvyXml.loadXmlFromFile(wsf);
+         fixFilePaths(xml, proj_dir.getName());
 
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
-	 if (bba != null) bba.addWorkingSet(xml);
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
+         if (bba != null) bba.addWorkingSet(xml);
        }
     }
 }
@@ -209,7 +209,7 @@ private void copyR(File src,File dest) throws IOException
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       if (!dest.exists()) dest.mkdir();
       for (String file : src.list()) {
-	 copyR(fsv.createFileObject(src,file), fsv.createFileObject(dest,file));
+         copyR(fsv.createFileObject(src,file), fsv.createFileObject(dest,file));
        }
     }
    else {
@@ -219,7 +219,7 @@ private void copyR(File src,File dest) throws IOException
       byte[] buf = new byte[1024];
       int len;
       while ((len = in.read(buf)) > 0) {
-	 out.write(buf, 0, len);
+         out.write(buf, 0, len);
        }
 
       in.close();
@@ -236,14 +236,14 @@ private void fixFilePaths(Element xml,String proj)
    String attr = xml.getAttribute("FILE");
    if (attr != null && attr.contains(proj)) {
       xml.setAttribute("FILE", BoardSetup.getSetup().getDefaultWorkspace() +
-			  File.separator + attr.substring(attr.indexOf(proj)));
+                          File.separator + attr.substring(attr.indexOf(proj)));
     }
 
    NodeList nl = xml.getChildNodes();
    for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
       if (n instanceof Element) {
-	 fixFilePaths((Element) n, proj);
+         fixFilePaths((Element) n, proj);
        }
     }
 }

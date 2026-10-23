@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugStackFrame.java					*/
-/*										*/
-/*	Representation of a javascript stack frame				*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugStackFrame.java                                      */
+/*                                                                              */
+/*      Representation of a javascript stack frame                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -38,17 +38,17 @@ class NobaseDebugStackFrame implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	frame_id;
+private String  frame_id;
 private int     frame_index;
-private String	frame_function;
-private String	frame_file;
-private int	source_line;
-private int	source_column;
+private String  frame_function;
+private String  frame_file;
+private int     source_line;
+private int     source_column;
 private List<ScopeData> frame_scopes;
 private NobaseDebugRefMap ref_map;
 
@@ -56,9 +56,9 @@ private NobaseDebugRefMap ref_map;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseDebugStackFrame(JSONObject json,NobaseDebugRefMap refmap,int idx)
@@ -84,19 +84,19 @@ NobaseDebugStackFrame(JSONObject json,NobaseDebugRefMap refmap,int idx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-int getIndex()				{ return frame_index; }
+int getIndex()                          { return frame_index; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw,int ctr,int lvl)
@@ -184,7 +184,7 @@ private static class ScopeData {
 
 
    
-}	// end of class NobaseDebugStackFrame
+}       // end of class NobaseDebugStackFrame
 
 
 

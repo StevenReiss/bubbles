@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleEditorBubble.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor editor bubble				*/
-/*										*/
+/*                                                                              */
+/*              BaleEditorBubble.java                                           */
+/*                                                                              */
+/*      Bubble Annotated Language Editor editor bubble                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -74,9 +74,9 @@ class BaleEditorBubble extends BudaBubble implements BaleConstants, BudaConstant
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static boolean callpath_bkg = true;
@@ -86,9 +86,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors and destructors						*/
-/*										*/
+/*                                                                              */
+/*      Constructors and destructors                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleEditorBubble(BaleFragmentEditor bfe)
@@ -102,44 +102,44 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
    switch (bfe.getFragmentType()) {
       case NONE :
-	 break;
+         break;
       case METHOD :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.method",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.method",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.method",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.method",maxht);
+         break;
       case CLASS :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.class",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.class",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.class",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.class",maxht);
+         break;
       case FILE :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.file",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.file",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.file",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.file",maxht);
+         break;
       case FIELDS :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.fields",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.fields",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.fields",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.fields",maxht);
+         break;
       case STATICS :
       case IMPORTS :
       case EXPORTS :
       case CODE :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.statics",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.statics",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.statics",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.statics",maxht);
+         break;
       case MAIN :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.main",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.main",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.main",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.main",maxht);
+         break;
       case HEADER :
-	 maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.prefix",maxwd);
-	 maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.prefix",maxht);
-	 break;
+         maxwd = BALE_PROPERTIES.getIntOption("Bale.initial.width.prefix",maxwd);
+         maxht = BALE_PROPERTIES.getIntOption("Bale.initial.height.prefix",maxht);
+         break;
       case ROFILE:
-	 break;
+         break;
       case ROMETHOD:
-	 break;
+         break;
       default:
-	 break;
+         break;
     }
    int maxbht = Math.max(maxht,BALE_MAX_INITIAL_BUBBLE_HEIGHT);
 
@@ -172,12 +172,12 @@ BaleEditorBubble(BaleFragmentEditor bfe)
       d.height += BALE_DELTA_INITIAL_HEIGHT;
 
       if (d.width > maxwd) {
-	 d.width = maxwd;
-	 d.height = maxht;
+         d.width = maxwd;
+         d.height = maxht;
        }
       else if (d.height > maxht) {
-	 d.height = maxht;
-	 d.width += 20;
+         d.height = maxht;
+         d.width += 20;
        }
 
       d.width -= BALE_ANNOT_WIDTH;
@@ -185,7 +185,7 @@ BaleEditorBubble(BaleFragmentEditor bfe)
       bfe.setInitialSize(d);
       // TODO: This call synch(getTreeLock()) which can block
       Dimension d1 = bfe.getPreferredSize();
-      d1.height += 6;	// leave space for insets?
+      d1.height += 6;   // leave space for insets?
       if (d1.height > d.height) d1.height = d.height;
 
       setContentPane(bfe,bfe.getEditor());
@@ -196,8 +196,8 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
       d = getPreferredSize();
       if (d.height > maxbht) {
-	 d.height = maxbht;
-	 setSize(d);
+         d.height = maxbht;
+         setSize(d);
       }
 
       setInteriorColor(BoardColors.getColor("Bale.EditorBubbleInterior"));
@@ -225,9 +225,9 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getContentProject()
@@ -265,16 +265,16 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
    switch (bfe.getFragmentType()) {
       case NONE :
-	 break;
+         break;
       case METHOD :
-	 nty = BudaContentNameType.METHOD;
-	 break;
+         nty = BudaContentNameType.METHOD;
+         break;
       case CLASS :
-	 nty = BudaContentNameType.CLASS;
-	 break;
+         nty = BudaContentNameType.CLASS;
+         break;
       case FILE :
-	 nty = BudaContentNameType.FILE;
-	 break;
+         nty = BudaContentNameType.FILE;
+         break;
       case FIELDS :
       case STATICS :
       case MAIN :
@@ -282,14 +282,14 @@ BaleEditorBubble(BaleFragmentEditor bfe)
       case IMPORTS :
       case EXPORTS :
       case CODE :
-	 nty = BudaContentNameType.CLASS_ITEM;
-	 break;
+         nty = BudaContentNameType.CLASS_ITEM;
+         break;
       case ROFILE:
-	 break;
+         break;
       case ROMETHOD:
-	 break;
+         break;
       default:
-	 break;
+         break;
     }
 
    return nty;
@@ -307,9 +307,9 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle context menu							*/
-/*										*/
+/*                                                                              */
+/*      Handle context menu                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -331,9 +331,9 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
 
 /********************************************************************************/
-/*										*/
-/*	User and automatic requests						*/
-/*										*/
+/*                                                                              */
+/*      User and automatic requests                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean handleQuitRequest()
@@ -346,9 +346,9 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle Bubble Connections						*/
-/*										*/
+/*                                                                              */
+/*      Handle Bubble Connections                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean connectTo(BudaBubble bb,MouseEvent evt)
@@ -360,7 +360,7 @@ BaleEditorBubble(BaleFragmentEditor bfe)
    BaleFragmentEditor bfe2 = (BaleFragmentEditor) bb.getContentPane();
 
    if (bfe1.getFragmentType() != BaleFragmentType.METHOD ||
-	  bfe2.getFragmentType() != BaleFragmentType.METHOD) return false;
+          bfe2.getFragmentType() != BaleFragmentType.METHOD) return false;
 
    BaleDocument bd1 = bfe1.getDocument();
    BaleDocument bd2 = bfe2.getDocument();
@@ -397,43 +397,43 @@ private class CallPathCompute implements Runnable {
 
    @Override public void run() {
       if (location_set == null) {
-	 BumpClient bc = BumpClient.getBump();
-	 location_set = bc.getCallPath(project_name,source_name,target_name);
-	 if (location_set != null) {
-	    // add the bubbles in the swing thread
-	    SwingUtilities.invokeLater(this);
-	  }
+         BumpClient bc = BumpClient.getBump();
+         location_set = bc.getCallPath(project_name,source_name,target_name);
+         if (location_set != null) {
+            // add the bubbles in the swing thread
+            SwingUtilities.invokeLater(this);
+          }
        }
       else {
-	 int ct = location_set.size();
-	 BaleEditorBubble b0 = BaleEditorBubble.this;
-	 BaleFactory bf = BaleFactory.getFactory();
-	 for (int i = 1; b0 != null && i < ct-1; ++i) {
-	    BumpLocation bloc = location_set.get(i);
-	    Position spos = getPosition(b0,location_set.get(i-1));
-	    b0	= (BaleEditorBubble)
-	       bf.createLocationEditorBubble(b0,spos,null,false,bloc,true,true,true);
-	  }
-	 if (b0 != null) {
-	    Position spos = getPosition(b0,location_set.get(ct-2));
-	    BudaRoot root = BudaRoot.findBudaRoot(b0);
-	    BudaConstants.LinkPort port0;
-	    if (spos == null) port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
-	    else port0 = new BaleLinePort(b0,spos,"Call Path Link");
-	    BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
-	    BudaBubbleLink lnk = new BudaBubbleLink(b0,port0,target_bubble,port1);
-	    if (root != null) root.addLink(lnk);
-	  }
+         int ct = location_set.size();
+         BaleEditorBubble b0 = BaleEditorBubble.this;
+         BaleFactory bf = BaleFactory.getFactory();
+         for (int i = 1; b0 != null && i < ct-1; ++i) {
+            BumpLocation bloc = location_set.get(i);
+            Position spos = getPosition(b0,location_set.get(i-1));
+            b0  = (BaleEditorBubble)
+               bf.createLocationEditorBubble(b0,spos,null,false,bloc,true,true,true);
+          }
+         if (b0 != null) {
+            Position spos = getPosition(b0,location_set.get(ct-2));
+            BudaRoot root = BudaRoot.findBudaRoot(b0);
+            BudaConstants.LinkPort port0;
+            if (spos == null) port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
+            else port0 = new BaleLinePort(b0,spos,"Call Path Link");
+            BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
+            BudaBubbleLink lnk = new BudaBubbleLink(b0,port0,target_bubble,port1);
+            if (root != null) root.addLink(lnk);
+          }
        }
     }
 
    private Position getPosition(BaleEditorBubble b0,BumpLocation sloc) {
       Position spos = null;
       try {
-	 BaleFragmentEditor bfe = (BaleFragmentEditor) b0.getContentPane();
-	 BaleDocument bfd = bfe.getDocument();
-	 int offset = bfd.mapOffsetToJava(sloc.getOffset());
-	 if (offset >= 0) spos = bfd.createPosition(offset);
+         BaleFragmentEditor bfe = (BaleFragmentEditor) b0.getContentPane();
+         BaleDocument bfd = bfe.getDocument();
+         int offset = bfd.mapOffsetToJava(sloc.getOffset());
+         if (offset >= 0) spos = bfd.createPosition(offset);
        }
       catch (BadLocationException e) { }
       return spos;
@@ -443,7 +443,7 @@ private class CallPathCompute implements Runnable {
       return "BALE_CallPathCompute_" + source_name + "_" + target_name;
     }
 
-}	// end of inner class CallPathCompute
+}       // end of inner class CallPathCompute
 
 
 
@@ -459,19 +459,19 @@ private final class EditorBubbleListener extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       if (getContentPane() != null) {
-	 ((BaleFragmentEditor) getContentPane()).relocateFindBar();
+         ((BaleFragmentEditor) getContentPane()).relocateFindBar();
        }
     }
 
-}	// end of inner class EditorBubbleListener
+}       // end of inner class EditorBubbleListener
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Preview method								*/
-/*										*/
+/*                                                                              */
+/*      Preview method                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void createPreview(BudaBubble bb, int xpos, int ypos)
@@ -497,9 +497,9 @@ private void createPreview(BudaBubble bb, int xpos, int ypos)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hoverer 								*/
-/*										*/
+/*                                                                              */
+/*      Hoverer                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class Hoverer extends BudaHover {
@@ -534,21 +534,21 @@ private class Hoverer extends BudaHover {
    
    @Override public void endHover(MouseEvent e) {
       if (preview_bubble != null){
-	 preview_bubble.setVisible(false);
-	 preview_bubble.disposeBubble();
-	 preview_bubble = null;
+         preview_bubble.setVisible(false);
+         preview_bubble.disposeBubble();
+         preview_bubble = null;
       }
     }
 
-}	// end of inner class Hoverer
+}       // end of inner class Hoverer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Metrics handling							*/
-/*										*/
+/*                                                                              */
+/*      Metrics handling                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void dumpInitialMetrics()
@@ -592,7 +592,7 @@ static void noteElision(Component c)
 
 
 
-}	// end of class BaleEditorBubble
+}       // end of class BaleEditorBubble
 
 
 

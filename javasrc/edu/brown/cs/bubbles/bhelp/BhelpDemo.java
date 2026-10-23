@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BhelpDemo.java							*/
-/*										*/
-/*	Demonstration root class for bubbles help demonstrations		*/
-/*										*/
+/*                                                                              */
+/*              BhelpDemo.java                                                  */
+/*                                                                              */
+/*      Demonstration root class for bubbles help demonstrations                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2012 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2012 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2012, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2012, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,16 +43,16 @@ class BhelpDemo implements BhelpConstants, BudaConstants.BudaDemonstration
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		        demo_name;
+private String                  demo_name;
 private List<BhelpAction>       help_actions;
-private boolean 	        demo_stopped;
-private BhelpContext	        demo_context;
-private boolean 	        allow_hovers;
+private boolean                 demo_stopped;
+private BhelpContext            demo_context;
+private boolean                 allow_hovers;
 
 
 private static CurrentDemo      current_demo = new CurrentDemo();
@@ -60,9 +60,9 @@ private static CurrentDemo      current_demo = new CurrentDemo();
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BhelpDemo(Element xml)
@@ -82,21 +82,21 @@ BhelpDemo(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()			{ return demo_name; }
+String getName()                        { return demo_name; }
 
 
 @Override public void stopDemonstration()
 {
    synchronized (current_demo) {
       if (current_demo.getDemo() != null && !demo_stopped) {
-	 BoardLog.logD("BHELP","STOPPING DEMO");
-	 demo_stopped = true;
-	 demo_context.setStopped();
+         BoardLog.logD("BHELP","STOPPING DEMO");
+         demo_stopped = true;
+         demo_context.setStopped();
        }
     }
 }
@@ -104,9 +104,9 @@ String getName()			{ return demo_name; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Execution methods							*/
-/*										*/
+/*                                                                              */
+/*      Execution methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void executeDemo(BudaBubbleArea bba,boolean silent)
@@ -115,7 +115,7 @@ void executeDemo(BudaBubbleArea bba,boolean silent)
     demo_stopped = false;
 
     synchronized (current_demo) {
-       if (current_demo.getDemo() != null) return;	// can't do more than one\
+       if (current_demo.getDemo() != null) return;      // can't do more than one\
        current_demo.setDemo(this);
      }
     BudaRoot br = demo_context.getBudaRoot();
@@ -177,7 +177,7 @@ private class DemoRun implements Runnable {
        }
    }
 
-}	// end of inner class DemoRun
+}       // end of inner class DemoRun
 
 
 
@@ -203,7 +203,7 @@ private static class CurrentDemo {
    
 }       // end of CurrentDemo
 
-}	// end of class BhelpDemo
+}       // end of class BhelpDemo
 
 
 

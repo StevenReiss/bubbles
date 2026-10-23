@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpClientJava.java						*/
-/*										*/
-/*	BUblles Mint Partnership main class for using Eclipse/Java		*/
-/*										*/
+/*                                                                              */
+/*              BumpClientJava.java                                             */
+/*                                                                              */
+/*      BUblles Mint Partnership main class for using Eclipse/Java              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko	*/
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -36,11 +36,11 @@ import javax.swing.JOptionPane;
 
 
 /**
- *	This class provides an interface between Code Bubbles and the back-end
- *	IDE.  This particular implementation works for ECLIPSE.
+ *      This class provides an interface between Code Bubbles and the back-end
+ *      IDE.  This particular implementation works for ECLIPSE.
  *
- *	At some point, this should be converted into an interface that can then
- *	be implemented by an appropriate class for each back end IDE.
+ *      At some point, this should be converted into an interface that can then
+ *      be implemented by an appropriate class for each back end IDE.
  *
  **/
 
@@ -49,16 +49,16 @@ abstract class BumpClientJava extends BumpClient
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpClientJava()
@@ -77,18 +77,18 @@ protected boolean checkIfRunning()
    for ( ; ; ) {
       String r = getStringReply("PING",null,null,null,60000);
       if (r != null && r.startsWith("<RESULT>")) {
-	 r = r.substring(8);
-	 int idx = r.indexOf("<");
-	 if (idx >= 0) r = r.substring(0,idx);
+         r = r.substring(8);
+         int idx = r.indexOf("<");
+         if (idx >= 0) r = r.substring(0,idx);
        }
-      if (r == null) break;		// nothing there
+      if (r == null) break;             // nothing there
       if (r.equals("EXIT") || r.equals("UNSET")) {
-	 BoardLog.logX("BUMP","Eclipse caught during exit " + r);
-	 // Eclipse is exiting; wait for that and try again
-	 try {
-	    Thread.sleep(3000);
-	  }
-	 catch (InterruptedException e) { }
+         BoardLog.logX("BUMP","Eclipse caught during exit " + r);
+         // Eclipse is exiting; wait for that and try again
+         try {
+            Thread.sleep(3000);
+          }
+         catch (InterruptedException e) { }
        }
       else return true;
     }
@@ -97,7 +97,7 @@ protected boolean checkIfRunning()
       BoardLog.logE("BUMP","Client mode with no backend IDE found");
       JOptionPane.showMessageDialog(null,
             "Server must be running and accessible before client can be run",
-				       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+                                       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
     }
    
@@ -107,15 +107,15 @@ protected boolean checkIfRunning()
 
 
 /********************************************************************************/
-/*										*/
-/*	Java Search queries							*/
-/*										*/
+/*                                                                              */
+/*      Java Search queries                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Find the loction of a method given the project and name.  If the name is
- *	ambiguous, mutliple locations may be returned.	The name can contain a
- *	parenthesized argument list, i.e. package.method(int,java.lang.String).
+ *      Find the loction of a method given the project and name.  If the name is
+ *      ambiguous, mutliple locations may be returned.  The name can contain a
+ *      parenthesized argument list, i.e. package.method(int,java.lang.String).
  **/
 
 @Override public List<BumpLocation> findMethod(String proj,String name,boolean system)
@@ -138,10 +138,10 @@ protected boolean checkIfRunning()
       int idx1 = nm0.lastIndexOf(".",idx0-1);
       String clsn = nm0.substring(idx1+1,idx0);
       if (mthd.equals(clsn) || mthd.equals("<init>")) {
-	 cnstr = true;
-	 nm0 = nm0.substring(0,idx0);
-	 if (idx2 > 0) nm0 += args;
-	 name = nm0;
+         cnstr = true;
+         nm0 = nm0.substring(0,idx0);
+         if (idx2 > 0) nm0 += args;
+         name = nm0;
        }
     }
 
@@ -154,18 +154,18 @@ protected boolean checkIfRunning()
 
    if (locs == null || locs.isEmpty()) {
       int x1 = name.indexOf('(');
-      if (cnstr && x1 >= 0) {				// check for nested constructor with extra argument
-	 String mthd = name.substring(0,x1);
-	 int x2 = mthd.lastIndexOf('.');
-	 if (x2 >= 0) {
-	    String pfx = name.substring(0,x2);
-	    if (args.startsWith("(" + pfx + ",") || args.startsWith("(" + pfx + ")")) {
-	       int ln = pfx.length();
-	       args = "(" + args.substring(ln+2);
-	       name = mthd + args;
-	       locs = findMethods(proj,name,false,true,cnstr,system);
-	    }
-	 }
+      if (cnstr && x1 >= 0) {                           // check for nested constructor with extra argument
+         String mthd = name.substring(0,x1);
+         int x2 = mthd.lastIndexOf('.');
+         if (x2 >= 0) {
+            String pfx = name.substring(0,x2);
+            if (args.startsWith("(" + pfx + ",") || args.startsWith("(" + pfx + ")")) {
+               int ln = pfx.length();
+               args = "(" + args.substring(ln+2);
+               name = mthd + args;
+               locs = findMethods(proj,name,false,true,cnstr,system);
+            }
+         }
       }
    }
 
@@ -196,10 +196,10 @@ private String removeGenerics(String name)
       if ((insideargs || !atdot) && c == '<') ++lvl;
       else if (lvl > 0 && c == '>') --lvl;
       else if (lvl == 0) {
-	 buf.append(c);
-	 if (c == '(') insideargs = true;
-	 else if (c == '.') atdot = true;
-	 else atdot = false;
+         buf.append(c);
+         if (c == '(') insideargs = true;
+         else if (c == '.') atdot = true;
+         else atdot = false;
       }
     }
 
@@ -208,7 +208,7 @@ private String removeGenerics(String name)
 
 
 
-}	// end of class BumpClientJava
+}       // end of class BumpClientJava
 
 
 

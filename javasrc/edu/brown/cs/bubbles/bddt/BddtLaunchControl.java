@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtLaunchControl.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool process/launch controller	*/
-/*										*/
+/*                                                                              */
+/*              BddtLaunchControl.java                                          */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool process/launch controller     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -83,32 +83,32 @@ class BddtLaunchControl extends BudaBubble implements BddtConstants, BumpConstan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpClient		bump_client;
-private BumpLaunchConfig	launch_config;
-private BumpProcess		cur_process;
-private JLabel			state_label;
-private LaunchState		launch_state;
-private RunEventHandler 	event_handler;
-private EditorContextListener	editor_handler;
+private BumpClient              bump_client;
+private BumpLaunchConfig        launch_config;
+private BumpProcess             cur_process;
+private JLabel                  state_label;
+private LaunchState             launch_state;
+private RunEventHandler         event_handler;
+private EditorContextListener   editor_handler;
 private Map<BumpThread,ExecutionAnnot> exec_annots;
-private BumpStackFrame		active_frame;
-private FrameAnnot		frame_annot;
-private BddtBubbleManager	bubble_manager;
-private int			freeze_count;
+private BumpStackFrame          active_frame;
+private FrameAnnot              frame_annot;
+private BddtBubbleManager       bubble_manager;
+private int                     freeze_count;
 private SwingEventListenerList<BddtFrameListener> frame_listeners;
-private Action			stepinto_action;
-private Action			stepuser_action;
-private FileSystemView		file_system;
-private BddtPerfViewTable	perf_data;
-private BumpProcess		hotswap_fail;
+private Action                  stepinto_action;
+private Action                  stepuser_action;
+private FileSystemView          file_system;
+private BddtPerfViewTable       perf_data;
+private BumpProcess             hotswap_fail;
 private BumpThread              active_thread;
 
-private JPanel			launch_panel;
+private JPanel                  launch_panel;
 
 private static final long serialVersionUID = 1;
 
@@ -117,9 +117,9 @@ private static AtomicInteger expr_counter = new AtomicInteger(0);
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors/destructors						*/
-/*										*/
+/*                                                                              */
+/*      Constructors/destructors                                                */
+/*                                                                              */
 /********************************************************************************/
 
 BddtLaunchControl(BumpLaunchConfig blc)
@@ -172,14 +172,14 @@ BddtLaunchControl(BumpLaunchConfig blc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BumpProcess getProcess()			{ return cur_process; }
-String getProject()				{ return launch_config.getProject(); }
-BddtBubbleManager getBubbleManager()		{ return bubble_manager; }
+BumpProcess getProcess()                        { return cur_process; }
+String getProject()                             { return launch_config.getProject(); }
+BddtBubbleManager getBubbleManager()            { return bubble_manager; }
 
 BudaBubble createPerfBubble()
 {
@@ -188,7 +188,7 @@ BudaBubble createPerfBubble()
    return perf_data.createBubble();
 }
 
-@Override public boolean isRemovable()		{ return false; }
+@Override public boolean isRemovable()          { return false; }
 
 boolean matchProcess(BumpProcess p)
 {
@@ -257,9 +257,9 @@ boolean isThreadRelevant(String tid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set up the display panel					*/
-/*										*/
+/*                                                                              */
+/*      Methods to set up the display panel                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -345,9 +345,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Keystroke handling							*/
-/*										*/
+/*                                                                              */
+/*      Keystroke handling                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void setupKeys()
@@ -366,9 +366,9 @@ void setupKeys()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initial bubble management						*/
-/*										*/
+/*                                                                              */
+/*      Initial bubble management                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void setupInitialBubbles()
@@ -412,9 +412,9 @@ void setupInitialBubbles()
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handling							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handling                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -428,9 +428,9 @@ void setupInitialBubbles()
 
 
 /********************************************************************************/
-/*										*/
-/*	State maintenance							*/
-/*										*/
+/*                                                                              */
+/*      State maintenance                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void setLaunchState(LaunchState ls)
@@ -447,34 +447,34 @@ synchronized void setLaunchState(LaunchState ls,int rct,int tct)
    if (state_label != null) {
       String lbl = ls.toString();
       switch (launch_state) {
-	 default :
-	    break;
-	 case STARTING :
-	    lbl = "SAVE, COMPILE, & START";
-	    break;
-	 case PARTIAL_PAUSE :
-	    lbl += " (" + Integer.toString(tct-rct) + "/" + Integer.toString(tct) + ")";
-	    break;
+         default :
+            break;
+         case STARTING :
+            lbl = "SAVE, COMPILE, & START";
+            break;
+         case PARTIAL_PAUSE :
+            lbl += " (" + Integer.toString(tct-rct) + "/" + Integer.toString(tct) + ")";
+            break;
        }
       state_label.setText(lbl);
       switch (launch_state) {
-	 case PAUSED :
-	 case PARTIAL_PAUSE :
-	    if (prior == LaunchState.RUNNING) {
-	       if (isVisible() && !isShowing()) {
-		  Window w = null;
-		  for (Container c = this; c != null; c = c.getParent()) {
-		     if (c instanceof Window) {
-			w = (Window) c;
-			break;
-		      }
-		   }
-		  if (w != null) w.toFront();
-		}
-	     }
-	    break;
-	 default :
-	    break;
+         case PAUSED :
+         case PARTIAL_PAUSE :
+            if (prior == LaunchState.RUNNING) {
+               if (isVisible() && !isShowing()) {
+                  Window w = null;
+                  for (Container c = this; c != null; c = c.getParent()) {
+                     if (c instanceof Window) {
+                        w = (Window) c;
+                        break;
+                      }
+                   }
+                  if (w != null) w.toFront();
+                }
+             }
+            break;
+         default :
+            break;
        }
     }
 }
@@ -482,9 +482,9 @@ synchronized void setLaunchState(LaunchState ls,int rct,int tct)
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging button actions						*/
-/*										*/
+/*                                                                              */
+/*      Debugging button actions                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class PlayAction extends AbstractAction {
@@ -521,7 +521,7 @@ private class PlayAction extends AbstractAction {
        }
     }
 
-}	// end of inner class PlayAction
+}       // end of inner class PlayAction
 
 
 
@@ -602,7 +602,7 @@ private class PauseAction extends AbstractAction {
        }
     }
 
-}	// end of inner class PauseAction
+}       // end of inner class PauseAction
 
 
 
@@ -634,7 +634,7 @@ private class StopAction extends AbstractAction {
        }
     }
 
-}	// end of inner class StopAction
+}       // end of inner class StopAction
 
 
 
@@ -654,19 +654,19 @@ private class ClearAction extends AbstractAction {
       Collection<BudaBubble> bbls;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-	 bbls = bba.getBubblesInRegion(ws.getRegion());
+         bbls = bba.getBubblesInRegion(ws.getRegion());
        }
       else {
-	 bbls = bba.getBubbles();
+         bbls = bba.getBubbles();
        }
 
       for (BudaBubble bbl : bbls) {
-	 if (bbl.isFloating() || bbl.isFixed()) continue;
-	 bba.userRemoveBubble(bbl);
+         if (bbl.isFloating() || bbl.isFixed()) continue;
+         bba.userRemoveBubble(bbl);
        }
     }
 
-}	// end of inner class ClearAction
+}       // end of inner class ClearAction
 
 
 
@@ -702,7 +702,7 @@ private class StepIntoAction extends AbstractAction {
        }
     }
 
-}	// end of inner class StepIntoAction
+}       // end of inner class StepIntoAction
 
 
 private class StepUserAction extends AbstractAction {
@@ -716,32 +716,32 @@ private class StepUserAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-	 stepinto_action.actionPerformed(evt);
-	 return;
+         stepinto_action.actionPerformed(evt);
+         return;
        }
 
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       BoardMetrics.noteCommand("BDDT","StepUserDebug");
-	       waitForFreeze();
-	       bump_client.stepUser(bt);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               BoardMetrics.noteCommand("BDDT","StepUserDebug");
+               waitForFreeze();
+               bump_client.stepUser(bt);
+             }
+            break;
       }
    }
 
-}	// end of inner class StepUserAction
+}       // end of inner class StepUserAction
 
 
 
@@ -756,27 +756,27 @@ private class StepOverAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       BoardMetrics.noteCommand("BDDT","StepOverDebug");
-	       waitForFreeze();
-	       bump_client.stepOver(bt);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               BoardMetrics.noteCommand("BDDT","StepOverDebug");
+               waitForFreeze();
+               bump_client.stepOver(bt);
+             }
+            break;
        }
     }
 
-}	// end of inner class StepOverAction
+}       // end of inner class StepOverAction
 
 
 
@@ -792,27 +792,27 @@ private class StepReturnAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       BoardMetrics.noteCommand("BDDT","StepReturnDebug");
-	       waitForFreeze();
-	       bump_client.stepReturn(bt);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               BoardMetrics.noteCommand("BDDT","StepReturnDebug");
+               waitForFreeze();
+               bump_client.stepReturn(bt);
+             }
+            break;
        }
     }
 
-}	// end of inner class StepReturnAction
+}       // end of inner class StepReturnAction
 
 
 
@@ -828,38 +828,38 @@ private class DropToFrameAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-		  waitForFreeze();
-		  BumpThreadStack stk = bt.getStack();
-		  BumpStackFrame frm = stk.getFrame(1);
-		  if (frm != null) {
-		     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
-		     bump_client.dropToFrame(frm);
-		   }
-		}
-	       else {
-		  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
-		  waitForFreeze();
-		  bump_client.dropToFrame(bt);
-		}
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+                  waitForFreeze();
+                  BumpThreadStack stk = bt.getStack();
+                  BumpStackFrame frm = stk.getFrame(1);
+                  if (frm != null) {
+                     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
+                     bump_client.dropToFrame(frm);
+                   }
+                }
+               else {
+                  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
+                  waitForFreeze();
+                  bump_client.dropToFrame(bt);
+                }
+             }
+            break;
        }
     }
 
-}	// end of inner class DropToFrameAction
+}       // end of inner class DropToFrameAction
 
 
 
@@ -893,14 +893,14 @@ private final class StartDebug implements Runnable {
       else setLaunchState(LaunchState.READY);
     }
 
-}	// end of inner class StartDebug
+}       // end of inner class StartDebug
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble button actions							*/
-/*										*/
+/*                                                                              */
+/*      Bubble button actions                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConsoleAction extends AbstractAction {
@@ -917,7 +917,7 @@ private class ConsoleAction extends AbstractAction {
       bubble_manager.createConsoleBubble();
     }
 
-}	// end of inner class ConsoleAction
+}       // end of inner class ConsoleAction
 
 
 
@@ -935,7 +935,7 @@ private class ThreadsAction extends AbstractAction {
       bubble_manager.createThreadBubble();
     }
 
-}	// end of inner class ThreadsAction
+}       // end of inner class ThreadsAction
 
 
 
@@ -953,7 +953,7 @@ private class HistoryAction extends AbstractAction {
       bubble_manager.createHistoryBubble();
     }
 
-}	// end of inner class HistoryAction
+}       // end of inner class HistoryAction
 
 
 
@@ -971,7 +971,7 @@ private class PerformanceAction extends AbstractAction {
       bubble_manager.createPerformanceBubble();
    }
 
-}	// end of inner class PerformanceAction
+}       // end of inner class PerformanceAction
 
 
 private class ValueViewerBubbleAction extends AbstractAction {
@@ -988,7 +988,7 @@ private class ValueViewerBubbleAction extends AbstractAction {
       bubble_manager.createValueViewerBubble();
    }
 
-}	// end of inner class ValueViewerBubbleAction
+}       // end of inner class ValueViewerBubbleAction
 
 
 
@@ -1006,7 +1006,7 @@ private class EvaluationBubbleAction extends AbstractAction {
       bubble_manager.createInteractionBubble();
    }
 
-}	// end of inner class EvaluationBubbleAction
+}       // end of inner class EvaluationBubbleAction
 
 
 
@@ -1024,7 +1024,7 @@ private class SwingAction extends AbstractAction {
       bubble_manager.createSwingBubble();
     }
 
-}	// end of inner class SwingAction
+}       // end of inner class SwingAction
 
 
 
@@ -1043,7 +1043,7 @@ private class NewChannelAction extends AbstractAction {
       bf.newDebugger(launch_config);
     } 
 
-}	// end of inner class ThreadsAction
+}       // end of inner class ThreadsAction
 
 
 void addFixedBubble(BddtAuxBubbleAction aux)
@@ -1055,16 +1055,16 @@ void addFixedBubble(BddtAuxBubbleAction aux)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle freeze in background					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle freeze in background                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void waitForFreeze()
 {
    while (freeze_count > 0) {
       try {
-	 wait(10000);
+         wait(10000);
        }
       catch (InterruptedException e) { }
     }
@@ -1088,22 +1088,22 @@ synchronized void doneFreeze()
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handling								*/
-/*										*/
+/*                                                                              */
+/*      Event handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class RunEventHandler implements BumpRunEventHandler {
 
    private Map<BumpThread,BumpThreadState> thread_states;
-   private BumpThread		last_stopped;
+   private BumpThread           last_stopped;
 
    RunEventHandler() {
       thread_states = new HashMap<BumpThread,BumpThreadState>();
       last_stopped = null;
     }
 
-   BumpThread getLastStoppedThread()		{ return last_stopped; }
+   BumpThread getLastStoppedThread()            { return last_stopped; }
 
    @Override public void handleLaunchEvent(BumpRunEvent evt) { }
 
@@ -1122,7 +1122,7 @@ private class RunEventHandler implements BumpRunEventHandler {
       switch (evt.getEventType()) {
          case PROCESS_ADD :
             if (cur_process == null && launch_state == LaunchState.STARTING &&
-        	   (elc == null || elc == launch_config)) {
+                   (elc == null || elc == launch_config)) {
                setProcess(evt.getProcess());
                last_stopped = null;
                BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
@@ -1139,7 +1139,7 @@ private class RunEventHandler implements BumpRunEventHandler {
                last_stopped = null;
              }
             else if (cur_process == null && launch_state == LaunchState.STARTING &&
-        		(elc == null || elc == launch_config)) {
+                        (elc == null || elc == launch_config)) {
                setLaunchState(LaunchState.TERMINATED);
                thread_states.clear();
                last_stopped = null;
@@ -1157,8 +1157,8 @@ private class RunEventHandler implements BumpRunEventHandler {
          case HOTCODE_FAILURE :
             if (hotswap_fail != cur_process) {
                JOptionPane.showMessageDialog(BddtLaunchControl.this,
-        	     "Hot Code Swapping Failed",
-        	     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
+                     "Hot Code Swapping Failed",
+                     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
                hotswap_fail = cur_process;
              }
             break;
@@ -1245,14 +1245,14 @@ private class RunEventHandler implements BumpRunEventHandler {
        }
    }
 
-}	// end of inner class RunEventHandler
+}       // end of inner class RunEventHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle thread state changes					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle thread state changes                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
@@ -1261,8 +1261,8 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
    if (bt.getThreadState().isStopped() && (ost != null && !ost.isStopped())) {
       addExecutionAnnot(bt);
       if (autoCreateBubble(bt)) {
-	 CreateBubble cb = new CreateBubble(bt);
-	 SwingUtilities.invokeLater(cb);
+         CreateBubble cb = new CreateBubble(bt);
+         SwingUtilities.invokeLater(cb);
        }
       else {
          BoardLog.logD("BDDT","NO Need to create bubble based " +
@@ -1284,29 +1284,29 @@ private boolean autoCreateBubble(BumpThread bt)
    switch (bt.getThreadType()) {
       case USER :
       case UI :
-	 switch (bt.getThreadState()) {
-	    case STOPPED_WAITING :
-	    case STOPPED_TIMED :
-	    case STOPPED_IO :
-	    case STOPPED_IDLE :
-	       return false;
-	    default : 
-	       break;
-	 }
-	 break;
+         switch (bt.getThreadState()) {
+            case STOPPED_WAITING :
+            case STOPPED_TIMED :
+            case STOPPED_IO :
+            case STOPPED_IDLE :
+               return false;
+            default : 
+               break;
+         }
+         break;
       default :
-	 switch (bt.getThreadState()) {
-	    case STOPPED_SYSTEM :
-	       return false;
-	    case STOPPED_WAITING :
-	    case STOPPED_TIMED :
-	    case STOPPED_IO :
-	    case STOPPED_IDLE :
-	       return false;
-	    default :
-	       break;
-	 }
-	 break;
+         switch (bt.getThreadState()) {
+            case STOPPED_SYSTEM :
+               return false;
+            case STOPPED_WAITING :
+            case STOPPED_TIMED :
+            case STOPPED_IO :
+            case STOPPED_IDLE :
+               return false;
+            default :
+               break;
+         }
+         break;
     }
 
    return true;
@@ -1364,14 +1364,14 @@ private class CreateBubble implements Runnable {
     }
    
 
-}	// end of inner class CreateBubble
+}       // end of inner class CreateBubble
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Execution annotations							*/
-/*										*/
+/*                                                                              */
+/*      Execution annotations                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void addExecutionAnnot(BumpThread bt)
@@ -1384,25 +1384,25 @@ private void addExecutionAnnot(BumpThread bt)
    if (stk != null && stk.getNumFrames() > 0) {
       BumpStackFrame bsf = stk.getFrame(0);
       if (frameFileExists(bsf) && bsf.getLineNumber() > 0 && !bsf.isSystem()) {
-	 ExecutionAnnot ea = new ExecutionAnnot(bt,bsf);
-	 removeExecutionAnnot(bt);
-	 exec_annots.put(bt,ea);
-	 BaleFactory.getFactory().addAnnotation(ea);
-	 setActiveFrame(bsf);
+         ExecutionAnnot ea = new ExecutionAnnot(bt,bsf);
+         removeExecutionAnnot(bt);
+         exec_annots.put(bt,ea);
+         BaleFactory.getFactory().addAnnotation(ea);
+         setActiveFrame(bsf);
        }
       else if (!props.getBoolean("Bddt.show.library.bubbles") &&
-	    props.getBoolean("Bddt.show.user.bubble")) {
-	 for (int i = 1; i < stk.getNumFrames(); ++i) {
-	    BumpStackFrame bsf1 = stk.getFrame(i);
-	    if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0 && !bsf1.isSystem()) {
-	       ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
-	       removeExecutionAnnot(bt);
-	       exec_annots.put(bt,ea);
-	       BaleFactory.getFactory().addAnnotation(ea);
-	       setActiveFrame(bsf1);
-	       break;
-	     }
-	  }
+            props.getBoolean("Bddt.show.user.bubble")) {
+         for (int i = 1; i < stk.getNumFrames(); ++i) {
+            BumpStackFrame bsf1 = stk.getFrame(i);
+            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0 && !bsf1.isSystem()) {
+               ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
+               removeExecutionAnnot(bt);
+               exec_annots.put(bt,ea);
+               BaleFactory.getFactory().addAnnotation(ea);
+               setActiveFrame(bsf1);
+               break;
+             }
+          }
        }
     }
 }
@@ -1422,48 +1422,48 @@ void setActiveFrame(BumpStackFrame frm)
    if (frm == null) {
       active_frame = null;
       if (frame_annot != null) {
-	 BaleFactory.getFactory().removeAnnotation(frame_annot);
-	 frame_annot = null;
+         BaleFactory.getFactory().removeAnnotation(frame_annot);
+         frame_annot = null;
        }
     }
    else if (active_frame != null && active_frame.match(frm)) {
       for (BddtFrameListener fl : frame_listeners) {
-	 fl.setActiveFrame(frm);
+         fl.setActiveFrame(frm);
        }
     }
    else {
       if (frame_annot != null) {
-	 BaleFactory.getFactory().removeAnnotation(frame_annot);
-	 frame_annot = null;
+         BaleFactory.getFactory().removeAnnotation(frame_annot);
+         frame_annot = null;
        }
       active_frame = frm;
       int stoplvl = 0;
       if (frm.getThread().getExceptionType() != null) {
-	 BumpThreadStack stk = frm.getThread().getStack();
-	 if (stk != null) {
-	    for (int i = 0; i < stk.getNumFrames(); ++i) {
-	       BumpStackFrame bsf1 = stk.getFrame(i);
-	       if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
-		  stoplvl = i;
-		  break;
-		}
-	     }
-	  }
+         BumpThreadStack stk = frm.getThread().getStack();
+         if (stk != null) {
+            for (int i = 0; i < stk.getNumFrames(); ++i) {
+               BumpStackFrame bsf1 = stk.getFrame(i);
+               if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+                  stoplvl = i;
+                  break;
+                }
+             }
+          }
        }
       if (frm.getLevel() > stoplvl && frm.getFile() != null) {
-	 frame_annot = new FrameAnnot(frm);
-	 BaleFactory.getFactory().addAnnotation(frame_annot);
+         frame_annot = new FrameAnnot(frm);
+         BaleFactory.getFactory().addAnnotation(frame_annot);
        }
       for (BddtFrameListener fl : frame_listeners) {
-	 fl.setActiveFrame(active_frame);
+         fl.setActiveFrame(active_frame);
        }
     }
 }
 
 
-BumpStackFrame getActiveFrame() 		{ return active_frame; }
-void addFrameListener(BddtFrameListener fl)	{ frame_listeners.add(fl); }
-void removeFrameListener(BddtFrameListener fl)	{ frame_listeners.remove(fl); }
+BumpStackFrame getActiveFrame()                 { return active_frame; }
+void addFrameListener(BddtFrameListener fl)     { frame_listeners.add(fl); }
+void removeFrameListener(BddtFrameListener fl)  { frame_listeners.remove(fl); }
 
 
 
@@ -1490,10 +1490,10 @@ private class ExecutionAnnot implements BaleAnnotation {
       
       execute_pos = null;
       try {
-	 execute_pos = for_document.createPosition(off);
+         execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BDDT","Bad execution position",e);
+         BoardLog.logE("BDDT","Bad execution position",e);
        }
       
       BoardLog.logD("BDDT","Create execution annotatino " + for_file + " " + 
@@ -1502,8 +1502,8 @@ private class ExecutionAnnot implements BaleAnnotation {
 
 
 
-   @Override public int getDocumentOffset()	{ return execute_pos.getOffset(); }
-   @Override public File getFile()		{ return for_file; }
+   @Override public int getDocumentOffset()     { return execute_pos.getOffset(); }
+   @Override public File getFile()              { return for_file; }
 
    @Override public Icon getIcon(BudaBubble b) {
       if (for_thread.getExceptionType() != null) return BoardImage.getIcon("execexcept");
@@ -1513,24 +1513,24 @@ private class ExecutionAnnot implements BaleAnnotation {
    @Override public String getToolTip() {
       String exc = for_thread.getExceptionType();
       if (exc == null) {
-	 return "Thread " + for_thread.getName() + " stopped at " + for_frame.getLineNumber();
+         return "Thread " + for_thread.getName() + " stopped at " + for_frame.getLineNumber();
        }
       else {
-	 return "Thread " + for_thread.getName() + " stopped at " + for_frame.getLineNumber() +
-	    " due to " + exc;
+         return "Thread " + for_thread.getName() + " stopped at " + for_frame.getLineNumber() +
+            " due to " + exc;
        }
     }
 
    @Override public Color getLineColor(BudaBubble bbl) {
       BumpStackFrame frm = bubble_manager.getFrameForBubble(bbl);
       if (frm != null && !frm.sameFrame(for_frame)) {
-	 return null;
+         return null;
        }
       if (for_thread.getExceptionType() != null) return except_color;
       return annot_color;
     }
 
-   @Override public Color getBackgroundColor()			{ return null; }
+   @Override public Color getBackgroundColor()                  { return null; }
 
    @Override public boolean getForceVisible(BudaBubble bb) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
@@ -1538,11 +1538,11 @@ private class ExecutionAnnot implements BaleAnnotation {
       return (bba == bba1);
     }
 
-   @Override public int getPriority()				{ return 20; }
+   @Override public int getPriority()                           { return 20; }
 
    @Override public void addPopupButtons(Component c,JPopupMenu m) { }
 
-}	// end of inner class ExecutionAnnot
+}       // end of inner class ExecutionAnnot
 
 
 
@@ -1575,8 +1575,8 @@ private class FrameAnnot implements BaleAnnotation {
 
 
 
-   @Override public int getDocumentOffset()	{ return execute_pos.getOffset(); }
-   @Override public File getFile()		{ return for_file; }
+   @Override public int getDocumentOffset()     { return execute_pos.getOffset(); }
+   @Override public File getFile()              { return for_file; }
 
    @Override public Icon getIcon(BudaBubble bbl) {
       return BoardImage.getIcon("exec");
@@ -1586,8 +1586,8 @@ private class FrameAnnot implements BaleAnnotation {
       return "Thread " + for_thread.getName() + " frame at " + for_frame.getLineNumber();
     }
 
-   @Override public Color getLineColor(BudaBubble bbl)		{ return annot_color; }
-   @Override public Color getBackgroundColor()			{ return null; }
+   @Override public Color getLineColor(BudaBubble bbl)          { return annot_color; }
+   @Override public Color getBackgroundColor()                  { return null; }
 
    @Override public boolean getForceVisible(BudaBubble bb) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
@@ -1595,18 +1595,18 @@ private class FrameAnnot implements BaleAnnotation {
       return (bba == bba1);
     }
 
-   @Override public int getPriority()				{ return 20; }
+   @Override public int getPriority()                           { return 20; }
 
    @Override public void addPopupButtons(Component c,JPopupMenu m) { }
 
-}	// end of inner class FrameAnnot
+}       // end of inner class FrameAnnot
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Evaluation string methods						*/
-/*										*/
+/*                                                                              */
+/*      Evaluation string methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 String getEvaluationString(BumpStackFrame frm,BumpRunValue rv,String id)
@@ -1616,12 +1616,12 @@ String getEvaluationString(BumpStackFrame frm,BumpRunValue rv,String id)
       case JAVA :
       case JAVA_IDEA :
       default :
-	 return getEvaluationStringJava(frm,rv,id);
+         return getEvaluationStringJava(frm,rv,id);
       case JS :
-	 return getEvaluationStringJS(frm,rv,id);
+         return getEvaluationStringJS(frm,rv,id);
       case DART :
-	 // TODO: get dart evaluation string
-	 return null;
+         // TODO: get dart evaluation string
+         return null;
     }
 }
 
@@ -1632,10 +1632,10 @@ private String getEvaluationStringJava(BumpStackFrame frm,BumpRunValue rv,String
    if (rv == null && frm != null) {
       rv = frm.getValue(id);
       if (rv == null) {
-	 BumpRunValue rv1 = frm.getValue("this");
-	 if (rv1 != null) {
-	    rv = rv1.getValue("this?" + id);
-	  }
+         BumpRunValue rv1 = frm.getValue("this");
+         if (rv1 != null) {
+            rv = rv1.getValue("this?" + id);
+          }
        }
     }
 
@@ -1653,7 +1653,7 @@ private String getEvaluationStringJava(BumpStackFrame frm,BumpRunValue rv,String
    String expr1 = "java.lang.String.valueOf(" + id.replace('?','.') + ")";
    if (rv != null && rv.getKind() == BumpValueKind.ARRAY) {
       if (rv.getLength() <= 100) {
-	 expr = "java.util.Arrays.toString(" + id + ")";
+         expr = "java.util.Arrays.toString(" + id + ")";
        }
     }
    else if (rv != null && rv.getKind() == BumpValueKind.OBJECT && rv.getValue().equals("null")) {
@@ -1737,56 +1737,56 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
       default :
       case CLASS :
       case UNKNOWN :
-	 break;
+         break;
       case OBJECT :
-	 String s = rv.getDetail();
-	 if (s != null) {
-	    s = IvyXml.htmlSanitize(s);
-	    s = s.replace("&#0a;","<br>");
-	    s = s.replace("&#x0a;","<br>");
-	    if (lvl > 0) {
-	       Collection<String> vars = rv.getVariables();
-	       if (vars != null && vars.size() > 0) {
-		  StringBuffer buf = new StringBuffer();
-		  buf.append("<br><table cellpadding='0' style='margin-left:20px;'>");
-		  for (String var : vars) {
-		     BumpRunValue srv = rv.getValue(var);
-		     if (srv != null) {
-			String sr = formatRunValue(srv,lvl-1);
-			buf.append("<tr><td><b>");
-			String pvar = var;
-			int idx = pvar.lastIndexOf("?");
-			if (idx > 0) pvar = pvar.substring(idx+1);
-			buf.append(pvar);
-			buf.append("</b></td><td>:</td><td>");
-			buf.append(sr);
-			buf.append("</td></tr>");
-		      }
-		   }
-		  buf.append("</table>");
-		  s += buf.toString();
-		}
-	     }
-	    return s;
-	  }
-	 break;
+         String s = rv.getDetail();
+         if (s != null) {
+            s = IvyXml.htmlSanitize(s);
+            s = s.replace("&#0a;","<br>");
+            s = s.replace("&#x0a;","<br>");
+            if (lvl > 0) {
+               Collection<String> vars = rv.getVariables();
+               if (vars != null && vars.size() > 0) {
+                  StringBuffer buf = new StringBuffer();
+                  buf.append("<br><table cellpadding='0' style='margin-left:20px;'>");
+                  for (String var : vars) {
+                     BumpRunValue srv = rv.getValue(var);
+                     if (srv != null) {
+                        String sr = formatRunValue(srv,lvl-1);
+                        buf.append("<tr><td><b>");
+                        String pvar = var;
+                        int idx = pvar.lastIndexOf("?");
+                        if (idx > 0) pvar = pvar.substring(idx+1);
+                        buf.append(pvar);
+                        buf.append("</b></td><td>:</td><td>");
+                        buf.append(sr);
+                        buf.append("</td></tr>");
+                      }
+                   }
+                  buf.append("</table>");
+                  s += buf.toString();
+                }
+             }
+            return s;
+          }
+         break;
       case ARRAY :
-	 if (rv.getLength() <= 100) {
-	    s = rv.getDetail();
-	    if (s != null) return s;
-	  }
-	 else {
-	    IvyLog.logI("BDDT","Handle large arrays " + rv.getLength());
-	  }
-	 break;
+         if (rv.getLength() <= 100) {
+            s = rv.getDetail();
+            if (s != null) return s;
+          }
+         else {
+            IvyLog.logI("BDDT","Handle large arrays " + rv.getLength());
+          }
+         break;
       case PRIMITIVE :
-	 return IvyXml.htmlSanitize(rv.getValue());
+         return IvyXml.htmlSanitize(rv.getValue());
       case STRING :
-	 String sx = IvyXml.htmlSanitize(rv.getValue());
-	 sx = sx.replace("&#0a;","<br>");
-	 sx = sx.replace("&#x0a;","<br>");
-	 sx = "&quot;" + sx + "&quot;";
-	 return sx;
+         String sx = IvyXml.htmlSanitize(rv.getValue());
+         sx = sx.replace("&#0a;","<br>");
+         sx = sx.replace("&#x0a;","<br>");
+         sx = "&quot;" + sx + "&quot;";
+         return sx;
     }
 
    return null;
@@ -1796,9 +1796,9 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle contextual operations on debugger editors			*/
-/*										*/
+/*                                                                              */
+/*      Handle contextual operations on debugger editors                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class EditorContextListener implements BaleFactory.BaleContextListener {
@@ -1817,21 +1817,21 @@ private final class EditorContextListener implements BaleFactory.BaleContextList
             switch (cfg.getTokenType()) {
                case FIELD_ID :
                case FIELD_DECL_ID :
-        	  BumpRunValue rv1 = frm.getValue("this");
-        	  if (rv1 != null) {
-        	     rv = rv1.getValue("this?" + id);
-        	   }
-        	  break;
+                  BumpRunValue rv1 = frm.getValue("this");
+                  if (rv1 != null) {
+                     rv = rv1.getValue("this?" + id);
+                   }
+                  break;
                case STATIC_FIELD_ID :
-        	  BumpRunValue rv2 = frm.getValue("this");
-        	  if (rv2 != null) {
-        	     String typ = rv2.getType();
-        	     typ = typ.replace("$",".");
-        	     // TODO: need to get static value here
-        	   }
-        	  break;
+                  BumpRunValue rv2 = frm.getValue("this");
+                  if (rv2 != null) {
+                     String typ = rv2.getType();
+                     typ = typ.replace("$",".");
+                     // TODO: need to get static value here
+                   }
+                  break;
                default :
-        	  break;
+                  break;
              }
             if (rv == null) rv = frm.getValue(id);
             String st = getEvaluationString(frm,rv,id);
@@ -1893,14 +1893,14 @@ private final class EditorContextListener implements BaleFactory.BaleContextList
       active_thread = thrd;
     }
 
-}	// end of inner class EditorContextListener
+}       // end of inner class EditorContextListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Evaluation handlers							*/
-/*										*/
+/*                                                                              */
+/*      Evaluation handlers                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class EvaluationListener implements BumpEvaluationHandler, ExpressionValue {
@@ -1933,16 +1933,16 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
    @Override public void evaluationResult(String eid,String expr,BumpRunValue v) {
       result_value = v;
       synchronized (this) {
-	 is_done = true;
-	 notifyAll();
+         is_done = true;
+         notifyAll();
        }
     }
 
    @Override public void evaluationError(String eid,String expr,String error) {
       error_value = error;
       synchronized (this) {
-	 is_done = true;
-	 notifyAll();
+         is_done = true;
+         notifyAll();
        }
     }
 
@@ -1956,17 +1956,17 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
    private synchronized void waitForResult() {
       long start = System.currentTimeMillis();
       while (!is_done) {
-	 try {
-	    wait(1000L);
-	  }
-	 catch (InterruptedException e) { }
-	 if ((System.currentTimeMillis() - start) > 10000) {
-	    evaluationError(null,null,"Operation Timeout");
-	  }
+         try {
+            wait(1000L);
+          }
+         catch (InterruptedException e) { }
+         if ((System.currentTimeMillis() - start) > 10000) {
+            evaluationError(null,null,"Operation Timeout");
+          }
        }
     }
 
-}	// end of class EvaluationListener
+}       // end of class EvaluationListener
 
 
 
@@ -1993,13 +1993,13 @@ private class ValueEvalListener implements BumpEvaluationHandler, Runnable {
       if (!bsv.isStackValid()) return;
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtLaunchControl.this);
       if (bba != null) {
-	 bba.addBubble(bsv,config_context.getEditor(),null,
-			  PLACEMENT_BELOW|PLACEMENT_LOGICAL|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+         bba.addBubble(bsv,config_context.getEditor(),null,
+                          PLACEMENT_BELOW|PLACEMENT_LOGICAL|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
        }
     }
 
 
-}	// end of inner class ValueEvalListener
+}       // end of inner class ValueEvalListener
 
 
 
@@ -2021,13 +2021,13 @@ private class ValueAction extends AbstractAction {
       frm.evaluateInternal(context_config.getToken(),null,el);
    }
 
-}	// end of inner class ValueAction
+}       // end of inner class ValueAction
 
 
 
 
 
-}	// end of class BddtLaunchControl
+}       // end of class BddtLaunchControl
 
 
 

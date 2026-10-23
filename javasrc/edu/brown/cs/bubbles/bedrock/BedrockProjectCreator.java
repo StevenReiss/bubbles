@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockProjectCreator.java					*/
-/*										*/
-/*	Code to create and setup a project					*/
-/*										*/
+/*                                                                              */
+/*              BedrockProjectCreator.java                                      */
+/*                                                                              */
+/*      Code to create and setup a project                                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,9 +51,9 @@ class BedrockProjectCreator implements BedrockConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String project_name;
@@ -84,9 +84,9 @@ private static final String SRC_NAME = "src_";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BedrockProjectCreator(String pnm,File pdir,String type,Element props)
@@ -99,9 +99,9 @@ BedrockProjectCreator(String pnm,File pdir,String type,Element props)
 
 
 /********************************************************************************/
-/*										*/
-/*	Work methods								*/
-/*										*/
+/*                                                                              */
+/*      Work methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 boolean setupProject()
@@ -118,17 +118,17 @@ boolean setupProject()
    boolean fg = true;
    switch (project_type) {
       case "NEW" :
-	 fg = setupNewProject();
-	 break;
+         fg = setupNewProject();
+         break;
       case "SOURCE" :
-	 fg = setupSourceProject();
-	 break;
+         fg = setupSourceProject();
+         break;
       case "TEMPLATE" :
-	 fg = setupTemplateProject();
-	 break;
+         fg = setupTemplateProject();
+         break;
       case "GIT" :
-	 fg = setupGitProject();
-	 break;
+         fg = setupGitProject();
+         break;
       case "CLONE" :
          fg = setupCloneProject();
          break;
@@ -150,9 +150,9 @@ boolean setupProject()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup a completely new project						*/
-/*										*/
+/*                                                                              */
+/*      Setup a completely new project                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean setupNewProject()
@@ -174,7 +174,7 @@ private boolean setupNewProject()
       bp.put("PACKAGE","package " + pnm + ";");
       StringTokenizer tok = new StringTokenizer(pnm,".");
       while (tok.hasMoreTokens()) {
-	 sdir = new File(sdir,tok.nextToken());
+         sdir = new File(sdir,tok.nextToken());
        }
       if (!sdir.mkdirs()) return false;
       String plast = sdir.getName();
@@ -206,9 +206,9 @@ private boolean setupNewProject()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup a project using existing source					*/
-/*										*/
+/*                                                                              */
+/*      Setup a project using existing source                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean setupSourceProject()
@@ -235,19 +235,19 @@ private boolean defineProject(File dir)
       String pkg = getPackageName(sf);
       File par = sf.getParentFile();
       if (pkg != null) {
-	 String [] ps = pkg.split("\\.");
-	 for (int i = ps.length-1; par != null && i >= 0; --i) {
-	    if (!par.getName().equals(ps[i])) par = null;
-	    else par = par.getParentFile();
-	  }
+         String [] ps = pkg.split("\\.");
+         for (int i = ps.length-1; par != null && i >= 0; --i) {
+            if (!par.getName().equals(ps[i])) par = null;
+            else par = par.getParentFile();
+          }
        }
       if (par != null) {
-	 List<File> lf = roots.get(par);
-	 if (lf == null) {
-	    lf = new ArrayList<File>();
-	    roots.put(par,lf);
-	  }
-	 lf.add(sf);
+         List<File> lf = roots.get(par);
+         if (lf == null) {
+            lf = new ArrayList<File>();
+            roots.put(par,lf);
+          }
+         lf.add(sf);
        }
     }
    Map<String,File> links = new HashMap<>();
@@ -279,16 +279,16 @@ protected void findFiles(File dir,Set<File> srcs,Set<File> libs,Set<File> rsrcs)
       else if (dir.getName().startsWith(".")) return;
       else if (dir.getName().equals("node_modules")) return;
       if (dir.getName().equals("resources")) {
-	 boolean havesrc = false;
-	 for (String fnm : dir.list()) {
-	    if (fnm.endsWith(".java")) havesrc = true;
-	  }
-	 if (!havesrc) rsrcs.add(dir);
+         boolean havesrc = false;
+         for (String fnm : dir.list()) {
+            if (fnm.endsWith(".java")) havesrc = true;
+          }
+         if (!havesrc) rsrcs.add(dir);
        }
       if (dir.listFiles() != null) {
-	 for (File sf : dir.listFiles()) {
-	    findFiles(sf,srcs,libs,rsrcs);
-	  }
+         for (File sf : dir.listFiles()) {
+            findFiles(sf,srcs,libs,rsrcs);
+          }
        }
       return;
     }
@@ -302,16 +302,16 @@ protected void findFiles(File dir,Set<File> srcs,Set<File> libs,Set<File> rsrcs)
    if (pnm.endsWith(".java")) srcs.add(dir.getAbsoluteFile());
    else if (pnm.endsWith(".jar")) {
       if (!pnm.contains("javadoc") && !pnm.contains("source"))
-	 libs.add(dir.getAbsoluteFile());
+         libs.add(dir.getAbsoluteFile());
     }
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup a project copying existing source 				*/
-/*										*/
+/*                                                                              */
+/*      Setup a project copying existing source                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean setupTemplateProject()
@@ -330,16 +330,16 @@ private boolean setupTemplateProject()
       File par = sf.getParentFile();
       String [] ps = pkg.split("\\.");
       for (int i = ps.length-1; par != null && i >= 0; --i) {
-	 if (!par.getName().equals(ps[i])) par = null;
-	 else par = par.getParentFile();
+         if (!par.getName().equals(ps[i])) par = null;
+         else par = par.getParentFile();
        }
       if (par != null) {
-	 List<File> lf = roots.get(pkg);
-	 if (lf == null) {
-	    lf = new ArrayList<File>();
-	    roots.put(pkg,lf);
-	  }
-	 lf.add(sf);
+         List<File> lf = roots.get(pkg);
+         if (lf == null) {
+            lf = new ArrayList<File>();
+            roots.put(pkg,lf);
+          }
+         lf.add(sf);
        }
     }
 
@@ -354,17 +354,17 @@ private boolean setupTemplateProject()
       File tdir = sdir;
       String [] ps = pkg.split("\\.");
       for (int i = 0; i < ps.length; ++i) {
-	 tdir = new File(tdir,ps[i]);
+         tdir = new File(tdir,ps[i]);
        }
       if (!tdir.exists() && !tdir.mkdirs()) return false;
       for (File f : ent.getValue()) {
-	 File f1 = new File(tdir,f.getName());
-	 try {
-	    IvyFile.copyFile(f,f1);
-	  }
-	 catch (IOException e) {
-	    BedrockPlugin.logE("Problem copying source files",e);
-	  }
+         File f1 = new File(tdir,f.getName());
+         try {
+            IvyFile.copyFile(f,f1);
+          }
+         catch (IOException e) {
+            BedrockPlugin.logE("Problem copying source files",e);
+          }
        }
     }
 
@@ -373,16 +373,16 @@ private boolean setupTemplateProject()
       File ldir = new File(project_dir,"lib");
       if (!ldir.mkdirs()) return false;
       for (File lf : libs) {
-	 File lf1 = new File(ldir,lf.getName());
-	 if (!lf1.exists()) {
-	    try {
-	       IvyFile.copyFile(lf,lf1);
-	     }
-	    catch (IOException e) {
-	       BedrockPlugin.logE("Problem copying source files",e);
-	     }
-	    liblst.add(lf1);
-	  }
+         File lf1 = new File(ldir,lf.getName());
+         if (!lf1.exists()) {
+            try {
+               IvyFile.copyFile(lf,lf1);
+             }
+            catch (IOException e) {
+               BedrockPlugin.logE("Problem copying source files",e);
+             }
+            liblst.add(lf1);
+          }
        }
     }
    prop_map.put(PROJ_PROP_LIBS,liblst);
@@ -391,12 +391,12 @@ private boolean setupTemplateProject()
       File rdir = new File(project_dir,"resources");
       if (!rdir.mkdirs()) return false;
       for (File rf : resources) {
-	 try {
-	    IvyFile.copyHierarchy(rf,rdir);
-	  }
-	 catch (IOException e) {
-	    BedrockPlugin.logE("Problem copying source files",e);
-	  }
+         try {
+            IvyFile.copyHierarchy(rf,rdir);
+          }
+         catch (IOException e) {
+            BedrockPlugin.logE("Problem copying source files",e);
+          }
        }
     }
 
@@ -406,9 +406,9 @@ private boolean setupTemplateProject()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup a project from GITHUB						*/
-/*										*/
+/*                                                                              */
+/*      Setup a project from GITHUB                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean setupGitProject()
@@ -439,9 +439,9 @@ private boolean setupCloneProject()
 
 
 /********************************************************************************/
-/*										*/
-/*	Check files for andrioid and junit usage				*/
-/*										*/
+/*                                                                              */
+/*      Check files for andrioid and junit usage                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkFileProperties()
@@ -461,31 +461,31 @@ private boolean checkFileProperties(File f)
    if (f.isDirectory()) {
       File [] subs = f.listFiles();
       if (subs != null) {
-	 for (File f1 : subs) {
-	    fg |= checkFileProperties(f1);
-	    fg1 = fg;
-	    if (fg) break;
-	  }
+         for (File f1 : subs) {
+            fg |= checkFileProperties(f1);
+            fg1 = fg;
+            if (fg) break;
+          }
        }
     }
    else if (f.getName().toLowerCase().endsWith(".java")) {
       try {
-	 String cnts = IvyFile.loadFile(f);
-	 if (cnts.contains("import android.")) {
-	    if (f.getName().equals("MainActivity.java")) {
-	       String pkg = getPackageName(f);
-	       if (pkg != null) prop_map.put(PROJ_PROP_ANDROID_PKG,pkg);
-	     }
-	    fg = true;
-	    prop_map.put(PROJ_PROP_ANDROID,true);
+         String cnts = IvyFile.loadFile(f);
+         if (cnts.contains("import android.")) {
+            if (f.getName().equals("MainActivity.java")) {
+               String pkg = getPackageName(f);
+               if (pkg != null) prop_map.put(PROJ_PROP_ANDROID_PKG,pkg);
+             }
+            fg = true;
+            prop_map.put(PROJ_PROP_ANDROID,true);
             BedrockPlugin.logD("ANDROID main found in " + f);
-	  }
-	 if (cnts.contains("import org.junit.") ||
-	       cnts.contains("import junit.framework.")) {
-	    prop_map.put(PROJ_PROP_JUNIT,true);
-	    fg1 = true;
-	    if (propBool(PROJ_PROP_USE_ANDROID)) fg = true;
-	  }
+          }
+         if (cnts.contains("import org.junit.") ||
+               cnts.contains("import junit.framework.")) {
+            prop_map.put(PROJ_PROP_JUNIT,true);
+            fg1 = true;
+            if (propBool(PROJ_PROP_USE_ANDROID)) fg = true;
+          }
        }
       catch (IOException e) { }
     }
@@ -510,24 +510,24 @@ public String getPackageName(File src)
       StringBuilder pkg = new StringBuilder();
 
       for ( ; ; ) {
-	 int tid = str.nextToken();
-	 if (tid == StreamTokenizer.TT_WORD) {
-	    if (str.sval.equals("package")) {
-	       for ( ; ; ) {
-		  int nid = str.nextToken();
-		  if (nid != StreamTokenizer.TT_WORD) break;
-		  pkg.append(str.sval);
-		  nid = str.nextToken();
-		  if (nid != '.') break;
-		  pkg.append(".");
-		}
-	       break;
-	     }
-	    else break;
-	  }
-	 else if (tid == StreamTokenizer.TT_EOF) {
-	    return null;
-	  }
+         int tid = str.nextToken();
+         if (tid == StreamTokenizer.TT_WORD) {
+            if (str.sval.equals("package")) {
+               for ( ; ; ) {
+                  int nid = str.nextToken();
+                  if (nid != StreamTokenizer.TT_WORD) break;
+                  pkg.append(str.sval);
+                  nid = str.nextToken();
+                  if (nid != '.') break;
+                  pkg.append(".");
+                }
+               break;
+             }
+            else break;
+          }
+         else if (tid == StreamTokenizer.TT_EOF) {
+            return null;
+          }
        }
 
       fis.close();
@@ -542,9 +542,9 @@ public String getPackageName(File src)
 
 
 /********************************************************************************/
-/*										*/
-/*	Generate class path file for Eclipse					*/
-/*										*/
+/*                                                                              */
+/*      Generate class path file for Eclipse                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean generateClassPathFile()
@@ -570,16 +570,16 @@ private boolean generateClassPathFile()
       xw.outputHeader();
       xw.begin("classpath");
       for (File sdir : propSources()) {
-	 xw.begin("classpathentry");
-	 xw.field("kind","src");
-	 xw.field("path",getFilePath(sdir));
-	 xw.end("classpathentry");
+         xw.begin("classpathentry");
+         xw.field("kind","src");
+         xw.field("path",getFilePath(sdir));
+         xw.end("classpathentry");
        }
       if (!propBool(PROJ_PROP_ANDROID)) {
-	 xw.begin("classpathentry");
-	 xw.field("kind","con");
-	 xw.field("path","org.eclipse.jdt.launching.JRE_CONTAINER");
-	 xw.end("classpathentry");
+         xw.begin("classpathentry");
+         xw.field("kind","con");
+         xw.field("path","org.eclipse.jdt.launching.JRE_CONTAINER");
+         xw.end("classpathentry");
        }
 
       xw.begin("classpathentry");
@@ -588,37 +588,37 @@ private boolean generateClassPathFile()
       xw.end("classpathentry");
       boolean havejunit = false;
       for (File f : propLibraries()) {
-	 xw.begin("classpathentry");
-	 xw.field("kind","lib");
-	 xw.field("path",getFilePath(f));
-	 if (f.getName().contains("junit")) havejunit = true;
-	 xw.end("classpathentry");
+         xw.begin("classpathentry");
+         xw.field("kind","lib");
+         xw.field("path",getFilePath(f));
+         if (f.getName().contains("junit")) havejunit = true;
+         xw.end("classpathentry");
        }
 
       if (propBool(PROJ_PROP_ANDROID)) {
-	 xw.begin("classpathentry");
-	 xw.field("kind","con");
-	 xw.field("path","com.android.ide.eclipse.adt.ANDROID_FRAMEWORK");
-	 xw.end("classpathentry");
-	 xw.begin("classpathentry");
-	 xw.field("kind","con");
-	 xw.field("exported","true");
-	 xw.field("path","com.android.ide.eclipse.adt.LIBRARIES");
-	 xw.end("classpathentry"); xw.begin("classpathentry");
-	 xw.field("kind","con");
-	 xw.field("exported","true");
-	 xw.field("path","com.android.ide.eclipse.adt.DEPENDENCIES");
-	 xw.end("classpathentry");
+         xw.begin("classpathentry");
+         xw.field("kind","con");
+         xw.field("path","com.android.ide.eclipse.adt.ANDROID_FRAMEWORK");
+         xw.end("classpathentry");
+         xw.begin("classpathentry");
+         xw.field("kind","con");
+         xw.field("exported","true");
+         xw.field("path","com.android.ide.eclipse.adt.LIBRARIES");
+         xw.end("classpathentry"); xw.begin("classpathentry");
+         xw.field("kind","con");
+         xw.field("exported","true");
+         xw.field("path","com.android.ide.eclipse.adt.DEPENDENCIES");
+         xw.end("classpathentry");
        }
 
       if (propBool(PROJ_PROP_JUNIT) && !havejunit) {
-	 String path = propString(PROJ_PROP_JUNIT_PATH);
-	 if (path != null) {
-	    xw.begin("classpathentry");
-	    xw.field("kind","lib");
-	    xw.field("path",path);
-	    xw.end("classpathentry");
-	  }
+         String path = propString(PROJ_PROP_JUNIT_PATH);
+         if (path != null) {
+            xw.begin("classpathentry");
+            xw.field("kind","lib");
+            xw.field("path",path);
+            xw.end("classpathentry");
+          }
        }
 
       xw.end("classpath");
@@ -657,11 +657,11 @@ private String getFilePath(File f)
       p2 = f3.getPath();
       p3 = p2 + File.separator;
       if (p1.equals(p2)) {
-	 return ent.getKey();
+         return ent.getKey();
        }
       else if (p1.startsWith(p3)) {
-	 int ln = p2.length();
-	 return ent.getKey() + File.separator + p1.substring(ln);
+         int ln = p2.length();
+         return ent.getKey() + File.separator + p1.substring(ln);
        }
     }
 
@@ -671,9 +671,9 @@ private String getFilePath(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Generate .project file for Eclipse					*/
-/*										*/
+/*                                                                              */
+/*      Generate .project file for Eclipse                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean generateProjectFile()
@@ -703,16 +703,16 @@ private boolean generateProjectFile()
       xw.begin("buildSpec");
 
       if (propBool(PROJ_PROP_ANDROID)) {
-	 xw.begin("buildCommand");
-	 xw.textElement("name","com.android.ide.eclipse.adt.ResourceManagerBuilder");
-	 xw.begin("arguments");
-	 xw.end("arguments");
-	 xw.end("buildCommand");
-	 xw.begin("buildCommand");
-	 xw.textElement("name","com.android.ide.eclipse.adt.PreCompilerBuilder");
-	 xw.begin("arguments");
-	 xw.end("arguments");
-	 xw.end("buildCommand");
+         xw.begin("buildCommand");
+         xw.textElement("name","com.android.ide.eclipse.adt.ResourceManagerBuilder");
+         xw.begin("arguments");
+         xw.end("arguments");
+         xw.end("buildCommand");
+         xw.begin("buildCommand");
+         xw.textElement("name","com.android.ide.eclipse.adt.PreCompilerBuilder");
+         xw.begin("arguments");
+         xw.end("arguments");
+         xw.end("buildCommand");
        }
 
       xw.begin("buildCommand");
@@ -722,29 +722,29 @@ private boolean generateProjectFile()
       xw.end("buildCommand");
 
       if (propBool(PROJ_PROP_ANDROID)) {
-	 xw.begin("buildCommand");
-	 xw.textElement("name","com.android.ide.eclipse.adt.ApkBuilder");
-	 xw.begin("arguments");
-	 xw.end("arguments");
-	 xw.end("buildCommand");
+         xw.begin("buildCommand");
+         xw.textElement("name","com.android.ide.eclipse.adt.ApkBuilder");
+         xw.begin("arguments");
+         xw.end("arguments");
+         xw.end("buildCommand");
        }
 
       xw.end("buildSpec");
       xw.begin("natures");
       if (propBool(PROJ_PROP_ANDROID)) {
-	 xw.textElement("nature","com.android.ide.eclipse.adt.AndroidNature");
+         xw.textElement("nature","com.android.ide.eclipse.adt.AndroidNature");
        }
       xw.textElement("nature","org.eclipse.jdt.core.javanature");
       xw.end("natures");
       xw.begin("linkedResources");
       for (Map.Entry<String,File> ent : propLinks().entrySet()) {
-	 xw.begin("link");
-	 xw.textElement("name",ent.getKey());
-	 xw.textElement("type","2");
-	 String xnm = ent.getValue().getPath();
-	 xnm = xnm.replace("\\","/");
-	 xw.textElement("location",xnm);
-	 xw.end("link");
+         xw.begin("link");
+         xw.textElement("name",ent.getKey());
+         xw.textElement("type","2");
+         String xnm = ent.getValue().getPath();
+         xnm = xnm.replace("\\","/");
+         xw.textElement("location",xnm);
+         xw.end("link");
        }
       xw.end("linkedResources");
       xw.end("projectDescription");
@@ -761,9 +761,9 @@ private boolean generateProjectFile()
 
 
 /********************************************************************************/
-/*										*/
-/*	Generate .settings file for Eclipse					*/
-/*										*/
+/*                                                                              */
+/*      Generate .settings file for Eclipse                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean generateSettingsFile()
@@ -801,12 +801,12 @@ private boolean generateSettingsFile()
       StringBuffer fbuf = new StringBuffer();
       Element optxml = IvyXml.loadXmlFromFile(f2);
       for (Element setxml : IvyXml.elementsByTag(optxml,"setting")) {
-	 String id = IvyXml.getAttrString(setxml,"id");
-	 String val = IvyXml.getAttrString(setxml,"value");
-	 fbuf.append(id);
-	 fbuf.append("=");
-	 fbuf.append(val);
-	 fbuf.append("\n");
+         String id = IvyXml.getAttrString(setxml,"id");
+         String val = IvyXml.getAttrString(setxml,"value");
+         fbuf.append(id);
+         fbuf.append("=");
+         fbuf.append(val);
+         fbuf.append("\n");
        }
       fopts = fbuf.toString();
     }
@@ -840,9 +840,9 @@ private boolean generateSettingsFile()
 
 
 /********************************************************************************/
-/*										*/
-/*	 Generate miscellaneous Eclipse files (e.g. for Android)		*/
-/*										*/
+/*                                                                              */
+/*       Generate miscellaneous Eclipse files (e.g. for Android)                */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean generateOtherFiles()
@@ -870,48 +870,48 @@ private boolean generateOtherFiles()
 
    try {
       if (!f1.exists()) {
-	 PrintWriter pw = new PrintWriter(new FileWriter(f1));
-	 pw.println("# Project target.");
-	 pw.println("target=android-22");
-	 pw.println("android.library.reference.1=../appcompat_v7");
-	 pw.close();
+         PrintWriter pw = new PrintWriter(new FileWriter(f1));
+         pw.println("# Project target.");
+         pw.println("target=android-22");
+         pw.println("android.library.reference.1=../appcompat_v7");
+         pw.close();
        }
       if (!f2.exists()) {
-	 f2.mkdir();
+         f2.mkdir();
        }
       if (!f4.exists()) {
-	 IvyXmlWriter xw = new IvyXmlWriter(f4);
-	 xw.outputHeader();
-	 xw.begin("manifest");
-	 xw.field("xmlns:android","http://schemas.android.com/apk/res/android");
-	 String pkg = propString(PROJ_PROP_ANDROID_PKG);
-	 if (pkg != null) xw.field("package",pkg);
-	 xw.field("android:versionCode",1);
-	 xw.field("android.versionName","1.0");
-	 xw.begin("uses-sdk");
-	 xw.field("android:minSdkVersion",8);
-	 xw.field("android:targetSdkVersion",21);
-	 xw.end();
-	 xw.begin("application");
-	 xw.field("android:allowBackups",true);
-	 xw.field("android:icon","@drawable/ic_launcher");
-	 xw.field("android:label","@string/app_name");
-	 xw.field("android:theme","@style/AppTheme");
-	 xw.begin("activity");
-	 xw.field("android:name",".MainActivity");
-	 xw.field("android:label","@string/app_name");
-	 xw.begin("intent-filter");
-	 xw.begin("action");
-	 xw.field("android:name","android.intent.action.MAIN");
-	 xw.end();
-	 xw.begin("category");
-	 xw.field("android:name","android.intent.category.LAUNCHER");
-	 xw.end();
-	 xw.end();
-	 xw.end();
-	 xw.end();
-	 xw.end();
-	 xw.close();
+         IvyXmlWriter xw = new IvyXmlWriter(f4);
+         xw.outputHeader();
+         xw.begin("manifest");
+         xw.field("xmlns:android","http://schemas.android.com/apk/res/android");
+         String pkg = propString(PROJ_PROP_ANDROID_PKG);
+         if (pkg != null) xw.field("package",pkg);
+         xw.field("android:versionCode",1);
+         xw.field("android.versionName","1.0");
+         xw.begin("uses-sdk");
+         xw.field("android:minSdkVersion",8);
+         xw.field("android:targetSdkVersion",21);
+         xw.end();
+         xw.begin("application");
+         xw.field("android:allowBackups",true);
+         xw.field("android:icon","@drawable/ic_launcher");
+         xw.field("android:label","@string/app_name");
+         xw.field("android:theme","@style/AppTheme");
+         xw.begin("activity");
+         xw.field("android:name",".MainActivity");
+         xw.field("android:label","@string/app_name");
+         xw.begin("intent-filter");
+         xw.begin("action");
+         xw.field("android:name","android.intent.action.MAIN");
+         xw.end();
+         xw.begin("category");
+         xw.field("android:name","android.intent.category.LAUNCHER");
+         xw.end();
+         xw.end();
+         xw.end();
+         xw.end();
+         xw.end();
+         xw.close();
        }
     }
    catch (Throwable e) {
@@ -952,8 +952,8 @@ private File findAndroidRoot(File f,Set<File> done)
    File [] subfiles = f.listFiles();
    if (subfiles != null) {
       for (File f2 : subfiles) {
-	 File f3 = findAndroidRoot(f2,done);
-	 if (f3 != null) return f3;
+         File f3 = findAndroidRoot(f2,done);
+         if (f3 != null) return f3;
        }
     }
 
@@ -984,9 +984,9 @@ private void createLink(File f1,File f2)
 
 
 /********************************************************************************/
-/*										*/
-/*	Property Methods							*/
-/*										*/
+/*                                                                              */
+/*      Property Methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPropMap(Element props)
@@ -1009,34 +1009,34 @@ private Object getPropertyValue(Element pelt)
    Object fval = null;
    switch (typ) {
       case "int" :
-	 fval = Integer.valueOf(val);
-	 break;
+         fval = Integer.valueOf(val);
+         break;
       case "String" :
-	 fval = val;
-	 break;
+         fval = val;
+         break;
       case "boolean" :
-	 fval = Boolean.valueOf(val);
-	 break;
+         fval = Boolean.valueOf(val);
+         break;
       case "File" :
-	 fval = new File(val);
-	 break;
+         fval = new File(val);
+         break;
       case "List" :
-	 List<Object> l = new ArrayList<>();
-	 for (Element lelt : IvyXml.children(pelt,"PROP")) {
-	    Object v = getPropertyValue(lelt);
-	    if (v != null) l.add(v);
-	  }
-	 fval = l;
-	 break;
+         List<Object> l = new ArrayList<>();
+         for (Element lelt : IvyXml.children(pelt,"PROP")) {
+            Object v = getPropertyValue(lelt);
+            if (v != null) l.add(v);
+          }
+         fval = l;
+         break;
       case "Map" :
-	 Map<String,Object> m = new HashMap<>();
-	 for (Element melt : IvyXml.children(pelt,"PROP")) {
-	    String k = IvyXml.getAttrString(melt,"NAME");
-	    Object v = getPropertyValue(melt);
-	    if (k != null && v != null) m.put(k,v);
-	  }
-	 fval = m;
-	 break;
+         Map<String,Object> m = new HashMap<>();
+         for (Element melt : IvyXml.children(pelt,"PROP")) {
+            String k = IvyXml.getAttrString(melt,"NAME");
+            Object v = getPropertyValue(melt);
+            if (k != null && v != null) m.put(k,v);
+          }
+         fval = m;
+         break;
     }
 
    return fval;
@@ -1076,12 +1076,12 @@ private Map<String,File> propLinks()
    Map<?,?> lnks = (Map<?,?>) prop_map.get(PROJ_PROP_LINKS);
    if (lnks != null) {
       for (Map.Entry<?,?> ent : lnks.entrySet()) {
-	 String k = ent.getKey().toString();
-	 Object v1 = ent.getValue();
-	 File v = null;
-	 if (v1 instanceof File) v = (File) v1;
-	 else if (v1 instanceof String) v = new File((String) v1);
-	 if (v != null) rslt.put(k,v);
+         String k = ent.getKey().toString();
+         Object v1 = ent.getValue();
+         File v = null;
+         if (v1 instanceof File) v = (File) v1;
+         else if (v1 instanceof String) v = new File((String) v1);
+         if (v != null) rslt.put(k,v);
        }
     }
    return rslt;
@@ -1095,8 +1095,8 @@ private List<File> propFiles(String k)
    List<File> rslt = new ArrayList<>();
    if (ps != null) {
       for (Object o : ps) {
-	 if (o instanceof File) rslt.add((File) o);
-	 else if (o instanceof String) rslt.add(new File((String) o));
+         if (o instanceof File) rslt.add((File) o);
+         else if (o instanceof String) rslt.add(new File((String) o));
        }
     }
    return rslt;
@@ -1114,7 +1114,7 @@ private File propFile(String k)
 
 
 
-}	// end of class BedrockProjectCreator
+}       // end of class BedrockProjectCreator
 
 
 

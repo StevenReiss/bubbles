@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtConsoleController.java					*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool console controller		*/
-/*										*/
+/*                                                                              */
+/*              BddtConsoleController.java                                      */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool console controller            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,9 +55,9 @@ class BddtConsoleController implements BddtConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<BddtLaunchControl,ConsoleDocument> launch_consoles;
@@ -76,9 +76,9 @@ enum TextMode { STDOUT, STDERR, STDIN, SYSTEM, EOF };
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructor								*/
-/*										*/
+/*                                                                              */
+/*      Constructor                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 BddtConsoleController()
@@ -108,9 +108,9 @@ BddtConsoleController()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void setupConsole(BddtLaunchControl blc)
@@ -173,9 +173,9 @@ void removeConsole(BddtLaunchControl blc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit methods								*/
-/*										*/
+/*                                                                              */
+/*      Edit methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void queueConsoleMessage(BumpProcess bp,TextMode mode,boolean eof,String msg)
@@ -184,9 +184,9 @@ private void queueConsoleMessage(BumpProcess bp,TextMode mode,boolean eof,String
    synchronized (message_queue) {
       last = message_queue.peekLast();
       if (last != null && last.getProcess() == bp && last.getTextMode() == mode &&
-	    last.isEof() == eof && last.getNumLines() < BDDT_CONSOLE_MAX_LINES/2) {
-	 last.merge(msg);
-	 return;
+            last.isEof() == eof && last.getNumLines() < BDDT_CONSOLE_MAX_LINES/2) {
+         last.merge(msg);
+         return;
        }
       String pid = bp.getId();
       Integer fg = auto_scroll.get(pid);
@@ -230,10 +230,10 @@ private void processConsoleMessage(ConsoleMessage msg)
 
    if (msg.isEof()) {
       synchronized (launch_consoles) {
-	 if (bp != null)  {
-	    addText(bp,TextMode.EOF,"\n [ Process Terminated ]\n");
-	    process_consoles.remove(bp.getId());
-	  }
+         if (bp != null)  {
+            addText(bp,TextMode.EOF,"\n [ Process Terminated ]\n");
+            process_consoles.remove(bp.getId());
+          }
        }
     }
    else {
@@ -275,14 +275,14 @@ private class ConsoleAdder implements Runnable {
             " " + add_message.length());
     }
 
-}	// end of inner class ConsoleAdder
+}       // end of inner class ConsoleAdder
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Input methods								*/
-/*										*/
+/*                                                                              */
+/*      Input methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void clearConsole(BumpProcess bp)
@@ -305,11 +305,11 @@ void handleInput(Document d,String input)
    BddtLaunchControl blc = null;
    synchronized (launch_consoles) {
       for (Map.Entry<BddtLaunchControl,ConsoleDocument> ent : launch_consoles.entrySet()) {
-	 if (ent.getValue() == d) {
-	    blc = ent.getKey();
-	    bp = blc.getProcess();
-	    break;
-	  }
+         if (ent.getValue() == d) {
+            blc = ent.getKey();
+            bp = blc.getProcess();
+            break;
+          }
        }
     }
    if (bp == null) return;
@@ -323,9 +323,9 @@ void handleInput(Document d,String input)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -334,8 +334,8 @@ private ConsoleDocument getDocument(BddtLaunchControl ctrl)
    synchronized (launch_consoles) {
       ConsoleDocument doc = launch_consoles.get(ctrl);
       if (doc == null) {
-	 doc = new ConsoleDocument(log_files.get(ctrl));
-	 launch_consoles.put(ctrl,doc);
+         doc = new ConsoleDocument(log_files.get(ctrl));
+         launch_consoles.put(ctrl,doc);
        }
       return doc;
     }
@@ -350,17 +350,17 @@ private ConsoleDocument getDocument(String pid,boolean force)
       ConsoleDocument doc = process_consoles.get(pid);
       if (doc != null) return doc;
       for (Map.Entry<BddtLaunchControl,ConsoleDocument> ent : launch_consoles.entrySet()) {
-	 BddtLaunchControl blc = ent.getKey();
-	 BumpProcess bp = blc.getProcess();
-	 if (bp != null && bp.getId().equals(pid)) {
-	    doc = ent.getValue();
-	    process_consoles.put(pid,doc);
-	    return doc;
-	  }
+         BddtLaunchControl blc = ent.getKey();
+         BumpProcess bp = blc.getProcess();
+         if (bp != null && bp.getId().equals(pid)) {
+            doc = ent.getValue();
+            process_consoles.put(pid,doc);
+            return doc;
+          }
        }
       if (force) {
-	 doc = new ConsoleDocument(log_files.get(pid));
-	 process_consoles.put(pid,doc);
+         doc = new ConsoleDocument(log_files.get(pid));
+         process_consoles.put(pid,doc);
        }
       return doc;
     }
@@ -370,9 +370,9 @@ private ConsoleDocument getDocument(String pid,boolean force)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BddtConsoleBubble createConsole(BddtLaunchControl blc)
@@ -400,9 +400,9 @@ BddtConsoleBubble createConsole(BumpProcess bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ConsoleHandler implements BumpConstants.BumpRunEventHandler {
@@ -421,23 +421,23 @@ private final class ConsoleHandler implements BumpConstants.BumpRunEventHandler 
       queueConsoleMessage(bp,md,eof,msg);
    }
 
-}	// end of inner class ConsoleHandler
+}       // end of inner class ConsoleHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	ConsoleBuffer implementation						*/
-/*										*/
+/*                                                                              */
+/*      ConsoleBuffer implementation                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConsoleDocument extends DefaultStyledDocument {
 
-   private int		line_count;
-   private int		max_length;
-   private int		line_length;
-   private File 	log_file;
-   private Writer	log_writer;
+   private int          line_count;
+   private int          max_length;
+   private int          line_length;
+   private File         log_file;
+   private Writer       log_writer;
    private static final long serialVersionUID = 1;
    
    ConsoleDocument(File logfile) {
@@ -451,22 +451,22 @@ private class ConsoleDocument extends DefaultStyledDocument {
    synchronized void clear() {
       writeLock();
       try {
-	 line_count = 0;
-	 max_length = 0;
-	 line_length = 0;
-	 remove(0,getLength());
+         line_count = 0;
+         max_length = 0;
+         line_length = 0;
+         remove(0,getLength());
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BDDT","Problem clearing console",e);
+         BoardLog.logE("BDDT","Problem clearing console",e);
        }
       finally { writeUnlock(); }
 
       log_writer = null;
       try {
-	 if (log_file != null) log_writer = new FileWriter(log_file);
+         if (log_file != null) log_writer = new FileWriter(log_file);
        }
       catch (IOException e) {
-	 BoardLog.logE("BDDT","Problem creating log writer: " + e);
+         BoardLog.logE("BDDT","Problem creating log writer: " + e);
        }
     }
 
@@ -546,11 +546,11 @@ private class ConsoleDocument extends DefaultStyledDocument {
 
    private void finish() {
       if (log_writer != null) {
-	 try {
-	    log_writer.close();
-	  }
-	 catch (IOException e) { }
-	 log_writer = null;
+         try {
+            log_writer.close();
+          }
+         catch (IOException e) { }
+         log_writer = null;
        }
     }
 
@@ -570,7 +570,7 @@ private class ConsoleDocument extends DefaultStyledDocument {
       return ct;
     }
 
-}	// end of inner class ConsoleDocument
+}       // end of inner class ConsoleDocument
 
 
 
@@ -590,10 +590,10 @@ private static class ConsoleMessage {
       num_lines = countTextLines(text);
     }
 
-   TextMode getTextMode()		{ return text_mode; }
-   boolean isEof()			{ return is_eof; }
-   String getText()			{ return message_text; }
-   BumpProcess getProcess()		{ return for_process; }
+   TextMode getTextMode()               { return text_mode; }
+   boolean isEof()                      { return is_eof; }
+   String getText()                     { return message_text; }
+   BumpProcess getProcess()             { return for_process; }
    int getNumLines()                    { return num_lines; }
    
    void merge(String t) { 
@@ -620,14 +620,14 @@ private static class ConsoleMessage {
       if (start > 0) message_text = message_text.substring(start);
     }
    
-}	// end of inner class ConsoleMessage
+}       // end of inner class ConsoleMessage
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread to handle console updates					*/
-/*										*/
+/*                                                                              */
+/*      Thread to handle console updates                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConsoleThread extends Thread {
@@ -652,11 +652,11 @@ private class ConsoleThread extends Thread {
        }
    }
 
-}	// end of inner class ConsoleThread
+}       // end of inner class ConsoleThread
 
 
 
-}	// end of class BddtConsoleController
+}       // end of class BddtConsoleController
 
 
 

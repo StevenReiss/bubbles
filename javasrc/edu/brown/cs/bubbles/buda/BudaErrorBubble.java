@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaErrorBubble.java						*/
-/*										*/
-/*	Bubble for displaying error messages					*/
-/*										*/
+/*                                                                              */
+/*              BudaErrorBubble.java                                            */
+/*                                                                              */
+/*      Bubble for displaying error messages                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Andrew Kovacs			*/
+/*      Copyright 2011 Brown University -- Andrew Kovacs                        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 package edu.brown.cs.bubbles.buda;
@@ -36,12 +36,12 @@ public class BudaErrorBubble extends BudaBubble {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Color	text_color;
+private Color   text_color;
 
 
 private static final long serialVersionUID = 1L;
@@ -50,9 +50,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaErrorBubble(final String errmsg)
@@ -74,9 +74,9 @@ public BudaErrorBubble(final String errmsg,Color c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Content pane								*/
-/*										*/
+/*                                                                              */
+/*      Content pane                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ErrorContentPane extends JPanel
@@ -90,7 +90,7 @@ private final class ErrorContentPane extends JPanel
       add(errlabel);
     }
 
-}	// end of inner class ErrorContentPane
+}       // end of inner class ErrorContentPane
 
 
 private final class QuitAction extends MouseAdapter {
@@ -99,14 +99,14 @@ private final class QuitAction extends MouseAdapter {
       setVisible(false);
     }
 
-}	// end of inner calss QuitAction
+}       // end of inner calss QuitAction
 
 
 
 
 
 
-}	// end of class BudaErrorBubble
+}       // end of class BudaErrorBubble
 
 
 

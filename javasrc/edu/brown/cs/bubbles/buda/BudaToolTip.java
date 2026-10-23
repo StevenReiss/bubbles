@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaToolTip							*/
-/*										*/
-/*	BUblles Display Area tool tip with html smart sizing			*/
-/*										*/
+/*                                                                              */
+/*              BudaToolTip                                                     */
+/*                                                                              */
+/*      BUblles Display Area tool tip with html smart sizing                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,13 +56,13 @@ public class BudaToolTip extends JToolTip implements MouseWheelListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JTextPane text_pane;
-private JLabel	  text_label;
+private JLabel    text_label;
 
 
 private static final int TIP_WIDTH = 800;
@@ -76,9 +76,9 @@ private static boolean scroll_label = true;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaToolTip()
@@ -102,15 +102,15 @@ public BudaToolTip()
       text_label.setOpaque(true);
 
       LookAndFeel.installColorsAndFont(text_pane,"ToopTip.background",
-	    "ToolTip.foreground","ToolTip.font");
+            "ToolTip.foreground","ToolTip.font");
 
       JComponent comp = text_pane;
       if (scroll_label) {
-	 comp = text_label;
-	 text_pane = null;
+         comp = text_label;
+         text_pane = null;
       }
       else {
-	 text_label = null;
+         text_label = null;
       }
 
       JScrollPane scrollpane = new JScrollPane(comp);
@@ -123,9 +123,9 @@ public BudaToolTip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handling								*/
-/*										*/
+/*                                                                              */
+/*      Event handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addNotify()
@@ -134,7 +134,7 @@ public BudaToolTip()
       super.addNotify();
       JComponent comp = getComponent();
       if (comp != null && allow_scrollable) {
-	 comp.addMouseWheelListener(this);
+         comp.addMouseWheelListener(this);
        }
     }
    catch (Throwable t) {
@@ -150,7 +150,7 @@ public BudaToolTip()
    try {
       JComponent comp = getComponent();
       if (comp != null) {
-	 comp.removeMouseWheelListener(this);
+         comp.removeMouseWheelListener(this);
        }
       super.removeNotify();
     }
@@ -165,15 +165,15 @@ public BudaToolTip()
    JComponent comp = getComponent();
    if (comp != null && text_pane != null) {
       text_pane.dispatchEvent(new MouseWheelEvent(text_pane,
-	    e.getID(), e.getWhen(), e.getModifiersEx(),
-	    0,0, e.getClickCount(), e.isPopupTrigger(),
-	    e.getScrollType(), e.getScrollAmount(), e.getWheelRotation()));
+            e.getID(), e.getWhen(), e.getModifiersEx(),
+            0,0, e.getClickCount(), e.isPopupTrigger(),
+            e.getScrollType(), e.getScrollAmount(), e.getWheelRotation()));
     }
    if (comp != null && text_label != null) {
       text_label.dispatchEvent(new MouseWheelEvent(text_label,
-	    e.getID(), e.getWhen(), e.getModifiersEx(),
-	    0,0, e.getClickCount(), e.isPopupTrigger(),
-	    e.getScrollType(), e.getScrollAmount(), e.getWheelRotation()));
+            e.getID(), e.getWhen(), e.getModifiersEx(),
+            0,0, e.getClickCount(), e.isPopupTrigger(),
+            e.getScrollType(), e.getScrollAmount(), e.getWheelRotation()));
     }
 }
 
@@ -184,15 +184,15 @@ public BudaToolTip()
 
    if (allow_scrollable) {
       if (text_pane != null) {
-	 String old = text_pane.getText();
-	 if (tip.startsWith("<html>")) text_pane.setContentType("text/html");
-	 else text_pane.setContentType("text/plain");
-	 text_pane.setText(tip);
-	 text_pane.setCaretPosition(0);
-	 firePropertyChange("tiptext",old,tip);
+         String old = text_pane.getText();
+         if (tip.startsWith("<html>")) text_pane.setContentType("text/html");
+         else text_pane.setContentType("text/plain");
+         text_pane.setText(tip);
+         text_pane.setCaretPosition(0);
+         firePropertyChange("tiptext",old,tip);
       }
       else if (text_label != null) {
-	 text_label.setText(tip);
+         text_label.setText(tip);
       }
     }
    else {
@@ -229,9 +229,9 @@ public BudaToolTip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Sizing routines 							*/
-/*										*/
+/*                                                                              */
+/*      Sizing routines                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Dimension getPreferredSize()
@@ -245,26 +245,26 @@ public BudaToolTip()
       dflt.height += 2;
       // if (dflt.width > MAX_WIDTH) dflt.width = MAX_WIDTH;
       if (dflt.height > MAX_HEIGHT) {
-	 dflt.width += 16;
-	 dflt.height = MAX_HEIGHT;
+         dflt.width += 16;
+         dflt.height = MAX_HEIGHT;
       }
       return dflt;
     }
    else if (allow_scrollable && text_label != null) {
       dflt = text_label.getPreferredSize();
       if (dflt.width >= TIP_WIDTH && txt.startsWith("<html>")) {
-	 View v = (View) text_label.getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey);
-	 int w0 = TIP_WIDTH;
-	 v.setSize(w0,0);
-	 float w = v.getPreferredSpan(View.X_AXIS);
-	 dflt.width = ((int) w) + 10;
+         View v = (View) text_label.getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey);
+         int w0 = TIP_WIDTH;
+         v.setSize(w0,0);
+         float w = v.getPreferredSpan(View.X_AXIS);
+         dflt.width = ((int) w) + 10;
       }
       dflt.width += 5;
       dflt.height += 2;
       // if (dflt.width > MAX_WIDTH) dflt.width = MAX_WIDTH;
       if (dflt.height > MAX_HEIGHT) {
-	 dflt.height = MAX_HEIGHT;
-	 dflt.width += 16;
+         dflt.height = MAX_HEIGHT;
+         dflt.width += 16;
       }
       return dflt;
    }
@@ -293,10 +293,10 @@ public BudaToolTip()
       v.setSize(w,0);
       float h1 = v.getPreferredSpan(View.Y_AXIS);
       if (h1 <= h) {
-	 wmax = w;
+         wmax = w;
        }
       else {
-	 wmin = w;
+         wmin = w;
        }
     }
    w = Math.round(wmin);
@@ -313,9 +313,9 @@ public BudaToolTip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Paint methods								*/
-/*										*/
+/*                                                                              */
+/*      Paint methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paintComponent(Graphics g0)
@@ -328,16 +328,16 @@ public BudaToolTip()
     }
    catch (IllegalArgumentException e) {
       BoardLog.logE("BUDA","Tool tip with no width/height: " + getSize() + " :: " +
-		       getTipText() + " :: " + getToolTipText() + " :: " + this,e);
+                       getTipText() + " :: " + getToolTipText() + " :: " + this,e);
     }
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Scrollable Label							*/
-/*										*/
+/*                                                                              */
+/*      Scrollable Label                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ScrollableLabel extends JLabel implements Scrollable {
@@ -364,13 +364,13 @@ private static final class ScrollableLabel extends JLabel implements Scrollable 
       return true;
     }
 
-}	// end of inner class ScrollableLabel
+}       // end of inner class ScrollableLabel
 
 
 
 
 
-}	// end of class BudaToolTip
+}       // end of class BudaToolTip
 
 
 

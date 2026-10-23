@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BdocTest.java							*/
-/*										*/
-/*	Bubbles Environment Documentation test program				*/
-/*										*/
+/*                                                                              */
+/*              BdocTest.java                                                   */
+/*                                                                              */
+/*      Bubbles Environment Documentation test program                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -45,9 +45,9 @@ public final class BdocTest implements BdocConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -61,17 +61,17 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BdocTest(String [] args)
@@ -81,9 +81,9 @@ private BdocTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Testing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -115,11 +115,11 @@ private static class CreateJSearch implements Runnable {
        }
     }
 
-}	// end of inner class createJSearch
+}       // end of inner class createJSearch
 
 
 
-}	// end of class BdocTest
+}       // end of class BdocTest
 
 
 

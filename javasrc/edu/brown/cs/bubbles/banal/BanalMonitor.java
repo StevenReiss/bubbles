@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalMonitor.java						*/
-/*										*/
-/*	Monitor for stand-alone Banal implementation				*/
-/*										*/
+/*                                                                              */
+/*              BanalMonitor.java                                               */
+/*                                                                              */
+/*      Monitor for stand-alone Banal implementation                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,21 +43,21 @@ class BanalMonitor implements BanalConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private MintControl	mint_control;
+private MintControl     mint_control;
 private BanalProjectManager project_manager;
-private boolean 	is_done;
+private boolean         is_done;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BanalMonitor(BanalMain bm,String mint)
@@ -68,9 +68,9 @@ BanalMonitor(BanalMain bm,String mint)
 
 
 /********************************************************************************/
-/*										*/
-/*	Server setup and run							*/
-/*										*/
+/*                                                                              */
+/*      Server setup and run                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void server()
@@ -83,11 +83,11 @@ void server()
 
    synchronized (this) {
       while (!is_done) {
-	 if (!checkEclipse()) break;
-	 try {
-	    wait(300000L);
-	  }
-	 catch (InterruptedException e) { }
+         if (!checkEclipse()) break;
+         try {
+            wait(300000L);
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -103,9 +103,9 @@ private synchronized void serverDone()
 
 
 /********************************************************************************/
-/*										*/
-/*	Check to exit if eclipse goes away					*/
-/*										*/
+/*                                                                              */
+/*      Check to exit if eclipse goes away                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean checkEclipse()
@@ -124,9 +124,9 @@ private boolean checkEclipse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Compute the package graph						*/
-/*										*/
+/*                                                                              */
+/*      Compute the package graph                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private String computePackageGraph(String proj,String pkg,boolean mthds,boolean samecls)
@@ -154,9 +154,9 @@ private String computePackageGraph(String proj,String pkg,boolean mthds,boolean 
 
 
 /********************************************************************************/
-/*										*/
-/*	Compute the package hierarchy						*/
-/*										*/
+/*                                                                              */
+/*      Compute the package hierarchy                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private String computePackageHierarchy(String proj)
@@ -176,9 +176,9 @@ private String computePackageHierarchy(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse access methods							*/
-/*										*/
+/*                                                                              */
+/*      Eclipse access methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 Element getAllProjects()
@@ -216,9 +216,9 @@ Element openProject(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle messages from Eclipse						*/
-/*										*/
+/*                                                                              */
+/*      Handle messages from Eclipse                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private final class EclipseHandler implements MintHandler {
@@ -242,7 +242,7 @@ private final class EclipseHandler implements MintHandler {
              }
           }
          else if (cmd.equals("PING")) {
-            msg.replyTo();			// we don't count for eclipse
+            msg.replyTo();                      // we don't count for eclipse
           }
          else if (cmd.equals("STOP")) {
             serverDone();
@@ -256,7 +256,7 @@ private final class EclipseHandler implements MintHandler {
        }
     }
 
-}	// end of inner class EclipseHandler
+}       // end of inner class EclipseHandler
 
 
 
@@ -266,15 +266,15 @@ private final class ExitHandler implements MintHandler {
       serverDone();
     }
 
-}	// end of inner class ExitHandler
+}       // end of inner class ExitHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle command requests from bubbles or elsewhere			*/
-/*										*/
+/*                                                                              */
+/*      Handle command requests from bubbles or elsewhere                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CommandHandler implements MintHandler {
@@ -322,12 +322,12 @@ private final class CommandHandler implements MintHandler {
       msg.replyTo(rply);
     }
 
-}	// end of inner class CommandHandler
+}       // end of inner class CommandHandler
 
 
 
 
-}	// end of class BanalMonitor
+}       // end of class BanalMonitor
 
 
 

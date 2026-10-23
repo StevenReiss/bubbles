@@ -85,10 +85,10 @@ BuenoGenericProjectEditor(Element edata,Element projdata)
       BuenoPathEntry pe = new BuenoPathEntry(e);
       if (pe.getPathType() != PathType.BINARY) initial_paths.add(pe);
       if (!pe.isIndirect() && pe.getPathType() == PathType.LIBRARY) {
-	 library_paths.add(pe);
+         library_paths.add(pe);
        }
       else if (!pe.isIndirect() && pe.getPathType() == PathType.SOURCE) {
-	 source_paths.add(pe);
+         source_paths.add(pe);
        }
     }
    

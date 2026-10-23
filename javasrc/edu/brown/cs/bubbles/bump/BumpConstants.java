@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpConstants.java						*/
-/*										*/
-/*	BUblles Mint Partnership constants					*/
-/*										*/
+/*                                                                              */
+/*              BumpConstants.java                                              */
+/*                                                                              */
+/*      BUblles Mint Partnership constants                                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,7 +42,7 @@ import java.util.EventListener;
 import java.util.List;
 
 /**
- *	Definitions for use with the BUMP-ECLIPSE interface
+ *      Definitions for use with the BUMP-ECLIPSE interface
  **/
 
 public interface BumpConstants extends MintConstants {
@@ -51,13 +51,13 @@ public interface BumpConstants extends MintConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Error types								*/
-/*										*/
+/*                                                                              */
+/*      Error types                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Error levels returned from the IDE.
+ *      Error levels returned from the IDE.
  **/
 
 enum BumpErrorType {
@@ -72,13 +72,13 @@ enum BumpErrorType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Location types								*/
-/*										*/
+/*                                                                              */
+/*      Location types                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Symbol types returned from the IDE.
+ *      Symbol types returned from the IDE.
  **/
 
 enum BumpSymbolType {
@@ -97,23 +97,23 @@ enum BumpSymbolType {
    MODULE,
    PACKAGE,
    PROJECT,
-   LOCAL,		// function local variable
-   GLOBAL,		// global variable
-   EXPORT,		// js: exports.x = y
-   IMPORT,		// js: var x = require('x')
-   PROGRAM		// js: executable
+   LOCAL,               // function local variable
+   GLOBAL,              // global variable
+   EXPORT,              // js: exports.x = y
+   IMPORT,              // js: var x = require('x')
+   PROGRAM              // js: executable
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Quick Fix types 							*/
-/*										*/
+/*                                                                              */
+/*      Quick Fix types                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Quick fix types returned from the IDE
+ *      Quick fix types returned from the IDE
  **/
 
 enum BumpFixType {
@@ -125,96 +125,96 @@ enum BumpFixType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for files							*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for files                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	A callback that can be registered with BUMP to handle IDE-generated
- *	messages related to remote edits, updated ASTs, etc.
+ *      A callback that can be registered with BUMP to handle IDE-generated
+ *      messages related to remote edits, updated ASTs, etc.
  **/
 
 interface BumpFileHandler extends EventListener {
 
 /**
- *	This routine is invoked with an updated elision information which is
- *	a reflection of the AST in Eclipse.
+ *      This routine is invoked with an updated elision information which is
+ *      a reflection of the AST in Eclipse.
  **/
    void handleElisionData(File file,int id,Element data);
 
 
 /**
- *	This routine is invoked when a fie that is open by this version of bubbles
- *	is edited either in the IDE or in another running copy of bubbles.
+ *      This routine is invoked when a fie that is open by this version of bubbles
+ *      is edited either in the IDE or in another running copy of bubbles.
  **/
    void handleRemoteEdit(File file,int len,int off,String txt);
 
-}	// end of interface BumpFileHandler
+}       // end of interface BumpFileHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Problem Handling classes						*/
-/*										*/
+/*                                                                              */
+/*      Problem Handling classes                                                */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Interface representing an error/warning/todo item/etc. from the IDE
+ *      Interface representing an error/warning/todo item/etc. from the IDE
  **/
 
 interface BumpProblem {
 
 /**
- *	Return a unique ID for this problem.
+ *      Return a unique ID for this problem.
  **/
    String getProblemId();
 
 /**
- *	Return the message associated with the problem.
+ *      Return the message associated with the problem.
  **/
    String getMessage();
 
 /**
- *	Return the file if any associated with the problem.
+ *      Return the file if any associated with the problem.
  **/
    File getFile();
 
 /**
- *	Return the line number (0 if there is none) associated with the problem.
+ *      Return the line number (0 if there is none) associated with the problem.
  **/
    int getLine();
 
 /**
- *	Return the start offset as per the IDE for the problem.
+ *      Return the start offset as per the IDE for the problem.
  **/
    int getStart();
 
 /**
- *	Return the end offset as per the IDE for the problem
+ *      Return the end offset as per the IDE for the problem
  **/
    int getEnd();
 
 /**
- *	Return the type of error (ERROR/WARNING/...)
+ *      Return the type of error (ERROR/WARNING/...)
  **/
    BumpErrorType getErrorType();
 
 
 /**
- *	Return the edit id that caused this error, 0 if none
+ *      Return the edit id that caused this error, 0 if none
  **/
    int getEditId();
 
 /**
- *	Get a list of the fixes suggested by the IDE for this error.  This will
- *	return null if there are no fixes.
+ *      Get a list of the fixes suggested by the IDE for this error.  This will
+ *      return null if there are no fixes.
  **/
    List<BumpFix> getFixes();
 
 /**
- *	Return project for this problem
+ *      Return project for this problem
  **/
    String getProject();
    
@@ -228,34 +228,34 @@ interface BumpProblem {
  **/
    String getData();
 
-}	// end of inner interface BumpProblem
+}       // end of inner interface BumpProblem
 
 
 
 
 /**
- *	Interface representing a quick fix for an error
+ *      Interface representing a quick fix for an error
  **/
 
 interface BumpFix {
 
 /**
- *	Return the type of quick fix.
+ *      Return the type of quick fix.
  **/
    BumpFixType getType();
 
 /**
- *	Return parameters describing the fix.  These are dependent on the fix.
+ *      Return parameters describing the fix.  These are dependent on the fix.
  **/
    String getParameter(String id);
 
 /**
- *	Return the edits associated with the fix.
+ *      Return the edits associated with the fix.
  **/
    Element getEdits();
 
 /**
- *	Return the relevance of this fix
+ *      Return the relevance of this fix
  **/
    int getRelevance();
 
@@ -265,7 +265,7 @@ interface BumpFix {
 
 
 /**
- *	Interface for callbacks for someone interested in getting problem notifications.
+ *      Interface for callbacks for someone interested in getting problem notifications.
  **/
 
 interface BumpProblemHandler extends EventListener {
@@ -276,12 +276,12 @@ interface BumpProblemHandler extends EventListener {
    default void handleClearProblems()                           { }
    default void handleClearProjectProblems(String proj)         { }
 
-}	// end of inner interface BumpProblemHandler
+}       // end of inner interface BumpProblemHandler
 
 
 
 /**
- *	The set of all valid parameters for quick fixes.
+ *      The set of all valid parameters for quick fixes.
  **/
 
 String [] FIX_PARAMETERS = new String [] {
@@ -301,59 +301,59 @@ interface BumpContractType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint handling classes						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint handling classes                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Interface for a breakpoint returned from the IDE.
+ *      Interface for a breakpoint returned from the IDE.
  **/
 
 interface BumpBreakpoint {
 
 /**
- *	Unique ID representing this breakpoint.
+ *      Unique ID representing this breakpoint.
  **/
    String getBreakId();
 
 /**
- *	File if any associated with the breakpoint.
+ *      File if any associated with the breakpoint.
  **/
    File getFile();
 
 /**
- *	Line number associated with the breakpoint; 0 indicates none.
+ *      Line number associated with the breakpoint; 0 indicates none.
  **/
    int getLineNumber();
 
 /**
- *	Get a property associated with the breakpoint.	Different types of breakpoints
- *	have different associated properties.  The breakpoint type can be obtained using
- *	the property "TYPE".
+ *      Get a property associated with the breakpoint.  Different types of breakpoints
+ *      have different associated properties.  The breakpoint type can be obtained using
+ *      the property "TYPE".
  **/
    String getProperty(String id);
 
 /**
- *	Get a boolean property associated with the breakpoint, false if not defined.
+ *      Get a boolean property associated with the breakpoint, false if not defined.
  **/
    boolean getBoolProperty(String id);
 
 /**
- *	Get an integer property associated with the breakpoint, 0 if not defined.
+ *      Get an integer property associated with the breakpoint, 0 if not defined.
  **/
    int getIntProperty(String id);
 
    String getDescription();
 
-}	// end of inner interface BumpBreakpoint
+}       // end of inner interface BumpBreakpoint
 
 
 
 
 /**
- *	Callback class for those interested in learing about additions/deletions or
- *	changes to breakpoints.
+ *      Callback class for those interested in learing about additions/deletions or
+ *      changes to breakpoints.
  **/
 
 interface BumpBreakpointHandler extends EventListener {
@@ -362,16 +362,16 @@ interface BumpBreakpointHandler extends EventListener {
    void handleBreakpointRemoved(BumpBreakpoint bp);
    void handleBreakpointChanged(BumpBreakpoint bp);
 
-}	// end of inner interface BumpBreakpointHandler
+}       // end of inner interface BumpBreakpointHandler
 
 
 
 
 /**
- *	Specify the mode of a breakpoint.  A breakpoint can either stop all the
- *	threads (SUSPEND_VM), or it can just suspend the thread in which it occurs
- *	(SUSPEND_THREAD).  If DEFAULT is specified, it will defer to the default
- *	setting in BbptFactory.
+ *      Specify the mode of a breakpoint.  A breakpoint can either stop all the
+ *      threads (SUSPEND_VM), or it can just suspend the thread in which it occurs
+ *      (SUSPEND_THREAD).  If DEFAULT is specified, it will defer to the default
+ *      setting in BbptFactory.
  **/
 
 enum BumpBreakMode {
@@ -380,17 +380,17 @@ enum BumpBreakMode {
    SUSPEND_VM,
    TRACE;
 
-   boolean isSuspendVm()	{ return this == SUSPEND_VM; }
-   boolean isSuspendThread()	{ return this != SUSPEND_VM; }
-   boolean isTrace()		{ return this == TRACE; }
+   boolean isSuspendVm()        { return this == SUSPEND_VM; }
+   boolean isSuspendThread()    { return this != SUSPEND_VM; }
+   boolean isTrace()            { return this == TRACE; }
 }
 
 
 /**
- *	Determines how exception breakpoints are interpreted.  CAUGHT implies that
- *	a break occurs when the exception is caught; UNCAUGHT only causes a breakpoint
- *	when the exception is not caught; ALL breaks in either case.  DEFAULT defers
- *	to the current default setting in BbptFactory.
+ *      Determines how exception breakpoints are interpreted.  CAUGHT implies that
+ *      a break occurs when the exception is caught; UNCAUGHT only causes a breakpoint
+ *      when the exception is not caught; ALL breaks in either case.  DEFAULT defers
+ *      to the current default setting in BbptFactory.
  **/
 
 enum BumpExceptionMode {
@@ -399,8 +399,8 @@ enum BumpExceptionMode {
    UNCAUGHT,
    ALL;
 
-   boolean isCaught()		{ return this == CAUGHT || this == ALL; }
-   boolean isUncaught() 	{ return this == UNCAUGHT || this == ALL; }
+   boolean isCaught()           { return this == CAUGHT || this == ALL; }
+   boolean isUncaught()         { return this == UNCAUGHT || this == ALL; }
 }
 
 
@@ -415,7 +415,7 @@ interface BumpBreakModel {
    void toggleBreakpoint(String proj,File file,int line,BumpBreakMode mode);
 
    void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode enmod,BumpBreakMode mode,
-	boolean subclasses);
+        boolean subclasses);
 
    void enableBreakpoint(File file,int line);
    void disableBreakpoint(File file,int line);
@@ -429,15 +429,15 @@ interface BumpBreakModel {
    void setDefaultBreakMode(BumpBreakMode mode);
    void setDefaultExceptionMode(BumpExceptionMode mode);
 
-}	// end of inner interface BumpBreakModel
+}       // end of inner interface BumpBreakModel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread states								*/
-/*										*/
+/*                                                                              */
+/*      Thread states                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 enum BumpThreadState {
@@ -496,10 +496,10 @@ enum BumpThreadState {
 
    public BumpThreadState getExceptionState() {
       switch (this) {
-	 case DEAD :
-	    return DEAD;
-	 default :
-	    return EXCEPTION;
+         case DEAD :
+            return DEAD;
+         default :
+            return EXCEPTION;
        }
     }
 
@@ -534,19 +534,19 @@ enum BumpThreadState {
 
    public boolean isRunning() {
       switch (this) {
-	 case NEW :
-	 case RUNNING :
-	 case RUNNING_SYNC :
-	 case RUNNING_IO :
-	 case RUNNING_SYSTEM :
-	 case WAITING :
-	 case TIMED_WAITING :
-	 case IDLE :
-	 case BLOCKED :
-	 case DEADLOCKED :
-	    return true;
-	 default :
-	    break;
+         case NEW :
+         case RUNNING :
+         case RUNNING_SYNC :
+         case RUNNING_IO :
+         case RUNNING_SYSTEM :
+         case WAITING :
+         case TIMED_WAITING :
+         case IDLE :
+         case BLOCKED :
+         case DEADLOCKED :
+            return true;
+         default :
+            break;
        }
       return false;
     }
@@ -584,9 +584,9 @@ enum BumpThreadState {
 
 
 /********************************************************************************/
-/*										*/
-/*	Run event handling							*/
-/*										*/
+/*                                                                              */
+/*      Run event handling                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 interface BumpRunModel {
@@ -599,7 +599,7 @@ interface BumpRunModel {
    void addRunEventHandler(BumpRunEventHandler reh);
    void removeRunEventHandler(BumpRunEventHandler reh);
 
-}	// end of inner interface BumpRunModel
+}       // end of inner interface BumpRunModel
 
 
 
@@ -636,7 +636,7 @@ interface BumpRunEvent {
    long getWhen();
    Object getEventData();
 
-}	// end of inner innerface BumpRunEvent
+}       // end of inner innerface BumpRunEvent
 
 
 
@@ -706,7 +706,7 @@ interface BumpLaunchConfigField {
    int getMax();
    String getDefaultValue();
 
-}	// end of interface BumpLaunchConfigField
+}       // end of interface BumpLaunchConfigField
 
 
 enum BumpConsoleMode {
@@ -715,19 +715,19 @@ enum BumpConsoleMode {
 
 interface BumpRunEventHandler extends EventListener {
 
-   default void handleLaunchEvent(BumpRunEvent evt)			{ }
-   default void handleProcessEvent(BumpRunEvent evt)			{ }
-   default void handleThreadEvent(BumpRunEvent evt)			{ }
+   default void handleLaunchEvent(BumpRunEvent evt)                     { }
+   default void handleProcessEvent(BumpRunEvent evt)                    { }
+   default void handleThreadEvent(BumpRunEvent evt)                     { }
 
 
    default void handleConsoleMessage(BumpProcess proc,
-         BumpConsoleMode mode,boolean iseof,String msg) 		{ }
+         BumpConsoleMode mode,boolean iseof,String msg)                 { }
 
-}	// end of inner interface BumpRunEventHandler
+}       // end of inner interface BumpRunEventHandler
 
 
 /**
- *	User-setup runnable
+ *      User-setup runnable
  **/
 
 interface BumpLaunchConfig {
@@ -774,11 +774,11 @@ interface BumpLaunchConfig {
 
    BumpLaunchConfig setAttribute(String name,String value);
 
-}	// end of inner interface BumpLaunch
+}       // end of inner interface BumpLaunch
 
 
 /**
- *	Active launch
+ *      Active launch
  **/
 
 interface BumpLaunch {
@@ -790,7 +790,7 @@ interface BumpLaunch {
 
 
 /**
- *	Active process
+ *      Active process
  **/
 
 interface BumpProcess {
@@ -801,11 +801,11 @@ interface BumpProcess {
    boolean isRunning();
    void requestSwingData(int x,int y);
    boolean isDummy();
-}	// end of inner interface BumpProcess
+}       // end of inner interface BumpProcess
 
 
 /**
- *	Thread in an active process
+ *      Thread in an active process
  **/
 
 interface BumpThread {
@@ -834,12 +834,12 @@ interface BumpThread {
    boolean isActive();
    void setActive(boolean fg);
 
-}	// end of inner interface BumpThread
+}       // end of inner interface BumpThread
 
 
 
 /**
- *	Representation of the stack
+ *      Representation of the stack
  **/
 
 interface BumpThreadStack {
@@ -848,7 +848,7 @@ interface BumpThreadStack {
    BumpThread getThread();
    BumpStackFrame getFrame(int idx);
 
-}	// end of inner interface BumpThreadStack
+}       // end of inner interface BumpThreadStack
 
 
 
@@ -877,7 +877,7 @@ interface BumpStackFrame {
    boolean sameFrame(BumpStackFrame frm);
    String getDisplayString();
 
-}	// end of inner interface BumpStackFrame
+}       // end of inner interface BumpStackFrame
 
 
 
@@ -901,7 +901,7 @@ interface BumpRunValue {
    BumpStackFrame getFrame();
    BumpThread getThread();
 
-}	// end of inner interface BumpRunValue
+}       // end of inner interface BumpRunValue
 
 
 
@@ -912,19 +912,19 @@ interface BumpThreadFilter extends EventListener {
 
 }
 
-String	BUMP_BANDAID_TRAILER = BandaidConstants.BANDAID_TRAILER;
+String  BUMP_BANDAID_TRAILER = BandaidConstants.BANDAID_TRAILER;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Completion handling classes						*/
-/*										*/
+/*                                                                              */
+/*      Completion handling classes                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	The types of completions that may be reported by the IDE.
+ *      The types of completions that may be reported by the IDE.
  **/
 
 enum CompletionType {
@@ -960,7 +960,7 @@ enum CompletionType {
 
 
 /**
- *	Information representing a completion from the IDE.
+ *      Information representing a completion from the IDE.
  **/
 
 interface BumpCompletion {
@@ -992,14 +992,14 @@ interface BumpCompletion {
 
    // int getRelevance();
 
-}	// end of inner interface BumpCompletion
+}       // end of inner interface BumpCompletion
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for file change notification					*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for file change notification                                  */
+/*                                                                              */
 /********************************************************************************/
 
 interface BumpChangeHandler extends EventListener {
@@ -1015,9 +1015,9 @@ interface BumpChangeHandler extends EventListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for editor requests						*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for editor requests                                           */
+/*                                                                              */
 /********************************************************************************/
 
 interface BumpOpenEditorBubbleHandler extends EventListener {
@@ -1025,7 +1025,7 @@ interface BumpOpenEditorBubbleHandler extends EventListener {
 
    void handleOpenEditorBubble(String projname, String resourcepath, String type);
 
-}	// end of inner class BumpOpenEditorBubbleHandler
+}       // end of inner class BumpOpenEditorBubbleHandler
 
 
 
@@ -1034,34 +1034,34 @@ interface BumpEvaluationHandler extends EventListener {
    void evaluationResult(String eid,String expr,BumpRunValue val);
    void evaluationError(String eid,String expr,String error);
 
-}	// end of inner class BumpEvaluationHandler
+}       // end of inner class BumpEvaluationHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for progress requests 					*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for progress requests                                         */
+/*                                                                              */
 /********************************************************************************/
 
 interface BumpProgressHandler extends EventListener {
 
    void handleProgress(long serialno,String id,String kind,String task,String subtask,double work);
 
-}	// end of inner class BumpProgressHandler
+}       // end of inner class BumpProgressHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Trie Performance Data							*/
-/*										*/
+/*                                                                              */
+/*      Trie Performance Data                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 // index into TrieNode performance arrays
-int BUMP_TRIE_OP_RUN = 0;			// count while running
-int BUMP_TRIE_OP_IO = 1;			// count doing I/O
-int BUMP_TRIE_OP_WAIT = 2;			// count doing wait
+int BUMP_TRIE_OP_RUN = 0;                       // count while running
+int BUMP_TRIE_OP_IO = 1;                        // count doing I/O
+int BUMP_TRIE_OP_WAIT = 2;                      // count doing wait
 
 int BUMP_TRIE_OP_COUNT = 3;
 
@@ -1094,7 +1094,7 @@ interface BumpTrieNode {
 
 
 
-}	// end of interface BumpConstants
+}       // end of interface BumpConstants
 
 
 

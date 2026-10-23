@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamHelpPanel.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing help panel			*/
-/*										*/
+/*                                                                              */
+/*              BeamHelpPanel.java                                              */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing help panel                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Yu Li	      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Yu Li             */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,19 +47,19 @@ class BeamHelpPanel implements BeamConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot		for_root;
+private BudaRoot                for_root;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamHelpPanel(BudaRoot br)
@@ -70,9 +70,9 @@ BeamHelpPanel(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addPanel()
@@ -108,9 +108,9 @@ void addPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Help methods								*/
-/*										*/
+/*                                                                              */
+/*      Help methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void showHelpVideo()
@@ -141,9 +141,9 @@ void showHelpTutorial()
 
 
 /********************************************************************************/
-/*										*/
-/*	Help action methods							*/
-/*										*/
+/*                                                                              */
+/*      Help action methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class HelpUrlAction extends AbstractAction {
@@ -169,7 +169,7 @@ private abstract class HelpUrlAction extends AbstractAction {
        }
     }
 
-}	// end of inner class HelpVideoAction
+}       // end of inner class HelpVideoAction
 
 
 
@@ -182,7 +182,7 @@ private class HelpVideoAction extends HelpUrlAction {
       super("Show Help Video",HELP_VIDEO_KEY,HELP_VIDEO_URL);
     }
 
-}	// end of inner class HelpVideoAction
+}       // end of inner class HelpVideoAction
 
 
 
@@ -195,7 +195,7 @@ private class HelpHomeAction extends HelpUrlAction {
       super("Show Home Page",HELP_HOME_KEY,HELP_HOME_URL);
     }
 
-}	// end of inner class HelpHomeAction
+}       // end of inner class HelpHomeAction
 
 
 
@@ -208,7 +208,7 @@ private class HelpWikiAction extends HelpUrlAction {
       super("Show Code Bubbles Wiki",HELP_WIKI_KEY,HELP_WIKI_URL);
     }
 
-}	// end of inner class HelpWikiAction
+}       // end of inner class HelpWikiAction
 
 
 
@@ -220,7 +220,7 @@ private class HelpTodoAction extends HelpUrlAction {
       super("Show How-To Page",HELP_TODO_KEY,HELP_TODO_URL);
     }
 
-}	// end of inner class HelpTodoAction
+}       // end of inner class HelpTodoAction
 
 
 
@@ -234,7 +234,7 @@ private class HelpTutorialAction extends HelpUrlAction {
       super("Show Tutorial",HELP_TUTORIAL_KEY,HELP_TUTORIAL_URL);
     }
 
-}	// end of inner class HelpTutorialAction
+}       // end of inner class HelpTutorialAction
 
 
 
@@ -255,7 +255,7 @@ private class HelpKeyAction extends AbstractAction {
       bb.grabFocus();
     }
 
-}	// end of inner class HelpKeyAction
+}       // end of inner class HelpKeyAction
 
 
 
@@ -277,16 +277,16 @@ private class HelpMouseAction extends AbstractAction {
       bb.grabFocus();
     }
 
-}	// end of inner class HelpMouseAction
+}       // end of inner class HelpMouseAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mail question								*/
-/*										*/
+/*                                                                              */
+/*      Mail question                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class HelpMailAction extends AbstractAction {
@@ -305,12 +305,12 @@ private class HelpMailAction extends AbstractAction {
       BeamFactory.sendMail(addr,"Bubbles Question","Your Question Here");
     }
 
-}	// end of inner class HelpMailAction
+}       // end of inner class HelpMailAction
 
 
 
 
-}	// end of class BeamHelpPanel
+}       // end of class BeamHelpPanel
 
 
 

@@ -1,9 +1,9 @@
 /********************************************************************************/
-/*										*/
-/*		BqstPanel.java							*/
-/*										*/
+/*                                                                              */
+/*              BqstPanel.java                                                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li				*/
+/*      Copyright 2009 Brown University -- Yu Li                                */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -48,33 +48,33 @@ import javax.swing.JScrollPane;
 
 
 /**
- *	This class is used to create Form Dialog.
+ *      This class is used to create Form Dialog.
  **/
 public class BqstPanel extends JDialog implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JPanel		  form_panel;
-private String		  form_title;
-private JScrollPane	     form_scrollpane;
+private JPanel            form_panel;
+private String            form_title;
+private JScrollPane          form_scrollpane;
 private ArrayList<BqstQuestion> question_list;
 private ArrayList<File>  file_list;
-private JLabel		  err_msg;
-private GridBagConstraints	form_cons;
-private boolean 	 screenshot_send_flag = false;
+private JLabel            err_msg;
+private GridBagConstraints      form_cons;
+private boolean          screenshot_send_flag = false;
 
-private static final long	serialVersionUID     = 1L;
+private static final long       serialVersionUID     = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BqstPanel(Frame frame,String title)
@@ -82,7 +82,7 @@ BqstPanel(Frame frame,String title)
    super(frame);
    setLocationRelativeTo(frame);
    setLocation(frame.getX() + (frame.getSize().width - FORM_WIDTH) / 2,
-		  frame.getY() + (frame.getSize().height - FORM_HEIGHT) / 2);
+                  frame.getY() + (frame.getSize().height - FORM_HEIGHT) / 2);
    setTitle(title);
    form_title = title;
    question_list = new ArrayList<BqstQuestion>();
@@ -118,15 +118,15 @@ void addFormTitle()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods of adding different types of questions				*/
-/*										*/
+/*                                                                              */
+/*      Methods of adding different types of questions                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
  * Add a question with a short text field.
  * @param question   the text of question
- * @param help	     the text of help message
+ * @param help       the text of help message
  * @param required   whether question is required or not
  **/
 public void addShortText(String question,String help,boolean required)
@@ -154,7 +154,7 @@ public void addLongText(String question,String help,boolean required)
 /**
  * Add a question with multiple choices.
  * @param question    the text of question
- * @param help	      the text of help message
+ * @param help        the text of help message
  * @param options     list of choices
  * @param icons       list of icons
  * @param sicons      list of selected icons
@@ -162,7 +162,7 @@ public void addLongText(String question,String help,boolean required)
  * @param required    whether question is required or not
  **/
 public void addMultiChoices(String question,String help,String[] options,Icon[] icons,
-			       Icon[] sicons,boolean others,boolean required)
+                               Icon[] sicons,boolean others,boolean required)
 {
    BqstMultiChoices q = new BqstMultiChoices(question,help,options,icons,sicons,required,others);
    registerQuestion(q);
@@ -173,13 +173,13 @@ public void addMultiChoices(String question,String help,String[] options,Icon[] 
 /**
  * Add a question with check boxes.
  * @param question   the text of question
- * @param help	     the text of help message
+ * @param help       the text of help message
  * @param required   whether question is required or not
  * @param options    list of choices
  * @param others     whether question has "others" choice
  **/
 public void addCheckBoxes(String question,String help,String[] options,boolean others,
-			     boolean required)
+                             boolean required)
 {
    BqstCheckBoxes q = new BqstCheckBoxes(question,help,options,required,others);
    registerQuestion(q);
@@ -225,9 +225,9 @@ public void setScreenshotFlag(boolean send)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup assistance methods						*/
-/*										*/
+/*                                                                              */
+/*      Setup assistance methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void addScreenShot()
@@ -261,9 +261,9 @@ private void registerQuestion(BqstQuestion q)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for displaying							*/
-/*										*/
+/*                                                                              */
+/*      Methods for displaying                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -302,9 +302,9 @@ private JPanel makeButtonPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for checking whether the required fields are filled or not	*/
-/*										*/
+/*                                                                              */
+/*      Methods for checking whether the required fields are filled or not      */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -316,11 +316,11 @@ private boolean checkForm()
    boolean filledflag = true;
    for (int i = 0; i < question_list.size(); i++) {
       if (question_list.get(i).getAnswer() == null) {
-	 question_list.get(i).markUnfilled();
-	 filledflag = false;
+         question_list.get(i).markUnfilled();
+         filledflag = false;
        }
       else {
-	 question_list.get(i).markFilled();
+         question_list.get(i).markFilled();
        }
     }
    return filledflag;
@@ -330,9 +330,9 @@ private boolean checkForm()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for generating an xml file of questions and user's input        */
-/*										*/
+/*                                                                              */
+/*      Methods for generating an xml file of questions and user's input        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -353,7 +353,7 @@ private void outputFile()
       xw.field("DATE", d.toString());
       xw.field("TIME", d.getTime());
       for (int i = 0; i < question_list.size(); i++) {
-	 xw.textElement(question_list.get(i).getTitle(), question_list.get(i).getAnswer());
+         xw.textElement(question_list.get(i).getTitle(), question_list.get(i).getAnswer());
        }
       xw.end(form_title);
       xw.close();
@@ -375,14 +375,14 @@ private void uploadOtherFiles()
    BoardUpload uploader;
    if (file_list.size() > 0) {
       for (int i = 0; i < file_list.size(); i++) {
-	 try {
-	    uploader = new BoardUpload(file_list.get(i),"FORM",form_title.replaceAll("\\s","_"));
-	    addHiddenField(file_list.get(i).getName(), uploader.getFileURL());
-	    BoardLog.logI("BQST", file_list.get(i).getName() + ": " + uploader.getFileURL());
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("File uploading error: ", e.getMessage());
-	  }
+         try {
+            uploader = new BoardUpload(file_list.get(i),"FORM",form_title.replaceAll("\\s","_"));
+            addHiddenField(file_list.get(i).getName(), uploader.getFileURL());
+            BoardLog.logI("BQST", file_list.get(i).getName() + ": " + uploader.getFileURL());
+          }
+         catch (IOException e) {
+            BoardLog.logE("File uploading error: ", e.getMessage());
+          }
        }
     }
 }
@@ -402,30 +402,30 @@ private void reset()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action listeners							*/
-/*										*/
+/*                                                                              */
+/*      Action listeners                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class SubmitListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent arg0) {
       if (checkForm()) {
-	 if (screenshot_send_flag) addScreenShot();
-	 uploadOtherFiles();
-	 outputFile();
-	 reset();
-	 err_msg.setText(THANKS_TEXT);
-	 form_scrollpane.getViewport().setViewPosition(new Point(0,0));
+         if (screenshot_send_flag) addScreenShot();
+         uploadOtherFiles();
+         outputFile();
+         reset();
+         err_msg.setText(THANKS_TEXT);
+         form_scrollpane.getViewport().setViewPosition(new Point(0,0));
        }
       else {
-	 err_msg.setText(UNFILLED_TEXT);
-	 form_scrollpane.getViewport().setViewPosition(new Point(0,0));
-	 validate();
+         err_msg.setText(UNFILLED_TEXT);
+         form_scrollpane.getViewport().setViewPosition(new Point(0,0));
+         validate();
        }
     }
 
-}	// end of inner class SubmitListener
+}       // end of inner class SubmitListener
 
 
 
@@ -437,7 +437,7 @@ private final class ResetListener implements ActionListener {
     }
 
 
-}	// end of inner class ResetListener
+}       // end of inner class ResetListener
 
 
 
@@ -448,12 +448,12 @@ private final class CancelListener implements ActionListener {
       dispose();
     }
 
-}	// end of inner class CanceltListener
+}       // end of inner class CanceltListener
 
 
 
 
-}	// end of class BqstPanel
+}       // end of class BqstPanel
 
 
 

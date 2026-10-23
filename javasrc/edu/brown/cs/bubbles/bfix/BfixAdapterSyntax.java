@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterSyntax.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterSyntax.java                                          */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -43,9 +43,9 @@ class BfixAdapterSyntax extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static Map<BfixErrorPattern,String> syntax_patterns;
@@ -58,9 +58,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterSyntax()
@@ -84,9 +84,9 @@ BfixAdapterSyntax()
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Method Implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override 
@@ -112,9 +112,9 @@ public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<Bf
 
 
 /********************************************************************************/
-/*										*/
-/*	Check if a syntax problem fixup is appropriate				*/
-/*										*/
+/*                                                                              */
+/*      Check if a syntax problem fixup is appropriate                          */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean trySyntaxProblem(BfixCorrector corr,BumpProblem bp)
@@ -153,9 +153,9 @@ private boolean trySyntaxProblem(BfixCorrector corr,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Syntax error fixer							*/
-/*										*/
+/*                                                                              */
+/*      Syntax error fixer                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -233,15 +233,15 @@ private class SyntaxFixer extends BfixFixer {
       return sd;
     }
 
-}	// end of inner class SyntaxFixer
+}       // end of inner class SyntaxFixer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to fix the syntax error						*/
-/*										*/
+/*                                                                              */
+/*      Class to fix the syntax error                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class SyntaxDoer extends BfixFixDoer {
@@ -265,12 +265,12 @@ private class SyntaxDoer extends BfixFixDoer {
 
    @Override public double getRegionOrder()                { return 0; } 
    
-}	// end of inner class SyntaxDoer
+}       // end of inner class SyntaxDoer
 
 
 
 
-}	// end of class BfixAdapterSyntax
+}       // end of class BfixAdapterSyntax
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconTest.java							*/
-/*										*/
-/*	Bubbles Environment Context Viewer test program 			*/
-/*										*/
+/*                                                                              */
+/*              BconTest.java                                                   */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer test program                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -44,9 +44,9 @@ public final class BconTest implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -60,17 +60,17 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BconTest(String [] args)
@@ -84,9 +84,9 @@ private BconTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Testing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -128,11 +128,11 @@ private static class CreateBcon implements Runnable {
        }
     }
 
-}	// end of inner class createBcon
+}       // end of inner class createBcon
 
 
 
-}	// end of class BconTest
+}       // end of class BconTest
 
 
 

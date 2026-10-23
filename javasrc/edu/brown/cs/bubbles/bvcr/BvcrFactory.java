@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrFactory.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool factory class for bubbles integration	*/
-/*										*/
+/*                                                                              */
+/*              BvcrFactory.java                                                */
+/*                                                                              */
+/*      Bubble Automated Testing Tool factory class for bubbles integration     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -73,26 +73,26 @@ public final class BvcrFactory implements BvcrConstants, BaleConstants, MintCons
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 		server_running;
-private boolean 		server_started;
-private Boolean 		factory_setup;
+private boolean                 server_running;
+private boolean                 server_started;
+private Boolean                 factory_setup;
 private Map<String,BvcrControlPanel> control_panels;
 private BudaRoot                buda_root;
 private Map<String,String>      project_warnings;
 
-private static BvcrFactory	the_factory = null;
+private static BvcrFactory      the_factory = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized BvcrFactory getFactory()
@@ -117,9 +117,9 @@ private BvcrFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -152,9 +152,9 @@ private void setupCallbacks()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bvcr agent setup							*/
-/*										*/
+/*                                                                              */
+/*      Bvcr agent setup                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 Element getChangesForFile(String proj,String file)
@@ -217,9 +217,9 @@ Element getFileDifferences(String proj,String file,String v0,String v1)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrControlPanel getControlPanel(String proj)
@@ -233,9 +233,9 @@ BvcrControlPanel getControlPanel(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Server code								*/
-/*										*/
+/*                                                                              */
+/*      Server code                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void startBvcrServer()
@@ -252,19 +252,19 @@ void startBvcrServer()
       BoardProperties bp = BoardProperties.getProperties("Bvcr");
       String dbgargs = bp.getProperty("Bvcr.jvm.args");
       if (dbgargs != null && dbgargs.contains("###")) {
-	 int port = (int) (Math.random() * 1000 + 3000);
-	 BoardLog.logI("BVCR","Bvcr debugging port " + port);
-	 dbgargs = dbgargs.replace("###",Integer.toString(port));
+         int port = (int) (Math.random() * 1000 + 3000);
+         BoardLog.logI("BVCR","Bvcr debugging port " + port);
+         dbgargs = dbgargs.replace("###",Integer.toString(port));
        }
 
       List<String> args = new ArrayList<String>();
       args.add(IvyExecQuery.getJavaPath());
       args.add("-Xmx" + Long.toString(mxmem));
       if (dbgargs != null) {
-	 StringTokenizer tok = new StringTokenizer(dbgargs);
-	 while (tok.hasMoreTokens()) {
-	    args.add(tok.nextToken());
-	  }
+         StringTokenizer tok = new StringTokenizer(dbgargs);
+         while (tok.hasMoreTokens()) {
+            args.add(tok.nextToken());
+          }
        }
       args.add("-cp");
       args.add(System.getProperty("java.class.path"));
@@ -290,41 +290,41 @@ void startBvcrServer()
       args.add(nlog.getPath());
 
       for (int i = 0; i < 100; ++i) {
-	 MintDefaultReply rply = new MintDefaultReply();
-	 mc.send("<BVCR DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
-	 String rslt = rply.waitForString(1000);
-	 if (rslt != null) {
-	    server_running = true;
-	    break;
-	  }
-	 if (i == 0) {
-	    try {
-	       exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
-	       server_started = true;
-	       BoardLog.logD("BVCR","Run " + exec.getCommand());
-	    }
-	    catch (IOException e) {
-	       break;
-	     }
-	  }
-	 else {
-	    try {
-	       if (exec != null) {
-		  // check if process exited (nothing to do)
-		  exec.exitValue();
-		  break;
-		}
-	     }
-	    catch (IllegalThreadStateException e) { }
-	  }
+         MintDefaultReply rply = new MintDefaultReply();
+         mc.send("<BVCR DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
+         String rslt = rply.waitForString(1000);
+         if (rslt != null) {
+            server_running = true;
+            break;
+          }
+         if (i == 0) {
+            try {
+               exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
+               server_started = true;
+               BoardLog.logD("BVCR","Run " + exec.getCommand());
+            }
+            catch (IOException e) {
+               break;
+             }
+          }
+         else {
+            try {
+               if (exec != null) {
+                  // check if process exited (nothing to do)
+                  exec.exitValue();
+                  break;
+                }
+             }
+            catch (IllegalThreadStateException e) { }
+          }
 
-	 try {
-	    wait(2000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(2000);
+          }
+         catch (InterruptedException e) { }
        }
       if (!server_running) {
-	 BoardLog.logI("BVCR","Unable to start bvcr server: " + args);
+         BoardLog.logI("BVCR","Unable to start bvcr server: " + args);
        }
     }
 
@@ -351,7 +351,7 @@ private synchronized void waitForSetup()
    for ( ; ; ) {
       if (factory_setup != null) break;
       try {
-	 wait(5000);
+         wait(5000);
       }
       catch (InterruptedException e) { }
     }
@@ -363,14 +363,14 @@ private static final class BvcrStarter implements Runnable {
       getFactory().startBvcrServer();
     }
 
-}	// end of inner class BvcrStarter
+}       // end of inner class BvcrStarter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action for showing method history					*/
-/*										*/
+/*                                                                              */
+/*      Action for showing method history                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
@@ -383,7 +383,7 @@ private final class BvcrContexter implements BaleContextListener, BassConstants.
     }
 
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String name,
-        	BassName forname) {
+                BassName forname) {
       BumpLocation loc = null;
       String proj = null;
       if (forname == null) {
@@ -426,7 +426,7 @@ private final class BvcrContexter implements BaleContextListener, BassConstants.
    
    
 
-}	// end of inner class BvcrContexter
+}       // end of inner class BvcrContexter
 
 
 private class HistoryAction extends AbstractAction {
@@ -450,7 +450,7 @@ private class HistoryAction extends AbstractAction {
       history_manager.process();
     }
 
-}	// end of inner class HistoryAction
+}       // end of inner class HistoryAction
 
 
 
@@ -475,7 +475,7 @@ private class DiffAction extends AbstractAction {
       history_manager.process();
     }
 
-}	// end of inner class HistoryAction
+}       // end of inner class HistoryAction
 
 
 
@@ -502,13 +502,13 @@ private class ControlAction extends AbstractAction {
       bba.addBubble(bbl,base_bubble,base_point,BudaConstants.PLACEMENT_LOGICAL);
     }
 
-}	// end of inner class HistoryAction
+}       // end of inner class HistoryAction
 
 
 /********************************************************************************/
-/*										*/
-/*	Tasks to perform once server is up and available			*/
-/*										*/
+/*                                                                              */
+/*      Tasks to perform once server is up and available                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ServerSetup implements Runnable {
@@ -542,7 +542,7 @@ private final class ServerSetup implements Runnable {
       SwingUtilities.invokeLater(new IssueWarnings());
     }
 
-}	// end of inner class ServerSetup
+}       // end of inner class ServerSetup
 
 
 
@@ -588,7 +588,7 @@ private final class IssueWarnings implements Runnable, ActionListener {
 }       // end of inner class IssueWarning
 
 
-}	// end of class BvcrFactory
+}       // end of class BvcrFactory
 
 
 

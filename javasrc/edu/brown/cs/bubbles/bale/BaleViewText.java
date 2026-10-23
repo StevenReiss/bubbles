@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewText.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor view for text element			*/
-/*										*/
+/*                                                                              */
+/*              BaleViewText.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor view for text element                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,24 +56,24 @@ class BaleViewText extends LabelView implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Segment 	saved_segment;
-private int		saved_start;
-private int		saved_end;
-private int		saved_counter;
+private Segment         saved_segment;
+private int             saved_start;
+private int             saved_end;
+private int             saved_counter;
 
 private static Map<Color,Paint> squiggle_paints = new HashMap<>();
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewText(BaleElement e)
@@ -89,9 +89,9 @@ BaleViewText(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Text caching methods							*/
-/*										*/
+/*                                                                              */
+/*      Text caching methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Segment getText(int p0,int p1)
@@ -109,16 +109,16 @@ BaleViewText(BaleElement e)
    if (p0 != saved_start || p1 != saved_end || bd.getEditCounter() != saved_counter || saved_segment == null) {
       Segment s = new Segment();
       try {
-	 bd.getText(p0,p1-p0,s);
-	 saved_start = p0;
-	 saved_end = p1;
-	 saved_counter = bd.getEditCounter();
-	 saved_segment = s;
+         bd.getText(p0,p1-p0,s);
+         saved_start = p0;
+         saved_end = p1;
+         saved_counter = bd.getEditCounter();
+         saved_segment = s;
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem with getText (" + p0 + "," + p1 + "): " + e +
-			  ":\n" + getElement(),e);
-	 return s;
+         BoardLog.logE("BALE","Problem with getText (" + p0 + "," + p1 + "): " + e +
+                          ":\n" + getElement(),e);
+         return s;
        }
     }
 
@@ -129,9 +129,9 @@ BaleViewText(BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting method 							*/
-/*										*/
+/*                                                                              */
+/*      Painting method                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g,Shape a)
@@ -156,18 +156,18 @@ BaleViewText(BaleElement e)
       // strip whitespace on end
       s = getText(p0, p1);
       while (Character.isWhitespace(s.last())) {
-	 p1 -= 1;
-	 s.count -= 1;
+         p1 -= 1;
+         s.count -= 1;
        }
     }
    if ((parent != null) && (parent.getStartOffset() == p0)) {
       // strip whitespace at start
       if (s == null) s = getText(p0,p1);
       while (Character.isWhitespace(s.first())) {
-	 p0 += 1;
-	 s.offset += 1;
-	 s.count -= 1;
-	 if (s.count <= 0) break;
+         p0 += 1;
+         s.offset += 1;
+         s.count -= 1;
+         if (s.count <= 0) break;
        }
     }
    if (s != null && s.count <= 0) return;
@@ -202,19 +202,19 @@ private static Paint getSquigglePaint(Color c)
    synchronized (squiggle_paints) {
       Paint p = squiggle_paints.get(c);
       if (p == null) {
-	 BufferedImage bi = new BufferedImage(4,3,BufferedImage.TYPE_4BYTE_ABGR);
-	 for (int i = 0; i < 4; ++i) {
-	    for (int j = 0; j < 3; ++j) {
-	       bi.setRGB(i,j,0);
-	     }
-	  }
-	 int color = c.getRGB();
-	 bi.setRGB(0,2,color);
-	 bi.setRGB(1,1,color);
-	 bi.setRGB(2,0,color);
-	 bi.setRGB(3,1,color);
-	 p = new TexturePaint(bi,new Rectangle(0,0,4,3));
-	 squiggle_paints.put(c,p);
+         BufferedImage bi = new BufferedImage(4,3,BufferedImage.TYPE_4BYTE_ABGR);
+         for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 3; ++j) {
+               bi.setRGB(i,j,0);
+             }
+          }
+         int color = c.getRGB();
+         bi.setRGB(0,2,color);
+         bi.setRGB(1,1,color);
+         bi.setRGB(2,0,color);
+         bi.setRGB(3,1,color);
+         p = new TexturePaint(bi,new Rectangle(0,0,4,3));
+         squiggle_paints.put(c,p);
        }
       return p;
     }
@@ -222,7 +222,7 @@ private static Paint getSquigglePaint(Color c)
 
 
 
-}	// end of class BaleViewText
+}       // end of class BaleViewText
 
 
 

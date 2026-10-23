@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BbookFactory.java						*/
-/*										*/
-/*	Factory for setting up programmers notebook display			*/
-/*										*/
+/*                                                                              */
+/*              BbookFactory.java                                               */
+/*                                                                              */
+/*      Factory for setting up programmers notebook display                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -70,25 +70,25 @@ public final class BbookFactory implements BbookConstants, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BbookTasker		task_manager;
-private BbookRegionManager	region_manager;
-private List<String>		all_projects;
-private BudaRoot		buda_root;
+private BbookTasker             task_manager;
+private BbookRegionManager      region_manager;
+private List<String>            all_projects;
+private BudaRoot                buda_root;
 
-private static BbookFactory	the_factory = new BbookFactory();
+private static BbookFactory     the_factory = new BbookFactory();
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BbookFactory()
@@ -106,14 +106,14 @@ private BbookFactory()
 
 
 
-public static BbookFactory getFactory() 	{ return the_factory; }
+public static BbookFactory getFactory()         { return the_factory; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -147,9 +147,9 @@ private static boolean isEnabled()
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging methods 							*/
-/*										*/
+/*                                                                              */
+/*      Logging methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 public void log(Component src,BnoteEntryType type,Object... args)
@@ -196,9 +196,9 @@ public BnoteTask getCurrentTask()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void createTaskSelector(BudaBubbleArea bba,BudaBubble bb,Point pt,String proj)
@@ -215,9 +215,9 @@ BbookRegion findTaskRegion(BudaBubbleArea bba,Rectangle r0)
 
 
 /********************************************************************************/
-/*										*/
-/*	Updating methods							*/
-/*										*/
+/*                                                                              */
+/*      Updating methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void handleSetTask(BnoteTask task,BudaBubbleArea bba,Rectangle loc)
@@ -237,8 +237,8 @@ synchronized List<String> getProjects()
    if (pxml != null) {
       Set<String> pset = new TreeSet<String>();
       for (Element pe : IvyXml.children(pxml,"PROJECT")) {
-	 String pnm = IvyXml.getAttrString(pe,"NAME");
-	 pset.add(pnm);
+         String pnm = IvyXml.getAttrString(pe,"NAME");
+         pset.add(pnm);
        }
       all_projects.addAll(pset);
     }
@@ -250,9 +250,9 @@ synchronized List<String> getProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Task request action							*/
-/*										*/
+/*                                                                              */
+/*      Task request action                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BbookAction extends AbstractAction {
@@ -273,25 +273,25 @@ private static class BbookAction extends AbstractAction {
       Rectangle r0 = new Rectangle(pt);
       BbookRegion tr = getFactory().findTaskRegion(bba,r0);
       if (tr == null) {
-	 getFactory().task_manager.createTaskSelector(bba,null,pt,null);
+         getFactory().task_manager.createTaskSelector(bba,null,pt,null);
        }
       else if (tr.getTask() != null) {
-	 getFactory().task_manager.createTaskNoter(bba,null,pt,tr.getTask().getProject(),tr.getTask());
+         getFactory().task_manager.createTaskNoter(bba,null,pt,tr.getTask().getProject(),tr.getTask());
        }
       else {
-	 getFactory().task_manager.createTaskSelector(bba,null,pt,null);
+         getFactory().task_manager.createTaskSelector(bba,null,pt,null);
        }
     }
 
-}	// end of inner class BbookAction
+}       // end of inner class BbookAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configurator for saving task set					*/
-/*										*/
+/*                                                                              */
+/*      Configurator for saving task set                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class TaskConfig implements BubbleConfigurator {
@@ -313,20 +313,20 @@ private static final class TaskConfig implements BubbleConfigurator {
     }
 
    @Override public void loadXml(BudaBubbleArea bba,Element root) {
-      if (bba == null) return;		// history loading
+      if (bba == null) return;          // history loading
       Element e = IvyXml.getChild(root,"BBOOK");
       if (e == null) return;
       getFactory().region_manager.loadTasks(e,bba);
     }
 
-}	// end of inner class TaskConfig
+}       // end of inner class TaskConfig
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle menu buttons							*/
-/*										*/
+/*                                                                              */
+/*      Handle menu buttons                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LogShow implements ButtonListener {
@@ -338,12 +338,12 @@ private static class LogShow implements ButtonListener {
       bba.addBubble(bb,null,pt,BudaConstants.PLACEMENT_EXPLICIT);
     }
 
-}	// end of inner class LogShow
+}       // end of inner class LogShow
 
 
 
 
-}	// end of class BbookFactory
+}       // end of class BbookFactory
 
 
 

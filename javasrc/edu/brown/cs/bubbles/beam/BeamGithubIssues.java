@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamGithubIssues.java						*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items bug report panel		*/
-/*										*/
+/*                                                                              */
+/*              BeamGithubIssues.java                                           */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items bug report panel          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Yu Li	      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Yu Li             */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -46,19 +46,19 @@ class BeamGithubIssues implements BeamConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot		for_root;
+private BudaRoot                for_root;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamGithubIssues(BudaRoot br)
@@ -69,9 +69,9 @@ BeamGithubIssues(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addPanel()
@@ -98,9 +98,9 @@ void addPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback to gather bug report information				*/
-/*										*/
+/*                                                                              */
+/*      Callback to gather bug report information                               */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BugReportListener implements ActionListener {
@@ -115,12 +115,12 @@ private final class BugReportListener implements ActionListener {
        }
    }
 
-}	// end of inner class BugReportListener
+}       // end of inner class BugReportListener
 
 
 
 
-}	// end of class BeamGithubIssues
+}       // end of class BeamGithubIssues
 
 
 

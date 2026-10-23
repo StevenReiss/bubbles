@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugValue.java						*/
-/*										*/
-/*	Representation of a JS value						*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugValue.java                                           */
+/*                                                                              */
+/*      Representation of a JS value                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -40,9 +40,9 @@ abstract class NobaseDebugValue implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected String value_description;
@@ -63,9 +63,9 @@ private static final Pattern FCT_NAME_PAT = Pattern.compile("^function ([A-Za-z0
 
 
 /********************************************************************************/
-/*										*/
-/*	Static methods								*/
-/*										*/
+/*                                                                              */
+/*      Static methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static NobaseDebugValue getValue(JSONObject val,NobaseDebugRefMap refmap,String name)
@@ -156,9 +156,9 @@ static NobaseDebugRefMap createRefs(JSONArray refs,NobaseDebugRefMap rslt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected NobaseDebugValue(JSONObject ref)
@@ -195,9 +195,9 @@ protected void complete(NobaseDebugRefMap refmap,int lvl) { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(String name,int lvl,IvyXmlWriter xw)
@@ -231,9 +231,9 @@ protected String toString(int lvl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Null values								*/
-/*										*/
+/*                                                                              */
+/*      Null values                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSNull extends NobaseDebugValue {
@@ -244,14 +244,14 @@ private static class JSNull extends NobaseDebugValue {
       xw.field("KIND","PRIVITIVE");
     }
 
-}	// end of inner class JSNull
+}       // end of inner class JSNull
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Undefined values							*/
-/*										*/
+/*                                                                              */
+/*      Undefined values                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSUndef extends NobaseDebugValue {
@@ -262,15 +262,15 @@ private static class JSUndef extends NobaseDebugValue {
       xw.field("KIND","PRIVITIVE");
     }
    
-}	// end of inner class JSUndef
+}       // end of inner class JSUndef
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Boolean values								*/
-/*										*/
+/*                                                                              */
+/*      Boolean values                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSBool extends NobaseDebugValue {
@@ -283,14 +283,14 @@ private static class JSBool extends NobaseDebugValue {
       xw.field("KIND","PRIVITIVE");
     }
     
-}	// end of inner class JSBool
+}       // end of inner class JSBool
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Numeric values								*/
-/*										*/
+/*                                                                              */
+/*      Numeric values                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSNumber extends NobaseDebugValue {
@@ -333,14 +333,14 @@ private static class JSNumber extends NobaseDebugValue {
       xw.field("NUMBER",number_value.toString());
     }
 
-}	// end of inner class JSNumber
+}       // end of inner class JSNumber
 
 
 
 /********************************************************************************/
-/*										*/
-/*	String values								*/
-/*										*/
+/*                                                                              */
+/*      String values                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSString extends NobaseDebugValue {
@@ -356,17 +356,17 @@ private static class JSString extends NobaseDebugValue {
       xw.field("KIND","STRING");
     }
 
-   @Override public String toString()		{ return string_value; }
+   @Override public String toString()           { return string_value; }
 
-}	// end of inner class JSString
+}       // end of inner class JSString
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Object values								*/
-/*										*/
+/*                                                                              */
+/*      Object values                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSObject extends NobaseDebugValue {
@@ -454,15 +454,15 @@ private static class JSObject extends NobaseDebugValue {
     }
 
 
-}	// end of inner class JSObject
+}       // end of inner class JSObject
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Function values 							*/
-/*										*/
+/*                                                                              */
+/*      Function values                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSFunction extends JSObject implements NobaseDebugFunction {
@@ -493,7 +493,7 @@ private static class JSFunction extends JSObject implements NobaseDebugFunction 
       return function_name;
     }
    
-}	// end of inner class JSFunction
+}       // end of inner class JSFunction
 
 
 
@@ -523,9 +523,9 @@ private static class JSSymbol extends NobaseDebugValue {
 
 
 /********************************************************************************/
-/*										*/
-/*	Frame values								*/
-/*										*/
+/*                                                                              */
+/*      Frame values                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class JSUnknown extends NobaseDebugValue {
@@ -538,12 +538,12 @@ private static class JSUnknown extends NobaseDebugValue {
       xw.field("KIND","UNKNNOWN");
     }
   
-}	// end of inner class JSUnknown
+}       // end of inner class JSUnknown
 
 
 
 
-}	// end of class NobaseDebugValue
+}       // end of class NobaseDebugValue
 
 
 

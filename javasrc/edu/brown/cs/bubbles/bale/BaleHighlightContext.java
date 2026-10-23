@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleHighlightContext.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor highlighting context			*/
-/*										*/
+/*                                                                              */
+/*              BaleHighlightContext.java                                       */
+/*                                                                              */
+/*      Bubble Annotated Language Editor highlighting context                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -56,28 +56,28 @@ class BaleHighlightContext implements BaleConstants, CaretListener, DocumentList
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Collection<BaleEditorPane>	for_editors;
-private Timer				our_timer;
-private TimerTask			wait_task;
-private CaretEvent			caret_event;
-private int				start_counter;
-private BumpClient			bump_client;
-private Set<BaleHighlightType>		active_types;
-private long				highlight_delay;
+private Collection<BaleEditorPane>      for_editors;
+private Timer                           our_timer;
+private TimerTask                       wait_task;
+private CaretEvent                      caret_event;
+private int                             start_counter;
+private BumpClient                      bump_client;
+private Set<BaleHighlightType>          active_types;
+private long                            highlight_delay;
 
-private static boolean		split_identifier = true;
+private static boolean          split_identifier = true;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleHighlightContext()
@@ -95,9 +95,9 @@ BaleHighlightContext()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor association methods						*/
-/*										*/
+/*                                                                              */
+/*      Editor association methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void addEditor(BaleEditorPane ed)
@@ -123,26 +123,26 @@ synchronized void removeEditor(BaleEditorPane ed)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static Highlighter.HighlightPainter getPainter(BaleHighlightType typ)
 {
    switch (typ) {
       case IDENTIFIER :
-	 return new IdentifierPainter();
+         return new IdentifierPainter();
       case IDENTIFIER_WRITE :
-	 return new IdentifierWritePainter();
+         return new IdentifierWritePainter();
       case IDENTIFIER_DEFINE :
-	 return new IdentifierDefinePainter();
+         return new IdentifierDefinePainter();
       case BRACKET :
-	 return new BracketPainter();
+         return new BracketPainter();
       case FIND :
-	 return new FindPainter();
+         return new FindPainter();
       default :
-	 break;
+         break;
     }
 
    return null;
@@ -151,9 +151,9 @@ static Highlighter.HighlightPainter getPainter(BaleHighlightType typ)
 
 
 /********************************************************************************/
-/*										*/
-/*	Caret event management							*/
-/*										*/
+/*                                                                              */
+/*      Caret event management                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public synchronized void caretUpdate(CaretEvent e)
@@ -169,10 +169,10 @@ static Highlighter.HighlightPainter getPainter(BaleHighlightType typ)
    doc.baleReadLock();
    try {
       if (wait_task == null && isStartable(e)) {
-	 caret_event = e;
-	 start_counter = doc.getEditCounter();
-	 wait_task = new WaitTimer(caret_event);
-	 our_timer.schedule(wait_task,highlight_delay);
+         caret_event = e;
+         start_counter = doc.getEditCounter();
+         wait_task = new WaitTimer(caret_event);
+         our_timer.schedule(wait_task,highlight_delay);
        }
     }
    finally { 
@@ -220,9 +220,9 @@ private boolean isStartable(CaretEvent e)
       case RBRACKET :
       case LANGLE :
       case RANGLE :
-	 break;
+         break;
       default :
-	 return false;
+         return false;
     }
 
    return true;
@@ -242,15 +242,15 @@ private class WaitTimer extends TimerTask {
       handleWaitDone(start_event);
     }
 
-}	// end of inner class WaitTimer
+}       // end of inner class WaitTimer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find the set of highlights					*/
-/*										*/
+/*                                                                              */
+/*      Methods to find the set of highlights                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleHighlight(CaretEvent start)
@@ -295,78 +295,78 @@ private void startHighlight(CaretEvent start)
 
    switch (leaf.getTokenType()) {
       case IDENTIFIER :
-	 List<BumpLocation> locsr = null;
-	 Collection<BumpLocation> locsw = null;
-	 Collection<BumpLocation> locsd = null;
+         List<BumpLocation> locsr = null;
+         Collection<BumpLocation> locsw = null;
+         Collection<BumpLocation> locsd = null;
 
-	 if (split_identifier) {
-	    locsr = bump_client.findRWReferences(doc.getProjectName(),
-						    doc.getFile(),spos,epos,false,4000);
-	    BumpSymbolType styp = BumpSymbolType.UNKNOWN;
-	    if (locsr != null && locsr.size() > 0) {
-	       BumpLocation loc = locsr.get(0);
-	       styp = loc.getSourceType();
-	       if (styp == BumpSymbolType.UNKNOWN) styp = loc.getSymbolType();
-	     }
-	    if (locsr != null && styp != BumpSymbolType.FUNCTION) removeDefs(locsr);
-	    switch (styp) {
-	       case UNKNOWN :
-		  locsw = bump_client.findReferences(null,doc.getFile(),spos,epos,4000);
-		  break;
-	       case FIELD :
-	       case LOCAL :
+         if (split_identifier) {
+            locsr = bump_client.findRWReferences(doc.getProjectName(),
+                                                    doc.getFile(),spos,epos,false,4000);
+            BumpSymbolType styp = BumpSymbolType.UNKNOWN;
+            if (locsr != null && locsr.size() > 0) {
+               BumpLocation loc = locsr.get(0);
+               styp = loc.getSourceType();
+               if (styp == BumpSymbolType.UNKNOWN) styp = loc.getSymbolType();
+             }
+            if (locsr != null && styp != BumpSymbolType.FUNCTION) removeDefs(locsr);
+            switch (styp) {
+               case UNKNOWN :
+                  locsw = bump_client.findReferences(null,doc.getFile(),spos,epos,4000);
+                  break;
+               case FIELD :
+               case LOCAL :
                case GLOBAL :
-		  locsw = bump_client.findRWReferences(null,doc.getFile(),spos,epos,true,2000);
-		  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,2000);
-		  break;
-	       case CLASS :
-	       case THROWABLE :
-	       case ENUM :
-	       case INTERFACE :
-		  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,2000);
-		  removeDefs(locsd);
-		  break;
+                  locsw = bump_client.findRWReferences(null,doc.getFile(),spos,epos,true,2000);
+                  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,2000);
+                  break;
+               case CLASS :
+               case THROWABLE :
+               case ENUM :
+               case INTERFACE :
+                  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,2000);
+                  removeDefs(locsd);
+                  break;
                case MODULE :
                   break;
                default :
-        	  break;
-	     }
-	  }
-	 else {
-	    locsr = bump_client.findReferences(null,doc.getFile(),spos,epos);
-	  }
-	 if (start != caret_event) return;
-	 if (doc.getEditCounter() != start_counter) return;
-	 if (locsr != null || locsw != null || locsd != null) {
-	    HighlightCreator hc = new HighlightCreator(start,start_counter,locsr,locsw,locsd);
-	    SwingUtilities.invokeLater(hc);
-	  }
-	 break;
+                  break;
+             }
+          }
+         else {
+            locsr = bump_client.findReferences(null,doc.getFile(),spos,epos);
+          }
+         if (start != caret_event) return;
+         if (doc.getEditCounter() != start_counter) return;
+         if (locsr != null || locsw != null || locsd != null) {
+            HighlightCreator hc = new HighlightCreator(start,start_counter,locsr,locsw,locsd);
+            SwingUtilities.invokeLater(hc);
+          }
+         break;
 
       case LBRACE :
       case LPAREN :
       case LBRACKET :
-	 BaleElement.Leaf me = findNextMatch(leaf);
-	 if (leaf != null && me != null) {
-	    BracketHighlightCreator bhc = new BracketHighlightCreator(leaf,me,start_counter);
-	    SwingUtilities.invokeLater(bhc);
-	 }
-	 break;
+         BaleElement.Leaf me = findNextMatch(leaf);
+         if (leaf != null && me != null) {
+            BracketHighlightCreator bhc = new BracketHighlightCreator(leaf,me,start_counter);
+            SwingUtilities.invokeLater(bhc);
+         }
+         break;
       case RBRACE :
       case RPAREN :
       case RBRACKET :
-	 me = findPriorMatch(leaf);
-	 if (leaf != null && me != null) {
-	    BracketHighlightCreator bhc = new BracketHighlightCreator(me,leaf,start_counter);
-	    SwingUtilities.invokeLater(bhc);
-	 }
-	 break;
+         me = findPriorMatch(leaf);
+         if (leaf != null && me != null) {
+            BracketHighlightCreator bhc = new BracketHighlightCreator(me,leaf,start_counter);
+            SwingUtilities.invokeLater(bhc);
+         }
+         break;
       case LANGLE :
       case RANGLE :
-	 // TODO: handle find matching brace
-	 break;
+         // TODO: handle find matching brace
+         break;
       default :
-	 break;
+         break;
     }
 }
 
@@ -400,7 +400,7 @@ private class DataGetter implements Runnable {
       return "BALE_HighlightDataGetter_" + start_event.getDot() + "_" + start_event.getMark();
     }
 
-}	// end of inner class DataGetter
+}       // end of inner class DataGetter
 
 
 
@@ -413,9 +413,9 @@ private class HighlightCreator implements Runnable {
    private Collection<BumpLocation> def_locs;
 
    HighlightCreator(CaretEvent start,int ctr,
-        	       Collection<BumpLocation> r,
-        	       Collection<BumpLocation> w,
-        	       Collection<BumpLocation> d) {
+                       Collection<BumpLocation> r,
+                       Collection<BumpLocation> w,
+                       Collection<BumpLocation> d) {
       start_event = start;
       edit_counter = ctr;
       read_locs = r;
@@ -442,7 +442,7 @@ private class HighlightCreator implements Runnable {
        }
     }
 
-}	// end of inner class HighlightCreator
+}       // end of inner class HighlightCreator
 
 
 
@@ -464,24 +464,24 @@ private class BracketHighlightCreator implements Runnable {
       BaleDocument doc = (BaleDocument) start_element.getDocument();
       doc.baleReadLock();
       try {
-	 if (doc.getEditCounter() != edit_counter) return;
-	 createBracketHighlights(start_element,end_element);
+         if (doc.getEditCounter() != edit_counter) return;
+         createBracketHighlights(start_element,end_element);
        }
       finally {
          doc.baleReadUnlock();
        }
     }
 
-}	// end of inner class BracketHighlightCreator
+}       // end of inner class BracketHighlightCreator
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bracket highlighting support						*/
-/*										*/
+/*                                                                              */
+/*      Bracket highlighting support                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleElement.Leaf findNextMatch(BaleElement open)
@@ -490,41 +490,41 @@ private BaleElement.Leaf findNextMatch(BaleElement open)
 
    switch (open.getTokenType()) {
       case LBRACE :
-	 rtyp = BaleTokenType.RBRACE;
-	 break;
+         rtyp = BaleTokenType.RBRACE;
+         break;
       case LBRACKET :
-	 rtyp = BaleTokenType.RBRACKET;
-	 break;
+         rtyp = BaleTokenType.RBRACKET;
+         break;
       case LPAREN :
-	 rtyp = BaleTokenType.RPAREN;
-	 break;
+         rtyp = BaleTokenType.RPAREN;
+         break;
       case LANGLE :
-	 rtyp = BaleTokenType.RANGLE;
-	 break;
+         rtyp = BaleTokenType.RANGLE;
+         break;
       default :
-	 break;
+         break;
     }
 
    int lvl = 0;
 
    for (BaleElement.Leaf nxt = open.getNextCharacterElement();
-	nxt != null;
-	nxt = nxt.getNextCharacterElement()) {
+        nxt != null;
+        nxt = nxt.getNextCharacterElement()) {
       switch (nxt.getTokenType()) {
-	 case LBRACE :
-	 case LPAREN :
-	 case LBRACKET :
-	    ++lvl;
-	    break;
-	 case RBRACE :
-	 case RPAREN :
-	 case RBRACKET :
-	    if (lvl > 0) --lvl;
-	    else if (nxt.getTokenType() == rtyp) return nxt;
-	    else return null;
-	    break;
-	 default :
-	    break;
+         case LBRACE :
+         case LPAREN :
+         case LBRACKET :
+            ++lvl;
+            break;
+         case RBRACE :
+         case RPAREN :
+         case RBRACKET :
+            if (lvl > 0) --lvl;
+            else if (nxt.getTokenType() == rtyp) return nxt;
+            else return null;
+            break;
+         default :
+            break;
        }
     }
 
@@ -539,41 +539,41 @@ private BaleElement.Leaf findPriorMatch(BaleElement open)
 
    switch (open.getTokenType()) {
       case RBRACE :
-	 rtyp = BaleTokenType.LBRACE;
-	 break;
+         rtyp = BaleTokenType.LBRACE;
+         break;
       case RBRACKET :
-	 rtyp = BaleTokenType.LBRACKET;
-	 break;
+         rtyp = BaleTokenType.LBRACKET;
+         break;
       case RPAREN :
-	 rtyp = BaleTokenType.LPAREN;
-	 break;
+         rtyp = BaleTokenType.LPAREN;
+         break;
       case RANGLE :
-	 rtyp = BaleTokenType.LANGLE;
-	 break;
+         rtyp = BaleTokenType.LANGLE;
+         break;
       default :
-	 break;
+         break;
     }
 
    int lvl = 0;
 
    for (BaleElement.Leaf nxt = open.getPreviousCharacterElement();
-	nxt != null;
-	nxt = nxt.getPreviousCharacterElement()) {
+        nxt != null;
+        nxt = nxt.getPreviousCharacterElement()) {
       switch (nxt.getTokenType()) {
-	 case LBRACE :
-	 case LPAREN :
-	 case LBRACKET :
-	    if (lvl > 0) --lvl;
-	    else if (nxt.getTokenType() == rtyp) return nxt;
-	    else return null;
-	    break;
-	 case RBRACE :
-	 case RPAREN :
-	 case RBRACKET :
-	    ++lvl;
-	    break;
-	 default :
-	    break;
+         case LBRACE :
+         case LPAREN :
+         case LBRACKET :
+            if (lvl > 0) --lvl;
+            else if (nxt.getTokenType() == rtyp) return nxt;
+            else return null;
+            break;
+         case RBRACE :
+         case RPAREN :
+         case RBRACKET :
+            ++lvl;
+            break;
+         default :
+            break;
        }
     }
 
@@ -583,9 +583,9 @@ private BaleElement.Leaf findPriorMatch(BaleElement open)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to set up highlights						*/
-/*										*/
+/*                                                                              */
+/*      Methods to set up highlights                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void createHighlights(CaretEvent start,BaleHighlightType typ,Collection<BumpLocation> locs)
@@ -596,14 +596,14 @@ private synchronized void createHighlights(CaretEvent start,BaleHighlightType ty
    if (locs != null) {
       boolean add = false;
       for (BumpLocation loc : locs) {
-	 for (BaleEditorPane bp : for_editors) {
-	    BaleDocument doc = bp.getBaleDocument();
-	    BaleRegion rgn = doc.getRegionFromLocation(loc);
-	    if (rgn != null) {
-	       bp.addHighlight(typ,rgn);
-	       add = true;
-	     }
-	  }
+         for (BaleEditorPane bp : for_editors) {
+            BaleDocument doc = bp.getBaleDocument();
+            BaleRegion rgn = doc.getRegionFromLocation(loc);
+            if (rgn != null) {
+               bp.addHighlight(typ,rgn);
+               add = true;
+             }
+          }
        }
       if (add) active_types.add(typ);
     }
@@ -617,7 +617,7 @@ private void removeHighlights(BaleHighlightType typ)
 {
    if (active_types.remove(typ)) {
       for (BaleEditorPane bp : for_editors) {
-	 bp.removeHighlights(typ);
+         bp.removeHighlights(typ);
       }
    }
 }
@@ -638,9 +638,9 @@ private synchronized void createBracketHighlights(BaleElement start,BaleElement 
    for (BaleEditorPane bp : for_editors) {
       BaleDocument doc = bp.getBaleDocument();
       if (doc == start.getDocument()) {
-	  BaleRegion rgn = new BaleRegion(start.getStartPosition(),end.getEndPosition());
-	  bp.addHighlight(BaleHighlightType.BRACKET,rgn);
-	 add = true;
+          BaleRegion rgn = new BaleRegion(start.getStartPosition(),end.getEndPosition());
+          bp.addHighlight(BaleHighlightType.BRACKET,rgn);
+         add = true;
       }
    }
    if (add) active_types.add(BaleHighlightType.BRACKET);
@@ -655,7 +655,7 @@ private synchronized void removeHighlights()
 {
    for (BaleHighlightType typ : active_types) {
       for (BaleEditorPane bp : for_editors) {
-	 bp.removeHighlights(typ);
+         bp.removeHighlights(typ);
        }
     }
 
@@ -665,12 +665,12 @@ private synchronized void removeHighlights()
 
 
 /********************************************************************************/
-/*										*/
-/*	Document listener methods						*/
-/*										*/
+/*                                                                              */
+/*      Document listener methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public void changedUpdate(DocumentEvent e)			{ }
+@Override public void changedUpdate(DocumentEvent e)                    { }
 
 
 
@@ -687,9 +687,9 @@ private synchronized void removeHighlights()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painter classes for different highlighting types			*/
-/*										*/
+/*                                                                              */
+/*      Painter classes for different highlighting types                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class IdentifierPainter extends DefaultHighlighter.DefaultHighlightPainter {
@@ -698,7 +698,7 @@ private static class IdentifierPainter extends DefaultHighlighter.DefaultHighlig
       super(BoardColors.getColor(BALE_IDENTIFIER_HIGHLIGHT_COLOR_PROP));
     }
 
-}	// end of inner class IdentifierPainter
+}       // end of inner class IdentifierPainter
 
 
 
@@ -710,7 +710,7 @@ private static class IdentifierWritePainter extends DefaultHighlighter.DefaultHi
       super(BoardColors.getColor(BALE_IDENTIFIER_WRITE_HIGHLIGHT_COLOR_PROP));
     }
 
-}	// end of inner class IdentifierWritePainter
+}       // end of inner class IdentifierWritePainter
 
 
 
@@ -722,7 +722,7 @@ private static class IdentifierDefinePainter extends DefaultHighlighter.DefaultH
       super(BoardColors.getColor(BALE_IDENTIFIER_DEFINE_HIGHLIGHT_COLOR_PROP));
     }
 
-}	// end of inner class IdentifierDefinePainter
+}       // end of inner class IdentifierDefinePainter
 
 
 
@@ -734,7 +734,7 @@ private static class BracketPainter extends DefaultHighlighter.DefaultHighlightP
       super(BoardColors.getColor(BALE_BRACKET_HIGHLIGHT_COLOR_PROP));
     }
 
-}	// end of inner class IdentifierPainter
+}       // end of inner class IdentifierPainter
 
 
 
@@ -748,7 +748,7 @@ private static class FindPainter extends DefaultHighlighter.DefaultHighlightPain
 
 
 
-}	// end of class BaleHighlightContext
+}       // end of class BaleHighlightContext
 
 
 

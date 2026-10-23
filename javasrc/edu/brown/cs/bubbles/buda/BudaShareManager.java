@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaShareManager.java						*/
-/*										*/
-/*	BUblles Display Area manager for shared working sets			*/
-/*										*/
+/*                                                                              */
+/*              BudaShareManager.java                                           */
+/*                                                                              */
+/*      BUblles Display Area manager for shared working sets                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,19 +55,19 @@ class BudaShareManager implements BudaConstants, MintConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private MintControl	mint_control;
+private MintControl     mint_control;
 private Map<String,Share> our_shares;
 private Map<BudaBubbleArea,BubbleChecker> call_backs;
 private Map<String,Integer> last_update;
 
-private static String	host_id;
-private static int	id_counter = 1;
-private static int	serial_number = 0;
+private static String   host_id;
+private static int      id_counter = 1;
+private static int      serial_number = 0;
 
 
 static {
@@ -76,9 +76,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaShareManager()
@@ -95,9 +95,9 @@ BudaShareManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to list all active shares we can connect to			*/
-/*										*/
+/*                                                                              */
+/*      Methods to list all active shares we can connect to                     */
+/*                                                                              */
 /********************************************************************************/
 
 List<BudaShare> getAllShares()
@@ -127,12 +127,12 @@ private class AllShares implements MintReply {
    @Override public synchronized void handleReply(MintMessage msg,MintMessage rply) {
       Element rx = rply.getXml();
       if (IvyXml.isElement(rx,"SHARES")) {
-	 for (Element sx : IvyXml.children(rx,"SHARE")) {
-	    String id = IvyXml.getAttrString(sx,"ID");
-	    if (our_shares.containsKey(id)) continue;
-	    Share s = new Share(sx);
-	    all_shares.put(s.getId(),s);
-	  }
+         for (Element sx : IvyXml.children(rx,"SHARE")) {
+            String id = IvyXml.getAttrString(sx,"ID");
+            if (our_shares.containsKey(id)) continue;
+            Share s = new Share(sx);
+            all_shares.put(s.getId(),s);
+          }
        }
     }
 
@@ -145,20 +145,20 @@ private class AllShares implements MintReply {
       long end = System.currentTimeMillis() + delay;
 
       while (!is_done) {
-	 try {
-	    wait(delay);
-	  }
-	 catch (InterruptedException e) { }
-	 if (delay > 0 && !is_done) {
-	    delay = end - System.currentTimeMillis();
-	    if (delay <= 0) break;
-	  }
+         try {
+            wait(delay);
+          }
+         catch (InterruptedException e) { }
+         if (delay > 0 && !is_done) {
+            delay = end - System.currentTimeMillis();
+            if (delay <= 0) break;
+          }
        }
 
       return all_shares.values();
     }
 
-}	// end of inner class AllShares
+}       // end of inner class AllShares
 
 
 
@@ -166,7 +166,7 @@ private void generateShares(BudaXmlWriter xw)
 {
    synchronized (our_shares) {
       for (Share s : our_shares.values()) {
-	 s.outputXml(xw,false);
+         s.outputXml(xw,false);
       }
     }
 }
@@ -174,9 +174,9 @@ private void generateShares(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for creating a shared working set				*/
-/*										*/
+/*                                                                              */
+/*      Methods for creating a shared working set                               */
+/*                                                                              */
 /********************************************************************************/
 
 void createShare(BudaWorkingSetImpl ws)
@@ -185,7 +185,7 @@ void createShare(BudaWorkingSetImpl ws)
 
    synchronized (our_shares) {
       for (Share s : our_shares.values()) {
-	 if (s.getWorkingSet() == ws) return;
+         if (s.getWorkingSet() == ws) return;
        }
       sh = new Share(ws,null);
       ws.setShared(true);
@@ -196,8 +196,8 @@ void createShare(BudaWorkingSetImpl ws)
       BudaBubbleArea bba = ws.getBubbleArea();
       BubbleChecker bc = call_backs.get(bba);
       if (bc == null) {
-	 bc = new BubbleChecker();
-	 bba.addBubbleAreaCallback(bc);
+         bc = new BubbleChecker();
+         bba.addBubbleAreaCallback(bc);
        }
     }
 }
@@ -209,8 +209,8 @@ void removeShare(BudaWorkingSetImpl ws)
    for (Iterator<Share> it = our_shares.values().iterator(); it.hasNext(); ) {
       Share s = it.next();
       if (s.getWorkingSet() == ws) {
-	 ws.setShared(false);
-	 it.remove();
+         ws.setShared(false);
+         it.remove();
        }
     }
 }
@@ -218,15 +218,15 @@ void removeShare(BudaWorkingSetImpl ws)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for using a shared workspace					*/
-/*										*/
+/*                                                                              */
+/*      Methods for using a shared workspace                                    */
+/*                                                                              */
 /********************************************************************************/
 
 boolean useShare(BudaShare bs,BudaBubbleArea bba,int offset)
 {
    String id = bs.getId();
-   if (our_shares.containsKey(id)) return false;	// don't share with self
+   if (our_shares.containsKey(id)) return false;        // don't share with self
 
    MintDefaultReply mdr = new MintDefaultReply();
    String msg = "<BUDA SOURCE='SHARE' CMD='SHARE' HOST='" + host_id + "' ID='" + id + "' />";
@@ -248,9 +248,9 @@ boolean useShare(BudaShare bs,BudaBubbleArea bba,int offset)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handler for share messages						*/
-/*										*/
+/*                                                                              */
+/*      Handler for share messages                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ShareHandler implements MintHandler {
@@ -258,9 +258,9 @@ private final class ShareHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       String host = args.getArgument(1);
-      if (host.equals(host_id)) {	  // ignore self messages
-	 msg.replyTo();
-	 return;
+      if (host.equals(host_id)) {         // ignore self messages
+         msg.replyTo();
+         return;
        }
       Element xml = msg.getXml();
       String id = IvyXml.getAttrString(xml,"ID");
@@ -270,47 +270,47 @@ private final class ShareHandler implements MintHandler {
       String rply = null;
 
       try {
-	 if (cmd == null) ;
-	 else if (cmd.equals("ALLSHARES")) {
-	    BudaXmlWriter xw = new BudaXmlWriter();
-	    xw.begin("SHARES");
-	    generateShares(xw);
-	    xw.end("SHARES");
-	    rply = xw.toString();
-	  }
-	 else if (cmd.equals("UNSHARE")) {
-	    Share s = our_shares.get(id);
-	    if (s != null) {
-	       our_shares.remove(id);
-	     }
-	  }
-	 else if (cmd.equals("UPDATE")) {
-	    Share s = our_shares.get(id);
-	    if (s != null) {
-	       Updater upd = new Updater(s,xml);
-	       BoardThreadPool.start(upd);
-	     }
-	  }
-	 else if (cmd.equals("SHARE")) {
-	    Share s = our_shares.get(id);
-	    if (s != null) {
-	       BudaXmlWriter xw = new BudaXmlWriter();
-	       s.outputXml(xw,true);
-	       rply = xw.toString();
-	     }
-	  }
-	 else {
-	    BoardLog.logD("BUDA","Unknown share message " + cmd);
-	  }
+         if (cmd == null) ;
+         else if (cmd.equals("ALLSHARES")) {
+            BudaXmlWriter xw = new BudaXmlWriter();
+            xw.begin("SHARES");
+            generateShares(xw);
+            xw.end("SHARES");
+            rply = xw.toString();
+          }
+         else if (cmd.equals("UNSHARE")) {
+            Share s = our_shares.get(id);
+            if (s != null) {
+               our_shares.remove(id);
+             }
+          }
+         else if (cmd.equals("UPDATE")) {
+            Share s = our_shares.get(id);
+            if (s != null) {
+               Updater upd = new Updater(s,xml);
+               BoardThreadPool.start(upd);
+             }
+          }
+         else if (cmd.equals("SHARE")) {
+            Share s = our_shares.get(id);
+            if (s != null) {
+               BudaXmlWriter xw = new BudaXmlWriter();
+               s.outputXml(xw,true);
+               rply = xw.toString();
+             }
+          }
+         else {
+            BoardLog.logD("BUDA","Unknown share message " + cmd);
+          }
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUDA","Problem processing share message " + cmd,t);
+         BoardLog.logE("BUDA","Problem processing share message " + cmd,t);
        }
 
       msg.replyTo(rply);
     }
 
-}	// end of inner class ShareHandler
+}       // end of inner class ShareHandler
 
 
 
@@ -331,38 +331,38 @@ private class Updater implements Runnable {
       Element share = IvyXml.getChild(update_msg,"SHARE");
       Element task = IvyXml.getChild(share,"TASK");
       synchronized (for_share) {
-	 Integer iv = last_update.get(host);
-	 if (iv != null && sno < iv) return;
-	 last_update.put(host,sno);
-	 for_share.setDoingUpdate(true);
-	 BudaTask bt = new BudaTask(task);
-	 // System.err.println("UPDATE: " + IvyXml.convertXmlToString(update_msg));
-	 bt.updateTask(for_share.getWorkingSet());
-	 for_share.setDoingUpdate(false);
-	 for_share.memoize();
+         Integer iv = last_update.get(host);
+         if (iv != null && sno < iv) return;
+         last_update.put(host,sno);
+         for_share.setDoingUpdate(true);
+         BudaTask bt = new BudaTask(task);
+         // System.err.println("UPDATE: " + IvyXml.convertXmlToString(update_msg));
+         bt.updateTask(for_share.getWorkingSet());
+         for_share.setDoingUpdate(false);
+         for_share.memoize();
        }
     }
 
-}	// end of inner class updater
+}       // end of inner class updater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handler for bubble updates						*/
-/*										*/
+/*                                                                              */
+/*      Handler for bubble updates                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BubbleChecker implements BubbleAreaCallback, BubbleViewCallback {
 
-   @Override public void moveDelta(int dx,int dy)		{ }
+   @Override public void moveDelta(int dx,int dy)               { }
    
    @Override public void updateOverview() {
       checkStates();
     }
 
-}	// end of inner class BubbleChecker
+}       // end of inner class BubbleChecker
 
 
 
@@ -370,9 +370,9 @@ private void checkStates()
 {
    for (Share s : our_shares.values()) {
       synchronized (s) {
-	 if (s.memoize()) {
-	    if (!s.isDoingUpdate()) sendUpdate(s);
-	  }
+         if (s.memoize()) {
+            if (!s.isDoingUpdate()) sendUpdate(s);
+          }
        }
     }
 }
@@ -399,9 +399,9 @@ private static synchronized int getSerialNumber()
 }
 
 /********************************************************************************/
-/*										*/
-/*	Representation of a shared working set or task				*/
-/*										*/
+/*                                                                              */
+/*      Representation of a shared working set or task                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Share implements BudaShare {
@@ -437,19 +437,19 @@ private static class Share implements BudaShare {
     }
 
 
-   BudaWorkingSetImpl getWorkingSet()			{ return working_set; }
+   BudaWorkingSetImpl getWorkingSet()                   { return working_set; }
 
-   @Override public String getId()			{ return share_id; }
-   @Override public String getUser()			{ return share_user; }
-   @Override public String getHost()			{ return share_host; }
+   @Override public String getId()                      { return share_id; }
+   @Override public String getUser()                    { return share_user; }
+   @Override public String getHost()                    { return share_host; }
 
    @Override public String getName() {
       if (share_name != null) return share_name;
       return working_set.getLabel();
     }
 
-   void setDoingUpdate(boolean fg)			{ doing_update = fg; }
-   boolean isDoingUpdate()				{ return doing_update; }
+   void setDoingUpdate(boolean fg)                      { doing_update = fg; }
+   boolean isDoingUpdate()                              { return doing_update; }
 
    boolean memoize() {
       StateMemo sm = new StateMemo(this);
@@ -465,7 +465,7 @@ private static class Share implements BudaShare {
       xw.field("USER",getUser());
       xw.field("HOST",getHost());
       if (cnts && working_set != null) {
-	 working_set.createTask(xw);
+         working_set.createTask(xw);
        }
       xw.end("SHARE");
     }
@@ -489,15 +489,15 @@ private static class Share implements BudaShare {
       return c;
     }
 
-}	// end of inner class Share
+}       // end of inner class Share
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Share utility methods							*/
-/*										*/
+/*                                                                              */
+/*      Share utility methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private static synchronized String createId(Share s)
@@ -509,9 +509,9 @@ private static synchronized String createId(Share s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of working set state					*/
-/*										*/
+/*                                                                              */
+/*      Representation of working set state                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class StateMemo {
@@ -526,15 +526,15 @@ private static class StateMemo {
       BudaBubbleArea bba = ws.getBubbleArea();
       Rectangle r1 = ws.getRegion();
       for (BudaBubble bb : bba.getBubblesInRegion(r1)) {
-	 Rectangle r2 = BudaRoot.findBudaLocation(bb);
-	 bubble_location.put(bb,r2);
+         Rectangle r2 = BudaRoot.findBudaLocation(bb);
+         bubble_location.put(bb,r2);
        }
     }
 
    boolean isSame(StateMemo sm) {
       if (sm == null) return false;
       if (share_name == null) {
-	 if (sm.share_name != null) return false;
+         if (sm.share_name != null) return false;
        }
       else if (!share_name.equals(sm.share_name)) return false;
 
@@ -544,10 +544,10 @@ private static class StateMemo {
     }
 
 
-}	// end of inner class StateMemo
+}       // end of inner class StateMemo
 
 
-}	// end of class BudaShareManager
+}       // end of class BudaShareManager
 
 
 

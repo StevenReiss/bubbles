@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*										*/
-/*		BhelpFactory.java						*/
-/*										*/
-/*	Factory for Bubbles help demonstrations 				*/
-/*										*/
+/*                                                                              */
+/*              BhelpFactory.java                                               */
+/*                                                                              */
+/*      Factory for Bubbles help demonstrations                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2012 Brown University -- Steven P. Reiss		      */
-/*	Copyright 2013 Brown University -- Izaak Baker			      */
+/*      Copyright 2012 Brown University -- Steven P. Reiss                    */
+/*      Copyright 2013 Brown University -- Izaak Baker                        */
 /*********************************************************************************
- *  Copyright 2012, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2012, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -49,23 +49,23 @@ public final class BhelpFactory implements BhelpConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<String,BhelpDemo>	demo_map;
-private BudaRoot		buda_root;
-private BhelpWebServer		web_server;
+private Map<String,BhelpDemo>   demo_map;
+private BudaRoot                buda_root;
+private BhelpWebServer          web_server;
 
-private static BhelpFactory	the_factory = null;
+private static BhelpFactory     the_factory = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized BhelpFactory getFactory()
@@ -85,8 +85,8 @@ private BhelpFactory(BudaRoot br)
    if (ins != null) {
       Element xml = IvyXml.loadXmlFromStream(ins);
       for (Element ex : IvyXml.children(xml,"DEMO")) {  // for each element in demo file
-	 BhelpDemo bd = new BhelpDemo(ex);		// create new demo w/ instructions
-	 demo_map.put(bd.getName(),bd); 		// save that name for bhelp
+         BhelpDemo bd = new BhelpDemo(ex);              // create new demo w/ instructions
+         demo_map.put(bd.getName(),bd);                 // save that name for bhelp
        }
     }
    BoardSetup.addHyperlinkListener("showme",new Hyperlinker("showme"));
@@ -102,9 +102,9 @@ private BhelpFactory(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods (called by BEMA)						*/
-/*										*/
+/*                                                                              */
+/*      Setup methods (called by BEMA)                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -126,9 +126,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Help demonstration start						*/
-/*										*/
+/*                                                                              */
+/*      Help demonstration start                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void startDemonstration(Component comp,String name)
@@ -161,9 +161,9 @@ void startDemonstration(Component comp,String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Demonstraction routines 						*/
-/*										*/
+/*                                                                              */
+/*      Demonstraction routines                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 //This will display a specific demo's "show or tell" screen
@@ -184,17 +184,17 @@ void displayDemoScreen(Component comp,String name,String backto)
       //Retrieve the proper demo
       InputStream ins = BoardProperties.getResourceFile(HELP_DOCUMENT);
       if (ins != null) {
-	 Element xml = IvyXml.loadXmlFromStream(ins);
-	 text += "<html>";
-	 if (!backto.equals("NULL")) {
-	    text += getTextOfHelp(xml, "instructions");
-	  }
-	 text += getTextOfHelp(xml, name);
-	 if (!backto.equals("NULL")) {
-	    text += "[<a class='tbutton' id='back' href='gotodemo:" +
+         Element xml = IvyXml.loadXmlFromStream(ins);
+         text += "<html>";
+         if (!backto.equals("NULL")) {
+            text += getTextOfHelp(xml, "instructions");
+          }
+         text += getTextOfHelp(xml, name);
+         if (!backto.equals("NULL")) {
+            text += "[<a class='tbutton' id='back' href='gotodemo:" +
                backto + ";backto:NULL'> BACK </a>]</p>";
-	  }
-	 text += "</html>";
+          }
+         text += "</html>";
        }
       
       jcomp.setText(text);
@@ -208,7 +208,7 @@ String getTextOfHelp(Element xml, String name)
    for (Element ex : IvyXml.children(xml, "HELP")) {
       String key = IvyXml.getAttrString(ex,"KEY");
       if (name.equals(key)) {
-	 return IvyXml.getTextElement(ex,"TEXT");
+         return IvyXml.getTextElement(ex,"TEXT");
        }
     }
    return "<p><span class='error'>No available demo for this topic</span></p>";
@@ -217,9 +217,9 @@ String getTextOfHelp(Element xml, String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hyperlink actions							*/
-/*										*/
+/*                                                                              */
+/*      Hyperlink actions                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class Hyperlinker implements HyperlinkListener {
@@ -240,7 +240,7 @@ private class Hyperlinker implements HyperlinkListener {
             startDemonstration((Component) e.getSource(),what);
             break;
          case "gotodemo" :
-            description = description.substring(9);	// warning hardcoded
+            description = description.substring(9);     // warning hardcoded
             String [] broken = description.split(";backto:");
             if (broken.length != 2) return;
             displayDemoScreen((Component) e.getSource(),broken[0],broken[1]);
@@ -248,14 +248,14 @@ private class Hyperlinker implements HyperlinkListener {
        }
    }
 
-}	// end of inner class Hyperlinker
+}       // end of inner class Hyperlinker
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Test actions								*/
-/*										*/
+/*                                                                              */
+/*      Test actions                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class TestAction extends AbstractAction {
@@ -268,10 +268,10 @@ private static final class TestAction extends AbstractAction {
       bf.startDemonstration(c,"testaction");
     }
 
-}	// end of inner class TestAction
+}       // end of inner class TestAction
 
 
-}	// end of class BhelpFactory
+}       // end of class BhelpFactory
 
 
 

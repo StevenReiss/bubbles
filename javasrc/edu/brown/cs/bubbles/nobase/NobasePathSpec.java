@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobasePathSpec.java						*/
-/*										*/
-/*	Information about a project path					*/
-/*										*/
+/*                                                                              */
+/*              NobasePathSpec.java                                             */
+/*                                                                              */
+/*      Information about a project path                                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -36,9 +36,9 @@ class NobasePathSpec implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private File directory_file;
@@ -50,9 +50,9 @@ private boolean is_nested;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobasePathSpec(Element xml)
@@ -98,18 +98,18 @@ NobasePathSpec(File f,boolean u,boolean e,boolean n)
 
 
 /********************************************************************************/
-/*										*/
-/*	AccessMethods								*/
-/*										*/
+/*                                                                              */
+/*      AccessMethods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
-File getFile()				{ return directory_file; }
+File getFile()                          { return directory_file; }
 
-boolean isUser()			{ return is_user; }
+boolean isUser()                        { return is_user; }
 
-boolean isExclude()			{ return is_exclude; }
+boolean isExclude()                     { return is_exclude; }
 
-boolean isNested()			{ return is_nested; }
+boolean isNested()                      { return is_nested; }
 
 
 void setProperties(boolean usr,boolean exc,boolean nest)
@@ -122,9 +122,9 @@ void setProperties(boolean usr,boolean exc,boolean nest)
 
 
 /********************************************************************************/
-/*										*/
-/*	Matching methods							*/
-/*										*/
+/*                                                                              */
+/*      Matching methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 boolean match(File path)
@@ -132,7 +132,7 @@ boolean match(File path)
    if (!directory_file.isAbsolute()) {
       String par = directory_file.getParent();
       if (par == null || par.equals("*") || par.equals("**")) {
-	 if (path.getName().equals(directory_file.getName())) return true;
+         if (path.getName().equals(directory_file.getName())) return true;
        }
     }
    else if (path == null) return false;
@@ -145,9 +145,9 @@ boolean match(File path)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void outputXml(IvyXmlWriter xw)
@@ -165,7 +165,7 @@ public void outputXml(IvyXmlWriter xw)
 
 
 
-}	// end of class NobasePathSpec
+}       // end of class NobasePathSpec
 
 
 

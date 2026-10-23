@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizStartWizard.java						*/
-/*										*/
-/*	Startup wizard for bubbles						*/
-/*										*/
+/*                                                                              */
+/*              BwizStartWizard.java                                            */
+/*                                                                              */
+/*      Startup wizard for bubbles                                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -62,9 +62,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizStartWizard(Element wdata)
@@ -77,9 +77,9 @@ BwizStartWizard(Element wdata)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setup()
@@ -91,8 +91,8 @@ private void setup()
    setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
    /*Panel to do a grid layout.
-	* This doesn't work as well as I'd like.
-	*/
+        * This doesn't work as well as I'd like.
+        */
    JPanel gridpanel=new JPanel();
    GroupLayout layout=new GroupLayout(gridpanel);
    layout.setAutoCreateGaps(true);
@@ -173,9 +173,9 @@ private void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Buttons 								*/
-/*										*/
+/*                                                                              */
+/*      Buttons                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class WizardButton extends JButton {
@@ -195,9 +195,9 @@ private class WizardButton extends JButton {
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions 								*/
-/*										*/
+/*                                                                              */
+/*      Actions                                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class CreateClassAction extends AbstractAction {
@@ -218,7 +218,7 @@ private class CreateClassAction extends AbstractAction {
       BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
     }
 
-}	// end of inner class CreateClassAction
+}       // end of inner class CreateClassAction
 
 
 private class CreateInterfaceAction extends AbstractAction {
@@ -239,7 +239,7 @@ private class CreateInterfaceAction extends AbstractAction {
       BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
     }
 
-}	// end of inner class CreateInterfaceAction
+}       // end of inner class CreateInterfaceAction
 
 
 private class CreateEnumAction extends AbstractAction {
@@ -260,7 +260,7 @@ private class CreateEnumAction extends AbstractAction {
       BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
     }
 
-}	// end of inner class CreateEnumAction
+}       // end of inner class CreateEnumAction
 
 
 
@@ -268,7 +268,7 @@ private class CreateEnumAction extends AbstractAction {
 
 
 
-}	// end of class BwizStartWizard
+}       // end of class BwizStartWizard
 
 
 

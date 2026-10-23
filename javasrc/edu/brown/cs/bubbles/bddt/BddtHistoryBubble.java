@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtHistoryBubble.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool history viewer		*/
-/*										*/
+/*                                                                              */
+/*              BddtHistoryBubble.java                                          */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool history viewer                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -65,33 +65,33 @@ import java.util.Map;
 
 
 class BddtHistoryBubble extends BudaBubble implements BddtConstants, BumpConstants, BudaConstants,
-		BddtConstants.BddtHistoryListener
+                BddtConstants.BddtHistoryListener
 {
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BddtHistoryData history_data;
 private BddtLaunchControl for_control;
-private HistoryGraph	history_graph;
-private long		last_update;
-private boolean 	update_needed;
-private boolean 	restart_needed;
+private HistoryGraph    history_graph;
+private long            last_update;
+private boolean         update_needed;
+private boolean         restart_needed;
 
-private double		x_scale;
-private double		y_scale;
-private HistoryPanel	draw_area;
-private JScrollPane	scroll_pane;
+private double          x_scale;
+private double          y_scale;
+private HistoryPanel    draw_area;
+private JScrollPane     scroll_pane;
 
 private Map<BumpThread,Color> thread_colors;
 private Map<LinkType,Stroke> type_strokes;
-private Stroke		arrow_stroke;
+private Stroke          arrow_stroke;
 
 private static final long serialVersionUID = 1;
 
@@ -101,9 +101,9 @@ private static final float [] DOTTED = new float [] { 2,2 };
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtHistoryBubble(BddtLaunchControl ctrl,BddtHistoryData hd)
@@ -119,9 +119,9 @@ BddtHistoryBubble(BddtLaunchControl ctrl,BddtHistoryData hd)
    thread_colors = new HashMap<BumpThread,Color>();
    type_strokes = new EnumMap<LinkType,Stroke>(LinkType.class);
    type_strokes.put(LinkType.ENTER,new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER,
-						      1.0f,DOTTED,0));
+                                                      1.0f,DOTTED,0));
    type_strokes.put(LinkType.RETURN,new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER,
-						       1.0f,DASHED,0));
+                                                       1.0f,DASHED,0));
    type_strokes.put(LinkType.NEXT,new BasicStroke(1));
    arrow_stroke = new BasicStroke(1);
 
@@ -144,9 +144,9 @@ BddtHistoryBubble(BddtLaunchControl ctrl,BddtHistoryData hd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to build the initial history graph				*/
-/*										*/
+/*                                                                              */
+/*      Methods to build the initial history graph                              */
+/*                                                                              */
 /********************************************************************************/
 
 private void updateGraph()
@@ -154,15 +154,15 @@ private void updateGraph()
    synchronized (this) {
       update_needed = false;
       if (restart_needed || history_graph == null) {
-	 history_graph = new HistoryGraph();
-	 last_update = 0;
-	 restart_needed = false;
+         history_graph = new HistoryGraph();
+         last_update = 0;
+         restart_needed = false;
        }
     }
 
    synchronized (history_graph) {
       for (BumpThread bt : history_data.getThreads()) {
-	 history_graph.addThreadItems(history_data.getItems(bt),last_update);
+         history_graph.addThreadItems(history_data.getItems(bt),last_update);
        }
       last_update = history_graph.finishBuild();
     }
@@ -171,9 +171,9 @@ private void updateGraph()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup the display						*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup the display                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -192,9 +192,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle user actions							*/
-/*										*/
+/*                                                                              */
+/*      Handle user actions                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -210,7 +210,7 @@ private void setupPanel()
    else {
       GraphObject go = getObjectAtPoint(pt.x,pt.y);
       if (go != null && go.getValue() != null) {
-	 popup.add(new GotoValueAction(go));
+         popup.add(new GotoValueAction(go));
        }
     }
 
@@ -236,24 +236,24 @@ private class GotoSourceAction extends AbstractAction {
       BumpStackFrame frame= stk.getFrame(0);
       BudaBubble bb = null;
       if (for_control.frameFileExists(frame)) {
-	 String mid = frame.getMethod() + frame.getSignature();
-	 bb = BaleFactory.getFactory().createMethodBubble(for_control.getProject(),mid);
+         String mid = frame.getMethod() + frame.getSignature();
+         bb = BaleFactory.getFactory().createMethodBubble(for_control.getProject(),mid);
        }
       else {
-	 bb = new BddtLibraryBubble(frame);
+         bb = new BddtLibraryBubble(frame);
        }
 
       if (bb != null) {
-	 BoardMetrics.noteCommand("BDDT","HistorySource");
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtHistoryBubble.this);
-	 if (bba != null) {
-	    bba.addBubble(bb,BddtHistoryBubble.this,null,
-			     PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
-	  }
+         BoardMetrics.noteCommand("BDDT","HistorySource");
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtHistoryBubble.this);
+         if (bba != null) {
+            bba.addBubble(bb,BddtHistoryBubble.this,null,
+                             PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+          }
        }
    }
 
-}	// end of inner class GotoSourceAction
+}       // end of inner class GotoSourceAction
 
 
 
@@ -273,12 +273,12 @@ private class GotoStackAction extends AbstractAction {
       BddtStackView sv = new BddtStackView(for_control,for_stack);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtHistoryBubble.this);
       if (bba != null) {
-	 bba.addBubble(sv,BddtHistoryBubble.this,null,
-			  PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(sv,BddtHistoryBubble.this,null,
+                          PLACEMENT_RIGHT|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class GotoStackAction
+}       // end of inner class GotoStackAction
 
 
 
@@ -298,20 +298,20 @@ private class GotoValueAction extends AbstractAction {
       BddtStackView sv = new BddtStackView(for_control,for_value,false);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtHistoryBubble.this);
       if (bba != null) {
-	 bba.addBubble(sv,BddtHistoryBubble.this,null,
-			  PLACEMENT_RIGHT|PLACEMENT_LOGICAL|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+         bba.addBubble(sv,BddtHistoryBubble.this,null,
+                          PLACEMENT_RIGHT|PLACEMENT_LOGICAL|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class GotoValueAction
+}       // end of inner class GotoValueAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	History update callbacks						*/
-/*										*/
+/*                                                                              */
+/*      History update callbacks                                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handleHistoryStarted()
@@ -339,9 +339,9 @@ private class GotoValueAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	History graph representation						*/
-/*										*/
+/*                                                                              */
+/*      History graph representation                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HistoryGraph {
@@ -358,31 +358,31 @@ private static class HistoryGraph {
       start_time = 0;
     }
 
-   int getNumObjects()				{ return graph_objects.size(); }
-   GraphObject getObject(int i) 		{ return graph_objects.get(i); }
-   long getStartTime()				{ return start_time; }
-   long getEndTime()				{ return last_time; }
+   int getNumObjects()                          { return graph_objects.size(); }
+   GraphObject getObject(int i)                 { return graph_objects.get(i); }
+   long getStartTime()                          { return start_time; }
+   long getEndTime()                            { return last_time; }
 
    GraphObject getObject(BddtHistoryItem hi) {
       BumpRunValue rv = hi.getThisValue();
       GraphObject go = null;
       if (rv != null) {
-	 String key = rv.getValue();
-	 go = object_map.get(key);
-	 if (go == null) {
-	    go = new GraphObject(rv);
-	    graph_objects.add(go);
-	    object_map.put(key,go);
-	  }
+         String key = rv.getValue();
+         go = object_map.get(key);
+         if (go == null) {
+            go = new GraphObject(rv);
+            graph_objects.add(go);
+            object_map.put(key,go);
+          }
        }
       else {
-	 String cnm = hi.getClassName();
-	 go = object_map.get(cnm);
-	 if (go == null) {
-	    go = new GraphObject(cnm);
-	    graph_objects.add(go);
-	    object_map.put(cnm,go);
-	  }
+         String cnm = hi.getClassName();
+         go = object_map.get(cnm);
+         if (go == null) {
+            go = new GraphObject(cnm);
+            graph_objects.add(go);
+            object_map.put(cnm,go);
+          }
        }
       return go;
     }
@@ -391,36 +391,36 @@ private static class HistoryGraph {
       GraphObject lastobj = null;
       BddtHistoryItem lastitem = null;
       for (BddtHistoryItem hi : itms) {
-	 GraphObject go = getObject(hi);
-	 if (since == 0 || hi.getTime() > since) {
-	    last_time = Math.max(last_time,hi.getTime());
-	    if (start_time == 0) start_time = last_time;
-	    else start_time = Math.min(start_time,hi.getTime());
+         GraphObject go = getObject(hi);
+         if (since == 0 || hi.getTime() > since) {
+            last_time = Math.max(last_time,hi.getTime());
+            if (start_time == 0) start_time = last_time;
+            else start_time = Math.min(start_time,hi.getTime());
 
-	    if (go == null) continue;
-	    if (lastobj == null) {		   // first time
-	       go.startBlock(hi);
-	     }
-	    else if (lastobj == go) {		   // step inside the same object
-	       go.extendBlock(hi);
-	     }
-	    else if (lastitem != null && hi.isInside(lastitem)) {	   // step/call into a new object
-	       go.startBlock(hi);
-	       lastobj.addLink(go,LinkType.ENTER,hi);
-	     }
-	    else if (lastitem != null && lastitem.isInside(hi)) {	   // return to prior object
-	       go.extendBlock(hi);
-	       // end prior block??
-	       lastobj.addLink(go,LinkType.RETURN,hi);
-	     }
-	    else {
-	       lastobj.finish(hi);
-	       go.startBlock(hi);
-	       lastobj.addLink(go,LinkType.NEXT,hi);
-	     }
-	  }
-	 lastobj = go;
-	 lastitem = hi;
+            if (go == null) continue;
+            if (lastobj == null) {                 // first time
+               go.startBlock(hi);
+             }
+            else if (lastobj == go) {              // step inside the same object
+               go.extendBlock(hi);
+             }
+            else if (lastitem != null && hi.isInside(lastitem)) {          // step/call into a new object
+               go.startBlock(hi);
+               lastobj.addLink(go,LinkType.ENTER,hi);
+             }
+            else if (lastitem != null && lastitem.isInside(hi)) {          // return to prior object
+               go.extendBlock(hi);
+               // end prior block??
+               lastobj.addLink(go,LinkType.RETURN,hi);
+             }
+            else {
+               lastobj.finish(hi);
+               go.startBlock(hi);
+               lastobj.addLink(go,LinkType.NEXT,hi);
+             }
+          }
+         lastobj = go;
+         lastitem = hi;
        }
     }
 
@@ -429,7 +429,7 @@ private static class HistoryGraph {
       return last_time;
     }
 
-}	// end of inner class HistoryGraph
+}       // end of inner class HistoryGraph
 
 
 
@@ -461,14 +461,14 @@ private static class GraphObject {
       start_time = 0;
     }
 
-   long getStartTime()				{ return start_time; }
+   long getStartTime()                          { return start_time; }
    String getName() {
       if (this_value == null) return class_name;
       return class_name + " " + this_value.getValue();
     }
-   List<GraphBlock> getBlocks() 		{ return all_blocks; }
-   List<GraphLink> getLinks()			{ return out_links; }
-   BumpRunValue getValue()			{ return this_value; }
+   List<GraphBlock> getBlocks()                 { return all_blocks; }
+   List<GraphLink> getLinks()                   { return out_links; }
+   BumpRunValue getValue()                      { return this_value; }
 
    void startBlock(BddtHistoryItem hi) {
       if (start_time == 0) start_time = hi.getTime();
@@ -487,8 +487,8 @@ private static class GraphObject {
    void finish(BddtHistoryItem hi) {
       GraphBlock gb = in_blocks.get(hi.getThread());
       if (gb != null) {
-	 gb.finish(hi.getTime());
-	 in_blocks.remove(hi.getThread());
+         gb.finish(hi.getTime());
+         in_blocks.remove(hi.getThread());
       }
     }
 
@@ -499,19 +499,19 @@ private static class GraphObject {
 
    long getReturnTime(GraphObject to) {
       for (GraphLink lnk : out_links) {
-	 if (lnk.getType() == LinkType.RETURN) {
-	    GraphObject go = lnk.getToObject();
-	    if (go == to) return lnk.getTime();
-	    else {
-	       long rt = go.getReturnTime(to);
-	       if (rt != 0) return Math.min(lnk.getTime(),rt);
-	     }
-	  }
+         if (lnk.getType() == LinkType.RETURN) {
+            GraphObject go = lnk.getToObject();
+            if (go == to) return lnk.getTime();
+            else {
+               long rt = go.getReturnTime(to);
+               if (rt != 0) return Math.min(lnk.getTime(),rt);
+             }
+          }
        }
       return 0;
     }
 
-}	// end of inner class GraphObject
+}       // end of inner class GraphObject
 
 
 
@@ -530,12 +530,12 @@ private static class GraphBlock {
       for_items.add(hi);
     }
 
-   long getStartTime()				{ return start_time; }
+   long getStartTime()                          { return start_time; }
    long getEndTime() {
       if (end_time != 0) return end_time;
       return last_time;
     }
-   List<BddtHistoryItem> getItems()		{ return for_items; }
+   List<BddtHistoryItem> getItems()             { return for_items; }
 
    BumpThread getThread() {
       if (for_items.isEmpty()) return null;
@@ -552,7 +552,7 @@ private static class GraphBlock {
       end_time = when;
     }
 
-}	// end of inner class GraphBlock
+}       // end of inner class GraphBlock
 
 
 
@@ -568,21 +568,21 @@ private static class GraphLink {
       for_item = hi;
     }
 
-   LinkType getType()			{ return link_type; }
-   GraphObject getToObject()		{ return to_object; }
-   long getTime()			{ return for_item.getTime(); }
-   BumpThread getThread()		{ return for_item.getThread(); }
-   BddtHistoryItem getItem()		{ return for_item; }
+   LinkType getType()                   { return link_type; }
+   GraphObject getToObject()            { return to_object; }
+   long getTime()                       { return for_item.getTime(); }
+   BumpThread getThread()               { return for_item.getThread(); }
+   BddtHistoryItem getItem()            { return for_item; }
 
-}	// end of inner class GraphLink
+}       // end of inner class GraphLink
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph sorter for history objects					*/
-/*										*/
+/*                                                                              */
+/*      Graph sorter for history objects                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class HistoryCompare implements Comparator<GraphObject>
@@ -591,13 +591,13 @@ private static final class HistoryCompare implements Comparator<GraphObject>
    @Override public int compare(GraphObject t0,GraphObject t1) {
       long x0 = t1.getReturnTime(t0);
       long x1 = t0.getReturnTime(t1);
-      if (x0 == x1) {			// either same or == 0
-	 long d = t0.getStartTime() - t1.getStartTime();
-	 if (d < 0) return -1;
-	 else if (d > 0) return 1;
-	 else if (t0.getName() == null) return -1;
-	 else if (t1.getName() == null) return 1;
-	 else return t0.getName().compareTo(t1.getName());
+      if (x0 == x1) {                   // either same or == 0
+         long d = t0.getStartTime() - t1.getStartTime();
+         if (d < 0) return -1;
+         else if (d > 0) return 1;
+         else if (t0.getName() == null) return -1;
+         else if (t1.getName() == null) return 1;
+         else return t0.getName().compareTo(t1.getName());
        }
       else if (x0 == 0) return -1;
       else if (x1 == 0) return 1;
@@ -605,26 +605,26 @@ private static final class HistoryCompare implements Comparator<GraphObject>
       else return -1;
     }
 
-}	// end of inner class HistoryCompare
+}       // end of inner class HistoryCompare
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Drawing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private double		left_right_margin;
-private double		object_width = 0;
-private double		object_hspacing;
-private double		active_width;
-private double		top_bottom_margin;
-private double		object_height;
-private double		time_start;
-private double		time_end;
-private double		arrow_size;
+private double          left_right_margin;
+private double          object_width = 0;
+private double          object_hspacing;
+private double          active_width;
+private double          top_bottom_margin;
+private double          object_height;
+private double          time_start;
+private double          time_end;
+private double          arrow_size;
 private Map<GraphObject,Double> graph_locations;
 
 
@@ -640,7 +640,7 @@ private void handlePaint(Graphics2D g)
    synchronized (history_graph) {
       int nobj = history_graph.getNumObjects();
       double twid = nobj * GRAPH_OBJECT_WIDTH + 2 * GRAPH_LEFT_RIGHT_MARGIN +
-	 (nobj - 1) * GRAPH_OBJECT_H_SPACE;
+         (nobj - 1) * GRAPH_OBJECT_H_SPACE;
       double sx = csz.width / twid;
       left_right_margin = GRAPH_LEFT_RIGHT_MARGIN * sx;
       object_width = GRAPH_OBJECT_WIDTH * sx;
@@ -658,13 +658,13 @@ private void handlePaint(Graphics2D g)
       graph_locations = new HashMap<GraphObject,Double>();
 
       for (int i = 0; i < nobj; ++i) {
-	 GraphObject go = history_graph.getObject(i);
-	 drawObject(g,i,go);
+         GraphObject go = history_graph.getObject(i);
+         drawObject(g,i,go);
        }
 
       for (int i = 0; i < nobj; ++i) {
-	 GraphObject go = history_graph.getObject(i);
-	 drawLinks(g,go);
+         GraphObject go = history_graph.getObject(i);
+         drawLinks(g,go);
        }
     }
 }
@@ -723,12 +723,12 @@ private void drawLinks(Graphics2D g,GraphObject go)
       double x3;
       double x4;
       if (x0 < x1) {
-	 x3 = x0 + active_width/2;
-	 x4 = x1 - active_width/2;
+         x3 = x0 + active_width/2;
+         x4 = x1 - active_width/2;
        }
       else {
-	 x3 = x0 - active_width/2;
-	 x4 = x1 + active_width/2;
+         x3 = x0 - active_width/2;
+         x4 = x1 + active_width/2;
        }
       Stroke sk = type_strokes.get(gl.getType());
       Color c = getThreadBlockColor(gl.getThread());
@@ -758,29 +758,29 @@ private Color getThreadBlockColor(BumpThread bt)
    synchronized (thread_colors) {
       Color c = thread_colors.get(bt);
       if (c == null) {
-	 double v;
-	 int ct = thread_colors.size();
-	 if (ct == 0) v = 0;
-	 else if (ct == 1) v = 1;
-	 else {
-	    v = 0.5;
-	    int p0 = ct-1;
-	    int p1 = 1;
-	    for (int p = p0; p > 1; p /= 2) {
-	       v /= 2.0;
-	       p0 -= p1;
-	       p1 *= 2;
-	     }
-	    if ((p0 & 1) == 0) p0 = 2*p1 - p0 + 1;
-	    v = v * p0;
-	  }
-	 float h = (float) (v * 0.8);
-	 float s = 0.7f;
-	 float b = 1.0f;
-	 int rgb = Color.HSBtoRGB(h,s,b);
-	 rgb |= 0xc0000000;
-	 c = new Color(rgb,true);
-	 thread_colors.put(bt,c);
+         double v;
+         int ct = thread_colors.size();
+         if (ct == 0) v = 0;
+         else if (ct == 1) v = 1;
+         else {
+            v = 0.5;
+            int p0 = ct-1;
+            int p1 = 1;
+            for (int p = p0; p > 1; p /= 2) {
+               v /= 2.0;
+               p0 -= p1;
+               p1 *= 2;
+             }
+            if ((p0 & 1) == 0) p0 = 2*p1 - p0 + 1;
+            v = v * p0;
+          }
+         float h = (float) (v * 0.8);
+         float s = 0.7f;
+         float b = 1.0f;
+         int rgb = Color.HSBtoRGB(h,s,b);
+         rgb |= 0xc0000000;
+         c = new Color(rgb,true);
+         thread_colors.put(bt,c);
        }
       return c;
     }
@@ -797,29 +797,29 @@ private void checkSizes()
 
    if (nsz.width > csz.width) {
       if (vsz.width >= csz.width) {
-	 csz.width = vsz.width;
-	 chng = true;
-	 x_scale = 1;
+         csz.width = vsz.width;
+         chng = true;
+         x_scale = 1;
        }
     }
    else if (nsz.width < csz.width) {
       if (x_scale == 1) {
-	 csz.width = vsz.width;
-	 chng = true;
+         csz.width = vsz.width;
+         chng = true;
        }
     }
 
    if (nsz.height > csz.height) {
       if (vsz.height >= csz.height) {
-	 csz.height = vsz.height;
-	 chng = true;
-	 y_scale = 1;
+         csz.height = vsz.height;
+         chng = true;
+         y_scale = 1;
        }
     }
    else if (nsz.height < csz.height) {
       if (y_scale == 1) {
-	 csz.height = vsz.height;
-	 chng = true;
+         csz.height = vsz.height;
+         chng = true;
        }
     }
 
@@ -852,9 +852,9 @@ private void drawArrow(Graphics2D g,double fx,double fy,double tx,double ty)
 
 
 /********************************************************************************/
-/*										*/
-/*	Correlation methods							*/
-/*										*/
+/*                                                                              */
+/*      Correlation methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private BddtHistoryItem getItemAtPoint(int x,int y)
@@ -872,27 +872,27 @@ private BddtHistoryItem getItemAtPoint(int x,int y)
       GraphBlock gb0 = null;
       double dtime = 0;
       for (GraphBlock gb : gobj.getBlocks()) {
-	 double dt = gb.getEndTime() - gb.getStartTime();
-	 if (t >= gb.getStartTime() && t <= gb.getEndTime()) {
-	    if (gb0 == null || dt < dtime) {
-	       gb0 = gb;
-	       dtime = dt;
-	     }
-	  }
+         double dt = gb.getEndTime() - gb.getStartTime();
+         if (t >= gb.getStartTime() && t <= gb.getEndTime()) {
+            if (gb0 == null || dt < dtime) {
+               gb0 = gb;
+               dtime = dt;
+             }
+          }
        }
       if (gb0 != null) {
-	 BddtHistoryItem bi0 = null;
-	 dtime = 0;
-	 for (BddtHistoryItem bhi : gb0.getItems()) {
-	    double dt = t - bhi.getTime();
-	    if (dt >= 0) {
-	       if (bi0 == null || dt < dtime) {
-		  bi0 = bhi;
-		  dtime = dt;
-		}
-	     }
-	  }
-	 if (bi0 != null) return bi0;
+         BddtHistoryItem bi0 = null;
+         dtime = 0;
+         for (BddtHistoryItem bhi : gb0.getItems()) {
+            double dt = t - bhi.getTime();
+            if (dt >= 0) {
+               if (bi0 == null || dt < dtime) {
+                  bi0 = bhi;
+                  dtime = dt;
+                }
+             }
+          }
+         if (bi0 != null) return bi0;
        }
     }
 
@@ -905,14 +905,14 @@ private BddtHistoryItem getItemAtPoint(int x,int y)
       GraphObject go = history_graph.getObject(i);
       double x0 = graph_locations.get(go);
       for (GraphLink gl : go.getLinks()) {
-	 double x1 = graph_locations.get(gl.getToObject());
-	 if (x > x0 && x < x1) {
-	    double dt = Math.abs(t - gl.getTime());
-	    if (gl0 == null || dt < dtime) {
-	       gl0 = gl;
-	       dtime = dt;
-	     }
-	  }
+         double x1 = graph_locations.get(gl.getToObject());
+         if (x > x0 && x < x1) {
+            double dt = Math.abs(t - gl.getTime());
+            if (gl0 == null || dt < dtime) {
+               gl0 = gl;
+               dtime = dt;
+             }
+          }
        }
     }
    if (gl0 != null && dtime <= delta) {
@@ -943,9 +943,9 @@ private GraphObject getObjectAtPoint(int x,int y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel for drawing history						*/
-/*										*/
+/*                                                                              */
+/*      Panel for drawing history                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class HistoryPanel extends JComponent {
@@ -963,26 +963,26 @@ private class HistoryPanel extends JComponent {
    @Override public String getToolTipText(MouseEvent e) {
       BddtHistoryItem itm = getItemAtPoint(e.getX(),e.getY());
       if (itm != null) {
-	 StringBuffer buf = new StringBuffer();
-	 BumpThreadStack stk = itm.getStack();
-	 BumpStackFrame frm = stk.getFrame(0);
-	 if (frm == null) return null;
-	 buf.append(frm.getMethod() + " at " + frm.getLineNumber());
-	 return buf.toString();
+         StringBuffer buf = new StringBuffer();
+         BumpThreadStack stk = itm.getStack();
+         BumpStackFrame frm = stk.getFrame(0);
+         if (frm == null) return null;
+         buf.append(frm.getMethod() + " at " + frm.getLineNumber());
+         return buf.toString();
       }
       GraphObject go = getObjectAtPoint(e.getX(),e.getY());
       if (go != null) {
-	 return go.getName();
+         return go.getName();
       }
       return null;
     }
 
-}	// end of inner class HistoryPanel
+}       // end of inner class HistoryPanel
 
 
 
 
-}	// end of class BddtHistoryBubble
+}       // end of class BddtHistoryBubble
 
 
 

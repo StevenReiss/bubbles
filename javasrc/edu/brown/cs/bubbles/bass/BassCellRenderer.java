@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BassCellRenderer.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies tree cell renderer			*/
-/*										*/
+/*                                                                              */
+/*              BassCellRenderer.java                                           */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies tree cell renderer                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -43,9 +43,9 @@ class BassCellRenderer extends DefaultTreeCellRenderer implements BassConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -54,9 +54,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassCellRenderer()
@@ -70,7 +70,7 @@ BassCellRenderer()
 }
 
 
-}	// end of class BassCellRenderer
+}       // end of class BassCellRenderer
 
 
 

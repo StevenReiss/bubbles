@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BdynTaskWindow.java						*/
-/*										*/
-/*	Window to hold transaction-task-thread visualization			*/
-/*										*/
+/*                                                                              */
+/*              BdynTaskWindow.java                                             */
+/*                                                                              */
+/*      Window to hold transaction-task-thread visualization                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -47,15 +47,15 @@ import java.util.List;
 
 
 class BdynTaskWindow extends JPanel implements BdynConstants, AdjustmentListener,
-	BdynConstants.BdynEventUpdater
+        BdynConstants.BdynEventUpdater
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpProcess for_process;
@@ -72,9 +72,9 @@ private static final int MAX_SCROLL_TIME = 1000;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BdynTaskWindow()
@@ -106,9 +106,9 @@ void dispose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaBubble getBubble()
@@ -145,14 +145,14 @@ void setEventTrace(BdynEventTrace et)
       min_time = event_trace.getStartTime();
       max_time = event_trace.getEndTime();
       if (max_time == min_time) {
-	 min_time = -1;
-	 max_time = 0;
+         min_time = -1;
+         max_time = 0;
        }
       else {
-	 time_bar.setValues(0,MAX_SCROLL_TIME,0,MAX_SCROLL_TIME);
+         time_bar.setValues(0,MAX_SCROLL_TIME,0,MAX_SCROLL_TIME);
        }
       if (et.getActiveThreadCount() != active_threads.size()) {
-	 active_threads = et.getActiveThreads();
+         active_threads = et.getActiveThreads();
        }
     }
    else {
@@ -165,17 +165,17 @@ void setEventTrace(BdynEventTrace et)
 
 
 
-List<BdynEntryThread>	getThreads()		{ return active_threads; }
+List<BdynEntryThread>   getThreads()            { return active_threads; }
 
-BdynEventTrace getEventTrace()			{ return event_trace; }
+BdynEventTrace getEventTrace()                  { return event_trace; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void eventsAdded()
@@ -192,22 +192,22 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 
    if (mxt > max_time) {
       if (evt.getActiveThreadCount() != active_threads.size()) {
-	 active_threads = evt.getActiveThreads();
+         active_threads = evt.getActiveThreads();
        }
       long omax = max_time;
       max_time = mxt;
       
       if (omax > 0) {
-	 int lv = time_bar.getLeftValue();
-	 int rv = time_bar.getRightValue();
-	 double nmxv = (max_time - min_time);
-	 double t0 = lv * omax / MAX_SCROLL_TIME + min_time;
-	 double t1 = rv * omax / MAX_SCROLL_TIME + min_time;
-	 if (rv == MAX_SCROLL_TIME) t1 = max_time;
-	 int it0 = (int) Math.round((t0 - min_time)/nmxv * MAX_SCROLL_TIME);
-	 int it1 = (int) Math.round((t1 - min_time)/nmxv * MAX_SCROLL_TIME);
-	 time_bar.setValues(it0,it1);
-	 task_panel.setTimes((long) t0,(long) t1);
+         int lv = time_bar.getLeftValue();
+         int rv = time_bar.getRightValue();
+         double nmxv = (max_time - min_time);
+         double t0 = lv * omax / MAX_SCROLL_TIME + min_time;
+         double t1 = rv * omax / MAX_SCROLL_TIME + min_time;
+         if (rv == MAX_SCROLL_TIME) t1 = max_time;
+         int it0 = (int) Math.round((t0 - min_time)/nmxv * MAX_SCROLL_TIME);
+         int it1 = (int) Math.round((t1 - min_time)/nmxv * MAX_SCROLL_TIME);
+         time_bar.setValues(it0,it1);
+         task_panel.setTimes((long) t0,(long) t1);
        }
     }
 }
@@ -216,9 +216,9 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle scroll bar							*/
-/*										*/
+/*                                                                              */
+/*      Handle scroll bar                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void adjustmentValueChanged(AdjustmentEvent ev) {
@@ -231,9 +231,9 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Run event handler							*/
-/*										*/
+/*                                                                              */
+/*      Run event handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class RunHandler implements BumpConstants.BumpRunEventHandler {
@@ -247,17 +247,17 @@ private final class RunHandler implements BumpConstants.BumpRunEventHandler {
             if (for_process == null) {
                BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BdynTaskWindow.this);
                if (bba != null) {
-        	  Object proc = bba.getProperty("Bddt.process");
-        	  if (proc != null && proc == blp) {
-        	     // process for this channel
-        	     setProcess(blp);
-        	     break;
-        	   }
-        	  if (proc == null && bba.getProperty("Bddt.debug") == null) {
-        	     // non-debug -- use next process
-        	     setProcess(blp);
-        	   }
-        	}
+                  Object proc = bba.getProperty("Bddt.process");
+                  if (proc != null && proc == blp) {
+                     // process for this channel
+                     setProcess(blp);
+                     break;
+                   }
+                  if (proc == null && bba.getProperty("Bddt.debug") == null) {
+                     // non-debug -- use next process
+                     setProcess(blp);
+                   }
+                }
              }
             break;
          case PROCESS_REMOVE :
@@ -269,15 +269,15 @@ private final class RunHandler implements BumpConstants.BumpRunEventHandler {
        }
     }
 
-}	// end of inner class RunHandler
+}       // end of inner class RunHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble for this window							*/
-/*										*/
+/*                                                                              */
+/*      Bubble for this window                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class TaskBubble extends BudaBubble {
@@ -302,10 +302,10 @@ private class TaskBubble extends BudaBubble {
       menu.show(this,e.getX(),e.getY());
     }
 
-}	// end of inner class TaskBubble
+}       // end of inner class TaskBubble
 
 
-}	// end of class BdynTaskWindow
+}       // end of class BdynTaskWindow
 
 
 

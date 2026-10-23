@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrVersionGIT.java						*/
-/*										*/
-/*	Bubble Version Collaboration Repository interface to GIT		*/
-/*										*/
+/*                                                                              */
+/*              BvcrVersionGIT.java                                             */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository interface to GIT                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,15 +52,15 @@ class BvcrVersionGIT extends BvcrVersionManager implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private File		git_root;
-private String		git_command;
-private String		current_version;
-private String		long_version;
+private File            git_root;
+private String          git_command;
+private String          current_version;
+private String          long_version;
 private String          origin_name;
 private String          master_name;
 
@@ -76,9 +76,9 @@ private static final Pattern MASTER_PATTERN = Pattern.compile("HEAD branch\\:\\s
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrVersionGIT(BvcrProject bp,File root)
@@ -99,15 +99,15 @@ BvcrVersionGIT(BvcrProject bp,File root)
       StringTokenizer tok = new StringTokenizer(vers," \r\n\t");
       boolean star = false;
       while (tok.hasMoreTokens()) {
-	 String v = tok.nextToken();
-	 if (v.equals("*")) star = true;
-	 else {
-	    if (star) {
-	       IvyLog.logD("BVCR","FOUND BRANCH " + v);
-	       current_version = v;
-	     }
-	    star = false;
-	  }
+         String v = tok.nextToken();
+         if (v.equals("*")) star = true;
+         else {
+            if (star) {
+               IvyLog.logD("BVCR","FOUND BRANCH " + v);
+               current_version = v;
+             }
+            star = false;
+          }
        }
     }
    findMasterName();
@@ -118,9 +118,9 @@ BvcrVersionGIT(BvcrProject bp,File root)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
@@ -131,8 +131,8 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    while (fp != null && fp.exists() && fp.isDirectory()) {
       File f2 = new File(fp,".git");
       if (f2.exists() && f2.isDirectory()) {
-	 IvyLog.logD("BVCR","HANDLE GIT REPOSITORY " + srcdir);
-	 return new BvcrVersionGIT(bp,f2);
+         IvyLog.logD("BVCR","HANDLE GIT REPOSITORY " + srcdir);
+         return new BvcrVersionGIT(bp,f2);
        }
       fp = fp.getParentFile();
     }
@@ -144,12 +144,12 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override File getRootDirectory()		{ return git_root; }
+@Override File getRootDirectory()               { return git_root; }
 
 @Override String getRepositoryName()
 {
@@ -182,8 +182,8 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    else {
       cmd += " --";
       for (File f : diffs) {
-	 f = IvyFile.getCanonical(f);
-	 cmd += " " + f.getAbsolutePath();
+         f = IvyFile.getCanonical(f);
+         cmd += " " + f.getAbsolutePath();
        }
     }
 
@@ -195,9 +195,9 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 
 /********************************************************************************/
-/*										*/
-/*	Find the top of the GIT repository					*/
-/*										*/
+/*                                                                              */
+/*      Find the top of the GIT repository                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void findGitRoot(File f0)
@@ -228,9 +228,9 @@ private void findGitRoot(File f0)
 
 
 /********************************************************************************/
-/*										*/
-/*	History gathering for a file						*/
-/*										*/
+/*                                                                              */
+/*      History gathering for a file                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void findHistory(File f,IvyXmlWriter xw)
@@ -243,28 +243,28 @@ private void findGitRoot(File f0)
    while (tok.hasMoreTokens()) {
       String ent = tok.nextToken();
       try {
-	 String [] ldata = ent.split("\t",3);
-	 String rev = ldata[0];
-	 String prev = ldata[1];
-	 String alts = ldata[2];
-	 List<String> prevs = priors.get(rev);
-	 if (prevs == null) {
-	    prevs = new ArrayList<String>();
-	    priors.put(rev,prevs);
-	  }
-	 for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
-	    String pid = ltok.nextToken();
-	    prevs.add(pid);
-	  }
-	 if (head == null && alts != null && alts.length() > 0) {
-	    for (StringTokenizer ltok = new StringTokenizer(alts,"(, )"); ltok.hasMoreTokens(); ) {
-	       String nm = ltok.nextToken();
-	       if (nm.equals("HEAD")) head = rev;
-	     }
-	  }
+         String [] ldata = ent.split("\t",3);
+         String rev = ldata[0];
+         String prev = ldata[1];
+         String alts = ldata[2];
+         List<String> prevs = priors.get(rev);
+         if (prevs == null) {
+            prevs = new ArrayList<String>();
+            priors.put(rev,prevs);
+          }
+         for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
+            String pid = ltok.nextToken();
+            prevs.add(pid);
+          }
+         if (head == null && alts != null && alts.length() > 0) {
+            for (StringTokenizer ltok = new StringTokenizer(alts,"(, )"); ltok.hasMoreTokens(); ) {
+               String nm = ltok.nextToken();
+               if (nm.equals("HEAD")) head = rev;
+             }
+          }
        }
       catch (Throwable t) {
-	 IvyLog.logE("BVCR","Problem parsing priors log entry",t);
+         IvyLog.logE("BVCR","Problem parsing priors log entry",t);
        }
     }
 
@@ -281,47 +281,47 @@ private void findGitRoot(File f0)
    while (tok.hasMoreTokens()) {
       String ent = tok.nextToken();
       try {
-	 String [] ldata = ent.split("\t",8);
+         String [] ldata = ent.split("\t",8);
          if (ldata.length < 8) continue;
-	 String rev = ldata[0];
-	 String srev = ldata[1];
-	 String auth = ldata[2];
-	 String email = ldata[3];
-	 Date d = GIT_DATE.parse(ldata[4]);
-	 String prev = ldata[5];
-	 String alts = ldata[6];
-	 String msg = ldata[7];
-	 String bdy = "";
+         String rev = ldata[0];
+         String srev = ldata[1];
+         String auth = ldata[2];
+         String email = ldata[3];
+         Date d = GIT_DATE.parse(ldata[4]);
+         String prev = ldata[5];
+         String alts = ldata[6];
+         String msg = ldata[7];
+         String bdy = "";
 
-	 if (email != null) {
-	    if (auth != null) auth += " (" + email + ")";
-	    else auth = email;
-	  }
+         if (email != null) {
+            if (auth != null) auth += " (" + email + ")";
+            else auth = email;
+          }
 
-	 BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
-	 Set<String> done = new HashSet<String>();
-	 for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
-	    String pid = ltok.nextToken();
-	    addPriors(fv,pid,fvs,priors,done);
-	  }
-	 if (srev != null && srev.length() > 0) fv.addAlternativeId(srev,null);
-	 if (alts != null && alts.length() > 0) {
-	    for (StringTokenizer ltok = new StringTokenizer(alts,"(, )"); ltok.hasMoreTokens(); ) {
-	       String nm = ltok.nextToken();
-	       fv.addAlternativeName(nm);
-	     }
-	  }
-	 fvs.put(rev,fv);
-	 while (tok.hasMoreTokens()) {
-	    String bdl = tok.nextToken();
-	    if (bdl.equals("***EOF")) break;
-	    bdy += bdl + "\n";
-	   }
-	 bdy = bdy.trim();
-	 if (bdy.length() > 2) fv.addVersionBody(bdy);
+         BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
+         Set<String> done = new HashSet<String>();
+         for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
+            String pid = ltok.nextToken();
+            addPriors(fv,pid,fvs,priors,done);
+          }
+         if (srev != null && srev.length() > 0) fv.addAlternativeId(srev,null);
+         if (alts != null && alts.length() > 0) {
+            for (StringTokenizer ltok = new StringTokenizer(alts,"(, )"); ltok.hasMoreTokens(); ) {
+               String nm = ltok.nextToken();
+               fv.addAlternativeName(nm);
+             }
+          }
+         fvs.put(rev,fv);
+         while (tok.hasMoreTokens()) {
+            String bdl = tok.nextToken();
+            if (bdl.equals("***EOF")) break;
+            bdy += bdl + "\n";
+           }
+         bdy = bdy.trim();
+         if (bdy.length() > 2) fv.addVersionBody(bdy);
        }
       catch (Throwable e) {
-	 IvyLog.logE("BVCR","Problem parsing log entry " + ent,e);
+         IvyLog.logE("BVCR","Problem parsing log entry " + ent,e);
        }
     }
 
@@ -330,8 +330,8 @@ private void findGitRoot(File f0)
       Set<String> done = new HashSet<String>();
       addPriors(fv,head,fvs,priors,done);
       for (BvcrFileVersion pv : fv.getPriorVersions(null)) {
-	 pv.addAlternativeId("HEAD",null);
-	 break;
+         pv.addAlternativeId("HEAD",null);
+         break;
        }
     }
 
@@ -347,9 +347,9 @@ private void findGitRoot(File f0)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get project version history						*/
-/*										*/
+/*                                                                              */
+/*      Get project version history                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void findProjectHistory(IvyXmlWriter xw)
@@ -360,61 +360,61 @@ private void findGitRoot(File f0)
    while (tok.hasMoreTokens()) {
       String ent = tok.nextToken();
       try {
-	 String [] ldata = ent.split("\t",8);
-	 String rev = ldata[0];
-	 String srev = ldata[1];
-	 String auth = ldata[2];
-	 String email = ldata[3];
-	 Date d = GIT_DATE.parse(ldata[4]);
-	 String prev = ldata[5];
-	 String alts = ldata[6];
-	 String msg = ldata[7];
-	 String bdy = "";
+         String [] ldata = ent.split("\t",8);
+         String rev = ldata[0];
+         String srev = ldata[1];
+         String auth = ldata[2];
+         String email = ldata[3];
+         Date d = GIT_DATE.parse(ldata[4]);
+         String prev = ldata[5];
+         String alts = ldata[6];
+         String msg = ldata[7];
+         String bdy = "";
 
-	 if (email != null) {
-	    if (auth != null) auth += " (" + email + ")";
-	    else auth = email;
-	  }
+         if (email != null) {
+            if (auth != null) auth += " (" + email + ")";
+            else auth = email;
+          }
 
-	 xw.begin("VERSION");
-	 xw.field("NAME",rev);
-	 xw.field("DATE",d);
-	 xw.field("AUTHOR",auth);
+         xw.begin("VERSION");
+         xw.field("NAME",rev);
+         xw.field("DATE",d);
+         xw.field("AUTHOR",auth);
 
-	 xw.textElement("MSG",msg);
+         xw.textElement("MSG",msg);
 
-	 for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
-	    String pid = ltok.nextToken();
-	    if (pid == null) continue;
-	    xw.begin("PRIOR");
-	    xw.field("ID",pid);
-	    xw.end("PRIOR");
-	  }
-	 if (srev != null && srev.length() > 0) {
-	    xw.begin("ALTERNATIVE");
-	    xw.field("ID",srev);
-	    xw.end("ALTERNATIVE");
-	  }
-	 if (alts != null && alts.length() > 0) {
-	    for (StringTokenizer ltok = new StringTokenizer(alts,"(,)"); ltok.hasMoreTokens(); ) {
-	       String nm = ltok.nextToken().trim();
-	       xw.begin("ALTERNATIVE");
-	       xw.field("NAME",nm);
-	       xw.end("ALTERNATIVE");
-	     }
-	  }
-	 while (tok.hasMoreTokens()) {
-	    String bdl = tok.nextToken();
-	    if (bdl.equals("***EOF")) break;
-	    bdy += bdl + "\n";
-	  }
-	 bdy = bdy.trim();
-	 if (bdy.length() > 2) xw.textElement("BODY",bdy);
+         for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {
+            String pid = ltok.nextToken();
+            if (pid == null) continue;
+            xw.begin("PRIOR");
+            xw.field("ID",pid);
+            xw.end("PRIOR");
+          }
+         if (srev != null && srev.length() > 0) {
+            xw.begin("ALTERNATIVE");
+            xw.field("ID",srev);
+            xw.end("ALTERNATIVE");
+          }
+         if (alts != null && alts.length() > 0) {
+            for (StringTokenizer ltok = new StringTokenizer(alts,"(,)"); ltok.hasMoreTokens(); ) {
+               String nm = ltok.nextToken().trim();
+               xw.begin("ALTERNATIVE");
+               xw.field("NAME",nm);
+               xw.end("ALTERNATIVE");
+             }
+          }
+         while (tok.hasMoreTokens()) {
+            String bdl = tok.nextToken();
+            if (bdl.equals("***EOF")) break;
+            bdy += bdl + "\n";
+          }
+         bdy = bdy.trim();
+         if (bdy.length() > 2) xw.textElement("BODY",bdy);
 
-	 xw.end("VERSION");
+         xw.end("VERSION");
        }
       catch (Throwable e) {
-	 IvyLog.logE("BVCR","Problem parsing log entry",e);
+         IvyLog.logE("BVCR","Problem parsing log entry",e);
        }
     }
 }
@@ -485,9 +485,9 @@ private void findMasterName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Status of all files in the project					*/
-/*										*/
+/*                                                                              */
+/*      Get Status of all files in the project                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void showChangedFiles(IvyXmlWriter xw,boolean ign)
@@ -510,45 +510,45 @@ private void findMasterName()
       file = file.replace("\\\"","\"");
       int idx1 = file.indexOf(" -> ");
       if (idx1 > 0) {
-	 tofile = file.substring(idx1+4);
-	 file = file.substring(0,idx1);
+         tofile = file.substring(idx1+4);
+         file = file.substring(0,idx1);
        }
       if (file.startsWith("\"")) {
-	 file = file.substring(1,file.length()-1);
+         file = file.substring(1,file.length()-1);
        }
       if (tofile != null && tofile.startsWith("\"")) {
-	 tofile = tofile.substring(1,tofile.length()-1);
+         tofile = tofile.substring(1,tofile.length()-1);
        }
       File nf = new File(git_root,file);
 
       String sts = "UNMODIFIED";
       boolean push = false;
       switch (what0) {
-	 case "M" :
-	    sts = "MODIFIED";
-	    break;
-	 case "A" :
-	    sts = "ADDED";
-	    push = true;
-	    break;
-	 case "D" :
-	    sts = "DELETED";
-	    break;
-	 case "R" :
-	    sts = "RENAMED";
-	    break;
-	 case "C" :
-	    sts = "COPIED";
-	    break;
-	 case "U" :
-	    sts = "UNMERGED";
-	    break;
-	 case "?" :
-	    sts = "UNTRACKED";
-	    break;
-	 case "!" :
-	    sts = "IGNORED";
-	    break;
+         case "M" :
+            sts = "MODIFIED";
+            break;
+         case "A" :
+            sts = "ADDED";
+            push = true;
+            break;
+         case "D" :
+            sts = "DELETED";
+            break;
+         case "R" :
+            sts = "RENAMED";
+            break;
+         case "C" :
+            sts = "COPIED";
+            break;
+         case "U" :
+            sts = "UNMERGED";
+            break;
+         case "?" :
+            sts = "UNTRACKED";
+            break;
+         case "!" :
+            sts = "IGNORED";
+            break;
        }
       FileData fd = new FileData(sts,tofile);
       filemap.put(nf,fd);
@@ -566,8 +566,8 @@ private void findMasterName()
       File nf = new File(git_root,fnm);
       FileData fd = filemap.get(nf);
       if (fd == null) {
-	 fd = new FileData(null,"UNMODIFIED");
-	 filemap.put(nf,fd);
+         fd = new FileData(null,"UNMODIFIED");
+         filemap.put(nf,fd);
        }
       fd.pushNeeded();
     }
@@ -592,7 +592,7 @@ private class FileData {
       file_state = state;
     }
 
-   void pushNeeded()				{ needs_push = true; }
+   void pushNeeded()                            { needs_push = true; }
 
    void outputXml(IvyXmlWriter xw) {
       if (new_name != null) {
@@ -603,14 +603,14 @@ private class FileData {
       if (needs_push) xw.field("UNPUSHED",true);
     }
 
-}	// end of inner class FileData
+}       // end of inner class FileData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle request to update files						*/
-/*										*/
+/*                                                                              */
+/*      Handle request to update files                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void ignoreFiles(IvyXmlWriter xw,List<String> files)
@@ -621,7 +621,7 @@ private class FileData {
       FileWriter fw = new FileWriter(ign,true);
       PrintWriter pw = new PrintWriter(fw);
       for (String fnm : files) {
-	 ignoreFile(xw,pw,fnm);
+         ignoreFile(xw,pw,fnm);
        }
       pw.close();
     }
@@ -680,9 +680,9 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void doCommit(IvyXmlWriter xw,String msg)
@@ -818,14 +818,14 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void addPriors(BvcrFileVersion fv,String id,Map<String,BvcrFileVersion> known,
-			  Map<String,List<String>> priors,
-			  Set<String> done)
+                          Map<String,List<String>> priors,
+                          Set<String> done)
 {
    if (id == null) return;
    if (done.contains(id)) return;
@@ -852,7 +852,7 @@ private void addPriors(BvcrFileVersion fv,String id,Map<String,BvcrFileVersion> 
 
 
 
-}	// end of class BvcrVersionGIT
+}       // end of class BvcrVersionGIT
 
 
 

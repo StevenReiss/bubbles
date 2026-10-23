@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrControlFilePanel.java					*/
-/*										*/
-/*	Bubble showing file status wrt versioning				*/
-/*										*/
+/*                                                                              */
+/*              BvcrControlFilePanel.java                                       */
+/*                                                                              */
+/*      Bubble showing file status wrt versioning                               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -74,23 +74,23 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 class BvcrControlFilePanel extends BudaBubble implements BvcrConstants,
-		BvcrConstants.BvcrProjectUpdated, BudaBubble.BudaBubbleOutputer
+                BvcrConstants.BvcrProjectUpdated, BudaBubble.BudaBubbleOutputer
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BvcrControlPanel	control_panel;
-private FileTable		output_table;
-private DirectoryNode		root_node;
-private FileTableModel		table_model;
-private boolean 		show_untracked;
-private boolean 		show_ignored;
-private List<JButton>		select_buttons;
+private BvcrControlPanel        control_panel;
+private FileTable               output_table;
+private DirectoryNode           root_node;
+private FileTableModel          table_model;
+private boolean                 show_untracked;
+private boolean                 show_ignored;
+private List<JButton>           select_buttons;
 private Set<String>             changed_files;
 
 private static final long serialVersionUID = 1;
@@ -98,9 +98,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BvcrControlFilePanel(BvcrControlPanel pnl)
@@ -165,9 +165,9 @@ static void registerKeys()
 
 
 /********************************************************************************/
-/*										*/
-/*	Updating methods							*/
-/*										*/
+/*                                                                              */
+/*      Updating methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void projectUpdated(BvcrControlPanel pnl)
@@ -199,9 +199,9 @@ private void updateAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble actions								*/
-/*										*/
+/*                                                                              */
+/*      Bubble actions                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -215,9 +215,9 @@ private void updateAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Table actions								*/
-/*										*/
+/*                                                                              */
+/*      Table actions                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void expandAll()
@@ -225,10 +225,10 @@ private void expandAll()
    JTree tr = output_table.getTree();
    for (int i = 0; i < tr.getRowCount(); ++i) {
       try {
-	 tr.expandRow(i);
+         tr.expandRow(i);
        }
       catch (Throwable t) {
-	 BoardLog.logE("BVCR","Problem setting up bvcr control panel",t);
+         BoardLog.logE("BVCR","Problem setting up bvcr control panel",t);
        }
     }
 
@@ -253,7 +253,7 @@ private class ExpandAllAction extends AbstractAction {
       expandAll();
     }
 
-}	// end of inner class ExpandAllAction
+}       // end of inner class ExpandAllAction
 
 
 
@@ -289,9 +289,9 @@ private final class FileChangeHandler implements BumpChangeHandler, Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	File table								*/
-/*										*/
+/*                                                                              */
+/*      File table                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class FileTable extends SwingTreeTable {
@@ -313,7 +313,7 @@ private class FileTable extends SwingTreeTable {
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
        }
       return cell_drawer[c];
     }
@@ -331,15 +331,15 @@ private class FileTable extends SwingTreeTable {
       Object v0 = getValueAt(row,-1);
       if (v0 == null) return null;
       if (v0 instanceof GenericNode) {
-	 GenericNode gn = (GenericNode) v0;
-	 return gn.getRelativeName();
+         GenericNode gn = (GenericNode) v0;
+         return gn.getRelativeName();
        }
       return null;
     }
 
 
 
-}	// end of inner class FileTable
+}       // end of inner class FileTable
 
 
 
@@ -356,7 +356,7 @@ private final class TableSelectionListener implements ListSelectionListener {
        }
     }
 
-}	// end of inner class TableSelectionListener
+}       // end of inner class TableSelectionListener
 
 
 
@@ -371,13 +371,13 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of innerclass CellRenderer
+}       // end of innerclass CellRenderer
 
 
 
@@ -391,30 +391,30 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-							      Object value,
-							      boolean sel,
-							      boolean expanded,
-							      boolean leaf,
-							      int row,
-							      boolean hasfocus) {
+                                                              Object value,
+                                                              boolean sel,
+                                                              boolean expanded,
+                                                              boolean leaf,
+                                                              int row,
+                                                              boolean hasfocus) {
       Color bkg = null;
       if (value instanceof FileNode) {
-	 FileNode fn = (FileNode) value;
-	 switch (fn.getFileStatus()) {
-	    case ADDED :
-	       bkg = BoardColors.getColor("Bvcr.ControlFileAdded");
-	       break;
-	    case DELETED :
-	       bkg = BoardColors.getColor("Bvcr.ControlFileDeleted");
-	       break;
-	    case IGNORED :
-	       bkg = BoardColors.getColor("Bvcr.ControlFileIgnored");
-	       break;
-	    case MODIFIED :
-	       bkg = BoardColors.getColor("Bvcr.ControlFileModified");
-	       break;
-	    default :
-	       break;
+         FileNode fn = (FileNode) value;
+         switch (fn.getFileStatus()) {
+            case ADDED :
+               bkg = BoardColors.getColor("Bvcr.ControlFileAdded");
+               break;
+            case DELETED :
+               bkg = BoardColors.getColor("Bvcr.ControlFileDeleted");
+               break;
+            case IGNORED :
+               bkg = BoardColors.getColor("Bvcr.ControlFileIgnored");
+               break;
+            case MODIFIED :
+               bkg = BoardColors.getColor("Bvcr.ControlFileModified");
+               break;
+            default :
+               break;
           }
        }
       else if (value instanceof DirectoryNode) {
@@ -427,16 +427,16 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
       return super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasfocus);
     }
 
-}	// end of inner class TreeCellRenderer
+}       // end of inner class TreeCellRenderer
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree Table Model							*/
-/*										*/
+/*                                                                              */
+/*      Tree Table Model                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class FileTableModel extends SwingTreeTable.AbstractTreeTableModel {
@@ -455,8 +455,8 @@ private class FileTableModel extends SwingTreeTable.AbstractTreeTableModel {
       Object [] chld = new Object[nchild];
       int [] cidx = new int[nchild];
       for (int i = 0; i < nchild; ++i) {
-	 cidx[i] = i;
-	 chld[i] = root_node.getChild(i);
+         cidx[i] = i;
+         chld[i] = root_node.getChild(i);
        }
       fireTreeStructureChanged(BvcrControlFilePanel.this,path,cidx,chld);
     }
@@ -471,70 +471,70 @@ private class FileTableModel extends SwingTreeTable.AbstractTreeTableModel {
       return gn.getChildCount();
     }
 
-   @Override public int getColumnCount()		{ return column_names.length; }
+   @Override public int getColumnCount()                { return column_names.length; }
 
-   @Override public String getColumnName(int col)	{ return column_names[col]; }
+   @Override public String getColumnName(int col)       { return column_names[col]; }
 
    @Override public Object getValueAt(Object node,int col) {
       GenericNode gn = (GenericNode) node;
       if (gn == null) return null;
       switch (col) {
-	 case -1 :
-	    return gn;
-	 case 0 :
-	    return gn.getRelativeName();
-	 case 1 :
-	    if (gn.getFileStatus() == null) return null;
-	    String sts = gn.getFileStatus().toString();
-	    if (gn.getPushStatus() == Boolean.TRUE) sts += "*";
-	    return sts;
+         case -1 :
+            return gn;
+         case 0 :
+            return gn.getRelativeName();
+         case 1 :
+            if (gn.getFileStatus() == null) return null;
+            String sts = gn.getFileStatus().toString();
+            if (gn.getPushStatus() == Boolean.TRUE) sts += "*";
+            return sts;
        }
       return null;
     }
 
 
-}	// end of inner class FileTableModel
+}       // end of inner class FileTableModel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic node (file/directory)						*/
-/*										*/
+/*                                                                              */
+/*      Generic node (file/directory)                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class GenericNode {
 
-   private DirectoryNode	   parent_node;
+   private DirectoryNode           parent_node;
 
    GenericNode() {
       parent_node = null;
     }
 
-   protected void setParent(DirectoryNode dn)	{ parent_node = dn; }
+   protected void setParent(DirectoryNode dn)   { parent_node = dn; }
 
    abstract File getFile();
-   GenericNode insert(File f,GenericNode gn)	{ return null; }
+   GenericNode insert(File f,GenericNode gn)    { return null; }
 
-   GenericNode getChild(int idx)		{ return null; }
-   int getChildCount()				{ return 0; }
+   GenericNode getChild(int idx)                { return null; }
+   int getChildCount()                          { return 0; }
 
    String getRelativeName() {
       if (parent_node != null) {
-	 return IvyFile.getRelativePath(parent_node.getFile(),getFile());
+         return IvyFile.getRelativePath(parent_node.getFile(),getFile());
        }
       return getFile().getPath();
     }
 
-   FileState getFileStatus()			{ return null; }
-   Boolean getPushStatus()			{ return null; }
+   FileState getFileStatus()                    { return null; }
+   Boolean getPushStatus()                      { return null; }
 
    @Override public String toString() {
       return getRelativeName();
     }
 
-}	// end of inner class GenericNode
+}       // end of inner class GenericNode
 
 
 
@@ -542,40 +542,40 @@ private abstract static class GenericNode {
 
 
 /********************************************************************************/
-/*										*/
-/*	FileNode -- leaf node for a particular file				*/
-/*										*/
+/*                                                                              */
+/*      FileNode -- leaf node for a particular file                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class FileNode extends GenericNode {
 
    private BvcrControlFileStatus file_status;
-   private File 		 file_name;
+   private File                  file_name;
 
    FileNode(BvcrControlFileStatus sts) {
       file_status = sts;
       file_name = new File(file_status.getFileName());
     }
 
-   @Override File getFile()			{ return file_name; }
-   FileState getFileStatus()			{ return file_status.getFileState(); }
-   Boolean getPushStatus()			{ return file_status.getUnpushed(); }
+   @Override File getFile()                     { return file_name; }
+   FileState getFileStatus()                    { return file_status.getFileState(); }
+   Boolean getPushStatus()                      { return file_status.getUnpushed(); }
 
-}	// end of inner class FileNode
+}       // end of inner class FileNode
 
 
 
 /********************************************************************************/
-/*										*/
-/*	DirectoryNode -- internal node for a set of files			*/
-/*										*/
+/*                                                                              */
+/*      DirectoryNode -- internal node for a set of files                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class DirectoryNode extends GenericNode {
 
-   private File 	      directory_name;
+   private File               directory_name;
    private SortedSet<GenericNode>  child_nodes;
-   private List<GenericNode>	child_list;
+   private List<GenericNode>    child_list;
 
    DirectoryNode(File nm) {
       directory_name = nm;
@@ -583,7 +583,7 @@ private static class DirectoryNode extends GenericNode {
       child_list = null;
     }
 
-   @Override File getFile()			{ return directory_name; }
+   @Override File getFile()                     { return directory_name; }
 
    synchronized GenericNode insert(File f,GenericNode add) {
       child_list = null;
@@ -626,17 +626,17 @@ private static class DirectoryNode extends GenericNode {
 
    private void setupChildList() {
       if (child_list == null) {
-	 child_list = new ArrayList<GenericNode>(child_nodes);
+         child_list = new ArrayList<GenericNode>(child_nodes);
       }
    }
 
-}	// end of inner class DirectoryNode
+}       // end of inner class DirectoryNode
 
 
 
 private static class TreeComparator implements Comparator<GenericNode> {
 
-   private File 	base_file;
+   private File         base_file;
 
    TreeComparator(File base) {
       base_file = base;
@@ -650,14 +650,14 @@ private static class TreeComparator implements Comparator<GenericNode> {
       return p1.compareTo(p2);
     }
 
-}	// end of inner class TreeComparator
+}       // end of inner class TreeComparator
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Button action methods							*/
-/*										*/
+/*                                                                              */
+/*      Button action methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ShowButtons implements ChangeListener {
@@ -678,7 +678,7 @@ private final class ShowButtons implements ChangeListener {
       projectUpdated(control_panel);
     }
 
-}	// end of inner class ShowButtons
+}       // end of inner class ShowButtons
 
 
 
@@ -700,10 +700,10 @@ private final class FileStateUpdate implements ActionListener {
             FileNode fn = (FileNode) o;
             switch (fn.getFileStatus()) {
                case UNTRACKED :
-        	  addrows.add(r);
-        	  break;
+                  addrows.add(r);
+                  break;
                default :
-        	  break;
+                  break;
              }
           }
          rows = new int [addrows.size()];
@@ -727,19 +727,19 @@ private final class FileStateUpdate implements ActionListener {
             case "ADD" :
                cmd = "FILEADD";
                switch (fn.getFileStatus()) {
-        	  case ADDED :
-        	  case COPIED :
-        	  case MODIFIED :
-        	  case RENAMED :
-        	  case UNMERGED :
-        	  case UNMODIFIED :
-        	     continue;
-        	  case DELETED :
-        	  case UNTRACKED :
-        	  case IGNORED :
-        	  default :
-        	     break;
-        	}
+                  case ADDED :
+                  case COPIED :
+                  case MODIFIED :
+                  case RENAMED :
+                  case UNMERGED :
+                  case UNMODIFIED :
+                     continue;
+                  case DELETED :
+                  case UNTRACKED :
+                  case IGNORED :
+                  default :
+                     break;
+                }
                break;
           }
          workon.add(fn);
@@ -759,18 +759,18 @@ private final class FileStateUpdate implements ActionListener {
       control_panel.startUpdate();
     }
 
-}	// end of inner class FileStateUpdate
+}       // end of inner class FileStateUpdate
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configurator methods							*/
-/*										*/
+/*                                                                              */
+/*      Configurator methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()		{ return "BVCR"; }
+@Override public String getConfigurator()               { return "BVCR"; }
 
 @Override public void outputXml(BudaXmlWriter xw)
 {
@@ -781,7 +781,7 @@ private final class FileStateUpdate implements ActionListener {
 
 
 
-}	// end of class BvcrControlFilePanel
+}       // end of class BvcrControlFilePanel
 
 
 

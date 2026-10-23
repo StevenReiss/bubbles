@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattProject.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool project information			*/
-/*										*/
+/*                                                                              */
+/*              BattProject.java                                                */
+/*                                                                              */
+/*      Bubble Automated Testing Tool project information                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -49,24 +49,24 @@ class BattProject implements BattConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String			project_name;
+private String                  project_name;
 private Map<String,List<ProjClass>> file_classes;
 private Set<File>               source_files;
 
-private Map<String,ProjClass>	class_data;
-private Set<String>		class_paths;
+private Map<String,ProjClass>   class_data;
+private Set<String>             class_paths;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattProject(Element xml)
@@ -90,13 +90,13 @@ void loadProject(Element xml)
       class_data.put(pc.getName(),pc);
       String fnm = pc.getSource();
       if (fnm != null) {
-	 List<ProjClass> clsl = file_classes.get(fnm);
-	 if (clsl == null) {
-	    clsl = new ArrayList<ProjClass>();
-	    file_classes.put(fnm,clsl);
-	  }
-	 // IvyLog.logD("Add class " + pc.getName() + " TO " + fnm);
-	 clsl.add(pc);
+         List<ProjClass> clsl = file_classes.get(fnm);
+         if (clsl == null) {
+            clsl = new ArrayList<ProjClass>();
+            file_classes.put(fnm,clsl);
+          }
+         // IvyLog.logD("Add class " + pc.getName() + " TO " + fnm);
+         clsl.add(pc);
        }
     }
 
@@ -106,25 +106,25 @@ void loadProject(Element xml)
       String bn = null;
       String ptyp = IvyXml.getAttrString(pe,"TYPE");
       if (ptyp != null && ptyp.equals("SOURCE"))
-	 bn = IvyXml.getTextElement(pe,"OUTPUT");
+         bn = IvyXml.getTextElement(pe,"OUTPUT");
       else
-	 bn = IvyXml.getTextElement(pe,"BINARY");
+         bn = IvyXml.getTextElement(pe,"BINARY");
       if (bn == null) continue;
       if (ignore == null && bn.endsWith("/lib/rt.jar")) {
-	 int idx = bn.lastIndexOf("rt.jar");
-	 ignore = bn.substring(0,idx);
+         int idx = bn.lastIndexOf("rt.jar");
+         ignore = bn.substring(0,idx);
        }
       if (ignore == null && bn.endsWith("/lib/jrt-fs.jar")) {
-	 int idx = bn.lastIndexOf("/lib/jrt-fs.jar");
-	 ignore = bn.substring(0,idx);
+         int idx = bn.lastIndexOf("/lib/jrt-fs.jar");
+         ignore = bn.substring(0,idx);
        }
       if (IvyXml.getAttrBool(pe,"SYSTEM")) continue;
       class_paths.add(bn);
     }
    if (ignore != null) {
       for (Iterator<String> it = class_paths.iterator(); it.hasNext(); ) {
-	 String nm = it.next();
-	 if (nm.startsWith(ignore)) it.remove();
+         String nm = it.next();
+         if (nm.startsWith(ignore)) it.remove();
        }
     }
    
@@ -146,12 +146,12 @@ void loadProject(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()			{ return project_name; }
+String getName()                        { return project_name; }
 
 List<String> getClassPath()
 {
@@ -163,7 +163,7 @@ List<String> getClassNames()
    List<String> rslt = new ArrayList<String>();
    for (ProjClass pc : class_data.values()) {
       if (pc.getSource() != null && pc.getBinary() != null) {
-	 rslt.add(pc.getName());
+         rslt.add(pc.getName());
        }
     }
    return rslt;
@@ -192,9 +192,9 @@ Set<String> getClassesForFile(String fnm,Set<String> rslt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Representation of class data						*/
-/*										*/
+/*                                                                              */
+/*      Representation of class data                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProjClass {
@@ -209,16 +209,16 @@ private static class ProjClass {
       class_file = IvyXml.getAttrString(e,"BINARY");
     }
 
-   String getName()			{ return class_name; }
-   String getSource()			{ return source_file; }
-   String getBinary()			{ return class_file; }
+   String getName()                     { return class_name; }
+   String getSource()                   { return source_file; }
+   String getBinary()                   { return class_file; }
 
-}	// end of inner class ProjClass
-
-
+}       // end of inner class ProjClass
 
 
-}	// end of class BattProject
+
+
+}       // end of class BattProject
 
 
 

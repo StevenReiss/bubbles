@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockConstants.java						*/
-/*										*/
-/*	Constants for Eclipse-Bubbles interface package 			*/
-/*										*/
+/*                                                                              */
+/*              BedrockConstants.java                                           */
+/*                                                                              */
+/*      Constants for Eclipse-Bubbles interface package                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -40,9 +40,9 @@ public interface BedrockConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Standard names								*/
-/*										*/
+/*                                                                              */
+/*      Standard names                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 String BEDROCK_PLUGIN = "edu.brown.cs.bubbles.bedrock";
@@ -51,9 +51,9 @@ String BEDROCK_UPDATER = "edu.brown.cs.bubbles.bedrock.BedrockBuilder";
 
 
 /********************************************************************************/
-/*										*/
-/*	Other names								*/
-/*										*/
+/*                                                                              */
+/*      Other names                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 String BEDROCK_DUMMY_HANDLE = "*DUMMY*";
@@ -62,24 +62,24 @@ String BEDROCK_UNMANAGED_HANDLE = "*UNMANAGED*";
 
 
 /********************************************************************************/
-/*										*/
-/*	Limits									*/
-/*										*/
+/*                                                                              */
+/*      Limits                                                                  */
+/*                                                                              */
 /********************************************************************************/
 
-int	MAX_TEXT_SEARCH_RESULTS = 128;
+int     MAX_TEXT_SEARCH_RESULTS = 128;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mint constants								*/
-/*										*/
+/*                                                                              */
+/*      Mint constants                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 // Must Match BumpConstants.BUMP_MINT_NAME
-String	BEDROCK_MESSAGE_ID = "BUBBLES_" + System.getProperty("user.name").replace(" ","_");
+String  BEDROCK_MESSAGE_ID = "BUBBLES_" + System.getProperty("user.name").replace(" ","_");
 String  BEDROCK_MINT_ID = "BUBBLES_" + System.getProperty("user.name").replace(" ","_") + "_@@@";
 // String BEDROCK_MESSAGE_ID = "BUBBLES";
 
@@ -87,9 +87,9 @@ String  BEDROCK_MINT_ID = "BUBBLES_" + System.getProperty("user.name").replace("
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugger constants							*/
-/*										*/
+/*                                                                              */
+/*      Debugger constants                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 enum BedrockDebugAction {
@@ -103,17 +103,17 @@ enum BedrockDebugAction {
    DROP_TO_FRAME
 }
 
-String	BEDROCK_LAUNCH_ID_PROP = "edu.brown.cs.bubbles.bedrock.ID";
-String	BEDROCK_LAUNCH_ORIGID_PROP = "edu.brown.cs.bubbles.bedrock.ORIGID";
-String	BEDROCK_LAUNCH_IGNORE_PROP = "edu.brown.cs.bubbles.bedrock.IGNORE";
+String  BEDROCK_LAUNCH_ID_PROP = "edu.brown.cs.bubbles.bedrock.ID";
+String  BEDROCK_LAUNCH_ORIGID_PROP = "edu.brown.cs.bubbles.bedrock.ORIGID";
+String  BEDROCK_LAUNCH_IGNORE_PROP = "edu.brown.cs.bubbles.bedrock.IGNORE";
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit information							*/
-/*										*/
+/*                                                                              */
+/*      Edit information                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 interface EditData {
@@ -122,14 +122,14 @@ interface EditData {
    int getLength();
    String getText();
 
-}	// end of subinterface EditData
+}       // end of subinterface EditData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Logging constants							*/
-/*										*/
+/*                                                                              */
+/*      Logging constants                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 enum BedrockLogLevel {
@@ -142,7 +142,7 @@ enum BedrockLogLevel {
 
 
 
-}	// end of interface BedrockConstants
+}       // end of interface BedrockConstants
 
 
 

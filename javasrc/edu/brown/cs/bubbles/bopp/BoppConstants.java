@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoppConstants.java						*/
-/*										*/
-/*	Conststand for the option panel 					*/
-/*										*/
+/*                                                                              */
+/*              BoppConstants.java                                              */
+/*                                                                              */
+/*      Conststand for the option panel                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Alexander Hills		      */
+/*      Copyright 2009 Brown University -- Alexander Hills                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -41,9 +41,9 @@ public interface BoppConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Enumerations for different preferent types				*/
-/*										*/
+/*                                                                              */
+/*      Enumerations for different preferent types                              */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -67,32 +67,32 @@ enum OptionType {
 
 
 /********************************************************************************/
-/*										*/
-/*	Strings for different settings						*/
-/*										*/
+/*                                                                              */
+/*      Strings for different settings                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
  * Name of preferences xml
  */
-String	  PREFERENCES_XML_FILENAME = "preferences.xml";
+String    PREFERENCES_XML_FILENAME = "preferences.xml";
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for option button on the main panel				*/
-/*										*/
+/*                                                                              */
+/*      Constants for option button on the main panel                           */
+/*                                                                              */
 /********************************************************************************/
 
-Insets	  BOPP_BUTTON_INSETS = new Insets(0,8,0,8);
+Insets    BOPP_BUTTON_INSETS = new Insets(0,8,0,8);
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Basic option								*/
-/*										*/
+/*                                                                              */
+/*      Basic option                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 interface BoppOptionNew {
@@ -105,11 +105,11 @@ interface BoppOptionNew {
 
    boolean search(Pattern [] pat);
 
-}	// end of inner interface BoppOptionNew
+}       // end of inner interface BoppOptionNew
 
 
 
-}	// end of interface BoppConstants
+}       // end of interface BoppConstants
 
 
 

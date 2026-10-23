@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaDefaultPort.java						*/
-/*										*/
-/*	BUblles Display Area simple port implementation 			*/
-/*										*/
+/*                                                                              */
+/*              BudaDefaultPort.java                                            */
+/*                                                                              */
+/*      BUblles Display Area simple port implementation                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -42,7 +42,7 @@ import java.awt.geom.Point2D;
 
 
 /**
- *	Standard implementation of a fixed link port for a bubble.
+ *      Standard implementation of a fixed link port for a bubble.
  **/
 
 public class BudaDefaultPort implements BudaConstants.LinkPort, BudaConstants {
@@ -50,9 +50,9 @@ public class BudaDefaultPort implements BudaConstants.LinkPort, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Point2D.Double rel_offset;
@@ -63,13 +63,13 @@ private boolean        is_any;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a port with any position
+ *      Create a port with any position
  **/
 
 public BudaDefaultPort()
@@ -80,8 +80,8 @@ public BudaDefaultPort()
 
 
 /**
- *	Create a port at the position corresponding to the given region.  Only
- *	border regions and COMPONENT (e.g. the center) are valid regions here.
+ *      Create a port at the position corresponding to the given region.  Only
+ *      border regions and COMPONENT (e.g. the center) are valid regions here.
  **/
 
 public BudaDefaultPort(BudaPortPosition pp,boolean any)
@@ -91,41 +91,41 @@ public BudaDefaultPort(BudaPortPosition pp,boolean any)
 
    switch (pp) {
       case NONE :
-	 rel_offset = null;
-	 return;
+         rel_offset = null;
+         return;
       case BORDER_N :
-	 setPosition(0,-1);
-	 break;
+         setPosition(0,-1);
+         break;
       case BORDER_NE :
-	 setPosition(1,-1);
-	 break;
+         setPosition(1,-1);
+         break;
       case BORDER_E :
-	 setPosition(1,0);
-	 break;
+         setPosition(1,0);
+         break;
       case BORDER_SE :
-	 setPosition(1,1);
-	 break;
+         setPosition(1,1);
+         break;
       case BORDER_S :
-	 setPosition(0,1);
-	 break;
+         setPosition(0,1);
+         break;
       case BORDER_SW :
-	 setPosition(-1,1);
-	 break;
+         setPosition(-1,1);
+         break;
       case BORDER_W :
-	 setPosition(-1,0);
-	 break;
+         setPosition(-1,0);
+         break;
       case BORDER_NW :
-	 setPosition(-1,-1);
-	 break;
+         setPosition(-1,-1);
+         break;
       case BORDER_EW :
       case BORDER_EW_TOP :
       case BORDER_NS :
-	 is_any = true;
-	 setPosition(0,0);
-	 break;
+         is_any = true;
+         setPosition(0,0);
+         break;
       default :
-	 setPosition(0,0);
-	 break;
+         setPosition(0,0);
+         break;
     }
 
    base_offset = new Point2D.Double(rel_offset.getX(),rel_offset.getY());
@@ -140,11 +140,11 @@ BudaDefaultPort(Element e)
    Element off = IvyXml.getChild(e,"RELOFF");
    if (off == null) rel_offset = null;
    else rel_offset = new Point2D.Double(IvyXml.getAttrDouble(off,"X",0),
-					   IvyXml.getAttrDouble(off,"Y",0));
+                                           IvyXml.getAttrDouble(off,"Y",0));
    off = IvyXml.getChild(e,"BASEOFF");
    if (off == null) base_offset = null;
    else base_offset = new Point2D.Double(IvyXml.getAttrDouble(off,"X",0),
-					    IvyXml.getAttrDouble(off,"Y",0));
+                                            IvyXml.getAttrDouble(off,"Y",0));
 }
 
 
@@ -163,9 +163,9 @@ private void setPosition(double x,double y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Point getLinkPoint(BudaBubble bb,Rectangle tgt)
@@ -210,26 +210,26 @@ private Point computeLinkPoint(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for finding port position					*/
-/*										*/
+/*                                                                              */
+/*      Methods for finding port position                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void computePosition(BudaBubble bb,double tx0,double ty0,double tx1,double ty1)
 {
    switch (port_pos) {
       case BORDER_EW :
-	 computeEW(bb,tx0,ty0,tx1,ty1);
-	 break;
+         computeEW(bb,tx0,ty0,tx1,ty1);
+         break;
       case BORDER_EW_TOP :
-	 computeEWTop(bb,tx0,ty0,tx1,ty1);
-	 break;
+         computeEWTop(bb,tx0,ty0,tx1,ty1);
+         break;
       case BORDER_NS :
-	 computeNS(bb,tx0,ty0,tx1,ty1);
-	 break;
+         computeNS(bb,tx0,ty0,tx1,ty1);
+         break;
       default :
-	 computeAny(bb,tx0,ty0,tx1,ty1);
-	 break;
+         computeAny(bb,tx0,ty0,tx1,ty1);
+         break;
     }
 }
 
@@ -271,39 +271,39 @@ private void computeAny(BudaBubble bb,double tx0,double ty0,double tx1,double ty
       case NONE :
       case BORDER_ANY :
       case CENTER :
-	 return;
+         return;
       case BORDER_N :
-	 if (close(yv,-1)) return;
-	 break;
+         if (close(yv,-1)) return;
+         break;
       case BORDER_NE :
-	 if (close(yv,-1) || close(xv,1)) return;
-	 break;
+         if (close(yv,-1) || close(xv,1)) return;
+         break;
       case BORDER_E :
-	 if (close(xv,1)) return;
-	 break;
+         if (close(xv,1)) return;
+         break;
       case BORDER_SE :
-	 if (close(xv,1) || close(yv,1)) return;
-	 break;
+         if (close(xv,1) || close(yv,1)) return;
+         break;
       case BORDER_S :
-	 if (close(yv,1)) return;
-	 break;
+         if (close(yv,1)) return;
+         break;
       case BORDER_SW :
-	 if (close(yv,1) || close(xv,-1)) return;
-	 break;
+         if (close(yv,1) || close(xv,-1)) return;
+         break;
       case BORDER_W :
-	 if (close(xv,-1)) return;
-	 break;
+         if (close(xv,-1)) return;
+         break;
       case BORDER_NW :
-	 if (close(xv,-1) || close(yv,-1)) return;
-	 break;
+         if (close(xv,-1) || close(yv,-1)) return;
+         break;
       case BORDER_EW_TOP :
-	 if (close(xv,-1) || close(xv,1)) return;
-	 break;
+         if (close(xv,-1) || close(xv,1)) return;
+         break;
       case BORDER_NS :
-	 if (close(yv,-1) || close(yv,1)) return;
-	 break;
+         if (close(yv,-1) || close(yv,1)) return;
+         break;
       default:
-	 break;
+         break;
     }
 
    rel_offset.setLocation(base_offset.getX(),base_offset.getY());
@@ -319,9 +319,9 @@ private static boolean close(double x,double y)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling restrict (EW/NS) ports				*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling restrict (EW/NS) ports                             */
+/*                                                                              */
 /********************************************************************************/
 
 private void computeEW(BudaBubble bb,double tx0,double ty0,double tx1,double ty1)
@@ -341,7 +341,7 @@ private void computeEW(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
 
    if (tx1 < r.getX()) xt = r.getX();
    else if (tx0 > r.getX() + r.getWidth()) xt = r.getX() + r.getWidth();
-   else xt = r.getX() + r.getWidth();	// overlapping -- need to choose one or the other
+   else xt = r.getX() + r.getWidth();   // overlapping -- need to choose one or the other
 
    if (ty > r.getY() && ty < r.getY() + r.getHeight()) {
       yt = ty;
@@ -390,7 +390,7 @@ private void computeEWTop(BudaBubble bb,double tx0,double ty0,double tx1,double 
 
    if (tx1 < r.getX()) xt = r.getX();
    else if (tx0 > r.getX() + r.getWidth()) xt = r.getX() + r.getWidth();
-   else xt = r.getX() + r.getWidth();	// overlapping -- need to choose one or the other
+   else xt = r.getX() + r.getWidth();   // overlapping -- need to choose one or the other
 
    yt = r.getY() + 10;
 
@@ -466,9 +466,9 @@ private void computeNS(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -485,17 +485,17 @@ private void computeNS(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
 
 
 /********************************************************************************/
-/*										*/
-/*	Removal methods 							*/
-/*										*/
+/*                                                                              */
+/*      Removal methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public void noteRemoved()			{ }
+@Override public void noteRemoved()                     { }
 
 
 
 
-}	// end of class BudaDefaultPort
+}       // end of class BudaDefaultPort
 
 
 

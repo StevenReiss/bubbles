@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BvcrMain.java							*/
-/*										*/
-/*	Bubble Version Collaboration Repository server main program		*/
-/*										*/
+/*                                                                              */
+/*              BvcrMain.java                                                   */
+/*                                                                              */
+/*      Bubble Version Collaboration Repository server main program             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,9 +51,9 @@ public final class BvcrMain implements BvcrConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -66,15 +66,15 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		mint_handle;
-private ProcessMode	process_mode;
-private BvcrMonitor	the_monitor;
-private List<String>	update_files;
+private String          mint_handle;
+private ProcessMode     process_mode;
+private BvcrMonitor     the_monitor;
+private List<String>    update_files;
 private Map<String,File> update_projects;
 
 private Map<String,BvcrVersionManager> manager_map;
@@ -88,17 +88,17 @@ private Map<String,BvcrProject> project_map;
 
 
 enum ProcessMode {
-   SERVER,			// act as a server
-   CHANGESET,			// just list changes
+   SERVER,                      // act as a server
+   CHANGESET,                   // just list changes
    UPDATE,
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BvcrMain(String [] args)
@@ -126,29 +126,29 @@ private BvcrMain(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning methods						*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
 {
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-m") && i+1 < args.length) {           // -m <mint handle>
-	    mint_handle = args[++i];
-	  }
-	 else if (args[i].startsWith("-C")) {                           // -Changeset
-	    process_mode = ProcessMode.CHANGESET;
-	  }
-	 else if (args[i].startsWith("-S")) {                           // -Server
-	    process_mode = ProcessMode.SERVER;
-	  }
-	 else if (args[i].startsWith("-U") && i+1 < args.length) {     // -Update <proj@file>
-	    process_mode = ProcessMode.UPDATE;
-	    if (update_files == null) update_files = new ArrayList<String>();
-	    update_files.add(args[++i]);
-	  }
+         if (args[i].startsWith("-m") && i+1 < args.length) {           // -m <mint handle>
+            mint_handle = args[++i];
+          }
+         else if (args[i].startsWith("-C")) {                           // -Changeset
+            process_mode = ProcessMode.CHANGESET;
+          }
+         else if (args[i].startsWith("-S")) {                           // -Server
+            process_mode = ProcessMode.SERVER;
+          }
+         else if (args[i].startsWith("-U") && i+1 < args.length) {     // -Update <proj@file>
+            process_mode = ProcessMode.UPDATE;
+            if (update_files == null) update_files = new ArrayList<String>();
+            update_files.add(args[++i]);
+          }
          else if (args[i].startsWith("-V") && i+1 < args.length) {      // -V <loglevel>
             String lvl = args[++i];
             switch (lvl.charAt(0)) {
@@ -183,7 +183,7 @@ private void scanArgs(String [] args)
             String root = args[++i];
             update_projects.put(pnm,new File(root));
           }
-	 else badArgs();
+         else badArgs();
        }
       else if (process_mode == ProcessMode.UPDATE) {
          update_files.add(args[i]);
@@ -210,9 +210,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -256,16 +256,16 @@ private void process()
 
    switch (process_mode) {
       case CHANGESET :
-	 processChanges(true);
+         processChanges(true);
          System.err.println("BVCR: Change File Updated for " + System.getProperty("user.name"));
-	 break;
+         break;
       case SERVER :
          processChanges(true);
-	 the_monitor.server();
-	 break;
+         the_monitor.server();
+         break;
       case UPDATE :
-	 processUpdates();
-	 break;
+         processUpdates();
+         break;
     }
 }
 
@@ -273,9 +273,9 @@ private void process()
 
 
 /********************************************************************************/
-/*										*/
-/*	Project management methods						*/
-/*										*/
+/*                                                                              */
+/*      Project management methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 void setProject(BvcrProject bp)
@@ -300,9 +300,9 @@ List<BvcrProject> getProjects()
 
 
 /********************************************************************************/
-/*										*/
-/*	Encryption key management						*/
-/*										*/
+/*                                                                              */
+/*      Encryption key management                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupKeys()
@@ -313,15 +313,15 @@ private void setupKeys()
       String id = bvm.getRepositoryId();
       SecretKey sk = null;
       if (id != null) {
-	 try {
-	    KeySpec ks = new PBEKeySpec(id.toCharArray(),KEY_SALT,KEY_COUNT);
-	    SecretKeyFactory kf = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-	    sk = kf.generateSecret(ks);
-	    key_map.put(proj,sk);
-	  }
-	 catch (Exception e) {
-	    IvyLog.logE("BVCR","Problem constructing key",e);
-	  }
+         try {
+            KeySpec ks = new PBEKeySpec(id.toCharArray(),KEY_SALT,KEY_COUNT);
+            SecretKeyFactory kf = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+            sk = kf.generateSecret(ks);
+            key_map.put(proj,sk);
+          }
+         catch (Exception e) {
+            IvyLog.logE("BVCR","Problem constructing key",e);
+          }
        }
       String nm = bvm.getRepositoryName();
       File f = bvm.getRootDirectory();
@@ -351,9 +351,9 @@ private String getEncodedName(String nm,String pfx)
       byte [] drslt = mdi.digest();
       long rslt = 0;
       for (int i = 0; i < drslt.length; ++i) {
-	 int j = i % 8;
-	 long x = (drslt[i] & 0xff);
-	 rslt ^= (x << (j*8));
+         int j = i % 8;
+         long x = (drslt[i] & 0xff);
+         rslt ^= (x << (j*8));
        }
       rslt &= 0x7fffffffffffffffL;
       nm = pfx + Long.toString(rslt);
@@ -370,9 +370,9 @@ private String getEncodedName(String nm,String pfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Change set processing methods						*/
-/*										*/
+/*                                                                              */
+/*      Change set processing methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void processChanges(boolean force)
@@ -386,20 +386,20 @@ private void processChanges(boolean force)
       if (ds == null) continue;
       if (force || ds.computationNeeded()) {
          IvyLog.logD("BVCR","Process changes for " + id);
-	 bvm.getDifferences(ds);
-	 IvyXmlWriter xw = new IvyXmlWriter();
-	 ds.outputXml(xw);
-	 SecretKey sk = key_map.get(id);
-	 String rid = id_map.get(id);
-	 String uid = user_map.get(id);
+         bvm.getDifferences(ds);
+         IvyXmlWriter xw = new IvyXmlWriter();
+         ds.outputXml(xw);
+         SecretKey sk = key_map.get(id);
+         String rid = id_map.get(id);
+         String uid = user_map.get(id);
          
          IvyLog.logD("BVCR","Change set result " + uid + " " +
                rid + " " + xw.toString());
          
-	 if (uid != null && rid != null &&
+         if (uid != null && rid != null &&
                !BvcrUpload.upload(xw.toString(),uid,rid,sk)) {
-	    IvyLog.logE("BVCR","Upload failed");
-	  }
+            IvyLog.logE("BVCR","Upload failed");
+          }
        }
     }
 }
@@ -453,9 +453,9 @@ BvcrVersionManager getManager(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get the change set for a file				*/
-/*										*/
+/*                                                                              */
+/*      Methods to get the change set for a file                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void processUpdates()
@@ -466,8 +466,8 @@ private void processUpdates()
    for (String s : update_files) {
       int idx = s.indexOf("@");
       if (idx >= 0) {
-	 proj = s.substring(0,idx);
-	 s = s.substring(idx+1);
+         proj = s.substring(0,idx);
+         s = s.substring(idx+1);
        }
       File f = new File(s);
       xw.begin("FILE");
@@ -500,9 +500,9 @@ void findActualChanges(String proj,File file,BvcrVersionManager bvm,IvyXmlWriter
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle information gathering 				*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle information gathering                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void findHistory(String proj,File file,IvyXmlWriter xw)
@@ -523,7 +523,7 @@ void findFileDiffs(String proj,File file,String vfr,String vto,IvyXmlWriter xw)
 
 
 
-}	// end of class BvcrMain
+}       // end of class BvcrMain
 
 
 

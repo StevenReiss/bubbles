@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BtedBubble.java 						*/
-/*										*/
-/*	Bubble Environment text editor bubble					*/
-/*										*/
+/*                                                                              */
+/*              BtedBubble.java                                                 */
+/*                                                                              */
+/*      Bubble Environment text editor bubble                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook 			*/
+/*      Copyright 2010 Brown University -- Adam M. Cook                         */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -81,35 +81,35 @@ class BtedBubble extends BudaBubble implements BtedConstants, BudaBubbleOutputer
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BtedEditorPane		 text_editor;
+private BtedEditorPane           text_editor;
 private transient  BtedFactory  the_factory;
-private File			 current_file;
-private RedoAction		 redo_action;
-private UndoAction		 undo_action;
-private JLabel			 name_label;
-private BtedFindBar		 search_bar;
-private JScrollPane		 scroll_pane;
-private JPanel			 main_panel;
+private File                     current_file;
+private RedoAction               redo_action;
+private UndoAction               undo_action;
+private JLabel                   name_label;
+private BtedFindBar              search_bar;
+private JScrollPane              scroll_pane;
+private JPanel                   main_panel;
 private transient BurpHistory    burp_history;
 private transient BtedUndoableEditListener edit_listener;
 private StartMode                start_mode;
 
-private static BoardProperties	 bted_props	  = BoardProperties.getProperties("Bted");
+private static BoardProperties   bted_props       = BoardProperties.getProperties("Bted");
 
-private static final long	serialVersionUID = 1;
+private static final long       serialVersionUID = 1;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BtedBubble(String path,StartMode mode)
@@ -141,16 +141,16 @@ BtedBubble(String path,StartMode mode)
 
    main_panel = new JPanel(new BorderLayout());
    this.setPreferredSize(new Dimension(bted_props.getInt(INITIAL_WIDTH),bted_props
-					  .getInt(INITIAL_HEIGHT)));
+                                          .getInt(INITIAL_HEIGHT)));
    main_panel.setPreferredSize(new Dimension(bted_props.getInt(INITIAL_WIDTH) - 10,
-						bted_props.getInt(INITIAL_HEIGHT) - 10));
+                                                bted_props.getInt(INITIAL_HEIGHT) - 10));
    main_panel.add(scroll_pane, BorderLayout.CENTER);
 
    this.setupGui();
 
    if (path == null && mode != StartMode.NEW) {
       if (!this.openFileFromStart(mode)) {
-	 this.newFile();
+         this.newFile();
        }
     }
    else if (path == null && mode == StartMode.NEW) {
@@ -180,9 +180,9 @@ BtedBubble(String path,StartMode mode)
 
 
 /********************************************************************************/
-/*										*/
-/*	Window setup								*/
-/*										*/
+/*                                                                              */
+/*      Window setup                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupGui()
@@ -298,9 +298,9 @@ static void registerDefaultKeys()
 
 
 /********************************************************************************/
-/*										*/
-/*	File handling methods							*/
-/*										*/
+/*                                                                              */
+/*      File handling methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -326,8 +326,8 @@ private boolean openFileFromStart(StartMode mode)
       current_file = chooser.getSelectedFile();
       BtedFactory.setLastDirectory(current_file);
       if (!current_file.exists() || !current_file.canRead()) {
-	 JOptionPane.showMessageDialog(null,"File " + current_file + " cannot be opened");
-	 return false;
+         JOptionPane.showMessageDialog(null,"File " + current_file + " cannot be opened");
+         return false;
        }
       the_factory.loadFileIntoEditor(current_file, text_editor, edit_listener);
       name_label.setText(current_file.getName());
@@ -380,7 +380,7 @@ private void openBubbleFromMenu(StartMode mode)
       BtedBubble bb = new BtedBubble(f.getPath(),mode);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       if (bba != null) {
-	 bba.addBubble(bb,this,null,BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_NEW);
+         bba.addBubble(bb,this,null,BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_NEW);
        }
     }
 }
@@ -399,16 +399,16 @@ private void saveFile()
     }
    else {
       try {
-	 OutputStream os = new BufferedOutputStream(new FileOutputStream(current_file));
-	 text_editor.setEditable(false);
-	 BudaCursorManager.setGlobalCursorForComponent(this,
-							  Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-	 Writer w = new OutputStreamWriter(os);
-	 text_editor.write(w);
-	 w.close();
+         OutputStream os = new BufferedOutputStream(new FileOutputStream(current_file));
+         text_editor.setEditable(false);
+         BudaCursorManager.setGlobalCursorForComponent(this,
+                                                          Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         Writer w = new OutputStreamWriter(os);
+         text_editor.write(w);
+         w.close();
        }
       catch (IOException e) {
-	 e.printStackTrace();
+         e.printStackTrace();
        }
       text_editor.setEditable(true);
       BudaCursorManager.resetDefaults(this); // setCursor(Cursor.getDefaultCursor());
@@ -425,7 +425,7 @@ private void saveAsFile()
    JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory(),getFileSystemView());
    int returnVal = chooser.showSaveDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION &&
-	  !the_factory.isFileOpen(chooser.getSelectedFile())) {
+          !the_factory.isFileOpen(chooser.getSelectedFile())) {
       this.onClose();
       current_file = chooser.getSelectedFile();
       BtedFactory.setLastDirectory(current_file);
@@ -480,9 +480,9 @@ protected void onClose()
 
 
 /********************************************************************************/
-/*										*/
-/*	BudaBubbleOutputer methods						*/
-/*										*/
+/*                                                                              */
+/*      BudaBubbleOutputer methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getConfigurator()
@@ -499,9 +499,9 @@ protected void onClose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Listeners and actions							*/
-/*										*/
+/*                                                                              */
+/*      Listeners and actions                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -551,10 +551,10 @@ private class UndoAction extends AbstractAction {
 
    public void updateUndoState() {
       if (burp_history.canUndo(text_editor)) {
-	 this.setEnabled(true);
+         this.setEnabled(true);
        }
       else {
-	 this.setEnabled(false);
+         this.setEnabled(false);
        }
     }
 
@@ -582,10 +582,10 @@ private class RedoAction extends AbstractAction {
 
    public void updateRedoState() {
       if (burp_history.canRedo(text_editor)) {
-	 this.setEnabled(true);
+         this.setEnabled(true);
        }
       else {
-	 this.setEnabled(false);
+         this.setEnabled(false);
        }
     }
 
@@ -704,12 +704,12 @@ private class FindAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (search_bar.isVisible()) {
-	 search_bar.setVisible(false);
-	 text_editor.grabFocus();
+         search_bar.setVisible(false);
+         text_editor.grabFocus();
        }
       else {
-	 search_bar.setVisible(true);
-	 search_bar.grabFocus();
+         search_bar.setVisible(true);
+         search_bar.grabFocus();
        }
     }
 
@@ -731,7 +731,7 @@ private class NextFindAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent arg0) {
       if (search_bar.isVisible()) {
-	 search_bar.search(SearchMode.NEXT);
+         search_bar.search(SearchMode.NEXT);
        }
     }
 
@@ -741,9 +741,9 @@ private class NextFindAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -767,7 +767,7 @@ private static class BtedEditorPane extends SwingEditorPane {
       Graphics2D g2 = (Graphics2D) g.create();
       Dimension sz = getSize();
       Paint p = new GradientPaint(0f,0f,BoardColors.getColor(TOP_COLOR),0f,sz.height,
-				     BoardColors.getColor(BOTTOM_COLOR));
+                                     BoardColors.getColor(BOTTOM_COLOR));
       Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
       g2.setPaint(p);
       g2.fill(r);
@@ -791,7 +791,7 @@ private static class BtedEditorPane extends SwingEditorPane {
 
 
 
-}	// end of class BtedBubble
+}       // end of class BtedBubble
 
 
 

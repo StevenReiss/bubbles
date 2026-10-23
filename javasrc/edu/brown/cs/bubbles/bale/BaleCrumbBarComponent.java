@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleCrumbBarComponent.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment editor crumb bar component	*/
-/*										*/
+/*                                                                              */
+/*              BaleCrumbBarComponent.java                                      */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment editor crumb bar component    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Ian Strickman		      */
+/*      Copyright 2010 Brown University -- Ian Strickman                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,23 +52,23 @@ class BaleCrumbBarComponent extends SwingTextPane implements BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleCrumbBar			parent_component;
-private int				nat_width;
-private int				nat_height;
-private RoundRectangle2D.Double 	draw_oval;
-private boolean 			rolled_over;
+private BaleCrumbBar                    parent_component;
+private int                             nat_width;
+private int                             nat_height;
+private RoundRectangle2D.Double         draw_oval;
+private boolean                         rolled_over;
 private boolean                         my_search_up;
-private String				my_arrow;
-private String				package_name;
+private String                          my_arrow;
+private String                          package_name;
 private String                          shown_text;
-private BaleCrumbBarComponent		brother_component;
-private Color				draw_color;
-private boolean 			is_dirty;
+private BaleCrumbBarComponent           brother_component;
+private Color                           draw_color;
+private boolean                         is_dirty;
 
 private static final char ARROW = '\u25B6';
 private static final int ELLIDED_WIDTH = 12; //from experimentation
@@ -79,9 +79,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleCrumbBarComponent(BaleCrumbBar par, BaleCrumbBarComponent bro, String shotxt)
@@ -136,9 +136,9 @@ BaleCrumbBarComponent(BaleCrumbBar par, BaleCrumbBarComponent bro, String shotxt
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void instOval()
@@ -187,9 +187,9 @@ int getWidthLocation()
 
 
 /********************************************************************************/
-/*										*/
-/*	Text appending methods							*/
-/*										*/
+/*                                                                              */
+/*      Text appending methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 void append(String toAp, Color c)
@@ -231,9 +231,9 @@ private void resetName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Resizing methods							*/
-/*										*/
+/*                                                                              */
+/*      Resizing methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void shrink()
@@ -275,9 +275,9 @@ int addedWidthIfGrown()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paint(Graphics g)
@@ -295,9 +295,9 @@ int addedWidthIfGrown()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void handleRequest(){
@@ -306,8 +306,8 @@ void handleRequest(){
    if (root == null || loc == null) return;
    if (!my_search_up) {
        root.createSearchBubble(new Point(loc.x+getWidthLocation(),
-					    loc.y+this.getHeight()),
-				  parent_component.getProjectName(),package_name,false);
+                                            loc.y+this.getHeight()),
+                                  parent_component.getProjectName(),package_name,false);
     }
    else root.hideSearchBubble();
    my_search_up = !my_search_up;
@@ -316,9 +316,9 @@ void handleRequest(){
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback handlers							*/
-/*										*/
+/*                                                                              */
+/*      Callback handlers                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Mouser extends MouseAdapter
@@ -340,14 +340,14 @@ private final class Mouser extends MouseAdapter
       repaint();
    }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Dummy caret for the component						*/
-/*										*/
+/*                                                                              */
+/*      Dummy caret for the component                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CrumbCaret extends DefaultCaret {
@@ -360,14 +360,14 @@ private static class CrumbCaret extends DefaultCaret {
       setVisible(false);
     }
 
-   @Override protected void adjustVisibility(Rectangle r)		{ }
+   @Override protected void adjustVisibility(Rectangle r)               { }
 
-}	// end of inner class CrumbCaret
-
-
+}       // end of inner class CrumbCaret
 
 
-}	// end of class BaleCrumbBarComponent
+
+
+}       // end of class BaleCrumbBarComponent
 
 
 

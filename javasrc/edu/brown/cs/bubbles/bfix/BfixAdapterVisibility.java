@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterVisibility.java					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterVisibility.java                                      */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -42,9 +42,9 @@ class BfixAdapterVisibility extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static List<BfixErrorPattern> visibility_patterns;
@@ -52,9 +52,9 @@ private static List<BfixErrorPattern> visibility_patterns;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterVisibility()
@@ -74,9 +74,9 @@ BfixAdapterVisibility()
 
 
 /********************************************************************************/
-/*										*/
-/*	Adapter interface							*/
-/*										*/
+/*                                                                              */
+/*      Adapter interface                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override 
@@ -111,9 +111,9 @@ private String getSuperClass(BfixCorrector corr,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private VisibilityFixer findFixer(BfixCorrector corr,BumpProblem bp,String outer)
@@ -135,9 +135,9 @@ private VisibilityFixer findFixer(BfixCorrector corr,BumpProblem bp,String outer
       String n1 = bl.getSymbolName();
       if (n1.endsWith(pat)) fnd = bl;
       else if (bl.getFile().equals(bp.getFile())) {
-	 if (bp.getStart() >= bl.getDefinitionOffset() &&
-	       bp.getStart() <= bl.getDefinitionEndOffset())
-	    cur = bl;
+         if (bp.getStart() >= bl.getDefinitionOffset() &&
+               bp.getStart() <= bl.getDefinitionEndOffset())
+            cur = bl;
        }
     }
    if (fnd == null || cur == null) return null;
@@ -154,41 +154,41 @@ private VisibilityFixer findFixer(BfixCorrector corr,BumpProblem bp,String outer
    int spos = 0;
    int epos = 0;
    for (BaleWindowElement prelt = pelt;
-	prelt != null;
-	prelt = prelt.getPreviousCharacterElement()) {
+        prelt != null;
+        prelt = prelt.getPreviousCharacterElement()) {
       System.err.println("FOUND " + prelt + " " + prelt.getTokenType());
       if (owhat != null) {
-	 if (prelt.getTokenType() == BaleConstants.BaleTokenType.KEYWORD) {
-	    int tstart = prelt.getStartOffset();
-	    int tlend = prelt.getEndOffset();
-	    String tok = doc.getWindowText(tstart,tlend-tstart);
-	    if (tok.equals(owhat)) {
-	       spos = prelt.getStartOffset();
-	       epos = prelt.getEndOffset();
-	       break;
-	     }
-	  }
+         if (prelt.getTokenType() == BaleConstants.BaleTokenType.KEYWORD) {
+            int tstart = prelt.getStartOffset();
+            int tlend = prelt.getEndOffset();
+            String tok = doc.getWindowText(tstart,tlend-tstart);
+            if (tok.equals(owhat)) {
+               spos = prelt.getStartOffset();
+               epos = prelt.getEndOffset();
+               break;
+             }
+          }
        }
       else {
-	 switch (prelt.getTokenType()) {
-	    case EOL :
-	    case SEMICOLON :
-	       spos = prelt.getEndOffset();
-	       epos = spos;
-	       break;
-	    case IDENTIFIER :
-	       int tstart = prelt.getStartOffset();
-	       int tlend = prelt.getEndOffset();
-	       String tok = doc.getWindowText(tstart,tlend-tstart);
-	       if (tok.equals("Override")) {
-		  spos = prelt.getEndOffset()+1;
-		  epos = spos;
-		}
-	       break;
+         switch (prelt.getTokenType()) {
+            case EOL :
+            case SEMICOLON :
+               spos = prelt.getEndOffset();
+               epos = spos;
+               break;
+            case IDENTIFIER :
+               int tstart = prelt.getStartOffset();
+               int tlend = prelt.getEndOffset();
+               String tok = doc.getWindowText(tstart,tlend-tstart);
+               if (tok.equals("Override")) {
+                  spos = prelt.getEndOffset()+1;
+                  epos = spos;
+                }
+               break;
             default :
                break;
-	  }
-	 if (spos > 0) break;
+          }
+         if (spos > 0) break;
        }
     }
 
@@ -200,9 +200,9 @@ private VisibilityFixer findFixer(BfixCorrector corr,BumpProblem bp,String outer
 
 
 /********************************************************************************/
-/*										*/
-/*	Fixing code								*/
-/*										*/
+/*                                                                              */
+/*      Fixing code                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static class VisibilityFixer extends BfixFixer {
@@ -234,14 +234,14 @@ private static class VisibilityFixer extends BfixFixer {
       return vd;
     }
 
-}	// end of inner class VisibilityFixer
+}       // end of inner class VisibilityFixer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Code to change the visibility						*/
-/*										*/
+/*                                                                              */
+/*      Code to change the visibility                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class VisibilityDoer extends BfixFixDoer {
@@ -266,12 +266,12 @@ private static class VisibilityDoer extends BfixFixDoer {
 
    @Override public double getRegionOrder()                { return 0; } 
    
-}	// end of inner class VisibilityDoer
+}       // end of inner class VisibilityDoer
 
 
 
 
-}	// end of class BfixAdapterVisibility
+}       // end of class BfixAdapterVisibility
 
 
 

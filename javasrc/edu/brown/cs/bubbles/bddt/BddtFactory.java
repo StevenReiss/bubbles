@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtFactory.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool factory and setup class	*/
-/*										*/
+/*                                                                              */
+/*              BddtFactory.java                                                */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool factory and setup class       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -74,45 +74,45 @@ import java.util.TreeSet;
 
 
 /**
- *	This class provides the entries for setting up and providing access to
- *	the various debugging bubbles and environment.
+ *      This class provides the entries for setting up and providing access to
+ *      the various debugging bubbles and environment.
  **/
 
 public final class BddtFactory implements BddtConstants, BudaConstants.ButtonListener,
-					BumpConstants, BaleConstants, BudaConstants
+                                        BumpConstants, BaleConstants, BudaConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaChannelSet		debug_channels;
-private BumpLaunchConfig	current_configuration;
-private JLabel			launch_label;
-private BudaRoot		buda_root;
-private List<BudaWorkingSet>	working_sets;
-private BudaWorkingSet		active_working_set;
-private Boolean 		debugging_use_workingset;
+private BudaChannelSet          debug_channels;
+private BumpLaunchConfig        current_configuration;
+private JLabel                  launch_label;
+private BudaRoot                buda_root;
+private List<BudaWorkingSet>    working_sets;
+private BudaWorkingSet          active_working_set;
+private Boolean                 debugging_use_workingset;
 private Map<BddtAuxBubbleAction,Boolean> aux_buttons;
 
 private static BddtConsoleController console_controller;
 private static BddtHistoryController history_controller;
-private static BddtFactory	the_factory;
-private static BoardProperties	bddt_properties;
+private static BddtFactory      the_factory;
+private static BoardProperties  bddt_properties;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This routine is called automatically at startup to initialize the module.
+ *      This routine is called automatically at startup to initialize the module.
  **/
 
 public static void setup()
@@ -136,7 +136,7 @@ public static void setup()
 
 
 /**
- *	Return the singleton instance of the ddttext viewer factory.
+ *      Return the singleton instance of the ddttext viewer factory.
  **/
 
 public static BddtFactory getFactory()
@@ -159,9 +159,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BddtFactory()
@@ -176,13 +176,13 @@ private BddtFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BddtConsoleController getConsoleControl()		{ return console_controller; }
-BddtHistoryController getHistoryControl()		{ return history_controller; }
+BddtConsoleController getConsoleControl()               { return console_controller; }
+BddtHistoryController getHistoryControl()               { return history_controller; }
 
 BudaWorkingSet getActiveWorkingSet()
 {
@@ -205,9 +205,9 @@ Map<BddtAuxBubbleAction,Boolean> getAuxButtons()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to setup up a debugging process 				*/
-/*										*/
+/*                                                                              */
+/*      Methods to setup up a debugging process                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public void newDebugger(BumpLaunchConfig blc)
@@ -219,21 +219,21 @@ public void newDebugger(BumpLaunchConfig blc)
    if (debugging_use_workingset) {
       bba = buda_root.getCurrentBubbleArea();
       if (active_working_set == null && working_sets.size() > 0) {
-	 active_working_set = working_sets.get(0);
-	 active_working_set.setLabel(label);
-	 for (BudaBubble bbl : bba.getBubblesInRegion(active_working_set.getRegion())) {
-	    bba.removeBubble(bbl);
-	  }
-	 // might need to remove some floating bubbles as well
+         active_working_set = working_sets.get(0);
+         active_working_set.setLabel(label);
+         for (BudaBubble bbl : bba.getBubblesInRegion(active_working_set.getRegion())) {
+            bba.removeBubble(bbl);
+          }
+         // might need to remove some floating bubbles as well
        }
       else {
-	 createDebuggerWorkingSet(label);
+         createDebuggerWorkingSet(label);
        }
     }
    else {
       if (debug_channels.getNumChannels() == 1 && debug_channels.isChannelEmpty()) {
-	 bba = debug_channels.getBubbleArea();
-	 debug_channels.setChannelName(label);
+         bba = debug_channels.getBubbleArea();
+         debug_channels.setChannelName(label);
        }
       else bba = debug_channels.addChannel(label);
       // Register Component Listener to terminate on close
@@ -256,16 +256,16 @@ public void newDebugger(BumpLaunchConfig blc)
       // save space for tool bar
       int y0 = Math.max(BDDT_LAUNCH_CONTROL_Y,36);
       bba.addBubble(ctrl,null,
-	    new Point(r.x + BDDT_LAUNCH_CONTROL_X,r.y + y0),
-	    PLACEMENT_EXPLICIT,BudaBubblePosition.MOVABLE);
+            new Point(r.x + BDDT_LAUNCH_CONTROL_X,r.y + y0),
+            PLACEMENT_EXPLICIT,BudaBubblePosition.MOVABLE);
     }
    else {
       BudaBubblePosition bbp = BudaBubblePosition.MOVABLE;
       if (bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_LAUNCH_CONTROL)) {
-	 bbp = BudaBubblePosition.FLOAT;
+         bbp = BudaBubblePosition.FLOAT;
        }
       bba.addBubble(ctrl,null,new Point(BDDT_LAUNCH_CONTROL_X,BDDT_LAUNCH_CONTROL_Y),
-	    PLACEMENT_EXPLICIT,bbp);
+            PLACEMENT_EXPLICIT,bbp);
     }
 
    BudaRoot br = BudaRoot.findBudaRoot(bba);
@@ -278,8 +278,8 @@ public void newDebugger(BumpLaunchConfig blc)
       r.height = r1.height;
       bba.scrollRectToVisible(r);
       if (bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_LAUNCH_CONTROL)) {
-	 if (active_working_set != null) ctrl.setWorkingSet(active_working_set);
-	 else ctrl.setFixed(true);
+         if (active_working_set != null) ctrl.setWorkingSet(active_working_set);
+         else ctrl.setFixed(true);
        }
     }
    else {
@@ -296,13 +296,13 @@ void setProcess(BddtLaunchControl ctrl,BumpProcess p)
    boolean useworkingset = bddt_properties.getBoolean("Bddt.use.workingset");
    if (useworkingset) {
       if (active_working_set != null) {
-	 active_working_set.setProperty("Bddt.process",p);
+         active_working_set.setProperty("Bddt.process",p);
        }
     }
    else {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(ctrl);
       if (bba != null) {
-	 bba.setProperty("Bddt.process",p);
+         bba.setProperty("Bddt.process",p);
        }
     }
 }
@@ -350,9 +350,9 @@ public boolean isThreadRelevant(BudaBubble lid,String tid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 BumpLaunchConfig getCurrentLaunchConfig()
@@ -369,8 +369,8 @@ void setCurrentLaunchConfig(BumpLaunchConfig blc)
 
    if (blc == null) {
       for (BumpLaunchConfig xlc : brm.getLaunchConfigurations()) {
-	 if (!xlc.isWorkingCopy()) blc = xlc;
-	 break;
+         if (!xlc.isWorkingCopy()) blc = xlc;
+         break;
        }
     }
    else {
@@ -415,14 +415,14 @@ private void setupDebuggingChannels()
 {
    String dflt = null;
    debug_channels = new BudaChannelSet(buda_root,BDDT_CHANNEL_TOP_COLOR_PROP,
-	 BDDT_CHANNEL_BOTTOM_COLOR_PROP,dflt);
+         BDDT_CHANNEL_BOTTOM_COLOR_PROP,dflt);
    BudaBubbleArea bba = debug_channels.getBubbleArea();
    if (bba != null) {
       bba.setProperty("Bddt.debug",Boolean.TRUE);
       if (bddt_properties.getBoolean("Bddt.grow.down")) {
-	 Dimension d = bba.getSize();
-	 d.height *= 2;
-	 bba.setSize(d);
+         Dimension d = bba.getSize();
+         d.height *= 2;
+         bba.setSize(d);
        }
     }
 }
@@ -431,9 +431,9 @@ private void setupDebuggingChannels()
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging panel 							*/
-/*										*/
+/*                                                                              */
+/*      Debugging panel                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupDebuggingPanel()
@@ -450,7 +450,7 @@ private void setupDebuggingPanel()
    pnl.addGBComponent(btn,1,1,1,1,0,0);
 
    btn = defineButton("new","<html>Create a new debugging channel for current configuration" +
-	 " or switch configurations (right click)",hdlr);
+         " or switch configurations (right click)",hdlr);
    BoardColors.setTransparent(btn,pnl);
    pnl.addGBComponent(btn,2,1,1,1,0,0);
    btn.addMouseListener(new ConfigSelector());
@@ -484,16 +484,16 @@ private static class DebuggingPanel extends SwingGridPanel
       Color tc = BoardColors.getColor(BDDT_PANEL_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(BDDT_PANEL_BOTTOM_COLOR_PROP);
       if (tc.equals(bc)) {
-	 g.setColor(tc);
+         g.setColor(tc);
        }
       else {
-	 Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
-	 g.setPaint(p);
+         Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
+         g.setPaint(p);
        }
       g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
-}	// end of inner class DebuggingPanel
+}       // end of inner class DebuggingPanel
 
 
 
@@ -559,12 +559,12 @@ private class PanelHandler extends AbstractAction implements ActionListener {
                useworkingset = false;
             if (useworkingset) {
                if (active_working_set == null) {
-        	  setPriorViewport(br);
-        	  active_working_set = working_sets.get(0);
-        	}
+                  setPriorViewport(br);
+                  active_working_set = working_sets.get(0);
+                }
                else if (prior_viewport != null) {
-        	  br.setViewport(prior_viewport.x,prior_viewport.y);
-        	}
+                  br.setViewport(prior_viewport.x,prior_viewport.y);
+                }
              }
             else {
                if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
@@ -590,7 +590,7 @@ private class PanelHandler extends AbstractAction implements ActionListener {
       Rectangle r = br.getViewport();
       boolean overlap = false;
       for (BudaWorkingSet bws : working_sets) {
-	 if (bws.getRegion().intersects(r)) overlap = true;
+         if (bws.getRegion().intersects(r)) overlap = true;
        }
       if (!overlap) prior_viewport = br.getViewport();
     }
@@ -611,14 +611,14 @@ private class PanelHandler extends AbstractAction implements ActionListener {
       cca.actionPerformed(act);
     }
 
-}	// end of inner class PanelHandler
+}       // end of inner class PanelHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble making methods (for non-debug mode)				*/
-/*										*/
+/*                                                                              */
+/*      Bubble making methods (for non-debug mode)                              */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubble makeConsoleBubble(BudaBubble src,BumpProcess proc)
@@ -643,9 +643,9 @@ BudaBubble makeConsoleBubble(BudaBubble src,BumpProcess proc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Button handling 							*/
-/*										*/
+/*                                                                              */
+/*      Button handling                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -674,9 +674,9 @@ BudaBubble makeConsoleBubble(BudaBubble src,BumpProcess proc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugger working set methods						*/
-/*										*/
+/*                                                                              */
+/*      Debugger working set methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static final int CLEAR_SIZE = 1024;
@@ -697,8 +697,8 @@ private void createDebuggerWorkingSet(String label)
       Collection<BudaBubble> bbls = bba.getBubblesInRegion(chkr);
       if (bbls.isEmpty()) break;
       for (BudaBubble bbl : bbls) {
-	 Rectangle rbbl = bbl.getBounds();
-	 endloc = Math.max(endloc,rbbl.x + rbbl.width);
+         Rectangle rbbl = bbl.getBounds();
+         endloc = Math.max(endloc,rbbl.x + rbbl.width);
        }
     }
    if (endloc + CLEAR_SIZE > dims.width) endloc = dims.width;
@@ -714,9 +714,9 @@ private void createDebuggerWorkingSet(String label)
 
 
 /********************************************************************************/
-/*										*/
-/*	Button actions for selecting configurator				*/
-/*										*/
+/*                                                                              */
+/*      Button actions for selecting configurator                               */
+/*                                                                              */
 /********************************************************************************/
 
 void addNewConfigurationActions(JPopupMenu menu)
@@ -749,7 +749,7 @@ private final class ConfigSelector extends BoardMouser {
        }
     }
 
-}	// end of inner class ConfigSelector
+}       // end of inner class ConfigSelector
 
 
 
@@ -770,7 +770,7 @@ private class ConfigAction extends AbstractAction {
       newDebugger(for_config);
     }
 
-}	// end of inner class ConfigAction
+}       // end of inner class ConfigAction
 
 
 
@@ -820,15 +820,15 @@ private static final class ConfigComparator implements Comparator<BumpLaunchConf
       return l1.getConfigName().compareTo(l2.getConfigName());
     }
 
-}	// end of inner class ConfigComparator
+}       // end of inner class ConfigComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	General context commands for debugging					*/
-/*										*/
+/*                                                                              */
+/*      General context commands for debugging                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class DebugContextListener implements BaleContextListener {
@@ -848,7 +848,7 @@ private static final class DebugContextListener implements BaleContextListener {
    
    
 
-}	// end of inner class EditorContextListener
+}       // end of inner class EditorContextListener
 
 
 
@@ -872,14 +872,14 @@ private static class BreakpointAction extends AbstractAction {
       BoardMetrics.noteCommand("BDDT","ANNOT_" + e.getActionCommand());
     }
 
-}	// end of inner class BreakpointAction
+}       // end of inner class BreakpointAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Detect changes to the debugger working set				*/
-/*										*/
+/*                                                                              */
+/*      Detect changes to the debugger working set                              */
+/*                                                                              */
 /********************************************************************************/
 
 private final class DebugBubbleChecker implements BubbleViewCallback {
@@ -891,12 +891,12 @@ private final class DebugBubbleChecker implements BubbleViewCallback {
        }
     }
 
-}	// end of inner class DebugBubbleChecker
+}       // end of inner class DebugBubbleChecker
 
 
 
 
-}	// end of class BddtFactory
+}       // end of class BddtFactory
 
 
 

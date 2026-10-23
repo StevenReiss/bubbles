@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BaleRegion.java 						*/
-/*										*/
-/*	Bubble Annotated Language Editor region definition			*/
-/*										*/
+/*                                                                              */
+/*              BaleRegion.java                                                 */
+/*                                                                              */
+/*      Bubble Annotated Language Editor region definition                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -38,23 +38,23 @@ class BaleRegion implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Position	start_position;
-private Position	end_position;
-private int		region_size;
-private boolean 	includes_eol;
+private Position        start_position;
+private Position        end_position;
+private int             region_size;
+private boolean         includes_eol;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleRegion(Position start,Position end)
@@ -88,17 +88,17 @@ BaleRegion(Position start,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-Position getStartPosition()		{ return start_position; }
-Position getEndPosition()		{ return end_position; }
+Position getStartPosition()             { return start_position; }
+Position getEndPosition()               { return end_position; }
 
-boolean includesEol()			{ return includes_eol; }
+boolean includesEol()                   { return includes_eol; }
 
-int getStart()				{ return start_position.getOffset(); }
+int getStart()                          { return start_position.getOffset(); }
 
 int getEnd()
 {
@@ -126,9 +126,9 @@ void reset(Position start,int len)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -152,7 +152,7 @@ void reset(Position start,int len)
 
 
 
-}	// end of class BaleRegion
+}       // end of class BaleRegion
 
 
 

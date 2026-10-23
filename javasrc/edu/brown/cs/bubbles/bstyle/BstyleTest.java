@@ -125,7 +125,7 @@ private void runServerTest1(String dir,String pid)
    
    try {
       String [] args = new String[] { "-m", mid, "-DEBUG","-OUTPUT",
-	    "-LOG", loghead + "servertest" + dir + ".log" };
+            "-LOG", loghead + "servertest" + dir + ".log" };
       
       BstyleMain.main(args); 
       
@@ -172,9 +172,9 @@ private synchronized void waitForResults()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubbles Messaging methods						*/
-/*										*/
+/*                                                                              */
+/*      Bubbles Messaging methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private Element sendBubblesXmlReply(String cmd,String proj,Map<String,Object> flds,String cnts)
@@ -212,7 +212,7 @@ private void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,S
    if (proj != null && proj.length() > 0) xw.field("PROJECT",proj);
    if (flds != null) {
       for (Map.Entry<String,Object> ent : flds.entrySet()) {
-	 xw.field(ent.getKey(),ent.getValue());
+         xw.field(ent.getKey(),ent.getValue());
        }
     }
    xw.field("LANG","eclipse");
@@ -233,9 +233,9 @@ private void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,S
 
 
 /********************************************************************************/
-/*										*/
-/*	Bedrock setup / shutdown methods					*/
-/*										*/
+/*                                                                              */
+/*      Bedrock setup / shutdown methods                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupBedrock(String dir,String mint,String proj)
@@ -292,21 +292,21 @@ private void setupBedrock(String dir,String mint,String proj)
    
    try {
       for (int i = 0; i < 250; ++i) {
-	 if (pingEclipse()) {
-	    CommandArgs args = new CommandArgs("LEVEL","DEBUG");
-	    sendBubblesMessage("LOGLEVEL",null,args,null);
-	    sendBubblesMessage("ENTER");
-	    Element pxml = sendBubblesXmlReply("OPENPROJECT",proj,null,null);
-	    if (!IvyXml.isElement(pxml,"PROJECT")) pxml = IvyXml.getChild(pxml,"PROJECT");
-	    return;
-	  }
-	 if (i == 0) new IvyExec(cmd);
-	 else {
-	    try { 
+         if (pingEclipse()) {
+            CommandArgs args = new CommandArgs("LEVEL","DEBUG");
+            sendBubblesMessage("LOGLEVEL",null,args,null);
+            sendBubblesMessage("ENTER");
+            Element pxml = sendBubblesXmlReply("OPENPROJECT",proj,null,null);
+            if (!IvyXml.isElement(pxml,"PROJECT")) pxml = IvyXml.getChild(pxml,"PROJECT");
+            return;
+          }
+         if (i == 0) new IvyExec(cmd);
+         else {
+            try { 
                Thread.sleep(100);
              } 
             catch (InterruptedException e) { }
-	  }
+          }
        }
     }
    catch (IOException e) { }
@@ -351,7 +351,7 @@ private void issueBuild()
    for (Element p : IvyXml.children(e,"PROJECT")) {
       String pnm = IvyXml.getAttrString(p,"NAME");
       if (!IvyXml.getAttrBool(p,"OPEN")) {
-	 sendBubblesXmlReply("OPENPROJECT",pnm,null,null);
+         sendBubblesXmlReply("OPENPROJECT",pnm,null,null);
        }
       sendBubblesXmlReply("BUILDPROJECT",pnm,args,null);
     }
@@ -380,7 +380,7 @@ private final class TestEclipseHandler implements MintHandler {
        }
     }
 
-}	// end of inner class TestEclipseHandler
+}       // end of inner class TestEclipseHandler
 
 
 

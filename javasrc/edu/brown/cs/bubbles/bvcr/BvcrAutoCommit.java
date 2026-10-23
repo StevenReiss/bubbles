@@ -193,9 +193,9 @@ private void handleProjectUpdated()
 
 
 /********************************************************************************/
-/*										*/
-/*	File Change manager							*/
-/*										*/
+/*                                                                              */
+/*      File Change manager                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private final class FileChangeManager implements BumpConstants.BumpChangeHandler {
@@ -224,7 +224,7 @@ private final class FileChangeManager implements BumpConstants.BumpChangeHandler
        }
     }
    
-}	// end of inner class FileChangeManager
+}       // end of inner class FileChangeManager
 
 
 

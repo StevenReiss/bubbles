@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseFileManager.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              NobaseFileManager.java                                          */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -37,9 +37,9 @@ class NobaseFileManager implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private Map<File,NobaseFile> file_data;
@@ -48,9 +48,9 @@ private Map<File,NobaseFile> file_data;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseFileManager(NobaseMain nm)
@@ -60,9 +60,9 @@ NobaseFileManager(NobaseMain nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get file buffer for a file						*/
-/*										*/
+/*                                                                              */
+/*      Get file buffer for a file                                              */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseFile getFileData(File f)
@@ -116,7 +116,7 @@ int getFileOffset(File f,int line,int col)
 
 
 
-}	// end of class NobaseFileManager
+}       // end of class NobaseFileManager
 
 
 

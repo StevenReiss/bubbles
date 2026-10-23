@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseModule.java						*/
-/*										*/
-/*	Manage node modules							*/
-/*										*/
+/*                                                                              */
+/*              NobaseModule.java                                               */
+/*                                                                              */
+/*      Manage node modules                                                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -35,24 +35,24 @@ class NobaseModule implements NobaseConstants
 {
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseProject		    for_project;
+private NobaseProject               for_project;
 private Map<NobaseFile,NobaseValue> export_map;
-private Set<NobaseFile> 	    active_files;
+private Set<NobaseFile>             active_files;
 
-private static boolean		    do_debug = true;
+private static boolean              do_debug = true;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseModule(NobaseProject proj)
@@ -65,9 +65,9 @@ NobaseModule(NobaseProject proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface methods for managing export object				*/
-/*										*/
+/*                                                                              */
+/*      Interface methods for managing export object                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseValue findRequiresValue(NobaseFile forfile,String nm)
@@ -86,12 +86,12 @@ NobaseValue findRequiresValue(NobaseFile forfile,String nm)
       nv = export_map.get(result);
     }
 
-   if (do_debug) {	
+   if (do_debug) {      
       NobaseMain.logD("REQUIRES: RESULT " + nm + " FOR " + forfile + " = " + nv);
       if (nv != null) {
-	 for (Object o : nv.getKnownProperties()) {
-	    NobaseMain.logD("\t" + o.toString() + " :: " + nv.getProperty(o,false));
-	 }
+         for (Object o : nv.getKnownProperties()) {
+            NobaseMain.logD("\t" + o.toString() + " :: " + nv.getProperty(o,false));
+         }
       }
    }
 
@@ -130,9 +130,9 @@ NobaseValue finishExportValue(NobaseFile forfile)
 
 
 /********************************************************************************/
-/*										*/
-/*	Requires function implementation					*/
-/*										*/
+/*                                                                              */
+/*      Requires function implementation                                        */
+/*                                                                              */
 /********************************************************************************/
 
 Evaluator getRequiresEvaluator()
@@ -158,12 +158,12 @@ private final class Requires implements Evaluator {
       return NobaseValue.createUnknownValue();
     }
 
-}	// end of inner class Requires
+}       // end of inner class Requires
 
 
 
 
-}	// end of class NobaseModule
+}       // end of class NobaseModule
 
 
 

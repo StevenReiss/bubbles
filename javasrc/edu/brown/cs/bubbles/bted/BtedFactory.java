@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BtedFactory.java						*/
-/*										*/
-/*	Bubble Environment text editor facility factory 			*/
-/*										*/
+/*                                                                              */
+/*              BtedFactory.java                                                */
+/*                                                                              */
+/*      Bubble Environment text editor facility factory                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Adam M. Cook 			*/
+/*      Copyright 2010 Brown University -- Adam M. Cook                         */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -69,14 +69,14 @@ import java.util.regex.Pattern;
 
 
 public final class BtedFactory implements BtedConstants, BumpConstants,
-	 BudaConstants.ButtonListener {
+         BudaConstants.ButtonListener {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private HashMap<String, Document>      active_documents;
@@ -84,21 +84,21 @@ private HashMap<Document, Integer>     document_count;
 
 private static HashMap<String, String> file_extensions = new HashMap<String,String>();
 
-private static BtedFactory	     the_factory;
-private static BoardProperties	 bted_props = BoardProperties.getProperties("Bted");
+private static BtedFactory           the_factory;
+private static BoardProperties   bted_props = BoardProperties.getProperties("Bted");
 
-private static File		last_directory = null;
+private static File             last_directory = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the singleton instance of the breakpoint factory.
+ *      Return the singleton instance of the breakpoint factory.
  **/
 public static BtedFactory getFactory()
 {
@@ -115,15 +115,15 @@ private BtedFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Setup the module.  This should be called from the initialization module
- *	(i.e. listed in the initialization setup).  It will register any buttons and
- *	bubble configurators that are needed.
+ *      Setup the module.  This should be called from the initialization module
+ *      (i.e. listed in the initialization setup).  It will register any buttons and
+ *      bubble configurators that are needed.
  **/
 
 public static void setup()
@@ -141,9 +141,9 @@ public static void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 static File getLastDirectory()
@@ -160,9 +160,9 @@ static void setLastDirectory(File d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Document methods							*/
-/*										*/
+/*                                                                              */
+/*      Document methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -180,16 +180,16 @@ private Vector<String> getExtensions(String str)
    for (int i = 0; i < str.length(); i++) {
       char ch = str.charAt(i);
       if (ch == '.') {
-	 inExt = true;
-	 start = i;
+         inExt = true;
+         start = i;
       }
       else if ((ch == ' ' || ch == ',' || ch == ';' || ch == '\n' || ch == '\r' || ch == Character.MIN_VALUE) &&
-	       inExt) {
-	 inExt = false;
-	 rslt.add(str.substring(start, i));
+               inExt) {
+         inExt = false;
+         rslt.add(str.substring(start, i));
       }
       else if (i == str.length() - 1 && inExt) {
-	 rslt.add(str.substring(start));
+         rslt.add(str.substring(start));
       }
    }
    return rslt;
@@ -266,7 +266,7 @@ private void getExtensionsFromProperties()
 
 
 /**
- * Loads a file into the editor.  Keeps track of which files are open.	If a
+ * Loads a file into the editor.  Keeps track of which files are open.  If a
  * file is opened more than once, the duplicate editor is pointed at the same
  * Document as the original.
  *
@@ -286,7 +286,7 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
    if (index >= 0) {
       String extension = path.substring(index).toLowerCase();
       if (file_extensions.containsKey(extension)) {
-	 contenttype = file_extensions.get(extension);
+         contenttype = file_extensions.get(extension);
       }
    }
 
@@ -296,7 +296,7 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
    }
    else {
       try {
-	 FileInputStream ins = new FileInputStream(file);
+         FileInputStream ins = new FileInputStream(file);
          try {
             editor.setContentType(contenttype);
           }
@@ -304,15 +304,15 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
             BoardLog.logE("BTED","Bad content type " + contenttype + " " + file,e);
             editor.setContentType("text/plain");
           }
-	 editor.read(ins,null);
-	 // String cnts = IvyFile.loadFile(file);
-	 // editor.setText(cnts);
-	 active_documents.put(file.getPath(), editor.getDocument());
-	 document_count.put(editor.getDocument(), Integer.valueOf(1));
-	 ins.close();
+         editor.read(ins,null);
+         // String cnts = IvyFile.loadFile(file);
+         // editor.setText(cnts);
+         active_documents.put(file.getPath(), editor.getDocument());
+         document_count.put(editor.getDocument(), Integer.valueOf(1));
+         ins.close();
        }
       catch (Throwable e) {
-	 BoardLog.logE("BTED",
+         BoardLog.logE("BTED",
                "Problem loading file for " + contenttype + " " + path,e);
       }
    }
@@ -349,7 +349,7 @@ void reopenBubble(String path,BtedBubble oldBubble)
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(oldBubble);
    BudaRoot br = BudaRoot.findBudaRoot(bba);
    BudaConstraint bc = new BudaConstraint(BudaBubblePosition.MOVABLE,oldBubble.getX(),
-	    oldBubble.getY());
+            oldBubble.getY());
    if (bba != null) bba.removeBubble(oldBubble);
    if (br != null) br.add(bb, bc);
 }
@@ -407,9 +407,9 @@ boolean isFileOpen(File file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Menu button handling							*/
-/*										*/
+/*                                                                              */
+/*      Menu button handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt)
@@ -425,30 +425,30 @@ boolean isFileOpen(File file)
 
    try {
       if (id.equals(NEW_FILE_BUTTON)) {
-	 bb = new BtedBubble(null,StartMode.NEW);
+         bb = new BtedBubble(null,StartMode.NEW);
        }
       else if (id.equals(LOAD_FILE_BUTTON)) {
-	 JFileChooser chooser = new JFileChooser(last_directory);
-	 int returnval = chooser.showOpenDialog(bba);
-	 if (returnval == JFileChooser.APPROVE_OPTION) {
-	    File f = chooser.getSelectedFile();
-	    setLastDirectory(f);
-	    if (f.exists() && f.canRead()) {
-	       bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
-	     }
-	  }
+         JFileChooser chooser = new JFileChooser(last_directory);
+         int returnval = chooser.showOpenDialog(bba);
+         if (returnval == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            setLastDirectory(f);
+            if (f.exists() && f.canRead()) {
+               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+             }
+          }
        }
       else if (id.equals(REMOTE_FILE_BUTTON)) {
-	 JFileChooser chooser = new JFileChooser(last_directory,
-	       BoardFileSystemView.getFileSystemView());
-	 int returnval = chooser.showOpenDialog(bba);
-	 if (returnval == JFileChooser.APPROVE_OPTION) {
-	    File f = chooser.getSelectedFile();
-	    setLastDirectory(f);
-	    if (f.exists() && f.canRead()) {
-	       bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
-	     }
-	  }
+         JFileChooser chooser = new JFileChooser(last_directory,
+               BoardFileSystemView.getFileSystemView());
+         int returnval = chooser.showOpenDialog(bba);
+         if (returnval == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            setLastDirectory(f);
+            if (f.exists() && f.canRead()) {
+               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+             }
+          }
        }
     }
    catch (Throwable t) {
@@ -466,9 +466,9 @@ boolean isFileOpen(File file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle inverted colors							*/
-/*										*/
+/*                                                                              */
+/*      Handle inverted colors                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void invertColors(JEditorPane editor)
@@ -483,12 +483,12 @@ private void invertColors(JEditorPane editor)
       String done = config.get("BTED_INVERTED");
       if (done != null) return;
       for (Configuration.StringKeyMatcher ckey : ckeys) {
-	 String [] props = config.getPropertyList(ckey.key);
-	 Color c1 = SwingColorSet.getColorByName(props[0]);
-	 Color c2 = BoardColors.invertColor(c1);
-	 String s2 = BoardColors.toColorString(c2);
-	 String rslt = s2 + ", " + props[1];
-	 config.put(ckey.key,rslt);
+         String [] props = config.getPropertyList(ckey.key);
+         Color c1 = SwingColorSet.getColorByName(props[0]);
+         Color c2 = BoardColors.invertColor(c1);
+         String s2 = BoardColors.toColorString(c2);
+         String rslt = s2 + ", " + props[1];
+         config.put(ckey.key,rslt);
        }
       config.put("BTED_INVERTED","DONE");
       editor.setEditorKit(new DefaultEditorKit());
@@ -499,7 +499,7 @@ private void invertColors(JEditorPane editor)
 
 
 
-}	// end of class BtedFactory
+}       // end of class BtedFactory
 
 
 

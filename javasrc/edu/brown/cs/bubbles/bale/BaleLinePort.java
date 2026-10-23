@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleLinePort.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor port at a given line number		*/
-/*										*/
+/*                                                                              */
+/*              BaleLinePort.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor port at a given line number            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,22 +57,22 @@ class BaleLinePort implements BaleConstants, BudaConstants, BudaConstants.LinkPo
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleEditorPane for_editor;
 private Position       file_position;
 private PortAnnotation port_annot;
-private String	       port_description;
+private String         port_description;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleLinePort(Component c,Position where,String desc)
@@ -81,8 +81,8 @@ BaleLinePort(Component c,Position where,String desc)
 
    for (Component p = c; p != null; p = p.getParent()) {
       if (p instanceof BaleFragmentEditor) {
-	 bfe = (BaleFragmentEditor) p;
-	 break;
+         bfe = (BaleFragmentEditor) p;
+         break;
       }
    }
    if (bfe == null) {
@@ -99,8 +99,8 @@ BaleLinePort(Component c,Position where,String desc)
    if (for_editor != null) {
       BaleAnnotationArea baa = for_editor.getAnnotationArea();
       if (baa != null) {
-	 port_annot = new PortAnnotation();
-	 baa.addAnnotation(port_annot);
+         port_annot = new PortAnnotation();
+         baa.addAnnotation(port_annot);
        }
     }
 }
@@ -108,9 +108,9 @@ BaleLinePort(Component c,Position where,String desc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Point getLinkPoint(BudaBubble bb,Rectangle tgt)
@@ -147,9 +147,9 @@ BaleLinePort(Component c,Position where,String desc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Actual computation methods						*/
-/*										*/
+/*                                                                              */
+/*      Actual computation methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private int computeLinePosition(BudaBubble bb)
@@ -186,9 +186,9 @@ private int computeLinePosition(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -205,9 +205,9 @@ private int computeLinePosition(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Removal methods 							*/
-/*										*/
+/*                                                                              */
+/*      Removal methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void noteRemoved()
@@ -222,41 +222,41 @@ private int computeLinePosition(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Line port annotation							*/
-/*										*/
+/*                                                                              */
+/*      Line port annotation                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class PortAnnotation implements BaleAnnotation {
 
-   PortAnnotation()						{}
+   PortAnnotation()                                             {}
 
-   @Override public File getFile()				{ return for_editor.getBaleDocument().getFile(); }
+   @Override public File getFile()                              { return for_editor.getBaleDocument().getFile(); }
 
    @Override public int getDocumentOffset() {
       return for_editor.getBaleDocument().getDocumentOffset(file_position.getOffset());
     }
 
-   @Override public Icon getIcon(BudaBubble b)			{ return null; }
+   @Override public Icon getIcon(BudaBubble b)                  { return null; }
 
-   @Override public String getToolTip() 			{ return port_description; }
+   @Override public String getToolTip()                         { return port_description; }
 
    @Override public Color getLineColor(BudaBubble b) { 
       return BoardColors.getColor(BALE_PORT_ANNOT_COLOR_PROP); 
     }
 
-   @Override public Color getBackgroundColor()			{ return null; }
+   @Override public Color getBackgroundColor()                  { return null; }
 
-   @Override public boolean getForceVisible(BudaBubble bb)	{ return false; }
+   @Override public boolean getForceVisible(BudaBubble bb)      { return false; }
 
-   @Override public int getPriority()				{ return 1; }
+   @Override public int getPriority()                           { return 1; }
 
    @Override public void addPopupButtons(Component c,JPopupMenu m) { }
 
-}	// end of inner class PortAnnotation
+}       // end of inner class PortAnnotation
 
 
-}	// end of class BaleLinePort
+}       // end of class BaleLinePort
 
 
 

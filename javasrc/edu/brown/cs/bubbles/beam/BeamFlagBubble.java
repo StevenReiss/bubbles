@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamFlagBubble.java						*/
-/*										*/
-/*	Encapsulates the flag bubble functionality				*/
-/*										*/
+/*                                                                              */
+/*              BeamFlagBubble.java                                             */
+/*                                                                              */
+/*      Encapsulates the flag bubble functionality                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Andrew Bragdon		      */
+/*      Copyright 2010 Brown University -- Andrew Bragdon                     */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -54,16 +54,16 @@ import java.util.Hashtable;
 
 
 class BeamFlagBubble extends BudaBubble implements BeamConstants,
-		BudaConstants.BudaBubbleOutputer
+                BudaConstants.BudaBubbleOutputer
 {
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JLabel flag_label = null;
@@ -79,8 +79,8 @@ private Hashtable<JMenuItem, String> context_menu_hash = null;
 
 private static final String [] DEFAULT_ICONS = {"Fixed", "Flag", "Warning"};
 private static final String [] ADDITIONAL_ICONS = {"Action", "Bomb", "Bug", "Clock",
-						"Database", "Fish", "Idea", "Investigate",
-						"Link", "Star"};
+                                                "Database", "Fish", "Idea", "Investigate",
+                                                "Link", "Star"};
 
 private String image_path = "";
 
@@ -91,9 +91,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamFlagBubble(String imagePath)
@@ -111,7 +111,7 @@ BeamFlagBubble(String imagePath)
 
    Image img = BoardImage.getImage(imagePath);
    overview_image = img;
-   flag_icon = new ImageIcon(img);	//new ImageIcon(imagePath);
+   flag_icon = new ImageIcon(img);      //new ImageIcon(imagePath);
    flag_label = new JLabel(flag_icon);
    flag_label.setSize(flag_size, flag_size);
 
@@ -152,12 +152,12 @@ BeamFlagBubble(String imagePath)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()	  { return "BEAM"; }
+@Override public String getConfigurator()         { return "BEAM"; }
 
 @Override public void outputXml(BudaXmlWriter xw) {
    xw.field("TYPE","FLAG");
@@ -165,19 +165,19 @@ BeamFlagBubble(String imagePath)
 }
 
 
-String getImagePath()			{ return image_path; }
+String getImagePath()                   { return image_path; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void changeIcon(String iconPath)
 {
    Image img = BoardImage.getImage(iconPath);
-   flag_icon = new ImageIcon(img);	//new ImageIcon(imagePath);
+   flag_icon = new ImageIcon(img);      //new ImageIcon(imagePath);
    overview_image = flag_icon.getImage();
    flag_label.setIcon(flag_icon);
 
@@ -190,9 +190,9 @@ private void changeIcon(String iconPath)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 protected void paintContentOverview(Graphics2D g)
@@ -214,9 +214,9 @@ protected void paintContentOverview(Graphics2D g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ChevronMouseEvents extends MouseAdapter
@@ -258,7 +258,7 @@ private final class ChevronMouseEvents extends MouseAdapter
       menu.show(chevron_label, 0, 0);
     }
 
-}	// end of inner calss ChevronMouseEvents
+}       // end of inner calss ChevronMouseEvents
 
 
 
@@ -268,11 +268,11 @@ private final class FlagContextMenuEvents implements ActionListener
    @Override public void actionPerformed(ActionEvent arg0) {
       JMenuItem item = (JMenuItem) arg0.getSource();
       if (context_menu_hash.containsKey(item)) {
-	 changeIcon(context_menu_hash.get(item));
+         changeIcon(context_menu_hash.get(item));
        }
     }
 
-}	// end of inner class FlagCOntextMenuEvents
+}       // end of inner class FlagCOntextMenuEvents
 
 
 
@@ -291,16 +291,16 @@ private final class FlagMouseEvents extends MouseAdapter
          // do nothing
        }
       else {
-	 chevron_label.setVisible(false);
-	 repaint();
+         chevron_label.setVisible(false);
+         repaint();
        }
     }
 
-}	// end of inner class FlagMouseEvents
+}       // end of inner class FlagMouseEvents
 
 
 
-}	// end of class BeamFlagBubble
+}       // end of class BeamFlagBubble
 
 
 

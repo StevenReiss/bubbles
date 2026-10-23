@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixCorrector.java						*/
-/*										*/
-/*	Corrector to be attached to an editor					*/
-/*										*/
+/*                                                                              */
+/*              BfixCorrector.java                                              */
+/*                                                                              */
+/*      Corrector to be attached to an editor                                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -62,35 +62,35 @@ public final class BfixCorrector implements BfixConstants, BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleWindow		for_editor;
-private BaleWindowDocument	for_document;
-private DocHandler		event_handler;
-private ProblemHandler	problem_handler;
-private BfixSmartInsert 	smart_inserter;
+private BaleWindow              for_editor;
+private BaleWindowDocument      for_document;
+private DocHandler              event_handler;
+private ProblemHandler  problem_handler;
+private BfixSmartInsert         smart_inserter;
 
-private int			start_offset;
-private int			end_offset;
-private long			start_time;
-private int			caret_position;
-private Set<BumpProblem>	active_problems;
-private String			bubble_id;
+private int                     start_offset;
+private int                     end_offset;
+private long                    start_time;
+private int                     caret_position;
+private Set<BumpProblem>        active_problems;
+private String                  bubble_id;
 private int                     problem_count;
 
-private Set<BfixMemo>		pending_fixes;
+private Set<BfixMemo>           pending_fixes;
 
-private static final int	MAX_REGION_SIZE = 150;
+private static final int        MAX_REGION_SIZE = 150;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixCorrector(BaleWindow ed,boolean auto)
@@ -138,9 +138,9 @@ void removeEditor()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle popup menu for local fixes					*/
-/*										*/
+/*                                                                              */
+/*      Handle popup menu for local fixes                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
@@ -152,14 +152,14 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
    if (probs != null) {
       boolean add = false;
       for (BumpProblem bp : probs) {
-	 String name = getFixForProblem(bp);
-	 if (name != null) {
-	    FixAction act = new FixAction(name,ctx.getOffset(),
+         String name = getFixForProblem(bp);
+         if (name != null) {
+            FixAction act = new FixAction(name,ctx.getOffset(),
                   ctx.getOffset()+1);
-	    menu.add(act);
-	    add = true;
-	    break;
-	  }
+            menu.add(act);
+            add = true;
+            break;
+          }
        }
       if (add) return;
     }
@@ -175,11 +175,11 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
       BumpProblem bp = it.next();
       fixname = getFixForProblem(bp);
       if (fixname != null) {
-	 int soff = for_document.mapOffsetToJava(bp.getStart());
-	 int eoff = for_document.mapOffsetToJava(bp.getEnd());
-	 if (eoff >= startoff && soff <= endoff) {
-	    ++haveprobs;
-	  }
+         int soff = for_document.mapOffsetToJava(bp.getStart());
+         int eoff = for_document.mapOffsetToJava(bp.getEnd());
+         if (eoff >= startoff && soff <= endoff) {
+            ++haveprobs;
+          }
        }
     }
    if (haveprobs == 1) {
@@ -203,8 +203,8 @@ private String getFixForProblem(BumpProblem bp)
    for (BfixAdapter fixadapt : fixfactory.getAdapters()) {
       String fixname = fixadapt.getMenuAction(this,bp);
       if (fixname != null) {
-	 if (name == null) name = fixname;
-	 else if (name.length() == 0 && fixname.length() > 0) name = fixname;
+         if (name == null) name = fixname;
+         else if (name.length() == 0 && fixname.length() > 0) name = fixname;
        }
     }
    return name;
@@ -229,7 +229,7 @@ private class FixAction extends AbstractAction {
       fixErrorsInRegion(start_correct,end_correct,true);
     }
 
-}	// end of inner class FixAction
+}       // end of inner class FixAction
 
 
 private static String getFixActionName(String name) {
@@ -244,18 +244,18 @@ private static String getFixActionName(String name) {
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public BaleWindow getEditor()			{ return for_editor; }
+public BaleWindow getEditor()                   { return for_editor; }
 
-int getEndOffset()			{ return end_offset; }
+int getEndOffset()                      { return end_offset; }
 
-public long getStartTime()		{ return start_time; }
+public long getStartTime()              { return start_time; }
 
-int getCaretPosition()			{ return caret_position; }
+int getCaretPosition()                  { return caret_position; }
 
 public String getBubbleId()
 {
@@ -275,9 +275,9 @@ BfixSmartInsert getInserter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Edit commands								*/
-/*										*/
+/*                                                                              */
+/*      Edit commands                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void fixErrorsInRegion(int startoff,int endoff,boolean force)
@@ -302,16 +302,16 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       if (probs.isEmpty()) return;
       // might want to check if there are errors that might prevent fixing
       for (Iterator<BumpProblem> it = probs.iterator(); it.hasNext(); ) {
-	 BumpProblem bp = it.next();
-	 if (done.contains(bp)) continue;
-	 int soff = for_document.mapOffsetToJava(bp.getStart());
-	 int eoff = for_document.mapOffsetToJava(bp.getEnd());
-	 if (eoff < startoff || soff > endoff) {
-	    it.remove();
-	    continue;
-	 }
-	 if (bp.getCategory().equals("BSTYLE")) styletry.add(bp);
-	 else totry.add(bp);
+         BumpProblem bp = it.next();
+         if (done.contains(bp)) continue;
+         int soff = for_document.mapOffsetToJava(bp.getStart());
+         int eoff = for_document.mapOffsetToJava(bp.getEnd());
+         if (eoff < startoff || soff > endoff) {
+            it.remove();
+            continue;
+         }
+         if (bp.getCategory().equals("BSTYLE")) styletry.add(bp);
+         else totry.add(bp);
       }
 
       boolean fnd = false;
@@ -399,7 +399,7 @@ private boolean fixRegionStyleProblems(List<BumpProblem> probs,boolean force,
          if (rw.waitForDone()) {
             return true;
           }
-       }	
+       }        
     }
    
    return false;
@@ -455,20 +455,20 @@ private class RunAndWait implements BumpProblemHandler {
      is_done = false;
      done_status = false;
      try {
-	BoardLog.logD("BFIX","Run fixer " + num_waits + " " + 
-	      SwingUtilities.isEventDispatchThread());
+        BoardLog.logD("BFIX","Run fixer " + num_waits + " " + 
+              SwingUtilities.isEventDispatchThread());
 
-	if (SwingUtilities.isEventDispatchThread()) {
-	   done_status = fixer_run.call();
-	 }
-	else {
-	   SwingRunner sr = new SwingRunner(fixer_run);
-	   SwingUtilities.invokeAndWait(sr);
-	   done_status = sr.getResult();
-	 }
+        if (SwingUtilities.isEventDispatchThread()) {
+           done_status = fixer_run.call();
+         }
+        else {
+           SwingRunner sr = new SwingRunner(fixer_run);
+           SwingUtilities.invokeAndWait(sr);
+           done_status = sr.getResult();
+         }
       }
      catch (Throwable e) {
-	BoardLog.logE("BSTYLE","Problem with corrector",e);
+        BoardLog.logE("BSTYLE","Problem with corrector",e);
         done_status = false;
       }
 
@@ -488,9 +488,9 @@ private class RunAndWait implements BumpProblemHandler {
       return done_status;
    }
 
-   @Override public void handleProblemRemoved(BumpProblem bp)	{ }
-   @Override public void handleProblemAdded(BumpProblem bp)	{ }
-   @Override public void handleClearProblems()			{ }
+   @Override public void handleProblemRemoved(BumpProblem bp)   { }
+   @Override public void handleProblemAdded(BumpProblem bp)     { }
+   @Override public void handleClearProblems()                  { }
 
    @Override public void handleProblemsDone() {
       BoardLog.logD("BFIX","Problems done " + num_waits);
@@ -504,7 +504,7 @@ private class RunAndWait implements BumpProblemHandler {
       BumpClient.getBump().removeProblemHandler(this);
    }
 
-}	// end of inner class RunAndWait
+}       // end of inner class RunAndWait
 
 
 
@@ -519,27 +519,27 @@ private class SwingRunner implements Runnable {
       fixer_result = false;
     }
 
-   boolean getResult()			{ return fixer_result; }
+   boolean getResult()                  { return fixer_result; }
 
    @Override public void run() {
       try {
-	 fixer_result = fixer_run.call();
+         fixer_result = fixer_run.call();
        }
       catch (Exception e) {
-	 BoardLog.logE("BFIX","Problem running fixer",e);
-	 fixer_result = false;
+         BoardLog.logE("BFIX","Problem running fixer",e);
+         fixer_result = false;
        }
     }
 
-}	// end of inner class SwingRunner
+}       // end of inner class SwingRunner
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Region management							*/
-/*										*/
+/*                                                                              */
+/*      Region management                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void clearRegion()
@@ -577,8 +577,8 @@ private void handleTyped(int off,int len)
       int npos = for_document.findLineOffset(lno+1);
       if (npos < 0) break;
       else if (npos < end_offset) {
-	 if (npos <= start_offset) break;
-	 start_offset = npos;
+         if (npos <= start_offset) break;
+         start_offset = npos;
        }
       else break;
     }
@@ -604,12 +604,12 @@ private void addProblem(BumpProblem bp)
    int soff = for_document.mapOffsetToJava(bp.getStart());
    if (soff < 0) {
       BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() +
-	    " " + bp.getLine() + " " + bp.getFile());
+            " " + bp.getLine() + " " + bp.getFile());
       return;
     }
 
    BoardLog.logD("BFIX","PROBLEM "+ bp.getMessage() + " " + start_offset + " " +
-	 end_offset + " " + soff);
+         end_offset + " " + soff);
 
    if (start_offset >= 0 && soff >= start_offset && soff <= end_offset) {
       BoardLog.logD("BFIX","Consider problem " + bp.getMessage());
@@ -641,9 +641,9 @@ private boolean checkFocus()
 
 
 /********************************************************************************/
-/*										*/
-/*	Find something to fix							*/
-/*										*/
+/*                                                                              */
+/*      Find something to fix                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkForElementToFix()
@@ -657,8 +657,8 @@ private void checkForElementToFix()
       BumpProblem bp = it.next();
       int soff = for_document.mapOffsetToJava(bp.getStart());
       if (soff < start_offset) {
-	 it.remove();
-	 continue;
+         it.remove();
+         continue;
        }
       if (bp.getCategory().equals("BSTYLE")) styletry.add(bp);
       else totry.add(bp);
@@ -672,42 +672,42 @@ private void checkForElementToFix()
    int numfnd = 0;
    for (BumpProblem bp : totry) {
       for (BfixAdapter fixadapt : fixfactory.getAdapters()) {
-	 fixadapt.addFixers(this,bp,false,fixers);
-	 fixadapt.addChores(this,bp,chores);
+         fixadapt.addFixers(this,bp,false,fixers);
+         fixadapt.addChores(this,bp,chores);
        }
       if (!fixers.isEmpty()) {
-	 for (BfixFixer fix : fixers) {
-	    if (addPending(fix.getMemo())) {
-	       ++numfnd;
-	       fixfactory.startTask(fix);
-	     }
-	    else {
-	       BoardLog.logD("BFIX", "Discard duplicate fix " + fix + " " +
+         for (BfixFixer fix : fixers) {
+            if (addPending(fix.getMemo())) {
+               ++numfnd;
+               fixfactory.startTask(fix);
+             }
+            else {
+               BoardLog.logD("BFIX", "Discard duplicate fix " + fix + " " +
                      pending_fixes.size() + " " + fix.getMemoId());
-	     }
-	  }
-	 break;
+             }
+          }
+         break;
        }
       else if (!chores.isEmpty()) {
-	 ChoreAdder adder = new ChoreAdder(chores);
-	 fixfactory.startTask(adder);
+         ChoreAdder adder = new ChoreAdder(chores);
+         fixfactory.startTask(adder);
        }
       else {
-	 recordError(bp);
+         recordError(bp);
        }
     }
    for (BumpProblem bp : styletry) {
       BfixRunnableFix fix = checkStyleProblemFixable(bp,false);
       if (fix != null) {
-	 RunAndWait rw = new RunAndWait(fix,2);
-	 rw.runFix();
-	 break;
+         RunAndWait rw = new RunAndWait(fix,2);
+         rw.runFix();
+         break;
        }
     }
 
    if (numfnd > 0) {
       BoardMetrics.noteCommand("BFIX","StartImplicitFix" + "_" + numfnd +
-	 "_" + start_offset + "_" + end_offset + "_" + caret_position);
+         "_" + start_offset + "_" + end_offset + "_" + caret_position);
     }
 }
 
@@ -720,25 +720,25 @@ private synchronized void recordError(BumpProblem bp)
    int lnocur = for_document.findLineNumber(caret_position);
    if (lnoerr+1 == lnocur && BfixAdapter.checkProblemPresent(bp,active_problems)) {
       try {
-	 if (lnoerr > 1) lnoerr -= 1;
-	 int lstart = for_document.findLineOffset(lnoerr);
-	 int lend = for_document.findLineOffset(lnocur+1);
-	 String s1 = for_document.getWindowText(lstart,lend-lstart);
-	 if (s1 == null) s1 = "???";
-	 File f = new File("/vol/spr/fixbugs");
-	 PrintWriter pw = new PrintWriter(new FileWriter(f,true));
-	 if (BfixAdapter.checkProblemPresent(bp, active_problems)) {
-	    pw.println("------------------------");
-	    pw.println(bp.getMessage());
-	    pw.println(soff + " " + bp.getStart() + " " + bp.getEnd() + " " +
+         if (lnoerr > 1) lnoerr -= 1;
+         int lstart = for_document.findLineOffset(lnoerr);
+         int lend = for_document.findLineOffset(lnocur+1);
+         String s1 = for_document.getWindowText(lstart,lend-lstart);
+         if (s1 == null) s1 = "???";
+         File f = new File("/vol/spr/fixbugs");
+         PrintWriter pw = new PrintWriter(new FileWriter(f,true));
+         if (BfixAdapter.checkProblemPresent(bp, active_problems)) {
+            pw.println("------------------------");
+            pw.println(bp.getMessage());
+            pw.println(soff + " " + bp.getStart() + " " + bp.getEnd() + " " +
                   bp.getLine() + " " + bp.getProblemId() + " " + 
                   bp.getErrorType() + " " + bp.getFile());
-	    pw.println(start_offset + " " + caret_position + " " + 
+            pw.println(start_offset + " " + caret_position + " " + 
                   end_offset + " " + start_time + " " + lstart + " " + 
                   lnoerr + " " + lnocur);
-	    pw.println(s1);
-	    pw.close();
-	 }
+            pw.println(s1);
+            pw.close();
+         }
        }
       catch (IOException e) { }
     }
@@ -747,9 +747,9 @@ private synchronized void recordError(BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle editor events							*/
-/*										*/
+/*                                                                              */
+/*      Handle editor events                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class DocHandler implements DocumentListener, CaretListener {
@@ -758,8 +758,8 @@ private final class DocHandler implements DocumentListener, CaretListener {
       int len = e.getLength();
       int dlen = e.getDocument().getLength();
       if (len != dlen) {
-	 BoardLog.logD("BFIX","SPELL: Clear for changed update");
-	 clearRegion();
+         BoardLog.logD("BFIX","SPELL: Clear for changed update");
+         clearRegion();
        }
     }
 
@@ -768,15 +768,15 @@ private final class DocHandler implements DocumentListener, CaretListener {
       int len = e.getLength();
       if (len == 0) return;
       else if (start_offset < 0 && len == 1) {
-	 handleTyped(off,1);
+         handleTyped(off,1);
        }
       else if (start_offset > 0 && off >= start_offset-2 && off <= end_offset+2 && len < 128) {
-	 handleTyped(off,len);
-	 SwingUtilities.invokeLater(new Checker());
+         handleTyped(off,len);
+         SwingUtilities.invokeLater(new Checker());
        }
       else {
-	 BoardLog.logD("BFIX","SPELL: Clear for insert update");
-	 clearRegion();
+         BoardLog.logD("BFIX","SPELL: Clear for insert update");
+         clearRegion();
        }
       smart_inserter.noteChange();
     }
@@ -785,16 +785,16 @@ private final class DocHandler implements DocumentListener, CaretListener {
       int off = e.getOffset();
       int len = e.getLength();
       if (len == 1) {
-	 handleBackspace(off);
+         handleBackspace(off);
        }
       else if (off == caret_position -1) {
-	 for (int i = 0; i < len; ++i) {
-	    handleBackspace(off);
-	 }
+         for (int i = 0; i < len; ++i) {
+            handleBackspace(off);
+         }
       }
       else {
-	 BoardLog.logD("BFIX","SPELL: Clear for remove update");
-	 clearRegion();
+         BoardLog.logD("BFIX","SPELL: Clear for remove update");
+         clearRegion();
        }
       smart_inserter.noteChange();
     }
@@ -804,23 +804,23 @@ private final class DocHandler implements DocumentListener, CaretListener {
       if (off == caret_position) return;
       if (caret_position < 0) return;
       if (off >= start_offset && off <= end_offset+2) {
-	 caret_position = off;
-	 return;
+         caret_position = off;
+         return;
        }
       BoardLog.logD("BFIX","SPELL: Clear for caret update");
       clearRegion();
     }
 
-}	// end of inner class DocHandler
+}       // end of inner class DocHandler
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle Compilation Events						*/
-/*										*/
+/*                                                                              */
+/*      Handle Compilation Events                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ProblemHandler implements BumpConstants.BumpProblemHandler {
@@ -842,7 +842,7 @@ private final class ProblemHandler implements BumpConstants.BumpProblemHandler {
       ++problem_count;
     }
 
-}	// end of inner class ProblemHandler
+}       // end of inner class ProblemHandler
 
 
 
@@ -863,14 +863,14 @@ private final class Checker implements Runnable {
       checkForElementToFix();
     }
 
-}	// end of inner class Checker
+}       // end of inner class Checker
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Runnable for adding a set of chores					*/
-/*										*/
+/*                                                                              */
+/*      Runnable for adding a set of chores                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class ChoreAdder implements Runnable {
@@ -885,19 +885,19 @@ private class ChoreAdder implements Runnable {
    @Override public void run() {
       BfixChoreManager tm = BfixFactory.getFactory().getChoreManager();
       for (BfixChore t : chore_list) {
-	 if (t.validate(false)) tm.addChore(t);
+         if (t.validate(false)) tm.addChore(t);
        }
     }
 
-}	// end of inner class ChoreAdder
+}       // end of inner class ChoreAdder
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Keep track of pending fixes						*/
-/*										*/
+/*                                                                              */
+/*      Keep track of pending fixes                                             */
+/*                                                                              */
 /********************************************************************************/
 
 boolean addPending(BfixMemo bm)
@@ -914,9 +914,9 @@ void removePending(BfixMemo bm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle fixes for region 						*/
-/*										*/
+/*                                                                              */
+/*      Handle fixes for region                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private static class RegionFixer implements FixAdapter {
@@ -932,7 +932,7 @@ private static class RegionFixer implements FixAdapter {
       num_fixers = 0;
     }
 
-   @Override public BumpProblem getProblem()			{ return the_problem; }
+   @Override public BumpProblem getProblem()                    { return the_problem; }
 
    @Override public void noteFixersAdded(int ct) {
       if (ct <= 0) noteDone();
@@ -943,7 +943,7 @@ private static class RegionFixer implements FixAdapter {
       if (--num_fixers == 0) noteDone();
     }
 
-   @Override public String getPrivateBufferId() 		{ return null; }
+   @Override public String getPrivateBufferId()                 { return null; }
    @Override public synchronized void noteFix(BfixRunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
       else if (fix_found != null && fix != null) {
@@ -970,10 +970,10 @@ private static class RegionFixer implements FixAdapter {
       notifyAll();
     }
 
-}	// end of inner class RegionFixer
+}       // end of inner class RegionFixer
 
 
-}	// end of class BfixCorrector
+}       // end of class BfixCorrector
 
 
 

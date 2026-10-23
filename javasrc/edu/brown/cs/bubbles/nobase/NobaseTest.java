@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseTest.java 						*/
-/*										*/
-/*	Test interface for Nobase						*/
-/*										*/
+/*                                                                              */
+/*              NobaseTest.java                                                 */
+/*                                                                              */
+/*      Test interface for Nobase                                               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -42,9 +42,9 @@ public final class NobaseTest implements NobaseConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main Program								*/
-/*										*/
+/*                                                                              */
+/*      Main Program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -64,22 +64,22 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private MintControl	mint_control;
-private String		instance_id;
-private int		edit_id;
-private Element 	last_runevent;
+private MintControl     mint_control;
+private String          instance_id;
+private int             edit_id;
+private Element         last_runevent;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private NobaseTest(String [] args)
@@ -93,9 +93,9 @@ private NobaseTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Actual test code							*/
-/*										*/
+/*                                                                              */
+/*      Actual test code                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -121,9 +121,9 @@ private void runTest()
    sendCommand("CREATEPROJECT",null,"NAME='TwitterExample' DIR='/u/spr/Nobbles/test/TwitterExample'",null);
    sendCommand("OPENPROJECT",proj,"PATH='true' OPTIONS='true'",null);
    sendCommand("EDITPROJECT",proj,"LOCAL='true'",
-	 "<PROJECT NAME='TwitterExample' PATH='/gpfs/main/home/spr/Nobbles/test/TwitterExample'>" +
-	 "<PATH USER='true' DIRECTORY='/home/spr/home/twiex' />" +
-	 "</PROJECT>");
+         "<PROJECT NAME='TwitterExample' PATH='/gpfs/main/home/spr/Nobbles/test/TwitterExample'>" +
+         "<PATH USER='true' DIRECTORY='/home/spr/home/twiex' />" +
+         "</PROJECT>");
    sendCommand("PROJECTS",null,null,null);
    sendCommand("OPENPROJECT",proj,null,null);
 
@@ -274,9 +274,9 @@ private void runTestTrack()
    sendCommand("CREATEPROJECT",null,"NAME='Track' DIR='/u/spr/Nobbles/test/Track'",null);
    sendCommand("OPENPROJECT",proj,"PATH='true' OPTIONS='true'",null);
    sendCommand("EDITPROJECT",proj,"LOCAL='true'",
-	 "<PROJECT NAME='Track' PATH='/gpfs/main/home/spr/Nobbles/test/Track'>" +
-	 "<PATH USER='true' DIRECTORY='/research/people/spr/track/server' />" +
-	 "</PROJECT>");
+         "<PROJECT NAME='Track' PATH='/gpfs/main/home/spr/Nobbles/test/Track'>" +
+         "<PATH USER='true' DIRECTORY='/research/people/spr/track/server' />" +
+         "</PROJECT>");
    sendCommand("PROJECTS",null,null,null);
    sendCommand("OPENPROJECT",proj,null,null);
 
@@ -307,24 +307,24 @@ private void waitForRunEvent(long wait)
    long now = System.currentTimeMillis();
    synchronized (this) {
       for ( ; ; ) {
-	 if (wait > 0) {
-	    long delta = System.currentTimeMillis() - now;
-	    if (delta > wait) {
-	       NobaseMain.logI("NOBASETEST: Wait timed out");
-	       return;
-	     }
-	  }
-	 if (last_runevent == null) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (last_runevent != null) {
-	    String kind = IvyXml.getAttrString(last_runevent,"KIND");
-	    last_runevent = null;
-	    if (kind != null && kind.equals("SUSPEND")) break;
-	  }
+         if (wait > 0) {
+            long delta = System.currentTimeMillis() - now;
+            if (delta > wait) {
+               NobaseMain.logI("NOBASETEST: Wait timed out");
+               return;
+             }
+          }
+         if (last_runevent == null) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
+         if (last_runevent != null) {
+            String kind = IvyXml.getAttrString(last_runevent,"KIND");
+            last_runevent = null;
+            if (kind != null && kind.equals("SUSPEND")) break;
+          }
        }
     }
 }
@@ -332,9 +332,9 @@ private void waitForRunEvent(long wait)
 
 
 /********************************************************************************/
-/*										*/
-/*	File management utilities						*/
-/*										*/
+/*                                                                              */
+/*      File management utilities                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void deleteAll(File f)
@@ -342,10 +342,10 @@ private void deleteAll(File f)
    if (!f.exists()) return;
    if (f.isDirectory()) {
       for (File c : f.listFiles()) {
-	 deleteAll(c);
+         deleteAll(c);
        }
       if (!f.delete()) {
-	 NobaseMain.logE("NOBASETEST: Can't delete directory " + f);
+         NobaseMain.logE("NOBASETEST: Can't delete directory " + f);
        }
     }
    else if (!f.delete()) {
@@ -357,9 +357,9 @@ private void deleteAll(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Run the server methods							*/
-/*										*/
+/*                                                                              */
+/*      Run the server methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void start()
@@ -369,11 +369,11 @@ private void start()
       r.start();
       NobaseMain.logI("NOBASETEST: STARTING");
       for (int i = 0; i < 100; ++i) {
-	 if (tryPing()) break;
-	 try {
-	    Thread.sleep(1000);
-	  }
-	 catch (InterruptedException e) { }
+         if (tryPing()) break;
+         try {
+            Thread.sleep(1000);
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -400,15 +400,15 @@ private class Runner extends Thread {
       NobaseMain.logI("NOBASETEST: Finish run");
     }
 
-}	// end of inner class Runner
+}       // end of inner class Runner
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Messaging methods							*/
-/*										*/
+/*                                                                              */
+/*      Messaging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private ReplyHandler sendCommand(String cmd,String proj,String flds,String args)
@@ -447,9 +447,9 @@ private boolean tryPing()
 
 
 /********************************************************************************/
-/*										*/
-/*	Reply handler								*/
-/*										*/
+/*                                                                              */
+/*      Reply handler                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ReplyHandler extends MintDefaultReply {
@@ -472,14 +472,14 @@ private static class ReplyHandler extends MintDefaultReply {
        }
     }
 
-}	// end of inner class ReplyHandler
+}       // end of inner class ReplyHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Message handler 							*/
-/*										*/
+/*                                                                              */
+/*      Message handler                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private final class MessageHandler implements MintHandler {
@@ -490,27 +490,27 @@ private final class MessageHandler implements MintHandler {
       NobaseMain.logI("NOBASETEST: End of Message");
       Element xml = msg.getXml();
       switch (IvyXml.getAttrString(xml,"TYPE")) {
-	 case "RUNEVENT" :
-	    NobaseTest test = NobaseTest.this;
-	    synchronized (test) {
-	       Element re = IvyXml.getChild(xml,"RUNEVENT");
-	       String kind = IvyXml.getAttrString(re,"KIND");
-	       if (kind.equals("RESUME") || kind.equals("SUSPEND")) {
-		  test.last_runevent = re;
-		  test.notifyAll();
-		}
-	     }
-	    break;
+         case "RUNEVENT" :
+            NobaseTest test = NobaseTest.this;
+            synchronized (test) {
+               Element re = IvyXml.getChild(xml,"RUNEVENT");
+               String kind = IvyXml.getAttrString(re,"KIND");
+               if (kind.equals("RESUME") || kind.equals("SUSPEND")) {
+                  test.last_runevent = re;
+                  test.notifyAll();
+                }
+             }
+            break;
        }
       msg.replyTo();
     }
 
-}	// end of inner class MessageHandler
+}       // end of inner class MessageHandler
 
 
 
 
-}	// end of class NobaseTest
+}       // end of class NobaseTest
 
 
 

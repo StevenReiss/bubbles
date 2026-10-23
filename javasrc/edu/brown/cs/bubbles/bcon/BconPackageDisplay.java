@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BconPackageDisplay.java 					*/
-/*										*/
-/*	The actual graph display panel						*/
-/*										*/
+/*                                                                              */
+/*              BconPackageDisplay.java                                         */
+/*                                                                              */
+/*      The actual graph display panel                                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -95,29 +95,29 @@ class BconPackageDisplay extends JPanel implements BconConstants, BanalConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BconPackageGraph	package_graph;
-private boolean 		show_labels;
-private boolean 		arc_labels;
-private boolean 		reset_graphics;
-private LayoutType		layout_type;
-private ComputeGraph		compute_graph;
+private BconPackageGraph        package_graph;
+private boolean                 show_labels;
+private boolean                 arc_labels;
+private boolean                 reset_graphics;
+private LayoutType              layout_type;
+private ComputeGraph            compute_graph;
 
-private boolean 		layout_needed;
-private boolean 		freeze_layout;
-private double			user_scale;
-private double			prior_scale;
+private boolean                 layout_needed;
+private boolean                 freeze_layout;
+private double                  user_scale;
+private double                  prior_scale;
 
-private PetalEditor		petal_editor;
-private GraphModel		petal_model;
-private PetalLayoutMethod	layout_method;
+private PetalEditor             petal_editor;
+private GraphModel              petal_model;
+private PetalLayoutMethod       layout_method;
 
 private Map<BconGraphNode,BconPetalNode> node_map;
-private Map<BconGraphArc,BconPetalArc>	 arc_map;
+private Map<BconGraphArc,BconPetalArc>   arc_map;
 
 private static Map<NodeType,CompShape> shape_map;
 
@@ -145,9 +145,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BconPackageDisplay(BconPackageGraph pg)
@@ -185,12 +185,12 @@ BconPackageDisplay(BconPackageGraph pg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-boolean getShowLabels() 			{ return show_labels; }
+boolean getShowLabels()                         { return show_labels; }
 void setShowLabels(boolean fg)
 {
    if (show_labels == fg) return;
@@ -202,10 +202,10 @@ void setShowLabels(boolean fg)
 
 
 
-boolean getShowArcLabels()			{ return arc_labels; }
-void setShowArcLabels(boolean fg)		{ arc_labels = fg; }
+boolean getShowArcLabels()                      { return arc_labels; }
+void setShowArcLabels(boolean fg)               { arc_labels = fg; }
 
-LayoutType getLayoutType()			{ return layout_type; }
+LayoutType getLayoutType()                      { return layout_type; }
 
 void setLayoutType(LayoutType t)
 {
@@ -215,37 +215,37 @@ void setLayoutType(LayoutType t)
 
    switch (layout_type) {
       case FORCE :
-	 PetalRelaxLayout prl = new PetalRelaxLayout(petal_editor);
-	 layout_method = prl;
-	 break;
+         PetalRelaxLayout prl = new PetalRelaxLayout(petal_editor);
+         layout_method = prl;
+         break;
       case SPRING :
-	 prl = new PetalRelaxLayout(petal_editor);
-	 prl.setArcLength(50);
-	 prl.setDistance(100);
-	 layout_method = prl;
-	 break;
+         prl = new PetalRelaxLayout(petal_editor);
+         prl.setArcLength(50);
+         prl.setDistance(100);
+         layout_method = prl;
+         break;
       default :
       case GENERAL :
-	 PetalLevelLayout pll = new PetalLevelLayout(petal_editor);
-	 pll.setOptimizeLevels(true);
-	 pll.setWhiteFraction(1.0);
-	 layout_method = pll;
-	 break;
+         PetalLevelLayout pll = new PetalLevelLayout(petal_editor);
+         pll.setOptimizeLevels(true);
+         pll.setWhiteFraction(1.0);
+         layout_method = pll;
+         break;
       case TREE :
-	 pll = new PetalLevelLayout(petal_editor);
-	 pll.setWhiteFraction(1.0);
-	 layout_method = pll;
-	 break;
+         pll = new PetalLevelLayout(petal_editor);
+         pll.setWhiteFraction(1.0);
+         layout_method = pll;
+         break;
       case MAP :
-	 pll = new PetalLevelLayout(petal_editor);
-	 pll.setTwoWay(true);
-	 pll.setWhiteFraction(1.0);
-	 layout_method = pll;
-	 break;
+         pll = new PetalLevelLayout(petal_editor);
+         pll.setTwoWay(true);
+         pll.setWhiteFraction(1.0);
+         layout_method = pll;
+         break;
       case CIRCLE :
-	 PetalCircleLayout pcl = new PetalCircleLayout(petal_editor);
-	 layout_method = pcl;
-	 break;
+         PetalCircleLayout pcl = new PetalCircleLayout(petal_editor);
+         layout_method = pcl;
+         break;
    }
 
    petal_editor.commandLayout(layout_method);
@@ -259,10 +259,10 @@ void addSelection(BconGraphNode nd)
 {
    for (PetalNode pn : petal_model.getNodes()) {
       if (pn instanceof BconPetalNode) {
-	 BconPetalNode bpn = (BconPetalNode) pn;
-	 if (bpn.getGraphNode() == nd) {
-	    petal_model.select(pn);
-	  }
+         BconPetalNode bpn = (BconPetalNode) pn;
+         if (bpn.getGraphNode() == nd) {
+            petal_model.select(pn);
+          }
        }
     }
 }
@@ -278,9 +278,9 @@ List<BconGraphNode> getSelections()
    List<BconGraphNode> rslt = new ArrayList<BconGraphNode>();
    for (PetalNode pn : petal_model.getSelectedNodes()) {
       if (pn instanceof BconPetalNode) {
-	 BconPetalNode bpn = (BconPetalNode) pn;
-	 BconGraphNode gn = bpn.getGraphNode();
-	 if (gn != null) rslt.add(gn);
+         BconPetalNode bpn = (BconPetalNode) pn;
+         BconGraphNode gn = bpn.getGraphNode();
+         if (gn != null) rslt.add(gn);
        }
     }
 
@@ -341,9 +341,9 @@ void handlePopupMenu(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph model setup							*/
-/*										*/
+/*                                                                              */
+/*      Graph model setup                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupGraphModel()
@@ -355,11 +355,11 @@ private void setupGraphModel()
    for (Iterator<Map.Entry<BconGraphNode,BconPetalNode>> it = node_map.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<BconGraphNode,BconPetalNode> ent = it.next();
       if (!nodeset.contains(ent.getKey())) {
-	 it.remove();
-	 chng = true;
+         it.remove();
+         chng = true;
        }
       else if (reset_graphics) {
-	 ent.getValue().resetGraphics();
+         ent.getValue().resetGraphics();
       }
     }
    reset_graphics = false;
@@ -367,37 +367,37 @@ private void setupGraphModel()
    for (BconGraphNode gn : nodes) {
       BconPetalNode pn = node_map.get(gn);
       if (pn != null) {
-	 pn.update();
+         pn.update();
        }
       else {
-	 pn = new BconPetalNode(gn);
-	 node_map.put(gn,pn);
-	 chng = true;
-	 layout_needed = true;
+         pn = new BconPetalNode(gn);
+         node_map.put(gn,pn);
+         chng = true;
+         layout_needed = true;
        }
     }
 
    Set<BconGraphArc> arcs = new HashSet<BconGraphArc>();
    for (BconGraphNode gn : nodes) {
       if (gn.getOutArcs() != null)
-	 arcs.addAll(gn.getOutArcs());
+         arcs.addAll(gn.getOutArcs());
     }
    for (Iterator<Map.Entry<BconGraphArc,BconPetalArc>> it = arc_map.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<BconGraphArc,BconPetalArc> ent = it.next();
       if (!arcs.contains(ent.getKey())) {
-	 it.remove();
-	 chng = true;
+         it.remove();
+         chng = true;
        }
     }
    for (BconGraphArc ga : arcs) {
       BconPetalArc pa = arc_map.get(ga);
       if (pa != null) {
-	 pa.update();
+         pa.update();
        }
       else {
-	 pa = new BconPetalArc(ga);
-	 arc_map.put(ga,pa);
-	 chng = true;
+         pa = new BconPetalArc(ga);
+         arc_map.put(ga,pa);
+         chng = true;
        }
     }
 
@@ -418,13 +418,13 @@ private void setupGraphModel()
       d1 = petal_editor.getExtent();
       Dimension d2 = getSize();
       if (d1.width != 0 && d2.width != 0 && d1.height != 0 && d2.height != 0) {
-	 double dx = d2.getWidth() / d1.getWidth();
-	 double dy = d2.getHeight() / d1.getHeight();
-	 double da = Math.min(dx,dy);
-	 double db = petal_editor.getScaleFactor() / prior_scale;
-	 petal_editor.setScaleFactor(da*db*0.95*user_scale);
-	 petal_editor.setScaleFactor(da * 0.95);
-	 prior_scale = user_scale;
+         double dx = d2.getWidth() / d1.getWidth();
+         double dy = d2.getHeight() / d1.getHeight();
+         double da = Math.min(dx,dy);
+         double db = petal_editor.getScaleFactor() / prior_scale;
+         petal_editor.setScaleFactor(da*db*0.95*user_scale);
+         petal_editor.setScaleFactor(da * 0.95);
+         prior_scale = user_scale;
       }
    }
 
@@ -434,9 +434,9 @@ private void setupGraphModel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Petal node and arc implementations					*/
-/*										*/
+/*                                                                              */
+/*      Petal node and arc implementations                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private Component getDisplayComponent(BconGraphNode gn)
@@ -478,25 +478,25 @@ static Color getNodeColor(NodeType nt)
 
    switch (nt) {
       case CLASS :
-	 ncol = BoardColors.getColor("Bcon.PackageClassNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackageClassNode");
+         break;
       case INTERFACE :
-	 ncol = BoardColors.getColor("Bcon.PackageInterfaceNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackageInterfaceNode");
+         break;
       case ENUM :
-	 ncol = BoardColors.getColor("Bcon.PackageEnumNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackageEnumNode");
+         break;
       case THROWABLE :
-	 ncol = BoardColors.getColor("Bcon.PackageThrowableNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackageThrowableNode");
+         break;
       case ANNOTATION :
-	 ncol = BoardColors.getColor("Bcon.PackageAnnotationNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackageAnnotationNode");
+         break;
       case PACKAGE :
-	 ncol = BoardColors.getColor("Bcon.PackagePackageNode");
-	 break;
+         ncol = BoardColors.getColor("Bcon.PackagePackageNode");
+         break;
       default:
-	 break;
+         break;
     }
 
    return ncol;
@@ -517,32 +517,32 @@ private class BconPetalNode extends PetalNodeDefault {
    @Override public String getToolTip(Point at) {
       String nm = graph_node.getFullName();
       switch (graph_node.getNodeType()) {
-	 case CLASS :
-	    return "Class " + nm;
-	 case INTERFACE :
-	    return "Interface " + nm;
-	 case ENUM :
-	    return "Enum " + nm;
-	 case ANNOTATION :
-	    return "Annotation " + nm;
-	 case PACKAGE :
-	    return "Package " + nm;
-	 case THROWABLE :
-	    return "Throwable " + nm;
-	 case METHOD :
-	    return "Method " + nm;
+         case CLASS :
+            return "Class " + nm;
+         case INTERFACE :
+            return "Interface " + nm;
+         case ENUM :
+            return "Enum " + nm;
+         case ANNOTATION :
+            return "Annotation " + nm;
+         case PACKAGE :
+            return "Package " + nm;
+         case THROWABLE :
+            return "Throwable " + nm;
+         case METHOD :
+            return "Method " + nm;
       }
       return null;
    }
 
-   @Override public boolean handleMouseClick(MouseEvent e)	{ return false; }
-   @Override public boolean handleKeyInput(KeyEvent e)		{ return false; }
+   @Override public boolean handleMouseClick(MouseEvent e)      { return false; }
+   @Override public boolean handleKeyInput(KeyEvent e)          { return false; }
 
-   void update()				{ }
+   void update()                                { }
 
-   String getSortName() 			{ return graph_node.getFullName(); }
-   int getArcCount()				{ return graph_node.getArcCount(); }
-   BconGraphNode getGraphNode() 		{ return graph_node; }
+   String getSortName()                         { return graph_node.getFullName(); }
+   int getArcCount()                            { return graph_node.getArcCount(); }
+   BconGraphNode getGraphNode()                 { return graph_node; }
 
    void resetGraphics() {
       setComponent(getDisplayComponent(graph_node));
@@ -553,32 +553,32 @@ private class BconPetalNode extends PetalNodeDefault {
       SwingUtilities.convertPointFromScreen(p0,BconPackageDisplay.this);
       JPopupMenu m = new JPopupMenu();
       if (package_graph.getCollapsedType(graph_node) != ArcType.NONE) {
-	 m.add(new ExpandAction(graph_node));
+         m.add(new ExpandAction(graph_node));
        }
       String pnm = graph_node.getFullName();
       if (graph_node.isInnerClass()) {
-	 m.add(new CompactAction(graph_node,ArcType.INNERCLASS));
-	 int idx = pnm.lastIndexOf(".");
-	 if (idx >= 0) pnm = pnm.substring(0,idx);
+         m.add(new CompactAction(graph_node,ArcType.INNERCLASS));
+         int idx = pnm.lastIndexOf(".");
+         if (idx >= 0) pnm = pnm.substring(0,idx);
        }
       if (graph_node.getClassType().contains(ClassType.METHOD)) {
-	 m.add(new CompactAction(graph_node,ArcType.MEMBER_OF));
+         m.add(new CompactAction(graph_node,ArcType.MEMBER_OF));
        }
       if (pnm.contains(".")) {
-	 m.add(new CompactAction(graph_node,ArcType.PACKAGE));
+         m.add(new CompactAction(graph_node,ArcType.PACKAGE));
        }
       if (graph_node.isSubclass()) {
-	 m.add(new CompactAction(graph_node,ArcType.SUBCLASS,
-	       ArcType.IMPLEMENTED_BY,ArcType.EXTENDED_BY));
+         m.add(new CompactAction(graph_node,ArcType.SUBCLASS,
+               ArcType.IMPLEMENTED_BY,ArcType.EXTENDED_BY));
        }
       m.add(new InducedAction(graph_node));
       m.add(new ExcludeAction(graph_node));
 
       if (graph_node.getClassType().contains(ClassType.METHOD)) {
-	 m.add(new SourceAction(graph_node));
+         m.add(new SourceAction(graph_node));
        }
       else {
-	 m.add(new SearchAction(graph_node));
+         m.add(new SearchAction(graph_node));
        }
 
       m.show(BconPackageDisplay.this,p0.x,p0.y);
@@ -586,14 +586,14 @@ private class BconPetalNode extends PetalNodeDefault {
 
    @Override public Point findPortPoint(Point at,Point from) {
       if (getComponent() instanceof GraphComponent) {
-	 GraphComponent gc = (GraphComponent) getComponent();
-	 return gc.findPortPoint(at,from);
+         GraphComponent gc = (GraphComponent) getComponent();
+         return gc.findPortPoint(at,from);
        }
 
       return super.findPortPoint(at,from);
     }
 
-}	// end of inner class BconPetalNode
+}       // end of inner class BconPetalNode
 
 
 
@@ -609,7 +609,7 @@ private class BconPetalArc extends PetalArcDefault {
       update();
     }
 
-   @Override public boolean handleMouseClick(MouseEvent evt)	{ return false; }
+   @Override public boolean handleMouseClick(MouseEvent evt)    { return false; }
 
    @Override public String getToolTip() {
       return for_arc.getLabel();
@@ -638,7 +638,7 @@ private class BconPetalArc extends PetalArcDefault {
     }
 
 
-}	// end of inner clas BconPetalArc
+}       // end of inner clas BconPetalArc
 
 
 
@@ -647,20 +647,20 @@ static Color getArcColor(ArcType prt)
    Color c = null;
    switch (prt) {
       default :
-	 c = BoardColors.getColor("Bcon.PackageArc");
-	 break;
+         c = BoardColors.getColor("Bcon.PackageArc");
+         break;
       case CALLS :
-	 c = BoardColors.getColor("Bcon.PackageCallsArc");
-	 break;
+         c = BoardColors.getColor("Bcon.PackageCallsArc");
+         break;
       case SUBCLASS :
       case IMPLEMENTED_BY :
       case EXTENDED_BY :
       case MEMBER_OF :
-	 c = BoardColors.getColor("Bcon.PackageClassArc");
-	 break;
+         c = BoardColors.getColor("Bcon.PackageClassArc");
+         break;
       case INNERCLASS :
-	 c = BoardColors.getColor("Bcon.PackageInnerArc");
-	 break;
+         c = BoardColors.getColor("Bcon.PackageInnerArc");
+         break;
     }
 
    return c;
@@ -669,15 +669,15 @@ static Color getArcColor(ArcType prt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Graph Components							*/
-/*										*/
+/*                                                                              */
+/*      Graph Components                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static class GraphComponent extends JPanel {
 
-   private CompShape	use_shape;
-   private Polygon	poly_shape;
+   private CompShape    use_shape;
+   private Polygon      poly_shape;
    private static final long serialVersionUID = 1;
    
    GraphComponent(CompShape sh) {
@@ -697,95 +697,95 @@ private static class GraphComponent extends JPanel {
 
       Shape s = null;
       switch (use_shape) {
-	 case SQUARE :
-	 default :
-	    r.x = 0;
+         case SQUARE :
+         default :
+            r.x = 0;
             r.y = 0;
-	    s = r;
-	    break;
-	 case TRIANGLE :
-	 case DIAMOND :
-	 case PENTAGON :
-	    s = poly_shape;
-	    break;
-	 case CIRCLE :
-	    Ellipse2D el = new Ellipse2D.Double();
-	    el.setFrame(0,0,r.width,r.height);
-	    s = el;
-	    break;
+            s = r;
+            break;
+         case TRIANGLE :
+         case DIAMOND :
+         case PENTAGON :
+            s = poly_shape;
+            break;
+         case CIRCLE :
+            Ellipse2D el = new Ellipse2D.Double();
+            el.setFrame(0,0,r.width,r.height);
+            s = el;
+            break;
        }
 
       if (s != null) {
-	 g2.fill(s);
+         g2.fill(s);
        }
     }
 
    private void setupShape() {
       Rectangle r = getBounds();
       switch (use_shape) {
-	 case SQUARE :
-	 case CIRCLE :
-	 default :
-	    break;
-	 case TRIANGLE :
-	    poly_shape = new Polygon();
-	    poly_shape.addPoint(r.width/2,0);
-	    poly_shape.addPoint(0,r.height);
-	    poly_shape.addPoint(r.width,r.height);
-	    break;
-	 case DIAMOND :
-	    poly_shape = new Polygon();
-	    poly_shape.addPoint(r.width/2,0);
-	    poly_shape.addPoint(0,r.height/2);
-	    poly_shape.addPoint(r.width/2,r.height);
-	    poly_shape.addPoint(r.width,r.height/2);
-	    break;
-	 case PENTAGON :
-	    poly_shape = new Polygon();
-	    double a1 = Math.tan(Math.toRadians(54));
-	    int h1 = (int) (r.width / 2.0 / a1);
-	    double a2 = Math.tan(Math.toRadians(18));
-	    int h2 = (int) (a2 * (r.height - h1));
-	    poly_shape.addPoint(r.width/2,0);
-	    poly_shape.addPoint(r.width,h1);
-	    poly_shape.addPoint(r.width - h2,r.height);
-	    poly_shape.addPoint(h2,r.height);
-	    poly_shape.addPoint(0,h1);
-	    break;
+         case SQUARE :
+         case CIRCLE :
+         default :
+            break;
+         case TRIANGLE :
+            poly_shape = new Polygon();
+            poly_shape.addPoint(r.width/2,0);
+            poly_shape.addPoint(0,r.height);
+            poly_shape.addPoint(r.width,r.height);
+            break;
+         case DIAMOND :
+            poly_shape = new Polygon();
+            poly_shape.addPoint(r.width/2,0);
+            poly_shape.addPoint(0,r.height/2);
+            poly_shape.addPoint(r.width/2,r.height);
+            poly_shape.addPoint(r.width,r.height/2);
+            break;
+         case PENTAGON :
+            poly_shape = new Polygon();
+            double a1 = Math.tan(Math.toRadians(54));
+            int h1 = (int) (r.width / 2.0 / a1);
+            double a2 = Math.tan(Math.toRadians(18));
+            int h2 = (int) (a2 * (r.height - h1));
+            poly_shape.addPoint(r.width/2,0);
+            poly_shape.addPoint(r.width,h1);
+            poly_shape.addPoint(r.width - h2,r.height);
+            poly_shape.addPoint(h2,r.height);
+            poly_shape.addPoint(0,h1);
+            break;
        }
    }
 
    Point  findPortPoint(Point at,Point from) {
       switch (use_shape) {
-	 case SQUARE :
-	    return PetalHelper.findPortPoint(getBounds(),at,from);
-	 case CIRCLE :
-	    return PetalHelper.findOvalPortPoint(getBounds(),at,from);
-	 case DIAMOND :
-	 case TRIANGLE :
-	 case PENTAGON :
-	    if (poly_shape != null)
-	       return PetalHelper.findShapePortPoint(this,poly_shape,at,from);
+         case SQUARE :
+            return PetalHelper.findPortPoint(getBounds(),at,from);
+         case CIRCLE :
+            return PetalHelper.findOvalPortPoint(getBounds(),at,from);
+         case DIAMOND :
+         case TRIANGLE :
+         case PENTAGON :
+            if (poly_shape != null)
+               return PetalHelper.findShapePortPoint(this,poly_shape,at,from);
 
        }
 
       return PetalHelper.findPortPoint(getBounds(),at,from);
     }
 
-}	// end of inner class GraphComponent
+}       // end of inner class GraphComponent
 
 
 
 /********************************************************************************/
-/*										*/
-/*	PetalModel definitions							*/
-/*										*/
+/*                                                                              */
+/*      PetalModel definitions                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class GraphModel extends PetalModelBase {
 
    private PetalNode [] node_array;
-   private PetalArc []	arc_array;
+   private PetalArc []  arc_array;
 
    GraphModel() {
       node_array = null;
@@ -799,28 +799,28 @@ private class GraphModel extends PetalModelBase {
 
    @Override public PetalNode [] getNodes() {
       if (node_array == null) {
-	 node_array = new PetalNode[node_map.size()];
-	 node_array = node_map.values().toArray(node_array);
-	 Arrays.sort(node_array,new NodeSorter());
+         node_array = new PetalNode[node_map.size()];
+         node_array = node_map.values().toArray(node_array);
+         Arrays.sort(node_array,new NodeSorter());
        }
       return node_array;
     }
 
    @Override public PetalArc [] getArcs() {
       if (arc_array == null) {
-	 arc_array = new PetalArc[arc_map.size()];
-	 arc_array = arc_map.values().toArray(arc_array);
+         arc_array = new PetalArc[arc_map.size()];
+         arc_array = arc_map.values().toArray(arc_array);
        }
       return arc_array;
     }
 
    // disable editing
-   @Override public void createArc(PetalNode frm,PetalNode to)			{ }
+   @Override public void createArc(PetalNode frm,PetalNode to)                  { }
    @Override public boolean dropNode(Object o,Point p,PetalNode pn,PetalArc pa) { return false; }
-   @Override public void removeArc(PetalArc pa) 				{ }
-   @Override public void removeNode(PetalNode pn)				{ }
+   @Override public void removeArc(PetalArc pa)                                 { }
+   @Override public void removeNode(PetalNode pn)                               { }
 
-}	// end of inner class GraphModel
+}       // end of inner class GraphModel
 
 
 
@@ -834,15 +834,15 @@ private static final class NodeSorter implements Comparator<PetalNode> {
       return s1.compareTo(s2);
     }
 
-}	// end of inner class NodeSorter
+}       // end of inner class NodeSorter
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Key/button actions							*/
-/*										*/
+/*                                                                              */
+/*      Key/button actions                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ExpandAction extends AbstractAction  {
@@ -861,7 +861,7 @@ private class ExpandAction extends AbstractAction  {
       relayout();
    }
 
-}	// end of inner class ExapandAction
+}       // end of inner class ExapandAction
 
 
 
@@ -877,7 +877,7 @@ private class CompactAction extends AbstractAction {
       for_node = gn;
       compact_type = EnumSet.of(at[0]);
       for (int i = 1; i < at.length; ++i) {
-	 compact_type.add(at[i]);
+         compact_type.add(at[i]);
        }
     }
 
@@ -886,7 +886,7 @@ private class CompactAction extends AbstractAction {
       relayout();
    }
 
-}	// end of inner class CompactAction
+}       // end of inner class CompactAction
 
 
 private class InducedAction extends AbstractAction {
@@ -905,7 +905,7 @@ private class InducedAction extends AbstractAction {
       relayout();
     }
 
-}	// end of inner class InducedAtion
+}       // end of inner class InducedAtion
 
 
 private class ExcludeAction extends AbstractAction {
@@ -923,7 +923,7 @@ private class ExcludeAction extends AbstractAction {
       relayout();
     }
 
-}	// end of inner class ExcludeAction
+}       // end of inner class ExcludeAction
 
 
 
@@ -941,7 +941,7 @@ private class HomeAction extends AbstractAction {
       relayout();
     }
 
-}	// end of inner class HomeAction
+}       // end of inner class HomeAction
 
 
 private class RemoveSelectAction extends AbstractAction {
@@ -956,12 +956,12 @@ private class RemoveSelectAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       for (BconGraphNode gn : select_nodes) {
-	 package_graph.addExclusion(gn.getFullName());
+         package_graph.addExclusion(gn.getFullName());
        }
       relayout();
     }
 
-}	// end of inner class RemoveSelectAction
+}       // end of inner class RemoveSelectAction
 
 
 
@@ -978,12 +978,12 @@ private class RestrictSelectAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       package_graph.removeStartNodes();
       for (BconGraphNode gn : select_nodes) {
-	 package_graph.addStartNode(gn.getFullName());
+         package_graph.addStartNode(gn.getFullName());
        }
       relayout();
     }
 
-}	// end of inner class RemoveSelectAction
+}       // end of inner class RemoveSelectAction
 
 
 
@@ -1009,12 +1009,12 @@ private class SourceAction extends AbstractAction {
       BoardMetrics.noteCommand("BCON","GotoMethodSource");
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BconPackageDisplay.this);
       if (bba != null) {
-	 bba.addBubble(bb,BconPackageDisplay.this,null,
-			  PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BconPackageDisplay.this,null,
+                          PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class SourceAction
+}       // end of inner class SourceAction
 
 
 
@@ -1038,19 +1038,19 @@ private class SearchAction extends AbstractAction {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BconPackageDisplay.this);
       if (bba != null) {
          bba.addBubble(bb,BconPackageDisplay.this,null,
-        		  PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+                          PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 
-}	// end of inner class SearchAction
+}       // end of inner class SearchAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*     Delayed Evaluation							*/
-/*										*/
+/*                                                                              */
+/*     Delayed Evaluation                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class ComputeGraph implements Runnable {
@@ -1086,7 +1086,7 @@ private class ComputeGraph implements Runnable {
       SwingUtilities.invokeLater(new SetupGraph());
    }
 
-}	// end of inner class ComputeGraph
+}       // end of inner class ComputeGraph
 
 
 
@@ -1097,12 +1097,12 @@ private final class SetupGraph implements Runnable {
       repaint();
     }
 
-}	// end of inner class SetupGraph
+}       // end of inner class SetupGraph
 
 
 
 
-}	// end of class BconPackageDisplay
+}       // end of class BconPackageDisplay
 
 
 

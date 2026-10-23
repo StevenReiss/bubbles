@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizNewWizard.java						*/
-/*										*/
-/*	New class,enum,interface,method wizard implementation			*/
-/*										*/
+/*                                                                              */
+/*              BwizNewWizard.java                                              */
+/*                                                                              */
+/*      New class,enum,interface,method wizard implementation                   */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -82,20 +82,20 @@ import java.util.TreeSet;
 
 
 abstract class BwizNewWizard  extends SwingGridPanel implements BwizConstants,
-		BwizConstants.ISignatureUpdate,
-		BwizConstants.IAccessibilityUpdatable,
-		BuenoConstants
+                BwizConstants.ISignatureUpdate,
+                BwizConstants.IAccessibilityUpdatable,
+                BuenoConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextField  main_name;	 //Class name, Method Name, Interface Name, or Enum Name
+private JTextField  main_name;   //Class name, Method Name, Interface Name, or Enum Name
 private JTextField  second_name; //Superclass or Return type, in case of Classes or Methods
 private BwizAccessibilityPanel accessibility_panel;
 private JTextField signature_area;
@@ -119,9 +119,9 @@ private static final String DEFAULT_PACKAGE = "<default package>";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizNewWizard(BuenoLocation loc,BuenoType type)
@@ -144,14 +144,14 @@ BwizNewWizard(BuenoLocation loc,BuenoType type)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-Component getFocus()				{ return main_name; }
+Component getFocus()                            { return main_name; }
 
-void setBubbleCreator(BuenoBubbleCreator bbc)	{ bubble_creator = bbc; }
+void setBubbleCreator(BuenoBubbleCreator bbc)   { bubble_creator = bbc; }
 
 
 void setInitialName(String nm)
@@ -161,12 +161,12 @@ void setInitialName(String nm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Panel setup methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
-protected int getAccessibilityInfo()	  { return 0; }
+protected int getAccessibilityInfo()      { return 0; }
 
 protected abstract Creator getCreator();
 
@@ -192,7 +192,7 @@ protected class InterfaceVerifier implements IVerifier {
       return new_validator.checkInterfaces(v);
     }
 
-}	// end of inner class InterfaceVerifier
+}       // end of inner class InterfaceVerifier
 
 
 protected class ParameterVerifier implements IVerifier {
@@ -205,7 +205,7 @@ protected class ParameterVerifier implements IVerifier {
       return new_validator.checkParameters(v);
     }
 
-}	// end of inner class ParameterVerifier
+}       // end of inner class ParameterVerifier
 
 
 private void setup()
@@ -337,7 +337,7 @@ private void setup()
 
    //Creates a button that changes cover when the mouse is over it
    create_button = new BwizHoverButton("Create",BoardColors.getColor("Bwiz.NewCreateDefault"),
-	 BoardColors.getColor("Bwiz.NewCreateActive"));
+         BoardColors.getColor("Bwiz.NewCreateActive"));
    //Styling
    create_button.setFont(getRelativeFont(4));
    create_button.setAlignmentY(Component.BOTTOM_ALIGNMENT);
@@ -355,9 +355,9 @@ private void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle Projects 							*/
-/*										*/
+/*                                                                              */
+/*      Handle Projects                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupProject() {
@@ -393,24 +393,24 @@ private final class ChooseProject implements ActionListener {
 
    void set() {
       if (project_dropdown != null) {
-	 Object obj = project_dropdown.getSelectedItem();
-	 if (obj != null) {
-	    String proj = obj.toString();
-	    property_set.put(BuenoKey.KEY_PROJECT,proj);
-	    updateSignature();
-	  }
+         Object obj = project_dropdown.getSelectedItem();
+         if (obj != null) {
+            String proj = obj.toString();
+            property_set.put(BuenoKey.KEY_PROJECT,proj);
+            updateSignature();
+          }
       }
     }
 
-}	// end of inner class ChooseProject
+}       // end of inner class ChooseProject
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle Packages 							*/
-/*										*/
+/*                                                                              */
+/*      Handle Packages                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPackage() {
@@ -474,18 +474,18 @@ private class PackageFinder implements Runnable {
 
    @Override public void run() {
       if (all_packages == null) {
-	 all_packages = getPackages();
-	 SwingUtilities.invokeLater(this);
+         all_packages = getPackages();
+         SwingUtilities.invokeLater(this);
        }
       else if (package_dropdown != null) {
-	 package_dropdown.setContents(all_packages);
-	 if (all_packages.size() > 0) {
-	    package_dropdown.setSelectedIndex(0);
-	  }
+         package_dropdown.setContents(all_packages);
+         if (all_packages.size() > 0) {
+            package_dropdown.setSelectedIndex(0);
+          }
        }
     }
 
-}	// end of inner class PackageFinder
+}       // end of inner class PackageFinder
 
 
 
@@ -506,14 +506,14 @@ private final class ChoosePackage implements ActionListener {
       }
    }
 
-}	// end of inner class ChoosePackage
+}       // end of inner class ChoosePackage
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle name areas							*/
-/*										*/
+/*                                                                              */
+/*      Handle name areas                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupSecondName()
@@ -528,16 +528,16 @@ private void setupSecondName()
    switch (create_type) {
       case NEW_CLASS :
       case NEW_INNER_CLASS :
-	 k = BuenoKey.KEY_EXTENDS;
-	 break;
+         k = BuenoKey.KEY_EXTENDS;
+         break;
       case NEW_METHOD :
-	 k = BuenoKey.KEY_RETURNS;
-	 break;
+         k = BuenoKey.KEY_RETURNS;
+         break;
       case NEW_PACKAGE :
          k = BuenoKey.KEY_CLASS_NAME;
          break;
       default :
-	 break;
+         break;
     }
    if (k != null) {
       second_name.getDocument().addDocumentListener(new TextPropertyListener(k));
@@ -575,16 +575,16 @@ private void setAccess(Accessibility a)
    mods &= ~(Modifier.PUBLIC|Modifier.PRIVATE|Modifier.PROTECTED);
    switch (a) {
       case PUBLIC :
-	 mods |= Modifier.PUBLIC;
-	 break;
+         mods |= Modifier.PUBLIC;
+         break;
       case PRIVATE :
-	 mods |= Modifier.PRIVATE;
-	 break;
+         mods |= Modifier.PRIVATE;
+         break;
       case PROTECTED :
-	 mods |= Modifier.PROTECTED;
-	 break;
+         mods |= Modifier.PROTECTED;
+         break;
       case DEFAULT :
-	 break;
+         break;
     }
    property_set.put(BuenoKey.KEY_MODIFIERS,mods);
 }
@@ -617,16 +617,16 @@ private final class ValidCallback implements BuenoValidatorCallback {
        }
     }
 
-}	// end of inner class ValidCallback
+}       // end of inner class ValidCallback
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Item change listener							*/
-/*										*/
+/*                                                                              */
+/*      Item change listener                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class ClassItemListener implements ItemChangeListener {
@@ -671,14 +671,14 @@ private class ClassItemListener implements ItemChangeListener {
        }
     }
 
-}	// end of inner class ClassItemListener
+}       // end of inner class ClassItemListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Accessility selection listener						*/
-/*										*/
+/*                                                                              */
+/*      Accessility selection listener                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class AccessibilityChange implements ActionListener {
@@ -688,7 +688,7 @@ private final class AccessibilityChange implements ActionListener {
       updateSignature();
     }
 
-}	// end of inner class Accessibility Change
+}       // end of inner class Accessibility Change
 
 
 private final class TypeChange implements ActionListener {
@@ -703,9 +703,9 @@ private final class TypeChange implements ActionListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract selection listener						*/
-/*										*/
+/*                                                                              */
+/*      Abstract selection listener                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ModifierChange implements ItemListener {
@@ -726,7 +726,7 @@ private final class ModifierChange implements ItemListener {
       updateSignature();
     }
 
-}	// end of inner class ModifierChange
+}       // end of inner class ModifierChange
 
 
 private void setModifier(int mod,boolean fg)
@@ -741,9 +741,9 @@ private void setModifier(int mod,boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handler for doing the creation					*/
-/*										*/
+/*                                                                              */
+/*      Action handler for doing the creation                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected abstract class Creator implements ActionListener, Runnable {
@@ -803,14 +803,14 @@ protected abstract class Creator implements ActionListener, Runnable {
        }
    }
    
-}	// end of inner class Creator
+}       // end of inner class Creator
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle text changes							*/
-/*										*/
+/*                                                                              */
+/*      Handle text changes                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class TextPropertyListener implements DocumentListener {
@@ -834,23 +834,23 @@ private class TextPropertyListener implements DocumentListener {
 
    private void updateAll(DocumentEvent e) {
       try {
-	 Document doc = e.getDocument();
-	 String data = doc.getText(0, doc.getLength());
+         Document doc = e.getDocument();
+         String data = doc.getText(0, doc.getLength());
 
-	 if (data != "") {
-	    property_set.put(property_key,data);
-	  }
+         if (data != "") {
+            property_set.put(property_key,data);
+          }
 
-	 updateSignature();
+         updateSignature();
        }
       catch (BadLocationException ex) { }
     }
 
-}	// end of inner class TextPropertyListener
+}       // end of inner class TextPropertyListener
 
 
 
-}	// end of class BwizClassWizard
+}       // end of class BwizClassWizard
 
 
 

@@ -54,7 +54,7 @@ class BuenoGenericProjectMaker implements BuenoConstants
 /********************************************************************************/
 
 private Element         type_data;
-private String		project_language;
+private String          project_language;
 
 private static final Pattern SSH_PAT = Pattern.compile("\\w+@\\w+(\\.\\w+)*\\:\\w+(\\/\\w+)*");
 

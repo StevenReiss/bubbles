@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BconRegion.java 						*/
-/*										*/
-/*	Bubbles Environment Context Viewer abstract region			*/
-/*										*/
+/*                                                                              */
+/*              BconRegion.java                                                 */
+/*                                                                              */
+/*      Bubbles Environment Context Viewer abstract region                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,26 +40,26 @@ abstract class BconRegion implements BconConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 protected BaleConstants.BaleFileOverview for_file;
 
-private boolean 	has_focus;
-private boolean 	has_bubble;
-private Position	start_position;
-private Position	end_position;
+private boolean         has_focus;
+private boolean         has_bubble;
+private Position        start_position;
+private Position        end_position;
 
-protected boolean	is_valid;
+protected boolean       is_valid;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BconRegion(BaleConstants.BaleFileOverview fov)
@@ -75,16 +75,16 @@ protected BconRegion(BaleConstants.BaleFileOverview fov)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-boolean hasFocus()			{ return has_focus; }
-void setHasFocus(boolean fg)		{ has_focus = fg; }
+boolean hasFocus()                      { return has_focus; }
+void setHasFocus(boolean fg)            { has_focus = fg; }
 
 
-boolean hasBubble()			{ return has_bubble; }
+boolean hasBubble()                     { return has_bubble; }
 void setHasBubble(boolean fg)
 {
    has_bubble = fg;
@@ -104,8 +104,8 @@ int getEndLine()
 }
 
 
-int getStartOffset()			{ return start_position.getOffset(); }
-int getEndOffset()			{ return end_position.getOffset(); }
+int getStartOffset()                    { return start_position.getOffset(); }
+int getEndOffset()                      { return end_position.getOffset(); }
 
 
 
@@ -129,32 +129,32 @@ boolean isValid()
 {
    return start_position != null && end_position != null;
 }
-		
+                
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract methods							*/
-/*										*/
+/*                                                                              */
+/*      Abstract methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 abstract RegionType getRegionType();
 abstract String getRegionName();
 
-String getShortRegionName()			{ return getRegionName(); }
+String getShortRegionName()                     { return getRegionName(); }
 
-boolean nameMatch(String name)			{ return false; }
-boolean createBubble(Component src)		{ return false; }
-BudaBubble makeBubble() 			{ return null; }
-int getModifiers()				{ return BCON_MODIFIERS_UNDEFINED; }
-boolean isComment()				{ return false; }
+boolean nameMatch(String name)                  { return false; }
+boolean createBubble(Component src)             { return false; }
+BudaBubble makeBubble()                         { return null; }
+int getModifiers()                              { return BCON_MODIFIERS_UNDEFINED; }
+boolean isComment()                             { return false; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Text methods								*/
-/*										*/
+/*                                                                              */
+/*      Text methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 String getRegionText()
@@ -220,7 +220,7 @@ boolean remove()
 }
 
 
-}	// end of abstract class BconRegion
+}       // end of abstract class BconRegion
 
 
 

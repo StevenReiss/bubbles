@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BoppOptionBase.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BoppOptionBase.java                                             */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -80,9 +80,9 @@ abstract class BoppOptionBase implements BoppConstants.BoppOptionNew, BoppConsta
 
 
 /********************************************************************************/
-/*										*/
-/*	Static constructors							*/
-/*										*/
+/*                                                                              */
+/*      Static constructors                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static BoppOptionBase getOption(String pkgname,Element ox)
@@ -91,27 +91,27 @@ static BoppOptionBase getOption(String pkgname,Element ox)
 
    switch (otyp) {
       case NONE :
-	 break;
+         break;
       case BOOLEAN :
-	 return new OptionBoolean(pkgname,ox);
+         return new OptionBoolean(pkgname,ox);
       case COLOR :
-	 return new OptionColor(pkgname,ox);
+         return new OptionColor(pkgname,ox);
       case COMBO :
-	 return new OptionChoice(pkgname,ox);
+         return new OptionChoice(pkgname,ox);
       case DIMENSION :
-	 return new OptionDimension(pkgname,ox);
+         return new OptionDimension(pkgname,ox);
       case DIVIDER :
-	 return new OptionDivider(pkgname,ox);
+         return new OptionDivider(pkgname,ox);
       case DOUBLE  :
-	 break;
+         break;
       case FONT :
-	 return new OptionFont(pkgname,ox);
+         return new OptionFont(pkgname,ox);
       case INTEGER :
-	 return new OptionInteger(pkgname,ox);
+         return new OptionInteger(pkgname,ox);
       case STRING :
-	 return new OptionString(pkgname,ox);
+         return new OptionString(pkgname,ox);
       case RADIO :
-	 return new OptionMultiple(pkgname,ox);
+         return new OptionMultiple(pkgname,ox);
     }
 
    return null;
@@ -121,26 +121,26 @@ static BoppOptionBase getOption(String pkgname,Element ox)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected String	option_name;
-protected String	option_description;
-protected String	package_name;
-protected List<String>	option_tabs;
-private String		option_keywords;
-private BoppOptionSet	option_set;
-private boolean 	doing_add;
+protected String        option_name;
+protected String        option_description;
+protected String        package_name;
+protected List<String>  option_tabs;
+private String          option_keywords;
+private BoppOptionSet   option_set;
+private boolean         doing_add;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BoppOptionBase(String pkgname,Element ox)
@@ -167,34 +167,34 @@ BoppOptionBase(String pkgname,Element ox)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getOptionName() 		{ return option_name; }
+@Override public String getOptionName()                 { return option_name; }
 
 @Override public abstract OptionType getOptionType();
 
-void setOptionSet(BoppOptionSet os)		{ option_set = os; }
+void setOptionSet(BoppOptionSet os)             { option_set = os; }
 
-@Override public Collection<String> getOptionTabs()	{ return option_tabs; }
+@Override public Collection<String> getOptionTabs()     { return option_tabs; }
 
 protected BoardProperties getProperties()
 {
    return BoardProperties.getProperties(package_name);
 }
 
-void doingAdd(boolean fg)			{ doing_add = fg; }
-boolean isDoingAdd()				{ return doing_add; }
+void doingAdd(boolean fg)                       { doing_add = fg; }
+boolean isDoingAdd()                            { return doing_add; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void noteChange()
@@ -226,13 +226,13 @@ void finishChanges()
 }
 
 
-void reset()						{ }
+void reset()                                            { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Search methods								*/
-/*										*/
+/*                                                                              */
+/*      Search methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean search(Pattern [] pats)
@@ -241,10 +241,10 @@ void reset()						{ }
 
    for (Pattern p : pats) {
       if (p != null) {
-	 Matcher m1 = p.matcher(option_name);
-	 Matcher m2 = p.matcher(option_description);
-	 Matcher m3 = p.matcher(option_keywords);
-	 if (!(m1.find() || m2.find() || m3.find())) return false;
+         Matcher m1 = p.matcher(option_name);
+         Matcher m2 = p.matcher(option_description);
+         Matcher m3 = p.matcher(option_keywords);
+         if (!(m1.find() || m2.find() || m3.find())) return false;
        }
     }
 
@@ -254,9 +254,9 @@ void reset()						{ }
 
 
 /********************************************************************************/
-/*										*/
-/*	Boolean Options 							*/
-/*										*/
+/*                                                                              */
+/*      Boolean Options                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionBoolean extends BoppOptionBase implements ActionListener {
@@ -270,7 +270,7 @@ private static class OptionBoolean extends BoppOptionBase implements ActionListe
       default_value = IvyXml.getAttrBool(ox,"DEFAULT",false);
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.BOOLEAN; }
+   @Override public OptionType getOptionType()          { return OptionType.BOOLEAN; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
@@ -299,15 +299,15 @@ private static class OptionBoolean extends BoppOptionBase implements ActionListe
       if (check_box != null) check_box.setSelected(getValue());
     }
 
-}	// end of inner class OptionBoolean
+}       // end of inner class OptionBoolean
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Color Options								*/
-/*										*/
+/*                                                                              */
+/*      Color Options                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionColor extends BoppOptionBase implements ActionListener {
@@ -321,26 +321,26 @@ private static class OptionColor extends BoppOptionBase implements ActionListene
       super(pkgname,ox);
       Element px = IvyXml.getChild(ox,"PROPERTIES");
       if (px == null) {
-	 from_name = option_name;
-	 to_name = null;
+         from_name = option_name;
+         to_name = null;
        }
       else {
-	 from_name = IvyXml.getAttrString(px,"FROM");
-	 to_name = IvyXml.getAttrString(px,"TO");
+         from_name = IvyXml.getAttrString(px,"FROM");
+         to_name = IvyXml.getAttrString(px,"TO");
        }
       color_button = null;
       range_button = null;
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.COLOR; }
+   @Override public OptionType getOptionType()          { return OptionType.COLOR; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
       if (to_name == null) {
-	 color_button = pnl.addColorField(option_description,getFromValue(),true,this);
+         color_button = pnl.addColorField(option_description,getFromValue(),true,this);
        }
       else {
-	 range_button = pnl.addColorRangeField(option_description,getFromValue(),getToValue(),this);
+         range_button = pnl.addColorRangeField(option_description,getFromValue(),getToValue(),this);
        }
       doingAdd(false);
     }
@@ -349,13 +349,13 @@ private static class OptionColor extends BoppOptionBase implements ActionListene
       if (isDoingAdd()) return;
       noteChange(from_name,to_name);
       if (to_name == null) {
-	 color_button = (SwingColorButton) evt.getSource();
-	 setFromValue(color_button.getColor());
+         color_button = (SwingColorButton) evt.getSource();
+         setFromValue(color_button.getColor());
        }
       else {
-	 range_button = (SwingColorRangeChooser) evt.getSource();
-	 setFromValue(range_button.getFirstColor());
-	 setToValue(range_button.getSecondColor());
+         range_button = (SwingColorRangeChooser) evt.getSource();
+         setFromValue(range_button.getFirstColor());
+         setToValue(range_button.getSecondColor());
        }
       finishChanges();
     }
@@ -378,20 +378,20 @@ private static class OptionColor extends BoppOptionBase implements ActionListene
 
    @Override void reset() {
       if (color_button != null) {
-	 color_button.setColor(getFromValue());
+         color_button.setColor(getFromValue());
       }
       else if (range_button != null) {
-	 range_button.setColors(getFromValue(),getToValue());
+         range_button.setColors(getFromValue(),getToValue());
       }
    }
-}	// end of inner class OptionColor
+}       // end of inner class OptionColor
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Choice options								*/
-/*										*/
+/*                                                                              */
+/*      Choice options                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionChoice extends BoppOptionBase implements ActionListener {
@@ -406,16 +406,16 @@ private static class OptionChoice extends BoppOptionBase implements ActionListen
       lookup_map = new HashMap<String,String>();
       combo_box = null;
       for (Element ce : IvyXml.children(ox,"COMBO")) {
-	 String k = IvyXml.getAttrString(ce,"TEXT");
-	 String v = IvyXml.getAttrString(ce,"VALUE");
-	 if (k != null && v != null) {
-	    choice_map.put(k,v);
-	    lookup_map.put(v,k);
-	  }
+         String k = IvyXml.getAttrString(ce,"TEXT");
+         String v = IvyXml.getAttrString(ce,"VALUE");
+         if (k != null && v != null) {
+            choice_map.put(k,v);
+            lookup_map.put(v,k);
+          }
        }
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.COMBO; }
+   @Override public OptionType getOptionType()          { return OptionType.COMBO; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
@@ -448,18 +448,18 @@ private static class OptionChoice extends BoppOptionBase implements ActionListen
 
    @Override void reset() {
       if (combo_box != null) {
-	 combo_box.setSelectedItem(getValue());
+         combo_box.setSelectedItem(getValue());
       }
    }
 
-}	// end of inner class OptionChoice
+}       // end of inner class OptionChoice
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Multiple choice options 					*/
-/*										*/
+/*                                                                              */
+/*      Multiple choice options                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionMultiple extends BoppOptionBase implements ListSelectionListener {
@@ -476,16 +476,16 @@ private static class OptionMultiple extends BoppOptionBase implements ListSelect
       selection_box = null;
       separator_text = IvyXml.getAttrString(ox,"SEPARATOR"," ");
       for (Element ce : IvyXml.children(ox,"COMBO")) {
-	 String k = IvyXml.getAttrString(ce,"TEXT");
-	 String v = IvyXml.getAttrString(ce,"VALUE");
-	 if (k != null && v != null) {
-	    choice_map.put(k,v);
-	    lookup_map.put(v,k);
-	  }
+         String k = IvyXml.getAttrString(ce,"TEXT");
+         String v = IvyXml.getAttrString(ce,"VALUE");
+         if (k != null && v != null) {
+            choice_map.put(k,v);
+            lookup_map.put(v,k);
+          }
        }
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.RADIO; }
+   @Override public OptionType getOptionType()          { return OptionType.RADIO; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
@@ -500,8 +500,8 @@ private static class OptionMultiple extends BoppOptionBase implements ListSelect
       List<String> sels = selection_box.getSelectedValuesList();
       String rslt = "";
       for (int i = 0; i < sels.size(); ++i) {
-	 if (i > 0) rslt += separator_text;
-	 rslt += choice_map.get(sels.get(i));
+         if (i > 0) rslt += separator_text;
+         rslt += choice_map.get(sels.get(i));
        }
       setValue(rslt);
       finishChanges();
@@ -512,7 +512,7 @@ private static class OptionMultiple extends BoppOptionBase implements ListSelect
       String v = getProperties().getProperty(option_name);
       if (v == null) v = "";
       for (Map.Entry<String,String> ent : choice_map.entrySet()) {
-	 rslt.put(ent.getKey(),v.contains(ent.getValue()));
+         rslt.put(ent.getKey(),v.contains(ent.getValue()));
        }
       return rslt;
     }
@@ -523,29 +523,29 @@ private static class OptionMultiple extends BoppOptionBase implements ListSelect
 
    @Override void reset() {
       if (selection_box != null) {
-	 selection_box.clearSelection();
-	 String v = getProperties().getProperty(option_name);
-	 if (v != null) {
-	    int idx = 0;
-	    for (Map.Entry<String,String> ent : choice_map.entrySet()) {
-	       if (v.contains(ent.getValue())) {
-		  selection_box.addSelectionInterval(idx,idx);
-		}
-	       ++idx;
-	     }
-	  }
+         selection_box.clearSelection();
+         String v = getProperties().getProperty(option_name);
+         if (v != null) {
+            int idx = 0;
+            for (Map.Entry<String,String> ent : choice_map.entrySet()) {
+               if (v.contains(ent.getValue())) {
+                  selection_box.addSelectionInterval(idx,idx);
+                }
+               ++idx;
+             }
+          }
        }
     }
 
-}	// end of inner class OptionChoice
+}       // end of inner class OptionChoice
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Dimension Options							*/
-/*										*/
+/*                                                                              */
+/*      Dimension Options                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionDimension extends BoppOptionBase implements ActionListener {
@@ -561,24 +561,24 @@ private static class OptionDimension extends BoppOptionBase implements ActionLis
       dim_field = null;
       Element px = IvyXml.getChild(ox,"PROPERTIES");
       if (px == null) {
-	 width_prop = option_name;
-	 height_prop = null;
+         width_prop = option_name;
+         height_prop = null;
        }
       else {
-	 width_prop = IvyXml.getAttrString(px,"WIDTH");
-	 height_prop = IvyXml.getAttrString(px,"HEIGHT");
+         width_prop = IvyXml.getAttrString(px,"WIDTH");
+         height_prop = IvyXml.getAttrString(px,"HEIGHT");
        }
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.DIMENSION; }
+   @Override public OptionType getOptionType()          { return OptionType.DIMENSION; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
       if (height_prop == null) {
-	 num_field = pnl.addNumericField(option_description,10,1024,getWidthValue(),this);
+         num_field = pnl.addNumericField(option_description,10,1024,getWidthValue(),this);
        }
       else {
-	 dim_field = pnl.addDimensionField(option_description,getWidthValue(),getHeightValue(),this);
+         dim_field = pnl.addDimensionField(option_description,getWidthValue(),getHeightValue(),this);
        }
       doingAdd(false);
     }
@@ -587,13 +587,13 @@ private static class OptionDimension extends BoppOptionBase implements ActionLis
       if (isDoingAdd()) return;
       noteChange(width_prop,height_prop);
       if (height_prop == null) {
-	 SwingNumericField fld = (SwingNumericField) evt.getSource();
-	 setWidthValue((int) fld.getValue());
+         SwingNumericField fld = (SwingNumericField) evt.getSource();
+         setWidthValue((int) fld.getValue());
        }
       else {
-	 SwingDimensionChooser dim = (SwingDimensionChooser) evt.getSource();
-	 setWidthValue(dim.getWidthValue());
-	 setHeightValue(dim.getHeightValue());
+         SwingDimensionChooser dim = (SwingDimensionChooser) evt.getSource();
+         setWidthValue(dim.getWidthValue());
+         setHeightValue(dim.getHeightValue());
        }
       finishChanges();
     }
@@ -621,23 +621,23 @@ private static class OptionDimension extends BoppOptionBase implements ActionLis
 
    @Override void reset() {
       if (num_field != null) {
-	 if (height_prop != null) num_field.setValue(getHeightValue());
-	 else if (width_prop != null) num_field.setValue(getWidthValue());
+         if (height_prop != null) num_field.setValue(getHeightValue());
+         else if (width_prop != null) num_field.setValue(getWidthValue());
        }
       else if (dim_field != null) {
-	 dim_field.setValue(getWidthValue(),getHeightValue());
+         dim_field.setValue(getWidthValue(),getHeightValue());
        }
     }
 
-}	// end of inner class OptionDimension
+}       // end of inner class OptionDimension
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Divider Options 							*/
-/*										*/
+/*                                                                              */
+/*      Divider Options                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionDivider extends BoppOptionBase {
@@ -646,21 +646,21 @@ private static class OptionDivider extends BoppOptionBase {
       super(pkgname,ox);
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.DIVIDER; }
+   @Override public OptionType getOptionType()          { return OptionType.DIVIDER; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       pnl.addSeparator();
       pnl.addSectionLabel(option_name);
     }
 
-}	// end of inner clss OptionDivider
+}       // end of inner clss OptionDivider
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Font Options								*/
-/*										*/
+/*                                                                              */
+/*      Font Options                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionFont extends BoppOptionBase implements ActionListener {
@@ -677,30 +677,30 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
       font_chooser = null;
       Element fx = IvyXml.getChild(ox,"PROPERTIES");
       if (fx == null) {
-	 font_prop = option_name;
-	 family_prop = null;
-	 size_prop = null;
-	 style_prop = null;
+         font_prop = option_name;
+         family_prop = null;
+         size_prop = null;
+         style_prop = null;
        }
       else {
-	 font_prop = null;
-	 family_prop = IvyXml.getAttrString(fx,"FAMILY");
-	 size_prop = IvyXml.getAttrString(fx,"SIZE");
-	 style_prop = IvyXml.getAttrString(fx,"STYLE");
-	 color_prop = IvyXml.getAttrString(fx,"COLOR");
+         font_prop = null;
+         family_prop = IvyXml.getAttrString(fx,"FAMILY");
+         size_prop = IvyXml.getAttrString(fx,"SIZE");
+         style_prop = IvyXml.getAttrString(fx,"STYLE");
+         color_prop = IvyXml.getAttrString(fx,"COLOR");
        }
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.FONT; }
+   @Override public OptionType getOptionType()          { return OptionType.FONT; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
       int sts = 0;
       if (font_prop == null) {
-	 if (family_prop == null) sts |= SwingFontChooser.FONT_FIXED_FAMILY;
-	 if (size_prop == null) sts |= SwingFontChooser.FONT_FIXED_SIZE;
-	 if (style_prop == null) sts |= SwingFontChooser.FONT_FIXED_STYLE;
-	 if (color_prop == null) sts |= SwingFontChooser.FONT_FIXED_COLOR;
+         if (family_prop == null) sts |= SwingFontChooser.FONT_FIXED_FAMILY;
+         if (size_prop == null) sts |= SwingFontChooser.FONT_FIXED_SIZE;
+         if (style_prop == null) sts |= SwingFontChooser.FONT_FIXED_STYLE;
+         if (color_prop == null) sts |= SwingFontChooser.FONT_FIXED_COLOR;
        }
       font_chooser = pnl.addFontField(option_description,getFontValue(),getColorValue(),sts,this);
       doingAdd(false);
@@ -717,7 +717,7 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
 
    private Font getFontValue() {
       if (font_prop != null) {
-	 return getProperties().getFont(font_prop);
+         return getProperties().getFont(font_prop);
        }
 
       String fam = "Serif";
@@ -747,22 +747,22 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
 
    private void setColor(Color c) {
       if (color_prop != null && c != null)
-	 getProperties().setProperty(color_prop,c);
+         getProperties().setProperty(color_prop,c);
     }
 
    @Override public void reset() {
       if (font_chooser != null) font_chooser.setFont(getFontValue(),getColorValue());
     }
    
-}	// end of inner class OptionFont
+}       // end of inner class OptionFont
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Numeric Options 							*/
-/*										*/
+/*                                                                              */
+/*      Numeric Options                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionInteger extends BoppOptionBase implements ChangeListener, ActionListener {
@@ -787,7 +787,7 @@ private static class OptionInteger extends BoppOptionBase implements ChangeListe
       else range_ok = false;
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.INTEGER; }
+   @Override public OptionType getOptionType()          { return OptionType.INTEGER; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
@@ -827,14 +827,14 @@ private static class OptionInteger extends BoppOptionBase implements ChangeListe
       else if (number_btn != null) number_btn.setValue(getValue());
     }
 
-}	// end of inner class OptionInteger
+}       // end of inner class OptionInteger
 
 
 
 /********************************************************************************/
-/*										*/
-/*	String options								*/
-/*										*/
+/*                                                                              */
+/*      String options                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionString extends BoppOptionBase implements ActionListener {
@@ -846,7 +846,7 @@ private static class OptionString extends BoppOptionBase implements ActionListen
       text_field = null;
     }
 
-   @Override public OptionType getOptionType()		{ return OptionType.STRING; }
+   @Override public OptionType getOptionType()          { return OptionType.STRING; }
 
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
@@ -874,10 +874,10 @@ private static class OptionString extends BoppOptionBase implements ActionListen
       text_field.setText(getValue());
     }
 
-}	// end of inner class OptionString
+}       // end of inner class OptionString
 
 
-}	// end of class BoppOptionBase
+}       // end of class BoppOptionBase
 
 
 

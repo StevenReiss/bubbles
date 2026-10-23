@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleHistory.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor definitions for history maintenance	*/
-/*										*/
+/*                                                                              */
+/*              BaleHistory.java                                                */
+/*                                                                              */
+/*      Bubble Annotated Language Editor definitions for history maintenance    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -60,9 +60,9 @@ class BaleHistory {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final char [] EMPTY = new char[0];
@@ -70,9 +70,9 @@ private static final char [] EMPTY = new char[0];
 
 
 /********************************************************************************/
-/*										*/
-/*	Implementation of our content class					*/
-/*										*/
+/*                                                                              */
+/*      Implementation of our content class                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static class BaleIdeContent extends GapContent {
@@ -84,12 +84,12 @@ static class BaleIdeContent extends GapContent {
     }
 
    @Override public UndoableEdit insertString(int where,String str) throws BadLocationException {
-	if (where > length() || where < 0) {
-	   throw new BadLocationException("Invalid insert " + where + " " + length(), where);
-	 }
-	char[] chars = str.toCharArray();
-	replace(where, 0, chars, chars.length);
-	return new BaleInsertUndo(this,where,str.length());
+        if (where > length() || where < 0) {
+           throw new BadLocationException("Invalid insert " + where + " " + length(), where);
+         }
+        char[] chars = str.toCharArray();
+        replace(where, 0, chars, chars.length);
+        return new BaleInsertUndo(this,where,str.length());
     }
 
    @Override public UndoableEdit remove(int where,int nitems) throws BadLocationException {
@@ -110,18 +110,18 @@ static class BaleIdeContent extends GapContent {
       super.updateUndoPositions(pos,off,len);
     }
 
-}	// end of inner class BaleIdeContent
+}       // end of inner class BaleIdeContent
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Generic undo event for bale/burp					*/
-/*										*/
+/*                                                                              */
+/*      Generic undo event for bale/burp                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class BaleGenericUndo extends AbstractUndoableEdit
-	implements BurpPlayableEdit {
+        implements BurpPlayableEdit {
 
    private transient Map<Object,Integer> special_delta;
 
@@ -142,7 +142,7 @@ private abstract static class BaleGenericUndo extends AbstractUndoableEdit
          }
          else return opos;
       }
-      if (delta > 0) {			// insertion
+      if (delta > 0) {                  // insertion
          if (edit != null && special_delta != null && special_delta.containsKey(edit)) {
             int ndelta = special_delta.get(edit);
             // if (ndelta != 0) BoardLog.logD("BALE","Update position special1 " + 
@@ -151,7 +151,7 @@ private abstract static class BaleGenericUndo extends AbstractUndoableEdit
           }
          if (opos == offset && start) return opos;
        }
-      else {				// deletion
+      else {                            // deletion
          if (offset - delta >= opos) {
             if (edit != null) {
                int ndelta = opos - offset;
@@ -159,8 +159,8 @@ private abstract static class BaleGenericUndo extends AbstractUndoableEdit
                // BoardLog.logD("BALE","Special update " + opos + " " + ndelta + " " + edit);
                Integer ov = special_delta.put(edit,ndelta);
                if (ov != null && ov != ndelta) {
-        	  System.err.println("VALUE CHANGED " + this + " " + edit + " " + ndelta + " " + ov);
-        	}
+                  System.err.println("VALUE CHANGED " + this + " " + edit + " " + ndelta + " " + ov);
+                }
              }
             delta = offset - opos;
           }
@@ -170,15 +170,15 @@ private abstract static class BaleGenericUndo extends AbstractUndoableEdit
       return opos+delta;
     }
 
-}	// end of inner class BaleGenericUndo
+}       // end of inner class BaleGenericUndo
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Implementation of Insert edit						*/
-/*										*/
+/*                                                                              */
+/*      Implementation of Insert edit                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static class BaleInsertUndo extends BaleGenericUndo {
@@ -220,30 +220,30 @@ static class BaleInsertUndo extends BaleGenericUndo {
    @Override public void redo() throws CannotRedoException {
       super.redo();
       try {
-	 int start = insert_offset;
-	 int len = insert_length;
-	 the_content.insertString(start, ins_string);
-	 ins_string = null;
-	 // Update the Positions that were in the range removed.
-	 if (pos_refs != null) {
-	    the_content.updatePositions(pos_refs, start,len);
-	    pos_refs = null;
-	  }
+         int start = insert_offset;
+         int len = insert_length;
+         the_content.insertString(start, ins_string);
+         ins_string = null;
+         // Update the Positions that were in the range removed.
+         if (pos_refs != null) {
+            the_content.updatePositions(pos_refs, start,len);
+            pos_refs = null;
+          }
        }
-	 catch (BadLocationException bl) {
-	    throw new CannotRedoException();
-	  }
+         catch (BadLocationException bl) {
+            throw new CannotRedoException();
+          }
        }
 
    @Override public void playUndo(Document doc) throws CannotUndoException {
       try {
-	 int start = insert_offset;
-	 int len = insert_length;
-	 // ins_string = the_content.getString(start,len);
-	 doc.remove(start,len);
+         int start = insert_offset;
+         int len = insert_length;
+         // ins_string = the_content.getString(start,len);
+         doc.remove(start,len);
        }
       catch (BadLocationException bl) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
     }
 
@@ -256,10 +256,10 @@ static class BaleInsertUndo extends BaleGenericUndo {
       if (eoffset > rend) eoffset = rend;
       if (offset >= eoffset) return false;
       try {
-	 doc.remove(offset,eoffset-offset);
+         doc.remove(offset,eoffset-offset);
        }
       catch (BadLocationException e) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
       return true;
     }
@@ -279,9 +279,9 @@ static class BaleInsertUndo extends BaleGenericUndo {
 
 
 /********************************************************************************/
-/*										*/
-/*	Implementation of Remove edit						*/
-/*										*/
+/*                                                                              */
+/*      Implementation of Remove edit                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static class BaleRemoveUndo extends BaleGenericUndo {
@@ -306,18 +306,18 @@ static class BaleRemoveUndo extends BaleGenericUndo {
    @Override public void undo() throws CannotUndoException {
       super.undo();
       try {
-	 int start = remove_offset;
-	 the_content.insertString(start, rem_string);
-	 int len = remove_length;
-	 // Update the Positions that were in the range removed.
-	 if (pos_refs != null) {
-	    the_content.updatePositions(pos_refs, start,len);
-	    pos_refs = null;
-	  }
-	 rem_string = null;
+         int start = remove_offset;
+         the_content.insertString(start, rem_string);
+         int len = remove_length;
+         // Update the Positions that were in the range removed.
+         if (pos_refs != null) {
+            the_content.updatePositions(pos_refs, start,len);
+            pos_refs = null;
+          }
+         rem_string = null;
        }
       catch (BadLocationException bl) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
     }
 
@@ -338,11 +338,11 @@ static class BaleRemoveUndo extends BaleGenericUndo {
 
    @Override public void playUndo(Document doc) throws CannotUndoException {
       try {
-	 int start = remove_offset;
-	 doc.insertString(start,rem_string,null);
+         int start = remove_offset;
+         doc.insertString(start,rem_string,null);
        }
       catch (BadLocationException bl) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
     }
 
@@ -352,10 +352,10 @@ static class BaleRemoveUndo extends BaleGenericUndo {
       int rend = rng.getEndPosition();
       if (offset < rstart || offset >= rend) return false;
       try {
-	 doc.insertString(offset,rem_string,null);
+         doc.insertString(offset,rem_string,null);
        }
       catch (BadLocationException e) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
       return true;
     }
@@ -373,9 +373,9 @@ static class BaleRemoveUndo extends BaleGenericUndo {
 
 
 /********************************************************************************/
-/*										*/
-/*	Document class								*/
-/*										*/
+/*                                                                              */
+/*      Document class                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 abstract static class BaleAbstractDocument extends BaleDocument {
@@ -389,38 +389,38 @@ abstract static class BaleAbstractDocument extends BaleDocument {
    @Override public void remove(int offs, int len) throws BadLocationException {
       writeLock();
       try {
-	 baleHandleRemove(offs, len);
+         baleHandleRemove(offs, len);
        }
       finally {
-	 writeUnlock();
+         writeUnlock();
        }
     }
 
    private void baleHandleRemove(int offs, int len) throws BadLocationException {
       if (len > 0) {
-	 if (offs < 0 || (offs + len) > getLength()) {
-	    throw new BadLocationException("Invalid remove " + offs + " " + len + " " + getLength(), offs);
-	  }
-	 DefaultDocumentEvent chng = createDocumentEvent(offs,len,DocumentEvent.EventType.REMOVE);
+         if (offs < 0 || (offs + len) > getLength()) {
+            throw new BadLocationException("Invalid remove " + offs + " " + len + " " + getLength(), offs);
+          }
+         DefaultDocumentEvent chng = createDocumentEvent(offs,len,DocumentEvent.EventType.REMOVE);
 
-	 boolean isComposedTextElement = false;
-	 // Check whether the position of interest is the composed text
-	 isComposedTextElement = isComposedTextElement(this, offs);
+         boolean isComposedTextElement = false;
+         // Check whether the position of interest is the composed text
+         isComposedTextElement = isComposedTextElement(this, offs);
 
-	 removeUpdate(chng);
-	 UndoableEdit u = getContent().remove(offs, len);
-	 if (u != null) {
-	    chng.addEdit(u);
-	  }
-	 postRemoveUpdate(chng);
-	 // Mark the edit as done.
-	 chng.end();
-	 fireRemoveUpdate(chng);
-	 // only fire undo if Content implementation supports it
-	 // undo for the composed text is not supported for now
-	 if ((u != null) && !isComposedTextElement) {
-	    fireUndoableEditUpdate(new UndoableEditEvent(this, chng));
-	  }
+         removeUpdate(chng);
+         UndoableEdit u = getContent().remove(offs, len);
+         if (u != null) {
+            chng.addEdit(u);
+          }
+         postRemoveUpdate(chng);
+         // Mark the edit as done.
+         chng.end();
+         fireRemoveUpdate(chng);
+         // only fire undo if Content implementation supports it
+         // undo for the composed text is not supported for now
+         if ((u != null) && !isComposedTextElement) {
+            fireUndoableEditUpdate(new UndoableEditEvent(this, chng));
+          }
        }
     }
 
@@ -544,8 +544,8 @@ abstract static class BaleAbstractDocument extends BaleDocument {
                BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
                List<BurpEditDelta> deltas = bpe.getDeltas();
                if (deltas != null) {
-        	  if (rslt == null) rslt = deltas;
-        	  else rslt.addAll(deltas);
+                  if (rslt == null) rslt = deltas;
+                  else rslt.addAll(deltas);
                }
             }
             else BoardLog.logX("BALE","History event not playable: " + ued);
@@ -553,16 +553,16 @@ abstract static class BaleAbstractDocument extends BaleDocument {
          return rslt;
        }
    
-    }	    // end of inner class BaleDefaultDocumentEvent
+    }       // end of inner class BaleDefaultDocumentEvent
 
-}	// end of inner class BaleAbstractDocument
+}       // end of inner class BaleAbstractDocument
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility methods 							*/
-/*										*/
+/*                                                                              */
+/*      Utility methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 static boolean isComposedTextElement(Document doc, int offset)
@@ -588,5 +588,5 @@ static boolean isComposedTextAttributeDefined(AttributeSet as)
 
 
 
-}	// end of class BaleHistory
+}       // end of class BaleHistory
 

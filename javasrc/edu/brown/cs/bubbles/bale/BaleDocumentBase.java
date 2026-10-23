@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleDocumentBase.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor base document				*/
-/*										*/
+/*                                                                              */
+/*              BaleDocumentBase.java                                           */
+/*                                                                              */
+/*      Bubble Annotated Language Editor base document                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,15 +56,15 @@ import java.util.WeakHashMap;
 
 // abstract class BaleDocumentBase extends BaleDocument implements Document, BaleConstants {
 abstract class BaleDocumentBase extends BaleHistory.BaleAbstractDocument
-	 implements Document, BaleConstants
+         implements Document, BaleConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -75,9 +75,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocumentBase()
@@ -89,9 +89,9 @@ BaleDocumentBase()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Editing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void postRemoveUpdate(AbstractDocument.DefaultDocumentEvent chng)
@@ -112,9 +112,9 @@ BaleDocumentBase()
 
 
 /********************************************************************************/
-/*										*/
-/*	Global Position management						*/
-/*										*/
+/*                                                                              */
+/*      Global Position management                                              */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public synchronized Position createPosition(int offs) throws BadLocationException
@@ -132,9 +132,9 @@ private Position createInternalPosition(int offs) throws BadLocationException
 
 
 /********************************************************************************/
-/*										*/
-/*	Local Position management						*/
-/*										*/
+/*                                                                              */
+/*      Local Position management                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BalePosition savePosition(Position p)
@@ -159,9 +159,9 @@ BaleSavedPositions savePositions() throws IOException
    sp.createFile();
    if (known_positions != null) {
       synchronized (known_positions) {
-	 for (BalePosition bp : known_positions.keySet()) {
-	    sp.addPosition(bp);
-	 }
+         for (BalePosition bp : known_positions.keySet()) {
+            sp.addPosition(bp);
+         }
       }
    }
    sp.clearFile();
@@ -204,118 +204,118 @@ private class SavedPositions implements BaleSavedPositions
       Segment sg = new Segment();
       sg.setPartialReturn(false);
       try {
-	 getText(0,ln,sg);
+         getText(0,ln,sg);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem getting text for temp file: " + e);
-	 return;
+         BoardLog.logE("BALE","Problem getting text for temp file: " + e);
+         return;
        }
 
       try {
-	 FileWriter fw = new FileWriter(temp_file);
-	 fw.write(sg.toString());
-	 fw.close();
+         FileWriter fw = new FileWriter(temp_file);
+         fw.write(sg.toString());
+         fw.close();
        }
       catch (IOException e) {
-	 BoardLog.logE("BALE","Problem creating temp file: " + e);
+         BoardLog.logE("BALE","Problem creating temp file: " + e);
        }
 
       boolean haveeol = true;
       List<Integer> lpos = new ArrayList<Integer>();
       for (int i = 0; i < ln; ++i) {
-	 if (haveeol) {
-	    lpos.add(i);
-	    haveeol = false;
-	  }
-	 if (sg.charAt(i) == '\n') haveeol = true;
+         if (haveeol) {
+            lpos.add(i);
+            haveeol = false;
+          }
+         if (sg.charAt(i) == '\n') haveeol = true;
        }
       if (haveeol) lpos.add(ln);
       line_starts = new int[lpos.size()];
       if (limbo_lines == null) {
-	 limbo_lines = new LimboLine[lpos.size()+1];
-	 Arrays.fill(limbo_lines,null);
+         limbo_lines = new LimboLine[lpos.size()+1];
+         Arrays.fill(limbo_lines,null);
        }
       int ct = 0;
       for (Integer iv : lpos) {
-	 line_starts[ct++] = iv;
+         line_starts[ct++] = iv;
        }
     }
 
    void addPosition(BalePosition bp) {
       int off = bp.getDocumentOffset();
       if (off >= getLength()) {
-	 position_data.put(bp,new SavePos(null,-1,off));
+         position_data.put(bp,new SavePos(null,-1,off));
        }
       else if (off == 0) {
-	 position_data.put(bp,new SavePos(null,0,off));
+         position_data.put(bp,new SavePos(null,0,off));
        }
       else {
-	 int idx = Arrays.binarySearch(line_starts,off);
-	 int lpos = -1;
-	 int cpos = -1;
-	 if (idx >= 0) {
-	    lpos = idx;
-	    cpos = 0;
-	  }
-	 else {
-	    lpos = -idx - 1 - 1;
-	    if (lpos < 0) {
-	       lpos = 0;
-	       cpos = 0;
-	     }
-	    else {
-	       cpos = off - line_starts[lpos];
-	     }
-	  }
-	 LimboLine ln = limbo_lines[lpos];
-	 if (ln == null) {
-	    ln = LimboFactory.createLine(temp_file,lpos+1);
-	    limbo_lines[lpos] = ln;
-	  }
+         int idx = Arrays.binarySearch(line_starts,off);
+         int lpos = -1;
+         int cpos = -1;
+         if (idx >= 0) {
+            lpos = idx;
+            cpos = 0;
+          }
+         else {
+            lpos = -idx - 1 - 1;
+            if (lpos < 0) {
+               lpos = 0;
+               cpos = 0;
+             }
+            else {
+               cpos = off - line_starts[lpos];
+             }
+          }
+         LimboLine ln = limbo_lines[lpos];
+         if (ln == null) {
+            ln = LimboFactory.createLine(temp_file,lpos+1);
+            limbo_lines[lpos] = ln;
+          }
 
-	 position_data.put(bp,new SavePos(ln,cpos,off));
+         position_data.put(bp,new SavePos(ln,cpos,off));
        }
       // BoardLog.logD("BALE","SAVE POSN " + bp.hashCode() + " == " + bp + " " + findLineNumber(bp.getOffset()));
     }
 
    void updatePositions() {
       for (int i = 0; i < limbo_lines.length; ++i) {
-	 if (limbo_lines[i] != null) limbo_lines[i].forceValidate();
+         if (limbo_lines[i] != null) limbo_lines[i].forceValidate();
        }
 
       for (Map.Entry<BalePosition,SavePos> ent : position_data.entrySet()) {
-	 BalePosition bp = ent.getKey();
-	 SavePos sp = ent.getValue();
+         BalePosition bp = ent.getKey();
+         SavePos sp = ent.getValue();
 
-	 LimboLine ll = sp.getLimbo();
-	 if (ll == null || ll.getLine() <= 0 || ll.getLine() > line_starts.length) {
-	    try {
-	       if (bp.getOffset() == 0) bp.reset(createInternalPosition(0));
-	       else if (bp.getOffset() < 0) bp.reset(createInternalPosition(getEndPosition().getOffset()));
-	       else if (sp.getOffset() == 0) bp.reset(createInternalPosition(0));
-	       else if (sp.getOffset() < 0) bp.reset(createInternalPosition(getEndPosition().getOffset()));
-	       else {
-		  int ln = (ll == null ? -2 : ll.getLine());
-		  BoardLog.logX("BALE","Bad reset position " + ln + " " +
-				   line_starts.length + " " + sp.getOffset() + " " + bp + " " +
-				   getEndPosition());
-		}
-	     }
-	    catch (BadLocationException e) {
-	       BoardLog.logE("BALE","Problem updating default position: " + e);
-	     }
-	    continue;
-	  }
+         LimboLine ll = sp.getLimbo();
+         if (ll == null || ll.getLine() <= 0 || ll.getLine() > line_starts.length) {
+            try {
+               if (bp.getOffset() == 0) bp.reset(createInternalPosition(0));
+               else if (bp.getOffset() < 0) bp.reset(createInternalPosition(getEndPosition().getOffset()));
+               else if (sp.getOffset() == 0) bp.reset(createInternalPosition(0));
+               else if (sp.getOffset() < 0) bp.reset(createInternalPosition(getEndPosition().getOffset()));
+               else {
+                  int ln = (ll == null ? -2 : ll.getLine());
+                  BoardLog.logX("BALE","Bad reset position " + ln + " " +
+                                   line_starts.length + " " + sp.getOffset() + " " + bp + " " +
+                                   getEndPosition());
+                }
+             }
+            catch (BadLocationException e) {
+               BoardLog.logE("BALE","Problem updating default position: " + e);
+             }
+            continue;
+          }
 
-	 int ln = ll.getLine();
-	 int npos = line_starts[ln-1] + sp.getOffset();
-	 // BoardLog.logD("BALE","RESET POSN " + bp.hashCode() + " -> " + npos);
-	 try {
-	    bp.reset(createInternalPosition(npos));
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Problem updating position: " + e);
-	  }
+         int ln = ll.getLine();
+         int npos = line_starts[ln-1] + sp.getOffset();
+         // BoardLog.logD("BALE","RESET POSN " + bp.hashCode() + " -> " + npos);
+         try {
+            bp.reset(createInternalPosition(npos));
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Problem updating position: " + e);
+          }
        }
     }
 
@@ -329,7 +329,7 @@ private class SavedPositions implements BaleSavedPositions
       limbo_lines = null;
     }
 
-}	// end of inner class SavedPositions
+}       // end of inner class SavedPositions
 
 
 
@@ -343,15 +343,15 @@ private static class SavePos {
       char_offset = coff;
     }
 
-   LimboLine getLimbo() 		{ return tagged_line; }
-   int getOffset()			{ return char_offset; }
+   LimboLine getLimbo()                 { return tagged_line; }
+   int getOffset()                      { return char_offset; }
 
-}	// end of inner class SavePos
-
-
+}       // end of inner class SavePos
 
 
-}	// end of class BaleDocumentBase
+
+
+}       // end of class BaleDocumentBase
 
 
 

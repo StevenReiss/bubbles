@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BattLaunchConfig.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool test launch configuration data		*/
-/*										*/
+/*                                                                              */
+/*              BattLaunchConfig.java                                           */
+/*                                                                              */
+/*      Bubble Automated Testing Tool test launch configuration data            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -39,9 +39,9 @@ class BattLaunchConfig implements BattConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String launch_name;
@@ -56,9 +56,9 @@ private boolean default_cp;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattLaunchConfig(Element xml)
@@ -77,26 +77,26 @@ BattLaunchConfig(Element xml)
       String vl = IvyXml.getText(ae);
 
       if (nm.equals("org.eclipse.debug.core.appendEnvironmentVariables")) {
-	 use_env = Boolean.valueOf(vl);
+         use_env = Boolean.valueOf(vl);
        }
       else if (nm.equals("org.eclipse.jdt.launching.CLASSPATH")) {
-	 if (class_path == null) class_path = new ArrayList<String>();
-	 class_path.add(vl);
+         if (class_path == null) class_path = new ArrayList<String>();
+         class_path.add(vl);
        }
       else if (nm.equals("org.eclipse.jdt.launching.DEFAULT_CLASSPATH")) {
-	 default_cp = Boolean.valueOf(vl);
+         default_cp = Boolean.valueOf(vl);
        }
       else if (nm.equals("org.eclipse.jdt.launching.MAIN_TYPE")) {
-	 main_type = vl;
+         main_type = vl;
        }
       else if (nm.equals("org.eclipse.jdt.launching.PROJECT_ATTR")) {
-	 project_name = vl;
+         project_name = vl;
        }
       else if (nm.equals("org.eclipse.jdt.launching.VM_ARGUMENTS")) {
-	 vm_args = vl;
+         vm_args = vl;
        }
       else if (nm.equals("org.eclipse.jdt.launching.PROGRAM_ARGUMENTS")) {
-	 prog_args = vl;
+         prog_args = vl;
        }
     }
 
@@ -106,17 +106,17 @@ BattLaunchConfig(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getName()		{ return launch_name; }
-String getProject()		{ return project_name; }
-String getVmArgs()		{ return vm_args; }
-String getStartClass()		{ return main_type; }
-String getProgramArgs()		{ return prog_args; }
-boolean useEnvironment()	{ return use_env; }
+String getName()                { return launch_name; }
+String getProject()             { return project_name; }
+String getVmArgs()              { return vm_args; }
+String getStartClass()          { return main_type; }
+String getProgramArgs()         { return prog_args; }
+boolean useEnvironment()        { return use_env; }
 
 String getClassPath()
 {
@@ -135,7 +135,7 @@ String getClassPath()
 
 
 
-}	// end of class BattLaunchConfig
+}       // end of class BattLaunchConfig
 
 
 

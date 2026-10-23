@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*			                                                        */
-/*		BgtaUtil.java							*/
-/*										*/
-/*	Chat utility functions                                  		*/
-/*										*/
+/*                                                                              */
+/*              BgtaUtil.java                                                   */
+/*                                                                              */
+/*      Chat utility functions                                                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Andrew Kovacs      		        */
+/*      Copyright 2011 Brown University -- Andrew Kovacs                        */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *

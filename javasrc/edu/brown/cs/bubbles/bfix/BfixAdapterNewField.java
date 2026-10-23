@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapterNewField.java					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapterNewField.java                                        */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -50,9 +50,9 @@ class BfixAdapterNewField extends BfixAdapter implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -62,9 +62,9 @@ private static List<BfixErrorPattern> field_patterns;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixAdapterNewField()
@@ -85,9 +85,9 @@ BfixAdapterNewField()
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Method Implementations 					*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override  public void addChores(BfixCorrector corr,BumpProblem bp,List<BfixChore> rslts)
@@ -122,9 +122,9 @@ BfixAdapterNewField()
 
 
 /********************************************************************************/
-/*										*/
-/*	Get new field name from error message					*/
-/*										*/
+/*                                                                              */
+/*      Get new field name from error message                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private String getFieldName(BfixCorrector corr,BumpProblem bp)
@@ -149,9 +149,9 @@ private boolean checkDone(BfixCorrector corr,String fld)
 
 
 /********************************************************************************/
-/*										*/
-/*	Field information management						*/
-/*										*/
+/*                                                                              */
+/*      Field information management                                            */
+/*                                                                              */
 /********************************************************************************/
 
 FieldData getDataForField(BfixCorrector corr,String field,boolean force)
@@ -166,9 +166,9 @@ FieldData getDataForField(BfixCorrector corr,String field,boolean force)
 
 
 /********************************************************************************/
-/*										*/
-/*	Chore to add getter for field						*/
-/*										*/
+/*                                                                              */
+/*      Chore to add getter for field                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class GetterChore extends BfixChore {
@@ -233,16 +233,16 @@ private class GetterChore extends BfixChore {
       return true;
     }
 
-}	// end of inner class GetterChore
+}       // end of inner class GetterChore
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Chore to add setter for field						*/
-/*										*/
+/*                                                                              */
+/*      Chore to add setter for field                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class SetterChore extends BfixChore {
@@ -304,14 +304,14 @@ private class SetterChore extends BfixChore {
       return true;
     }
 
-}	// end of inner class SetterChore
+}       // end of inner class SetterChore
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Chore to add initializer for field					*/
-/*										*/
+/*                                                                              */
+/*      Chore to add initializer for field                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class InitializerChore extends BfixChore {
@@ -333,18 +333,18 @@ private class InitializerChore extends BfixChore {
       String type = fd.getTypeName();
       String value = "null";
       switch (type) {
-	 case "int" :
-	 case "short" :
-	 case "long" :
-	 case "byte" :
-	 case "char" :
-	 case "double" :
-	 case "float" :// do the work here
-	    value = "0";
-	    break;
-	 case "boolean" :
-	    value = "false";
-	    break;
+         case "int" :
+         case "short" :
+         case "long" :
+         case "byte" :
+         case "char" :
+         case "double" :
+         case "float" :// do the work here
+            value = "0";
+            break;
+         case "boolean" :
+            value = "false";
+            break;
        }
       StringBuffer cnts = new StringBuffer();
       cnts.append(fieldname);
@@ -361,14 +361,14 @@ private class InitializerChore extends BfixChore {
       return true;
     }
 
-}	// end of inner class InitializerChore
+}       // end of inner class InitializerChore
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Information about a field and its uses					*/
-/*										*/
+/*                                                                              */
+/*      Information about a field and its uses                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private FileData getFileData(BfixCorrector corr,String field)
@@ -380,11 +380,11 @@ private FileData getFileData(BfixCorrector corr,String field)
    synchronized (file_map) {
       fd = getFileData(f);
       if (fd == null) {
-	 int idx = field.lastIndexOf(".");
-	 String cls = field.substring(0,idx);
-	 String proj = corr.getEditor().getWindowDocument().getProjectName();
-	 fd = new FileData(f,proj,cls);
-	 file_map.put(f,fd);
+         int idx = field.lastIndexOf(".");
+         String cls = field.substring(0,idx);
+         String proj = corr.getEditor().getWindowDocument().getProjectName();
+         fd = new FileData(f,proj,cls);
+         file_map.put(f,fd);
        }
     }
    if (fd != null) fd.useCorrector(corr);
@@ -441,7 +441,7 @@ private static class FileData {
     }
 
 
-   void invalidate() {	
+   void invalidate() {  
       last_updated = 0;
     }
 
@@ -491,21 +491,21 @@ private static class FileData {
    private String getFieldName(String field) {
       if (field == null) return null;
       if (field.startsWith(for_class)) {
-	 int idx = for_class.length() + 1;
-	 field = field.substring(idx);
+         int idx = for_class.length() + 1;
+         field = field.substring(idx);
        }
       else {
-	 String pat = "." + for_class + ".";
-	 int idx = field.indexOf(pat);
-	 if (idx > 0) {
-	    int ln = pat.length();
-	    field = field.substring(idx+ln);
-	  }
+         String pat = "." + for_class + ".";
+         int idx = field.indexOf(pat);
+         if (idx > 0) {
+            int ln = pat.length();
+            field = field.substring(idx+ln);
+          }
        }
       return field;
     }
 
-}	// end of inner class FileData
+}       // end of inner class FileData
 
 
 
@@ -535,27 +535,27 @@ private static class FieldData {
       have_setter = false;
       have_initer = false;
       if (rds != null) {
-	 for (BumpLocation rloc : rds) {
-	    String where = rloc.getSymbolName();
-	    if (where == null) return;
-	    int idx = where.lastIndexOf(".");
-	    if (idx > 0) where = where.substring(idx+1);
-	    where = where.toLowerCase();
-	    if (where.startsWith("get") || where.startsWith("is")) have_getter = true;
-	    else if (where.equalsIgnoreCase(field_proper)) have_getter = true;
-	 }
+         for (BumpLocation rloc : rds) {
+            String where = rloc.getSymbolName();
+            if (where == null) return;
+            int idx = where.lastIndexOf(".");
+            if (idx > 0) where = where.substring(idx+1);
+            where = where.toLowerCase();
+            if (where.startsWith("get") || where.startsWith("is")) have_getter = true;
+            else if (where.equalsIgnoreCase(field_proper)) have_getter = true;
+         }
       }
       if (wts != null) {
-	 for (BumpLocation wloc : wts) {
-	    String where = wloc.getSymbolName();
-	    if (where == null) continue;
-	    int idx = where.lastIndexOf(".");
-	    if (idx > 0) where = where.substring(idx+1);
-	    where = where.toLowerCase();
-	    if (wloc.getSymbolType() == BumpSymbolType.CONSTRUCTOR) have_initer = true;
-	    else if (wloc.getSymbolType() == BumpSymbolType.FIELD) have_initer = true;
-	    else if (where.startsWith("set")) have_setter = true;
-	 }
+         for (BumpLocation wloc : wts) {
+            String where = wloc.getSymbolName();
+            if (where == null) continue;
+            int idx = where.lastIndexOf(".");
+            if (idx > 0) where = where.substring(idx+1);
+            where = where.toLowerCase();
+            if (wloc.getSymbolType() == BumpSymbolType.CONSTRUCTOR) have_initer = true;
+            else if (wloc.getSymbolType() == BumpSymbolType.FIELD) have_initer = true;
+            else if (where.startsWith("set")) have_setter = true;
+         }
       }
    }
 
@@ -566,20 +566,20 @@ private static class FieldData {
       have_initer = false;
    }
 
-   boolean getHasGetter()			{ return have_getter; }
-   boolean getHasSetter()			{ return have_setter; }
-   boolean getHasIniter()			{ return have_initer; }
-   boolean isValid()				{ return def_location != null; }
-   String getTypeName() 			{ return def_location.getReturnType(); }
+   boolean getHasGetter()                       { return have_getter; }
+   boolean getHasSetter()                       { return have_setter; }
+   boolean getHasIniter()                       { return have_initer; }
+   boolean isValid()                            { return def_location != null; }
+   String getTypeName()                         { return def_location.getReturnType(); }
    boolean isStatic() {
       return Modifier.isStatic(def_location.getModifiers());
    }
 
-}	// end of inner class FieldData
+}       // end of inner class FieldData
 
 
 
-}	// end of class BfixAdapterNewField
+}       // end of class BfixAdapterNewField
 
 
 

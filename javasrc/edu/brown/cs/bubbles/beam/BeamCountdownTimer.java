@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*										*/
-/*		BeamCountdownTimer.java 					*/
-/*										*/
-/*	Countdown timer bubble							*/
-/*										*/
+/*                                                                              */
+/*              BeamCountdownTimer.java                                         */
+/*                                                                              */
+/*      Countdown timer bubble                                                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
-/*	Based on code by 0sx4Rayal in github				      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
+/*      Based on code by 0sx4Rayal in github                                  */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -52,9 +52,9 @@ class BeamCountdownTimer extends BudaBubble implements BeamConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private long cur_hours;
@@ -65,7 +65,7 @@ private long last_tick_time;
 private long running_time;
 private long time_left;
 
-private JLabel	label_time;
+private JLabel  label_time;
 
 private SwingButton reset_button;
 private SwingButton start_button;
@@ -83,9 +83,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamCountdownTimer()
@@ -102,26 +102,26 @@ BeamCountdownTimer()
 
 
 /********************************************************************************/
-/*										*/
-/*	Timer methods								*/
-/*										*/
+/*                                                                              */
+/*      Timer methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void changeLabelTimer()
 {
    label_time.setForeground(Color.BLACK);
    String text = time_formatter.format(cur_hours) + " : " +
-	 time_formatter.format(cur_minutes)  + " : " +
-	 time_formatter.format(cur_seconds);
+         time_formatter.format(cur_minutes)  + " : " +
+         time_formatter.format(cur_seconds);
    label_time.setText(text);
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel to hold the timer 						*/
-/*										*/
+/*                                                                              */
+/*      Panel to hold the timer                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class CountdownPanel extends Box {
@@ -225,15 +225,15 @@ private class CountdownPanel extends Box {
       reset();
     }
 
-}	// end of inner class CountdownPanel
+}       // end of inner class CountdownPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handling 							*/
-/*										*/
+/*                                                                              */
+/*      Action handling                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private final class TimeAction extends AbstractAction {
@@ -255,7 +255,7 @@ private final class TimeAction extends AbstractAction {
       changeLabelTimer();
     }
 
-}	// end of inner class TimeAction
+}       // end of inner class TimeAction
 
 
 
@@ -275,7 +275,7 @@ private final class StartAction extends AbstractAction {
       our_timer.start();
     }
 
-}	// end of inner class StartAction
+}       // end of inner class StartAction
 
 
 
@@ -290,7 +290,7 @@ private final class PauseAction extends AbstractAction {
       start_button.setEnabled(true);
     }
 
-}	// end of inner class PauseAction
+}       // end of inner class PauseAction
 
 
 
@@ -319,13 +319,13 @@ private final class ResetAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       if (our_timer != null) our_timer.stop();
       try {
-	 Thread.sleep(1);		// wait for timer to finish
+         Thread.sleep(1);               // wait for timer to finish
        }
       catch (InterruptedException ex) { }
       reset();
     }
 
-}	// end of inner class ResetAction
+}       // end of inner class ResetAction
 
 
 private final class TickAction extends AbstractAction {
@@ -347,11 +347,11 @@ private final class TickAction extends AbstractAction {
          Alarm alarm = new Alarm();
          alarm.start();
          our_timer.stop();
-	 reset();
+         reset();
        }
     }
 
-}	// end of inner class TickAction
+}       // end of inner class TickAction
 
 
 
@@ -376,7 +376,7 @@ private static class Alarm extends Thread {
 
 
 
-}	// end of class BeamCountdownTimer
+}       // end of class BeamCountdownTimer
 
 
 

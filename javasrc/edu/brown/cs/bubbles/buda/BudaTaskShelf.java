@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaTaskShelf.java						*/
-/*										*/
-/*	BUblles Display Area top bar						*/
-/*										*/
+/*                                                                              */
+/*              BudaTaskShelf.java                                              */
+/*                                                                              */
+/*      BUblles Display Area top bar                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009-2010 Brown University --  Yu Li	      */
+/*      Copyright 2009-2010 Brown University --  Yu Li        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -60,9 +60,9 @@ class BudaTaskShelf extends JPanel implements BudaConstants, TreeSelectionListen
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JTree task_tree;
@@ -84,9 +84,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaTaskShelf(BudaTopBar topbar, BudaTask [] tasks, Point popuppoint)
@@ -141,9 +141,9 @@ BudaTaskShelf(BudaTopBar topbar, BudaTask [] tasks, Point popuppoint)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for tree style							*/
-/*										*/
+/*                                                                              */
+/*      Class for tree style                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class IconCellRenderer extends DefaultTreeCellRenderer implements TreeCellRenderer
@@ -156,37 +156,37 @@ private static class IconCellRenderer extends DefaultTreeCellRenderer implements
     }
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-							      Object value, boolean sel,
-							      boolean expanded, boolean leaf,
-							      int row, boolean hasfocus) {
+                                                              Object value, boolean sel,
+                                                              boolean expanded, boolean leaf,
+                                                              int row, boolean hasfocus) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
       Object obj = node.getUserObject();
 
       if (obj instanceof String) {
-	 if (expanded) {
-	    setIcon(COLLAPSE_ICON);
-	  }
-	 else {
-	    setIcon(EXPAND_ICON);
-	  }
-	 setText(obj.toString());
+         if (expanded) {
+            setIcon(COLLAPSE_ICON);
+          }
+         else {
+            setIcon(EXPAND_ICON);
+          }
+         setText(obj.toString());
        }
       else {
-	 setIcon(LEAF_ICON);
-	 BudaTask bt = (BudaTask) obj;
-	 setText(bt.toString());
+         setIcon(LEAF_ICON);
+         BudaTask bt = (BudaTask) obj;
+         setText(bt.toString());
        }
       return this;
     }
 
-}	// end of inner class IconCellRenderer
+}       // end of inner class IconCellRenderer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods for setup						*/
-/*										*/
+/*                                                                              */
+/*      Helper methods for setup                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private int getAreaOffset(double x)
@@ -200,8 +200,8 @@ private int getAreaOffset(double x)
 
 private long diffDayPeriods(Calendar start)
 {
-   long startl	 =  start.getTimeInMillis() +
-				start.getTimeZone().getOffset(start.getTimeInMillis());
+   long startl   =  start.getTimeInMillis() +
+                                start.getTimeZone().getOffset(start.getTimeInMillis());
 
    Calendar end = Calendar.getInstance();
    long endl = end.getTimeInMillis() + end.getTimeZone().getOffset(end.getTimeInMillis());
@@ -226,9 +226,9 @@ void setBrotherPopup(JPopupMenu bro)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action callbacks							*/
-/*										*/
+/*                                                                              */
+/*      Action callbacks                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void valueChanged(TreeSelectionEvent e)
@@ -245,9 +245,9 @@ void setBrotherPopup(JPopupMenu bro)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup Methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup Methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private DefaultMutableTreeNode getTopNode(boolean bydate, BudaTask [] tasks)
@@ -272,25 +272,25 @@ private DefaultMutableTreeNode setupByDate(BudaTask [] tasks) {
    for (int i=0; i<tasks.length; i++) {
       start.setTime(tasks[i].getDate());
       if (diffDayPeriods(start)==0) {
-	  task_nodes.get("Today").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("Today").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else if (diffDayPeriods(start)==1) {
-	  task_nodes.get("Yesterday").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("Yesterday").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else if (diffDayPeriods(start)>1 && diffDayPeriods(start)<7) {
-	  task_nodes.get("This Week").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("This Week").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else if (diffDayPeriods(start)>=7 && diffDayPeriods(start)<31) {
-	  task_nodes.get("This Month").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("This Month").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else if (diffDayPeriods(start)>31 && diffDayPeriods(start)<183) {
-	  task_nodes.get("Past Six Months").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("Past Six Months").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else if (diffDayPeriods(start)>=183 && diffDayPeriods(start)<365) {
-	  task_nodes.get("This Year").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("This Year").add(new DefaultMutableTreeNode(tasks[i]));
        }
       else {
-	  task_nodes.get("More Than a Year").add(new DefaultMutableTreeNode(tasks[i]));
+          task_nodes.get("More Than a Year").add(new DefaultMutableTreeNode(tasks[i]));
        }
     }
 
@@ -320,9 +320,9 @@ private DefaultMutableTreeNode setupAlphabetically(BudaTask [] tasks)
 
       DefaultMutableTreeNode cat = task_nodes.get(id);
       if (cat == null) {
-	 cat = new DefaultMutableTreeNode(id);
-	 top.add(cat);
-	 task_nodes.put(id, cat);
+         cat = new DefaultMutableTreeNode(id);
+         top.add(cat);
+         task_nodes.put(id, cat);
        }
       cat.add(new DefaultMutableTreeNode(tasks[i]));
     }
@@ -357,12 +357,12 @@ private final class ExpansionListener implements TreeExpansionListener {
       my_popup.pack();
    }
 
-}	// end of inner class ExpansionListener
+}       // end of inner class ExpansionListener
 
 
 
 
-}	// end of class BudaTaskShelf
+}       // end of class BudaTaskShelf
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleCompletionContext.java					*/
-/*										*/
-/*	Bubble Annotated Language Editor context for auto completion		*/
-/*										*/
+/*                                                                              */
+/*              BaleCompletionContext.java                                      */
+/*                                                                              */
+/*      Bubble Annotated Language Editor context for auto completion            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -106,36 +106,36 @@ class BaleCompletionContext implements BaleConstants, CaretListener, BuenoConsta
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BaleEditorPane	for_editor;
-private BaleDocument	for_document;
-private BalePosition	start_position;
-private BalePosition	end_position;
+private BaleEditorPane  for_editor;
+private BaleDocument    for_document;
+private BalePosition    start_position;
+private BalePosition    end_position;
 private Collection<BumpCompletion> found_completions;
 private Collection<CompletionItem> found_items;
 private CompletionGetter getter_thread;
-private long		start_time;
-private JDialog 	cur_menu;
-private EditMouser	edit_mouser;
-private EditKeyer	edit_keyer;
-private EditFocus	edit_focus;
+private long            start_time;
+private JDialog         cur_menu;
+private EditMouser      edit_mouser;
+private EditKeyer       edit_keyer;
+private EditFocus       edit_focus;
 private CompletionPanel the_panel;
 
 private static Map<String,Boolean> package_names;
 
-private static boolean	       case_insensitive;
-private static boolean	       use_relevance;
+private static boolean         case_insensitive;
+private static boolean         use_relevance;
 
-private static long	completion_delay;
+private static long     completion_delay;
 
-private static final int	SHOW_ITEMS = 8;
-private static final int	X_DELTA = 0;
-private static final int	Y_DELTA = 0;
-private static final Pattern	ID_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z_0-9]*");
+private static final int        SHOW_ITEMS = 8;
+private static final int        X_DELTA = 0;
+private static final int        Y_DELTA = 0;
+private static final Pattern    ID_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z_0-9]*");
 
 static {
    completion_delay = BALE_PROPERTIES.getLong(BALE_AUTOCOMPLETE_DELAY,0);
@@ -146,9 +146,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleCompletionContext(BaleEditorPane edt,int soff,char ch)
@@ -186,9 +186,9 @@ BaleCompletionContext(BaleEditorPane edt,int soff,char ch)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle editing						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle editing                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void handleSelected()
@@ -246,7 +246,7 @@ private final class EditMouser extends MouseAdapter {
       removeContext();
     }
 
-}	// end of inner class EditMouser
+}       // end of inner class EditMouser
 
 
 private final class EditKeyer extends KeyAdapter {
@@ -286,11 +286,11 @@ private final class EditKeyer extends KeyAdapter {
 
    @Override public void keyTyped(KeyEvent e) {
       if (e.getKeyChar() == KeyEvent.CHAR_UNDEFINED) {
-	 removeContext();
+         removeContext();
        }
     }
 
-}	// end of inner class EditKeyer
+}       // end of inner class EditKeyer
 
 
 
@@ -300,14 +300,14 @@ private final class EditFocus extends FocusAdapter {
      removeContext();
   }
 
-}	// end of inner class EditFocus
+}       // end of inner class EditFocus
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle user selection					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle user selection                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleCompletion(CompletionItem ci)
@@ -320,26 +320,26 @@ private void handleCompletion(CompletionItem ci)
    
    BoardLog.logD("BALE","HANDLE autocomplete " + s);
 
-   removeContext();	// this clears for_editor, so do it once we have addition point
+   removeContext();     // this clears for_editor, so do it once we have addition point
 
    if (ci.getStartIndex() >= 0) {
       int i = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
       int j = be.getCaretPosition();
       if (ci.getEndIndex() >= 0) {
-	 int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
-	 if (j0 >= j) j = j0;
+         int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
+         if (j0 >= j) j = j0;
        }
       BoardLog.logD("BALE","CHECK autocomplete " + i + " " + j + " " + 
             be.getCaretPosition() + " " + s);
       try {
-	 d.remove(i,j-i);
-	 d.insertString(i,s,null);
+         d.remove(i,j-i);
+         d.insertString(i,s,null);
        }
       catch (BadLocationException e) { }
     }
    else {
       try {
-	 d.insertString(be.getCaretPosition(),s,null);
+         d.insertString(be.getCaretPosition(),s,null);
        }
       catch (BadLocationException e) { }
     }
@@ -350,14 +350,14 @@ private void handleCompletion(CompletionItem ci)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle dialog box						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle dialog box                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void handleFound(Collection<BumpCompletion> fnd,boolean calls)
 {
-   if (for_editor == null) return;	// no longer relevant
+   if (for_editor == null) return;      // no longer relevant
    if (fnd == null || fnd.size() == 0) return;
 
    found_completions = new TreeSet<>(new CompletionComparator());
@@ -380,7 +380,7 @@ private synchronized void handleShow()
 {
    BaleEditorPane be = for_editor;
 
-   if (be == null) return;	// no longer relevant
+   if (be == null) return;      // no longer relevant
    if (!be.isFocusOwner()) {
       removeContext();
       return;
@@ -391,9 +391,9 @@ private synchronized void handleShow()
    for (BumpCompletion bc : found_completions) {
       CompletionItem citm = null;
       if (bc.getCompletion().length() == 0)
-	 citm = new CompletionItemBumpCall(bc);
+         citm = new CompletionItemBumpCall(bc);
       else
-	citm = new CompletionItemBump(bc);
+        citm = new CompletionItemBump(bc);
       found_items.add(citm);
     }
    restrictOptions();
@@ -461,31 +461,31 @@ private synchronized void restrictOptions()
       CompletionItem ci = found_items.iterator().next();
       off0 = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
       if (ci.getCompletionText() == null ||
-	    ci.getCompletionText().length() == 0)
-	off0 = off1;
+            ci.getCompletionText().length() == 0)
+        off0 = off1;
    }
 
    try {
       String text1 = null;
       if (off0 < off1) {
-	 text1 = be.getText(off0,off1-off0);
+         text1 = be.getText(off0,off1-off0);
        }
       else if (off0 == off1) text1 = null;
       else {
-	 removeContext();
-	 return;
+         removeContext();
+         return;
        }
 
       List<CompletionItem> rslt = new ArrayList<CompletionItem>();
       if (text1 == null || text1.length() == 0) rslt.addAll(found_items);
       else {
-	 for (CompletionItem ci : found_items) {
-	    if (ci.canStartWith(text1)) rslt.add(ci);
-	  }
+         for (CompletionItem ci : found_items) {
+            if (ci.canStartWith(text1)) rslt.add(ci);
+          }
        }
       if (rslt.size() == 0) {
-	 CompletionItem ci = getNewItem(text1);
-	 if (ci != null) rslt.add(ci);
+         CompletionItem ci = getNewItem(text1);
+         if (ci != null) rslt.add(ci);
        }
       if (rslt.size() == 0) removeContext();
       else the_panel.setItems(rslt);
@@ -511,24 +511,24 @@ private CompletionItem getNewItem(String text)
    Set<String> done = new HashSet<>();
    for (BumpCompletion bc : found_completions) {
       if (bc.getType() == BumpConstants.CompletionType.METHOD_REF) {
-	 String dcls = bc.getDeclaringType();
-	 if (dcls == null) continue;
-	 int i2 = dcls.indexOf("<");
-	 if (i2 > 0) dcls = dcls.substring(0,i2);
-	 int i1 = dcls.lastIndexOf(".");
-	 if (i1 < 0) {
-	    cls = dcls;
-	    break;
-	  }
-	 else {
-	    String pnm = dcls.substring(0,i1);
-	    if (done.contains(pnm)) continue;
-	    done.add(pnm);
-	    if (isPackage(proj,pnm)) {
-	       cls = dcls;
-	       break;
-	    }
-	  }
+         String dcls = bc.getDeclaringType();
+         if (dcls == null) continue;
+         int i2 = dcls.indexOf("<");
+         if (i2 > 0) dcls = dcls.substring(0,i2);
+         int i1 = dcls.lastIndexOf(".");
+         if (i1 < 0) {
+            cls = dcls;
+            break;
+          }
+         else {
+            String pnm = dcls.substring(0,i1);
+            if (done.contains(pnm)) continue;
+            done.add(pnm);
+            if (isPackage(proj,pnm)) {
+               cls = dcls;
+               break;
+            }
+          }
        }
     }
 
@@ -569,9 +569,9 @@ private static boolean isValidId(String text)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get the completion set asynchronously			*/
-/*										*/
+/*                                                                              */
+/*      Methods to get the completion set asynchronously                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class CompletionGetter implements Runnable {
@@ -588,47 +588,47 @@ private class CompletionGetter implements Runnable {
       BoardLog.logD("BALE","Start autocomplete with " + ctr);
       BumpClient bcc = BumpClient.getBump();
       completions = bcc.getCompletions(doc.getProjectName(),
-	    doc.getFile(),
-	    ctr,spos);
+            doc.getFile(),
+            ctr,spos);
       if (completions == null) {
-	 removeContext();
-	 return;
+         removeContext();
+         return;
        }
 
       List<BumpCompletion> callcomps = null;
       int cct = 0;
       for (Iterator<BumpCompletion> it = completions.iterator(); it.hasNext(); ) {
-	 BumpCompletion bc = it.next();
-	 switch (bc.getType()) {
-	    case METHOD_REF :
-	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
-		  it.remove();
-		  if (bc.getSignature() != null && bc.getCompletion() != null && cct == 0) {
-		     if (callcomps == null) callcomps = new ArrayList<>();
-		     callcomps.add(bc);
-		   }
-		}
-	       else ++cct;
-	       break;
-	    case TYPE_REF :
-	    case FIELD_REF :
-	    default :
-	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-	       else ++cct;
-	       break;
-	  }
+         BumpCompletion bc = it.next();
+         switch (bc.getType()) {
+            case METHOD_REF :
+               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
+                  it.remove();
+                  if (bc.getSignature() != null && bc.getCompletion() != null && cct == 0) {
+                     if (callcomps == null) callcomps = new ArrayList<>();
+                     callcomps.add(bc);
+                   }
+                }
+               else ++cct;
+               break;
+            case TYPE_REF :
+            case FIELD_REF :
+            default :
+               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
+               else ++cct;
+               break;
+          }
        }
 
       if (for_document == null) return;
       
       if (callcomps != null) {
-	 handleFound(callcomps,true);
+         handleFound(callcomps,true);
        }
       else  if (completions.size() == 0) {
-	 removeContext();
+         removeContext();
        }
       else {
-	 handleFound(completions,false);
+         handleFound(completions,false);
        }
    }
 
@@ -640,7 +640,7 @@ private class CompletionGetter implements Runnable {
     }
 
 
-}	// end of inner class CompletionGetter
+}       // end of inner class CompletionGetter
 
 
 
@@ -650,7 +650,7 @@ private final class CompletionShower implements ActionListener {
       handleShow();
     }
 
-}	// end of inner class CompletionShower
+}       // end of inner class CompletionShower
 
 
 
@@ -660,10 +660,10 @@ private static final class CompletionComparator implements Comparator<BumpComple
       int v = 0;
 
       if (use_relevance) {
-	 int r1 = c1.getRelevance();
-	 int r2 = c2.getRelevance();
-	 v = Integer.compare(r2,r1);
-	 if (v != 0) return v;
+         int r1 = c1.getRelevance();
+         int r2 = c2.getRelevance();
+         v = Integer.compare(r2,r1);
+         if (v != 0) return v;
        }
 
       if (c1.getName() == null && c2.getName() == null) v = 0;
@@ -674,28 +674,28 @@ private static final class CompletionComparator implements Comparator<BumpComple
 
       if (v != 0) return v;
       if (c1.getSignature() != null && c2.getSignature() != null) {
-	 v = c1.getSignature().compareTo(c2.getSignature());
-	 if (v != 0) return v;
+         v = c1.getSignature().compareTo(c2.getSignature());
+         if (v != 0) return v;
        }
       String t1 = c1.getDeclaringType();
       String t2 = c2.getDeclaringType();
       if (t1 != null && t2 != null) {
-	 v = t1.compareTo(t2);
-	 if (v != 0) return v;
+         v = t1.compareTo(t2);
+         if (v != 0) return v;
       }
 
       return 0;
     }
 
-}	// end of inner class CompletionComparator
+}       // end of inner class CompletionComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to hold the completion options					*/
-/*										*/
+/*                                                                              */
+/*      Class to hold the completion options                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private class CompletionPanel extends JPanel implements MouseListener {
@@ -719,7 +719,7 @@ private class CompletionPanel extends JPanel implements MouseListener {
       setBorder(new MatteBorder(5,5,5,5,BoardColors.getColor("Bale.CompletionBorder")));
     }
 
-   void setSize()				{ item_list.setSize(); }
+   void setSize()                               { item_list.setSize(); }
    void setItems(List<CompletionItem> v) {
       item_list.setItems(v);
       item_list.setSize();
@@ -738,13 +738,13 @@ private class CompletionPanel extends JPanel implements MouseListener {
 
    void decCurrentIndex(){
       if (item_list.getSelectedIndex() > 0) {
-      	 setCurrentIndex(item_list.getSelectedIndex() -1);
+         setCurrentIndex(item_list.getSelectedIndex() -1);
       }
    }
 
    void incCurrentIndex(){
       if (item_list.getSelectedIndex() < (item_list.getModel().getSize()-1)) {
-      	 setCurrentIndex(item_list.getSelectedIndex()+1);
+         setCurrentIndex(item_list.getSelectedIndex()+1);
       }
    }
 
@@ -759,15 +759,15 @@ private class CompletionPanel extends JPanel implements MouseListener {
       handleCompletion(ci);
    }
 
-   @Override public void mouseEntered(MouseEvent e)		{ }
+   @Override public void mouseEntered(MouseEvent e)             { }
 
-   @Override public void mouseExited(MouseEvent e)		{ }
+   @Override public void mouseExited(MouseEvent e)              { }
 
-   @Override public void mousePressed(MouseEvent e)		{ }
+   @Override public void mousePressed(MouseEvent e)             { }
 
-   @Override public void mouseReleased(MouseEvent e)		{ }
+   @Override public void mouseReleased(MouseEvent e)            { }
 
-}	// end of inner class CompletionPanel
+}       // end of inner class CompletionPanel
 
 
 
@@ -801,7 +801,7 @@ private static class CompletionList extends JList<CompletionItem> {
       return item_model.getElementAt(0);
     }
 
-}	// end of inner class CompletionList
+}       // end of inner class CompletionList
 
 
 
@@ -811,11 +811,11 @@ private static class CompletionModel extends DefaultListModel<CompletionItem> {
    private static final long serialVersionUID = 1;
 
 
-   CompletionModel()				{ }
+   CompletionModel()                            { }
 
-   void addItem(CompletionItem ci)		{ addElement(ci); }
+   void addItem(CompletionItem ci)              { addElement(ci); }
 
-}	// end of inner class CompletionModel
+}       // end of inner class CompletionModel
 
 
 
@@ -828,23 +828,23 @@ private static final class CompletionListCellRenderer extends DefaultListCellRen
    @Override public Component getListCellRendererComponent(JList<?> list, Object value, 
          int index, boolean isSelected, boolean cellHasFocus)
      {
-	 Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	 CompletionItem ci = (CompletionItem) value;
-	 Icon icn = ci.getIcon();
-	 if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
+         Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+         CompletionItem ci = (CompletionItem) value;
+         Icon icn = ci.getIcon();
+         if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
 
-	 return renderedcomp;
+         return renderedcomp;
      }
 
-}	// end of inner class CompletionListCellRenderer
+}       // end of inner class CompletionListCellRenderer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Item management 							*/
-/*										*/
+/*                                                                              */
+/*      Item management                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class CompletionItem {
@@ -857,9 +857,9 @@ private abstract static class CompletionItem {
    abstract int getEndIndex();
    abstract boolean canStartWith(String text);
    abstract int getRelevance();
-   Icon getIcon()					{ return null; }
+   Icon getIcon()                                       { return null; }
 
-   void accepted(BaleEditorPane editor) 		{ }
+   void accepted(BaleEditorPane editor)                 { }
 
    protected void getSignatureObjects(String sgn) {
       param_types = "";
@@ -871,10 +871,10 @@ private abstract static class CompletionItem {
 
       int parenindex = s.indexOf('(');
       if (parenindex >= 0) {
-	 return_type = s.substring(0,parenindex);
-	 return_type = shortenType(return_type);
-	 String temp = s.substring(parenindex+1,s.length()-1);
-	 param_types = shortenType(temp);
+         return_type = s.substring(0,parenindex);
+         return_type = shortenType(return_type);
+         String temp = s.substring(parenindex+1,s.length()-1);
+         param_types = shortenType(temp);
        }
     }
 
@@ -883,25 +883,25 @@ private abstract static class CompletionItem {
       StringBuilder buf = new StringBuilder();
       String pfx = null;
       while (tok.hasMoreTokens()) {
-	 String q = tok.nextToken();
-	 if ("<>,".contains(q)) {
-	    if (pfx != null) buf.append(pfx);
-	    pfx = null;
-	    buf.append(q);
-	  }
-	 else if (q.equals(".")) pfx = null;
-	 else pfx = q;
+         String q = tok.nextToken();
+         if ("<>,".contains(q)) {
+            if (pfx != null) buf.append(pfx);
+            pfx = null;
+            buf.append(q);
+          }
+         else if (q.equals(".")) pfx = null;
+         else pfx = q;
        }
       if (pfx != null) buf.append(pfx);
       return buf.toString();
     }
 
-}	// end of inner class CompletionItem
+}       // end of inner class CompletionItem
 
 
 
 private static class CompletionItemNewMethod extends CompletionItem implements
-	BuenoConstants.BuenoBubbleCreator
+        BuenoConstants.BuenoBubbleCreator
 {
    private String class_name;
    private String method_name;
@@ -915,13 +915,13 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       link_point = null;
     }
 
-   @Override String getCompletionText() 	{ return "("; }
+   @Override String getCompletionText()         { return "("; }
 
-   @Override int getStartIndex()		{ return -1; }
+   @Override int getStartIndex()                { return -1; }
 
-   @Override int getEndIndex()			{ return -1; }
+   @Override int getEndIndex()                  { return -1; }
 
-   @Override int getRelevance() 		{ return 1; }
+   @Override int getRelevance()                 { return 1; }
 
    @Override boolean canStartWith(String text) {
       method_name = text;
@@ -929,7 +929,7 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       return true;
     }
 
-   @Override Icon getIcon()			{ return BoardImage.getIcon("default_method"); }
+   @Override Icon getIcon()                     { return BoardImage.getIcon("default_method"); }
 
    @Override public String toString() {
       return "Create new method " + method_name;
@@ -939,7 +939,7 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       link_editor = editor;
       BaleDocument doc = editor.getBaleDocument();
       try {
-	 link_point = doc.createPosition(editor.getCaretPosition());
+         link_point = doc.createPosition(editor.getCaretPosition());
        }
       catch (BadLocationException e) {
          return; 
@@ -971,7 +971,7 @@ private static class CompletionItemNewMethod extends CompletionItem implements
        }
     }
 
-}	// end of inner class CompletionItemNewMethod
+}       // end of inner class CompletionItemNewMethod
 
 
 
@@ -987,9 +987,9 @@ private static class CompletionItemBump extends CompletionItem {
    @Override public String toString() {
       String comp = bump_completion.getCompletion();
       if (comp.indexOf(')') >= 0) {
-	 comp = comp.substring(0,comp.length()-1);
-	 comp += param_types + ") : " + return_type;
-	 return comp;
+         comp = comp.substring(0,comp.length()-1);
+         comp += param_types + ") : " + return_type;
+         return comp;
        }
       return comp;
     }
@@ -1010,13 +1010,13 @@ private static class CompletionItemBump extends CompletionItem {
       String compl = bump_completion.getCompletion();
       if (compl.startsWith(txt)) return true;
       if (case_insensitive) {
-	 if (compl.toLowerCase().startsWith(txt.toLowerCase())) return true;
+         if (compl.toLowerCase().startsWith(txt.toLowerCase())) return true;
        }
       if (bump_completion.getType() == CompletionType.PACKAGE_REF) return false;
       int i = compl.lastIndexOf('.');
       while (i != -1) {
-	 if (compl.startsWith(txt,i+1)) return true;
-	 i = compl.lastIndexOf('.',i-1);
+         if (compl.startsWith(txt,i+1)) return true;
+         i = compl.lastIndexOf('.',i-1);
        }
       return false;
     }
@@ -1026,8 +1026,8 @@ private static class CompletionItemBump extends CompletionItem {
       if (toreturn == null) return null;
       int ln = toreturn.length();
       if (ln > 1 && toreturn.charAt(ln-1) == ')' &&
-	     (param_types != null && param_types.length() > 0)){
-	 toreturn = toreturn.substring(0, toreturn.length()-1);
+             (param_types != null && param_types.length() > 0)){
+         toreturn = toreturn.substring(0, toreturn.length()-1);
        }
       return toreturn;
    }
@@ -1040,7 +1040,7 @@ private static class CompletionItemBump extends CompletionItem {
     }
 
 
-}	// end of inner class CompletionItemBump
+}       // end of inner class CompletionItemBump
 
 
 
@@ -1087,10 +1087,10 @@ private static class CompletionItemBumpCall extends CompletionItem {
     }
 
 
-}	// end of inner class CompletionItemBumpCall
+}       // end of inner class CompletionItemBumpCall
 
 
-}	// end of class BaleCompletionContext
+}       // end of class BaleCompletionContext
 
 
 

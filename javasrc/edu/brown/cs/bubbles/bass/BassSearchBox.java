@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BassSearchBox.java						*/
-/*										*/
-/*	Bubble Augmented Search Strategies search area				*/
-/*										*/
+/*                                                                              */
+/*              BassSearchBox.java                                              */
+/*                                                                              */
+/*      Bubble Augmented Search Strategies search area                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -97,32 +97,32 @@ import java.util.Set;
 
 
 class BassSearchBox extends SwingGridPanel implements BassConstants, CaretListener,
-	TreeExpansionListener, ActionListener, BudaConstants.BudaBubbleOutputer,
-	BudaConstants, BudaConstants.Scalable
+        TreeExpansionListener, ActionListener, BudaConstants.BudaBubbleOutputer,
+        BudaConstants, BudaConstants.Scalable
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JTextField	input_field;
-private JTree		active_options;
+private JTextField      input_field;
+private JTree           active_options;
 private transient BassTreeModel tree_model;
-private boolean 	is_static;
-private boolean 	is_common;
+private boolean         is_static;
+private boolean         is_common;
 private transient Reseter cur_reseter;
 private transient Set<String> local_expands;
 
 private JScrollPane scroll_pane;
 private BassSearchBox our_self;
 
-private String		old_text;
+private String          old_text;
 
-private static String	search_text = "";
+private static String   search_text = "";
 private static Set<String> expanded_nodes = new HashSet<String>();
 
 private static Icon people_expand_image = null;
@@ -144,9 +144,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BassSearchBox(BassTreeModel mdl,boolean common)
@@ -271,14 +271,14 @@ private static synchronized void loadImages()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-JTextField getEditor()			{ return input_field; }
+JTextField getEditor()                  { return input_field; }
 
-void setStatic(boolean fg)		{ is_static = fg; }
+void setStatic(boolean fg)              { is_static = fg; }
 
 static void setDefault(String proj,String pfx)
 {
@@ -299,9 +299,9 @@ static void setDefault(String proj,String pfx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callbacks for text input						*/
-/*										*/
+/*                                                                              */
+/*      Callbacks for text input                                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void caretUpdate(CaretEvent e)
@@ -399,13 +399,13 @@ private void fixupDisplay(String txt)
    if (txt.trim().length() >= kys) {
       if (tree_model.getLeafCount() <= mxl) expandAll();
       else {
-	 int ct = active_options.getRowCount();
-	 while (ct < mnl) {
-	    for (int i = 0; i < ct; ++i) {
-	       active_options.expandRow(i);
-	     }
-	    ct = active_options.getRowCount();
-	 }
+         int ct = active_options.getRowCount();
+         while (ct < mnl) {
+            for (int i = 0; i < ct; ++i) {
+               active_options.expandRow(i);
+             }
+            ct = active_options.getRowCount();
+         }
        }
       int[] aryIndices = tree_model.getIndicesOfFirstMethod();
       int index = 0;
@@ -427,9 +427,9 @@ private void doPrune(String txt)
 {
    if (bk_reset) {
       synchronized (this) {
-	 if (cur_reseter != null) {
-	    if (cur_reseter.setNextText(txt)) return;
-	  }
+         if (cur_reseter != null) {
+            if (cur_reseter.setNextText(txt)) return;
+          }
        }
     }
 
@@ -447,11 +447,11 @@ private void doReset(String txt)
     }
    else {
       synchronized (this) {
-	 if (cur_reseter != null) {
-	    if (cur_reseter.setNextText(txt)) return;
-	  }
-	 cur_reseter = new Reseter(txt);
-	 BoardThreadPool.start(cur_reseter);
+         if (cur_reseter != null) {
+            if (cur_reseter.setNextText(txt)) return;
+          }
+         cur_reseter = new Reseter(txt);
+         BoardThreadPool.start(cur_reseter);
        }
     }
 }
@@ -479,37 +479,37 @@ private class Reseter implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 for ( ; ; ) {
-	    for ( ; ; ) {
-	       String t;
-	       synchronized (this) {
-		  t = reset_text;
-		  if (t == null) break;
-		  reset_text = null;
-		}
-	       tree_model.reset(t,false);
-	     }
+         for ( ; ; ) {
+            for ( ; ; ) {
+               String t;
+               synchronized (this) {
+                  t = reset_text;
+                  if (t == null) break;
+                  reset_text = null;
+                }
+               tree_model.reset(t,false);
+             }
 
-	    try {
-	       SwingUtilities.invokeAndWait(new TreeUpdater());
-	     }
-	    catch (InterruptedException e) { }
-	    catch (InvocationTargetException e) {
-	       BoardLog.logE("BASS","Problem with global tree update",e);
-	     }
+            try {
+               SwingUtilities.invokeAndWait(new TreeUpdater());
+             }
+            catch (InterruptedException e) { }
+            catch (InvocationTargetException e) {
+               BoardLog.logE("BASS","Problem with global tree update",e);
+             }
 
-	    synchronized (this) {
-	       if (reset_text == null) {
-		  is_active = false;
-		  break;
-		}
-	     }
-	  }
+            synchronized (this) {
+               if (reset_text == null) {
+                  is_active = false;
+                  break;
+                }
+             }
+          }
        }
       finally { BowiFactory.stopTask(); }
     }
 
-}	// end of inner class Reseter
+}       // end of inner class Reseter
 
 
 
@@ -519,15 +519,15 @@ private final class TreeUpdater implements Runnable {
       tree_model.globalUpdate();
     }
 
-}	// end of inner class TreeUpdater
+}       // end of inner class TreeUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Method to create a new bubble						*/
-/*										*/
+/*                                                                              */
+/*      Method to create a new bubble                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void createBubble(BassName bn,int ypos)
@@ -536,14 +536,14 @@ private void createBubble(BassName bn,int ypos)
    try {
       BudaBubble bb = bn.createBubble();
       if (bb != null) {
-	 addAndLocateBubble(bb,ypos,null);
+         addAndLocateBubble(bb,ypos,null);
        }
       else {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 BudaBubbleGroup bbg = bn.createBubbleGroup(bba);
-	 if (bbg != null) {
-	    addAndLocateBubbleGroup(bbg,ypos,null);
-	  }
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         BudaBubbleGroup bbg = bn.createBubbleGroup(bba);
+         if (bbg != null) {
+            addAndLocateBubbleGroup(bbg,ypos,null);
+          }
        }
     }
    finally { BowiFactory.stopTask(); }
@@ -581,7 +581,7 @@ void addAndLocateBubble(BudaBubble bb, int ypos,Point ploc)
       Dimension bsz = bb.getSize();
       int potx = loc.x - bsz.width - BUBBLE_CREATION_SPACE;
       if (potx < root.getCurrentViewport().x)
-	 loc.x = loc.x + obb.getWidth() + BUBBLE_CREATION_SPACE;
+         loc.x = loc.x + obb.getWidth() + BUBBLE_CREATION_SPACE;
       else loc.x = potx;
       loc.y = ypos;
    }
@@ -590,11 +590,11 @@ void addAndLocateBubble(BudaBubble bb, int ypos,Point ploc)
       Iterable<BudaBubble> cbb = root.getCurrentBubbleArea().getBubbles();
       Rectangle r;
       for (BudaBubble b : cbb) {
-	 r = b.getBounds();
-	 if (b != obb && r.contains(loc.getLocation())) {
-	    loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
-	    break;
-	 }
+         r = b.getBounds();
+         if (b != obb && r.contains(loc.getLocation())) {
+            loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
+            break;
+         }
       }
    }
 
@@ -622,7 +622,7 @@ private void addAndLocateBubbleGroup(BudaBubbleGroup bbg, int ypos,Point ploc)
       Rectangle bbnds = bbg.getBounds();
       int potx = loc.x - bbnds.width - BUBBLE_CREATION_SPACE;
       if (potx < root.getCurrentViewport().x)
-	 loc.x = loc.x + obb.getWidth() + BUBBLE_CREATION_SPACE;
+         loc.x = loc.x + obb.getWidth() + BUBBLE_CREATION_SPACE;
       else loc.x = potx;
       loc.y = ypos;
     }
@@ -632,8 +632,8 @@ private void addAndLocateBubbleGroup(BudaBubbleGroup bbg, int ypos,Point ploc)
    for (BudaBubble b : cbb) {
       r = b.getBounds();
       if (b != obb && r.contains(loc.getLocation())) {
-	 loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
-	 break;
+         loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
+         break;
        }
     }
 
@@ -677,9 +677,9 @@ private BudaBubble createPreviewBubble(BassName bn, int xpos, int ypos)
 
 
 /********************************************************************************/
-/*										*/
-/*	PopupMenu method							*/
-/*										*/
+/*                                                                              */
+/*      PopupMenu method                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 boolean handlePopupMenu(MouseEvent e)
@@ -702,8 +702,8 @@ boolean handlePopupMenu(MouseEvent e)
       else if (fullname.charAt(ln-1) == ':') fullname.append(btb.getLocalName());
       else if (fullname.charAt(ln-1) == '.') fullname.append(btb.getLocalName());
       else {
-	 fullname.append(".");
-	 fullname.append(btb.getLocalName());
+         fullname.append(".");
+         fullname.append(btb.getLocalName());
        }
       // System.err.println("FLAGS COMPUTED");
 
@@ -734,9 +734,9 @@ boolean handlePopupMenu(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree actions								*/
-/*										*/
+/*                                                                              */
+/*      Tree actions                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void expandAll()
@@ -780,7 +780,7 @@ private void moveUpSelection()
    if (active_options.getSelectionCount() > 0) {
       int index = active_options.getSelectionRows()[0];
       if (index > 0)
-	 active_options.setSelectionRow(index - 1);
+         active_options.setSelectionRow(index - 1);
       active_options.scrollRectToVisible(active_options.getPathBounds(active_options.getSelectionPath()));
     }
 }
@@ -790,7 +790,7 @@ private void moveDownSelection()
    if (active_options.getSelectionCount() > 0) {
       int index = active_options.getSelectionRows()[0];
       if (index < active_options.getRowCount() - 1)
-	 active_options.setSelectionRow(index + 1);
+         active_options.setSelectionRow(index + 1);
       active_options.scrollRectToVisible(active_options.getPathBounds(active_options.getSelectionPath()));
     }
 }
@@ -799,9 +799,9 @@ private void moveDownSelection()
 
 
 /********************************************************************************/
-/*										*/
-/*	Actions for the search							*/
-/*										*/
+/*                                                                              */
+/*      Actions for the search                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private static class AbortAction extends AbstractAction {
@@ -816,15 +816,15 @@ private static class AbortAction extends AbstractAction {
       BoardMetrics.noteCommand("BASS","AbortSearch");
       BudaBubble bb = BudaRoot.findBudaBubble((Component) e.getSource());
       if (bb != null) {
-	 BudaRoot br = BudaRoot.findBudaRoot(bb);
-	 br.removeCurrentBubble();
-   //	    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
-   //	    bba.removeCurrentBubble(null);
-   //	    bb.setVisible(false);
+         BudaRoot br = BudaRoot.findBudaRoot(bb);
+         br.removeCurrentBubble();
+   //       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
+   //       bba.removeCurrentBubble(null);
+   //       bb.setVisible(false);
       }
     }
 
-}	// end of inner class AbortAction
+}       // end of inner class AbortAction
 
 
 
@@ -840,11 +840,11 @@ private static class UpSelectionAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","UpSelection");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    BassSearchBox bx = (BassSearchBox) c;
-	    bx.moveUpSelection();
-	    break;
-	  }
+         if (c instanceof BassSearchBox) {
+            BassSearchBox bx = (BassSearchBox) c;
+            bx.moveUpSelection();
+            break;
+          }
        }
     }
 
@@ -862,11 +862,11 @@ private static class DownSelectionAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","DownSelection");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    BassSearchBox bx = (BassSearchBox) c;
-	    bx.moveDownSelection();
-	    break;
-	  }
+         if (c instanceof BassSearchBox) {
+            BassSearchBox bx = (BassSearchBox) c;
+            bx.moveDownSelection();
+            break;
+          }
        }
     }
 
@@ -883,15 +883,15 @@ private static class ExpandAllAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","ExpandAll");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    BassSearchBox bx = (BassSearchBox) c;
-	    bx.expandAll();
-	    break;
-	  }
+         if (c instanceof BassSearchBox) {
+            BassSearchBox bx = (BassSearchBox) c;
+            bx.expandAll();
+            break;
+          }
        }
     }
 
-}	// end of inner class ExpandAllAction
+}       // end of inner class ExpandAllAction
 
 
 
@@ -906,14 +906,14 @@ private static class CompactAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","Compact");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    BassSearchBox bx = (BassSearchBox) c;
-	    bx.compact();
-	  }
+         if (c instanceof BassSearchBox) {
+            BassSearchBox bx = (BassSearchBox) c;
+            bx.compact();
+          }
        }
     }
 
-}	// end of inner class CompactAction
+}       // end of inner class CompactAction
 
 
 
@@ -929,14 +929,14 @@ private static class TextSearchAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","TextSearch");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    ((BassSearchBox) c).createTextSearchBubble();
-	    break;
-	 }
+         if (c instanceof BassSearchBox) {
+            ((BassSearchBox) c).createTextSearchBubble();
+            break;
+         }
       }
    }
 
-}	// end of inner class TextSearchAction
+}       // end of inner class TextSearchAction
 
 
 
@@ -953,16 +953,16 @@ private class ClearInputAction extends AbstractAction {
       input_field.setText("");
     }
 
-}	// end of inner class ClearInputAction
+}       // end of inner class ClearInputAction
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getConfigurator()			{ return "BASS"; }
+@Override public String getConfigurator()                       { return "BASS"; }
 
 
 @Override public void outputXml(BudaXmlWriter xw)
@@ -977,9 +977,9 @@ private class ClearInputAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintComponent(Graphics g)
@@ -1002,9 +1002,9 @@ private class ClearInputAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Drag/drop handler							*/
-/*										*/
+/*                                                                              */
+/*      Drag/drop handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Transferer extends TransferHandler {
@@ -1014,10 +1014,10 @@ private final class Transferer extends TransferHandler {
    @Override protected Transferable createTransferable(JComponent c) {
       BassSearchBox bsb = null;
       for (Component jc = c; jc != null; jc = jc.getParent()) {
-	 if (jc instanceof BassSearchBox) {
-	    bsb = (BassSearchBox) jc;
-	    break;
-	  }
+         if (jc instanceof BassSearchBox) {
+            bsb = (BassSearchBox) jc;
+            break;
+          }
        }
       if (bsb == null) return null;
 
@@ -1032,25 +1032,25 @@ private final class Transferer extends TransferHandler {
       return COPY;
     }
 
-}	// end of inner class Transferer
+}       // end of inner class Transferer
 
 
 
 private class TransferBubble implements Transferable, BudaConstants.BudaDragBubble,
-	BudaConstants.BudaDragBubbleGroup
+        BudaConstants.BudaDragBubbleGroup
 {
    private List<BassName> tree_entries;
 
    TransferBubble(TreePath [] pths) {
       tree_entries = new ArrayList<>();
       for (int i = 0; i < pths.length; ++i) {
-	 BassTreeNode btn = (BassTreeNode) pths[i].getLastPathComponent();
-	 BassName bn = btn.getBassName();
-	 if (bn != null) tree_entries.add(bn);
+         BassTreeNode btn = (BassTreeNode) pths[i].getLastPathComponent();
+         BassName bn = btn.getBassName();
+         if (bn != null) tree_entries.add(bn);
        }
     }
 
-   boolean isValid()				{ return tree_entries.size() > 0; }
+   boolean isValid()                            { return tree_entries.size() > 0; }
 
    @Override public Object getTransferData(DataFlavor df) {
       if (df == BudaRoot.getBubbleTransferFlavor()) return this;
@@ -1059,8 +1059,8 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
 
    @Override public DataFlavor [] getTransferDataFlavors() {
        return new DataFlavor [] {
-	     BudaRoot.getBubbleTransferFlavor(),
-	     BudaRoot.getBubbleGroupTransferFlavor() };
+             BudaRoot.getBubbleTransferFlavor(),
+             BudaRoot.getBubbleGroupTransferFlavor() };
      }
 
    @Override public boolean isDataFlavorSupported(DataFlavor f) {
@@ -1071,8 +1071,8 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
    @Override public BudaBubble [] createBubbles() {
       List<BudaBubble> rlst = new ArrayList<>();
       for (BassName ent : tree_entries) {
-	 BudaBubble bbl = ent.createBubble();
-	 if (bbl != null) rlst.add(ent.createBubble());
+         BudaBubble bbl = ent.createBubble();
+         if (bbl != null) rlst.add(ent.createBubble());
        }
       BudaBubble [] rslt = new BudaBubble[rlst.size()];
       rslt = rlst.toArray(rslt);
@@ -1083,26 +1083,26 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BassSearchBox.this);
       if (bba == null) return null;
       for (BassName ent : tree_entries) {
-	 BudaBubbleGroup grp = ent.createBubbleGroup(bba);
-	 if (grp != null) return grp;
+         BudaBubbleGroup grp = ent.createBubbleGroup(bba);
+         if (grp != null) return grp;
        }
       return null;
     }
 
-}	// end of inner class TransferBubble
+}       // end of inner class TransferBubble
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse checker for double clicks 					*/
-/*										*/
+/*                                                                              */
+/*      Mouse checker for double clicks                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class Mouser extends MouseAdapter {
 
-   private TreePath	pressed_path;
+   private TreePath     pressed_path;
 
    Mouser() {
       pressed_path = null;
@@ -1113,9 +1113,9 @@ private class Mouser extends MouseAdapter {
       TreePath spath = active_options.getPathForLocation(e.getX(),e.getY());
       pressed_path = spath;
       if (srow != -1) {
-	 if (e.getClickCount() == 1) {
-	    active_options.setSelectionRow(srow);
-	  }
+         if (e.getClickCount() == 1) {
+            active_options.setSelectionRow(srow);
+          }
       }
    }
 
@@ -1140,15 +1140,15 @@ private class Mouser extends MouseAdapter {
       input_field.grabFocus();
    }
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Hover interaction over this tree :: added by Hsu-Sheng Ko		*/
-/*										*/
+/*                                                                              */
+/*      Hover interaction over this tree :: added by Hsu-Sheng Ko               */
+/*                                                                              */
 /********************************************************************************/
 
 private class Hoverer extends BudaHover {
@@ -1183,10 +1183,10 @@ private class Hoverer extends BudaHover {
             for (int i = 1; i < tp.getPathCount(); ++i) {
                Object o1 = tp.getPathComponent(i);
                if (o1 instanceof BassTreeNode) {
-        	  BassTreeNode btn = (BassTreeNode) o1;
-        	  if (fn == null) fn = btn.getLocalName();
-        	  else fn = fn + "." + btn.getLocalName();
-        	}
+                  BassTreeNode btn = (BassTreeNode) o1;
+                  if (fn == null) fn = btn.getLocalName();
+                  else fn = fn + "." + btn.getLocalName();
+                }
              }
             if (fn != null) {
                int idx = fn.indexOf("#");
@@ -1230,14 +1230,14 @@ private class Hoverer extends BudaHover {
        }
     }
 
-}	// end of inner class Hoverer
+}       // end of inner class Hoverer
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Cell renderer for search box						*/
-/*										*/
+/*                                                                              */
+/*      Cell renderer for search box                                            */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -1254,12 +1254,12 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
 
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-        						      Object value,
-        						      boolean sel,
-        						      boolean expanded,
-        						      boolean leaf,
-        						      int row,
-        						      boolean hasfocus) {
+                                                              Object value,
+                                                              boolean sel,
+                                                              boolean expanded,
+                                                              boolean leaf,
+                                                              int row,
+                                                              boolean hasfocus) {
       JLabel label = this;
       BassTreeBase btb = (BassTreeBase) value;
    
@@ -1327,15 +1327,15 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
       return label;
     }
 
-}	// end of inner class SearchBoxCellRenderer
+}       // end of inner class SearchBoxCellRenderer
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class for composting icons						*/
-/*										*/
+/*                                                                              */
+/*      Class for composting icons                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OverlayIcon implements Icon {
@@ -1345,7 +1345,7 @@ private static class OverlayIcon implements Icon {
    OverlayIcon(Icon... base) {
       icon_set = new ArrayList<Icon>();
       for (Icon ic : base) {
-	 icon_set.add(ic);
+         icon_set.add(ic);
        }
     }
 
@@ -1361,20 +1361,20 @@ private static class OverlayIcon implements Icon {
 
    @Override public void paintIcon(Component c,Graphics g,int x,int y) {
       for (Icon ic : icon_set) {
-	 ic.paintIcon(c,g,x,y);
+         ic.paintIcon(c,g,x,y);
        }
     }
 
-}	// end of inner class OverlayIcon
+}       // end of inner class OverlayIcon
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree with a gradient background 					*/
-/*										*/
+/*                                                                              */
+/*      Tree with a gradient background                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class GradientTree extends JTree {
@@ -1399,16 +1399,16 @@ private static class GradientTree extends JTree {
        g2.fill(r);
 
        try {
-	  super.paintComponent(g);
-	}
+          super.paintComponent(g);
+        }
        catch (Throwable t) {
-	  // update might have occurred while trying to paint
-	  try {
-	     Thread.sleep(500);
-	   }
-	  catch (InterruptedException e) { }
-	  super.paintComponent(g);
-	}
+          // update might have occurred while trying to paint
+          try {
+             Thread.sleep(500);
+           }
+          catch (InterruptedException e) { }
+          super.paintComponent(g);
+        }
     }
 
    @Override public void expandRow(int row) {
@@ -1428,15 +1428,15 @@ private static class GradientTree extends JTree {
       return psz;
     }
 
-}	// end of inner class GradientTree
+}       // end of inner class GradientTree
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to track expanded nodes 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to track expanded nodes                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void useExpandedNodes()
@@ -1466,13 +1466,13 @@ private void useLocalExpandedNodes()
       TreePath tp0 = new TreePath(tp.getPathComponent(0));
       boolean allow = true;
       for (int i = 1; allow && i < tp.getPathCount()-1; ++i) {
-	 Object o = tp.getPathComponent(i);
-	 tp0 = tp0.pathByAddingChild(o);
-	 if (active_options.isCollapsed(tp0)) {
-	    String what = getPathName(tp0);
-	    if (!expand.contains(what))
-	       allow = false;
-	 }
+         Object o = tp.getPathComponent(i);
+         tp0 = tp0.pathByAddingChild(o);
+         if (active_options.isCollapsed(tp0)) {
+            String what = getPathName(tp0);
+            if (!expand.contains(what))
+               allow = false;
+         }
       }
       if (allow && tp != null) active_options.expandPath(tp);
     }
@@ -1522,18 +1522,18 @@ private String getPathName(TreePath tp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle tree model changes						*/
-/*										*/
+/*                                                                              */
+/*      Handle tree model changes                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private final class UpdateHandler implements TreeModelListener {
 
-   @Override public void treeNodesChanged(TreeModelEvent e)		{ }
+   @Override public void treeNodesChanged(TreeModelEvent e)             { }
 
-   @Override public void treeNodesInserted(TreeModelEvent e)		{ }
+   @Override public void treeNodesInserted(TreeModelEvent e)            { }
 
-   @Override public void treeNodesRemoved(TreeModelEvent e)		{ }
+   @Override public void treeNodesRemoved(TreeModelEvent e)             { }
 
    @Override public void treeStructureChanged(TreeModelEvent e) {
       int mxl = BASS_PROPERTIES.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
@@ -1541,11 +1541,11 @@ private final class UpdateHandler implements TreeModelListener {
       else useLocalExpandedNodes();
     }
 
-}	// end of inner class UpdateHandler
+}       // end of inner class UpdateHandler
 
 
 
-}	// end of class BassSearchBox
+}       // end of class BassSearchBox
 
 
 

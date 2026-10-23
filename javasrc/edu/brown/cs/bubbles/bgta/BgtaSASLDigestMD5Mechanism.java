@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaSASLDigestMD5Mechanism.java 				*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaSASLDigestMD5Mechanism.java                                 */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Sumner Warren		      */
+/*      Copyright 2011 Brown University -- Sumner Warren                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -43,9 +43,9 @@ public class BgtaSASLDigestMD5Mechanism extends SASLMechanism {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
@@ -56,9 +56,9 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
 
 
 /********************************************************************************/
-/*										*/
-/*	SASL Mechanism implementation						*/
-/*										*/
+/*                                                                              */
+/*      SASL Mechanism implementation                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void authenticate() throws IOException, XMPPException
@@ -73,7 +73,7 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
 
 
 @Override public void authenticate(String username,String host,String pwd) throws IOException,
-	 XMPPException
+         XMPPException
 {
    this.authenticationId = username;
    this.password = pwd;
@@ -88,7 +88,7 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
 
 
 @Override public void authenticate(String username,String host,CallbackHandler cbh)
-	throws IOException, XMPPException
+        throws IOException, XMPPException
 {
    String[] mechanisms = { getName() };
    Map<String, String> props = new HashMap<String, String>();
@@ -123,7 +123,7 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
    if (response != null) {
       authenticationText = Base64.encodeBytes(response, Base64.DONT_BREAK_LINES);
       if (authenticationText.equals("")) {
-	 authenticationText = "=";
+         authenticationText = "=";
        }
     }
 
@@ -137,7 +137,7 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
 
 
 
-}	// end of class BgtaSASLDigestMD5Mechansim
+}       // end of class BgtaSASLDigestMD5Mechansim
 
 
 

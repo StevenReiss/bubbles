@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixAdapter.java						*/
-/*										*/
-/*	Adapter to handle a set of error messages				*/
-/*										*/
+/*                                                                              */
+/*              BfixAdapter.java                                                */
+/*                                                                              */
+/*      Adapter to handle a set of error messages                               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -36,18 +36,18 @@ public abstract class BfixAdapter implements BfixConstants, BaleConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String adapter_name;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BfixAdapter(String name)
@@ -59,9 +59,9 @@ protected BfixAdapter(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract Action methods 						*/
-/*										*/
+/*                                                                              */
+/*      Abstract Action methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public void addFixers(BfixCorrector bc,BumpProblem bp,boolean explict,List<BfixFixer> rslts)
@@ -88,9 +88,9 @@ protected String getMenuAction(BfixCorrector bc,BumpProblem bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods								*/
-/*										*/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public static boolean checkProblemPresent(BumpProblem prob,Collection<BumpProblem> bpl)
@@ -211,9 +211,9 @@ public static boolean checkSafePosition(BfixCorrector bc,int start,int end)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -223,7 +223,7 @@ public static boolean checkSafePosition(BfixCorrector bc,int start,int end)
 
 
 
-}	// end of class BfixAdapter
+}       // end of class BfixAdapter
 
 /* end of BfixAdapter.java */
 

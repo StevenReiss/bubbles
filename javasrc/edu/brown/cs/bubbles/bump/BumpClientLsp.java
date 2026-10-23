@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpClientLsp.java						*/
-/*										*/
-/*	Run LSPBASE for various languages					*/
-/*										*/
+/*                                                                              */
+/*              BumpClientLsp.java                                              */
+/*                                                                              */
+/*      Run LSPBASE for various languages                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,13 +42,13 @@ class BumpClientLsp extends BumpClient
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		for_language;
-private boolean 	lspbase_starting;
+private String          for_language;
+private boolean         lspbase_starting;
 
 private static String [] lspbase_libs = new String [] {
    "lspbase.jar",
@@ -60,9 +60,9 @@ private static String [] lspbase_libs = new String [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpClientLsp(String lang)
@@ -71,30 +71,30 @@ BumpClientLsp(String lang)
    lspbase_starting = false;
 
    mint_control.register("<LSPBASE SOURCE='LSPBASE' TYPE='_VAR_0' />",
-	 new IDEHandler());
+         new IDEHandler());
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	LspBase interaction methods						*/
-/*										*/
+/*                                                                              */
+/*      LspBase interaction methods                                             */
+/*                                                                              */
 /********************************************************************************/
 
 
 /**
- *	Return the name of the back end.
+ *      Return the name of the back end.
  **/
 
-@Override public String getName()		{ return "DartLsp"; }
-@Override public String getServerName() 	{ return "LSPBASE"; }
+@Override public String getName()               { return "DartLsp"; }
+@Override public String getServerName()         { return "LSPBASE"; }
 
 
 
 
 /**
- *	Start the back end running.  This routine will return immediately.  If the user
- *	actually needs to use the backend, they should use waitForIDE.
+ *      Start the back end running.  This routine will return immediately.  If the user
+ *      actually needs to use the backend, they should use waitForIDE.
  **/
 
 @Override void localStartIDE()
@@ -116,8 +116,8 @@ private void ensureRunning()
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
       BoardLog.logE("BUMP","Client mode with no LspBase/" + for_language + " found");
       JOptionPane.showMessageDialog(null,
-	    "Server must be running and accessible before client can be run",
-	    "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+            "Server must be running and accessible before client can be run",
+            "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
     }
 
@@ -132,15 +132,15 @@ private void ensureRunning()
    String cp = null;
    for (String s : lspbase_libs) {
       if (s.equals("eclipsejar")) {
-	 cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
-	 continue;
+         cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
+         continue;
        }
       String lib = BoardSetup.getSetup().getLibraryPath(s);
       if (lib == null) continue;
       File f = new File(lib);
       if (f.exists()) {
-	 if (cp == null) cp = lib;
-	 else cp += File.pathSeparator + lib;
+         if (cp == null) cp = lib;
+         else cp += File.pathSeparator + lib;
        }
     }
    argl.add("-cp");
@@ -176,35 +176,35 @@ private void ensureRunning()
    try {
       IvyExec ex = null;
       if (System.getProperty("LspBase.DEBUG") != null) {
-	 runLocally(cls,argl);
+         runLocally(cls,argl);
        }
       else {
-	 ex = new IvyExec(argl,null,IvyExec.ERROR_OUTPUT);
+         ex = new IvyExec(argl,null,IvyExec.ERROR_OUTPUT);
        }
       boolean eok = false;
       for (int i = 0; i < 200; ++i) {
-	 synchronized (this) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (tryPing()) {
-	    BoardLog.logI("BUMP","LspBase/" + for_language + " started successfully");
-	    eok = true;
-	    break;
-	  }
-	 if (ex != null && !ex.isRunning()) {
-	    BoardLog.logE("BUMP","Problem starting javascript back end");
-	    JOptionPane.showMessageDialog(null,
-		  "LspBase could not be started.",
-		  "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	    System.exit(1);
-	  }
+         synchronized (this) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
+         if (tryPing()) {
+            BoardLog.logI("BUMP","LspBase/" + for_language + " started successfully");
+            eok = true;
+            break;
+          }
+         if (ex != null && !ex.isRunning()) {
+            BoardLog.logE("BUMP","Problem starting javascript back end");
+            JOptionPane.showMessageDialog(null,
+                  "LspBase could not be started.",
+                  "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+          }
        }
       if (!eok) {
-	 BoardLog.logE("BUMP","Lspbase/" + for_language + " doesn't seem to start");
-	 System.exit(1);
+         BoardLog.logE("BUMP","Lspbase/" + for_language + " doesn't seem to start");
+         System.exit(1);
        }
     }
    catch (IOException e) {
@@ -236,34 +236,34 @@ private static class LspbaseThread extends Thread {
       boolean fnd = false;
       List<String> newargs = new ArrayList<>();
       for (String s : arg_list) {
-	 if (s.equals(main_class)) fnd = true;
-	 else if (fnd) {
-	    newargs.add(s);
-	  }
-	 else if (s.startsWith("-D")) {
-	    String a = s.substring(2);
-	    int idx = a.indexOf("=");
-	    String var = a.substring(0,idx);
-	    String val = a.substring(idx+1).trim();
-	    System.setProperty(var,val);
-	  }
+         if (s.equals(main_class)) fnd = true;
+         else if (fnd) {
+            newargs.add(s);
+          }
+         else if (s.startsWith("-D")) {
+            String a = s.substring(2);
+            int idx = a.indexOf("=");
+            String var = a.substring(0,idx);
+            String val = a.substring(idx+1).trim();
+            System.setProperty(var,val);
+          }
        }
       String [] argarr = newargs.toArray(new String[newargs.size()]);
       try {
-	 Class<?> start = Class.forName(main_class);
-	 Method m = start.getMethod("main",argarr.getClass());
-	 m.invoke(null,(Object) argarr);
+         Class<?> start = Class.forName(main_class);
+         Method m = start.getMethod("main",argarr.getClass());
+         m.invoke(null,(Object) argarr);
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUMP","Problem starting lspbase locally",t);
+         BoardLog.logE("BUMP","Problem starting lspbase locally",t);
        }
     }
 
-}	// end of inner class LspBaseThread
+}       // end of inner class LspBaseThread
 
 
 
-}	// end of class BumpClientLsp
+}       // end of class BumpClientLsp
 
 
 

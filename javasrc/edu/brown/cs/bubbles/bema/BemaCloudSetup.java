@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BemaCloudSetup.java						*/
-/*										*/
-/*	Handle setting up cloud bubbles 					*/
-/*										*/
+/*                                                                              */
+/*              BemaCloudSetup.java                                             */
+/*                                                                              */
+/*      Handle setting up cloud bubbles                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -55,20 +55,20 @@ class BemaCloudSetup implements BemaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BoardSetup	board_setup;
-private ServerMonitor	server_monitor;
+private BoardSetup      board_setup;
+private ServerMonitor   server_monitor;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BemaCloudSetup(BoardSetup bs)
@@ -79,9 +79,9 @@ BemaCloudSetup(BoardSetup bs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 boolean doSetup()
@@ -121,9 +121,9 @@ void stopServer()
 
 
 /********************************************************************************/
-/*										*/
-/*	Web relay checking							*/
-/*										*/
+/*                                                                              */
+/*      Web relay checking                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean checkWebRelay(String id)
@@ -153,9 +153,9 @@ private boolean checkWebRelay(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	User dialog								*/
-/*										*/
+/*                                                                              */
+/*      User dialog                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private class CloudDialog implements ActionListener, CaretListener, UndoableEditListener {
@@ -237,8 +237,8 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
             try {
                String s = IvyFile.loadFile(f2);
                if (s != null) {
-        	  web_key.setText(s.trim());
-        	}
+                  web_key.setText(s.trim());
+                }
              }
             catch (IOException e) { }
           }
@@ -319,14 +319,14 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
        }
     }
 
-}	// end of inner class Cloud Dialog
+}       // end of inner class Cloud Dialog
 
 
 
 /********************************************************************************/
-/*										*/
-/*	ServerChecker -- code to check server					*/
-/*										*/
+/*                                                                              */
+/*      ServerChecker -- code to check server                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class ServerChecker extends Thread {
@@ -379,14 +379,14 @@ private class ServerChecker extends Thread {
       return false;
     }
 
-}	// end of inner class ServerChecker
+}       // end of inner class ServerChecker
 
 
 
 /********************************************************************************/
-/*										*/
-/*	ServerMonitor								*/
-/*										*/
+/*                                                                              */
+/*      ServerMonitor                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class ServerMonitor extends Thread {
@@ -404,44 +404,44 @@ private class ServerMonitor extends Thread {
 
    @Override public void run() {
       try {
-	 server_process = new IvyExec(server_command,IvyExec.READ_OUTPUT);
-	 InputStream ins = server_process.getInputStream();
-	 try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
-	    for ( ; ; ) {
-	       String ln = br.readLine();
-	       if (ln == null) break;
-	       synchronized (this) {
-		  if (server_ready == null) {
-		     if (ln.contains(SERVER_READY_STRING)) {
-			server_ready = true;
-			notifyAll();
-			return;
-		      }
-		   }
-		}
-	       if (!server_process.isRunning()) break;
-	     }
-	    server_process.destroy();
-	  }
+         server_process = new IvyExec(server_command,IvyExec.READ_OUTPUT);
+         InputStream ins = server_process.getInputStream();
+         try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
+            for ( ; ; ) {
+               String ln = br.readLine();
+               if (ln == null) break;
+               synchronized (this) {
+                  if (server_ready == null) {
+                     if (ln.contains(SERVER_READY_STRING)) {
+                        server_ready = true;
+                        notifyAll();
+                        return;
+                      }
+                   }
+                }
+               if (!server_process.isRunning()) break;
+             }
+            server_process.destroy();
+          }
        }
       catch (IOException e) {
-	 if (server_process != null) server_process.destroy();
+         if (server_process != null) server_process.destroy();
        }
 
       synchronized (this) {
-	 server_ready = false;
-	 notifyAll();
+         server_ready = false;
+         notifyAll();
        }
    }
 
    boolean waitForReady() {
       synchronized (this) {
-	 while (server_ready == null) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
+         while (server_ready == null) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
        }
       return server_ready;
     }
@@ -451,7 +451,7 @@ private class ServerMonitor extends Thread {
 }
 
 
-}	// end of class BemaCloudSetup
+}       // end of class BemaCloudSetup
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardAttributes.java						*/
-/*										*/
-/*	Bubbles attribute and property management attribute handling		*/
-/*										*/
+/*                                                                              */
+/*              BoardAttributes.java                                            */
+/*                                                                              */
+/*      Bubbles attribute and property management attribute handling            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,21 +42,21 @@ import java.util.StringTokenizer;
 
 
 /**
- *	This class provides a means for storing an AttributeSet as a property
- *	set and hence in a property file managed by BoardProperties.  It provides
- *	the facilities needed to convert the various attributes from strings in
- *	the properties files to objects of the correct types.  This includes a
- *	full range of colors (using the X11 color names, enumerations, numbers,
- *	TabSets, and alignments.
+ *      This class provides a means for storing an AttributeSet as a property
+ *      set and hence in a property file managed by BoardProperties.  It provides
+ *      the facilities needed to convert the various attributes from strings in
+ *      the properties files to objects of the correct types.  This includes a
+ *      full range of colors (using the X11 color names, enumerations, numbers,
+ *      TabSets, and alignments.
  *
- *	It actually maintains, for each BoardAttributes object, a set of
- *	different AttributeSets indexed by String id.  This allows the set to
- *	be used to describe a variety of attributes (e.g. the properties of each
- *	type of element for text display).
+ *      It actually maintains, for each BoardAttributes object, a set of
+ *      different AttributeSets indexed by String id.  This allows the set to
+ *      be used to describe a variety of attributes (e.g. the properties of each
+ *      type of element for text display).
  *
- *	The AttributeSet objects returned from here are mutable.  Hence users
- *	should request a separate copy (by creating a new BoardAttributes object)
- *	if this is going to be a problem.
+ *      The AttributeSet objects returned from here are mutable.  Hence users
+ *      should request a separate copy (by creating a new BoardAttributes object)
+ *      if this is going to be a problem.
  *
  **/
 
@@ -65,9 +65,9 @@ public class BoardAttributes implements BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BoardProperties property_set;
@@ -81,13 +81,13 @@ private static Map<String,Integer> align_map;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new attribute meta set from the property file identified by 'id'.
+ *      Create a new attribute meta set from the property file identified by 'id'.
  **/
 
 public BoardAttributes(String id)
@@ -102,13 +102,13 @@ public BoardAttributes(String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the actual attribute set for a given type.
+ *      Return the actual attribute set for a given type.
  **/
 
 public AttributeSet getAttributes(String id)
@@ -130,9 +130,9 @@ public void reload()
 
 
 /********************************************************************************/
-/*										*/
-/*	Loading methods 							*/
-/*										*/
+/*                                                                              */
+/*      Loading methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadAttributes()
@@ -140,9 +140,9 @@ private void loadAttributes()
    for (String key : property_set.stringPropertyNames()) {
       int idx = key.indexOf(".");
       if (idx >= 0) {
-	 String id = key.substring(0,idx);
-	 // if (id.equals(base_id)) continue;
-	 setupSet(id);
+         String id = key.substring(0,idx);
+         // if (id.equals(base_id)) continue;
+         setupSet(id);
        }
     }
 }
@@ -156,8 +156,8 @@ private AttributeSet setupSet(String id)
    AttributeSet as = attr_sets.get(lid);
    if (as != null) {
       if (as == SimpleAttributeSet.EMPTY) {
-	 BoardLog.logE("BOARD","Attribute sets are cyclic");
-	 System.exit(1);
+         BoardLog.logE("BOARD","Attribute sets are cyclic");
+         System.exit(1);
        }
       return as;
     }
@@ -175,18 +175,18 @@ private AttributeSet setupSet(String id)
    
    for (String pnm : property_set.stringPropertyNames()) {
       if (pnm.toLowerCase().startsWith(lid + ".")) {
-	 int idx = pnm.indexOf(".");
-	 String anm = pnm.substring(idx+1).toLowerCase();
-	 if (anm.equals(BOARD_ATTR_PARENT)) continue;
+         int idx = pnm.indexOf(".");
+         String anm = pnm.substring(idx+1).toLowerCase();
+         if (anm.equals(BOARD_ATTR_PARENT)) continue;
          if (anm.contains(".")) continue;
-	 Object akey = key_map.get(anm);
-	 if (akey == null) akey = anm;
-	 String v = property_set.getProperty(pnm);
-	 Object typ = type_map.get(anm);
-	 Object aval = v;
-	 if (typ != null) aval = convertType(typ,v,pnm);
+         Object akey = key_map.get(anm);
+         if (akey == null) akey = anm;
+         String v = property_set.getProperty(pnm);
+         Object typ = type_map.get(anm);
+         Object aval = v;
+         if (typ != null) aval = convertType(typ,v,pnm);
 
-	 sas.addAttribute(akey,aval);
+         sas.addAttribute(akey,aval);
        }
     }
 
@@ -204,34 +204,34 @@ private Object convertType(Object typ,String v,String pnm)
     }
    else if (typ == Integer.class || typ.equals("Integer")) {
       try {
-	 return Integer.valueOf(v);
+         return Integer.valueOf(v);
        }
       catch (NumberFormatException e) {
-	 BoardLog.logE("BOARD","bad integer attribute value: " + e);
+         BoardLog.logE("BOARD","bad integer attribute value: " + e);
        }
       return null;
     }
    else if (typ == Float.class || typ.equals("Float")) {
       try {
-	 return Float.valueOf(v);
+         return Float.valueOf(v);
        }
       catch (NumberFormatException e) {
-	 BoardLog.logE("BOARD","bad floating attribute value: " + e);
+         BoardLog.logE("BOARD","bad floating attribute value: " + e);
        }
       return null;
     }
    else if (typ == Color.class || typ.equals("Color")) {
       Color c = null;
       if (v.equals("^")) {
-	 v = base_id + ".attr." + pnm.toLowerCase();
-	 c = BoardColors.getColor(v);
+         v = base_id + ".attr." + pnm.toLowerCase();
+         c = BoardColors.getColor(v);
        }
       else if (v.startsWith("^")) {
-	 v = v.substring(1);
-	 c = BoardColors.getColor(v);
+         v = v.substring(1);
+         c = BoardColors.getColor(v);
        }
       else {
-	 c = SwingColorSet.getColorByName(v);
+         c = SwingColorSet.getColorByName(v);
        }
       return c;
     }
@@ -239,25 +239,25 @@ private Object convertType(Object typ,String v,String pnm)
       Class<?> c = (Class<?>) typ;
       Object [] ecs = c.getEnumConstants();
       for (int i = 0; i < ecs.length; ++i) {
-	 if (ecs[i].toString().toLowerCase().equals(v.toLowerCase())) return ecs[i];
+         if (ecs[i].toString().toLowerCase().equals(v.toLowerCase())) return ecs[i];
        }
       return null;
     }
    else if (typ.equals("TABSET")) {
       List<TabStop> stops = new ArrayList<TabStop>();
       try {
-	 StringTokenizer tok = new StringTokenizer(v,",; ");
-	 while (tok.hasMoreTokens()) {
-	    int loc = Integer.parseInt(tok.nextToken());
-	    // TODO: need to adjust for font size
-	    stops.add(new TabStop(loc));
-	  }
-	 TabStop [] stopa = new TabStop[stops.size()];
-	 stopa = stops.toArray(stopa);
-	 return new TabSet(stopa);
+         StringTokenizer tok = new StringTokenizer(v,",; ");
+         while (tok.hasMoreTokens()) {
+            int loc = Integer.parseInt(tok.nextToken());
+            // TODO: need to adjust for font size
+            stops.add(new TabStop(loc));
+          }
+         TabStop [] stopa = new TabStop[stops.size()];
+         stopa = stops.toArray(stopa);
+         return new TabSet(stopa);
        }
       catch (NumberFormatException e) {
-	 BoardLog.logE("BOARD","bad tab set attribute value: " + v);
+         BoardLog.logE("BOARD","bad tab set attribute value: " + v);
        }
       return null;
     }
@@ -274,15 +274,15 @@ private Object convertType(Object typ,String v,String pnm)
 
 
 /********************************************************************************/
-/*										*/
-/*	Routines to save updated attribute sets 				*/
-/*										*/
+/*                                                                              */
+/*      Routines to save updated attribute sets                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This saves the suite of attribute sets back in their original file.
+ *      This saves the suite of attribute sets back in their original file.
  *
- *	NOTE: NOT YET IMPLEMENTED
+ *      NOTE: NOT YET IMPLEMENTED
  **/
 
 public void save()
@@ -292,9 +292,9 @@ public void save()
 
 
 /********************************************************************************/
-/*										*/
-/*	Static definitions for attributes and their properies			*/
-/*										*/
+/*                                                                              */
+/*      Static definitions for attributes and their properies                   */
+/*                                                                              */
 /********************************************************************************/
 
 static {
@@ -356,7 +356,7 @@ static {
 
 
 
-}	// end of class BoardAttributes
+}       // end of class BoardAttributes
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoInnerClassDialog.java					*/
-/*										*/
-/*	BUbbles Environment New Objects creator new method dialog		*/
-/*										*/
+/*                                                                              */
+/*              BuenoInnerClassDialog.java                                      */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator new method dialog               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -41,14 +41,14 @@ public class BuenoInnerClassDialog extends BuenoAbstractDialog implements BuenoC
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BuenoInnerClassDialog(BudaBubble source,Point locale,BuenoType typ,
-			    BuenoProperties known,BuenoLocation insert,
-			    BuenoBubbleCreator newer)
+                            BuenoProperties known,BuenoLocation insert,
+                            BuenoBubbleCreator newer)
 {
    super(source,locale,known,insert,newer,typ);
 }
@@ -56,9 +56,9 @@ public BuenoInnerClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Class dialog panel setup						*/
-/*										*/
+/*                                                                              */
+/*      Class dialog panel setup                                                */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void setupPanel(SwingGridPanel pnl)
@@ -86,9 +86,9 @@ public BuenoInnerClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void doCreate(BudaBubbleArea bba,Point p)
@@ -119,9 +119,9 @@ public BuenoInnerClassDialog(BudaBubble source,Point locale,BuenoType typ,
 
 
 /********************************************************************************/
-/*										*/
-/*	Get the full name of the new method					*/
-/*										*/
+/*                                                                              */
+/*      Get the full name of the new method                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private String getClassName()
@@ -138,7 +138,7 @@ private String getClassName()
 
 
 
-}	// end of class BuenoInnerClassDialog
+}       // end of class BuenoInnerClassDialog
 
 
 

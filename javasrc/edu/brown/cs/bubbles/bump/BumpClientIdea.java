@@ -81,9 +81,9 @@ BumpClientIdea()
 
 
 
-@Override public String getName()		{ return "Idea"; }
+@Override public String getName()               { return "Idea"; }
 
-@Override public String getServerName() 	{ return "BUBJET"; }
+@Override public String getServerName()         { return "BUBJET"; }
 
 
 
@@ -124,11 +124,11 @@ private void ensureRunning()
     }
    if (ef1 != null && ef1.isDirectory()) {
       for (String s : MAC_BINARY) {
-	 File ef2 = new File(ef1,s);
-	 if (ef2.exists() && ef2.canExecute()) {
-	    ef1 = ef2;
-	    break;
-	  }
+         File ef2 = new File(ef1,s);
+         if (ef2.exists() && ef2.canExecute()) {
+            ef1 = ef2;
+            break;
+          }
        }
     }
    if (ef1 == null || !ef1.exists() || !ef1.canExecute()) ef1 = new File(ef,"idea");
@@ -163,30 +163,30 @@ private void ensureRunning()
       IvyExec ex = new IvyExec(cmd,env,IvyExec.ERROR_OUTPUT);
       boolean eok = false;
       for (int i = 0; i < 700; ++i) {
-	 synchronized (this) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (tryPing()) {
-	    BoardLog.logI("BUMP","IntelliJ idea started successfully");
-	    eok = true;
-	    break;
-	  }
-	 if (!ex.isRunning()) {
-	    BoardLog.logE("BUMP","Problem starting IntelliJ idea");
-	    if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
-	       JOptionPane.showMessageDialog(null,
-		     "IntelliJ IDEA could not be started. Check the idea log",
-		     "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	     }
-	    System.exit(1);
-	  }
+         synchronized (this) {
+            try {
+               wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }
+         if (tryPing()) {
+            BoardLog.logI("BUMP","IntelliJ idea started successfully");
+            eok = true;
+            break;
+          }
+         if (!ex.isRunning()) {
+            BoardLog.logE("BUMP","Problem starting IntelliJ idea");
+            if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
+               JOptionPane.showMessageDialog(null,
+                     "IntelliJ IDEA could not be started. Check the idea log",
+                     "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+             }
+            System.exit(1);
+          }
        }
       if (!eok) {
-	 BoardLog.logE("BUMP","IntelliJ idea doesn't seem to start");
-	 System.exit(1);
+         BoardLog.logE("BUMP","IntelliJ idea doesn't seem to start");
+         System.exit(1);
        }
     }
    catch (IOException e) {

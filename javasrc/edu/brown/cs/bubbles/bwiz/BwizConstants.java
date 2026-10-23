@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizConstants.java						*/
-/*										*/
-/*	Constants for bubble wizards package					*/
-/*										*/
+/*                                                                              */
+/*              BwizConstants.java                                              */
+/*                                                                              */
+/*      Constants for bubble wizards package                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -37,37 +37,37 @@ public interface BwizConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface for accessibility						*/
-/*										*/
+/*                                                                              */
+/*      Interface for accessibility                                             */
+/*                                                                              */
 /********************************************************************************/
 
 interface IAccessibilityUpdatable {
 
    void updateAccessibility(ActionEvent e);
 
-}	// end of inner interface IAccessibilityUpdatable
+}       // end of inner interface IAccessibilityUpdatable
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface for signature update						*/
-/*										*/
+/*                                                                              */
+/*      Interface for signature update                                          */
+/*                                                                              */
 /********************************************************************************/
 
 interface ISignatureUpdate {
 
     void updateSignature();
 
-}	// end of inner interface ISignatureUpdate
+}       // end of inner interface ISignatureUpdate
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Interface for input string verification 				*/
-/*										*/
+/*                                                                              */
+/*      Interface for input string verification                                 */
+/*                                                                              */
 /********************************************************************************/
 
 interface IVerifier {
@@ -76,13 +76,13 @@ interface IVerifier {
     List<String> results(String test);
 
 
-}	// end of inner interface IVerifier
+}       // end of inner interface IVerifier
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener interfaces							*/
-/*										*/
+/*                                                                              */
+/*      Listener interfaces                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 interface ItemChangeListener extends EventListener {
@@ -90,7 +90,7 @@ interface ItemChangeListener extends EventListener {
    void itemAdded(String item);
    void itemRemoved(String item);
 
-}	// end of inner interface ItemChangeListener
+}       // end of inner interface ItemChangeListener
 
 
 
@@ -100,15 +100,15 @@ interface VerificationListener extends EventListener
 
     void verificationEvent(Object sender, boolean success);
 
-}	// end of inner interface VerificationListener
+}       // end of inner interface VerificationListener
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Accessibility information						*/
-/*										*/
+/*                                                                              */
+/*      Accessibility information                                               */
+/*                                                                              */
 /********************************************************************************/
 
 enum Accessibility
@@ -144,15 +144,15 @@ enum Accessibility
       throw new IllegalArgumentException("No constant with text " + text + " found");
     }
 
-}	// end of enum Accessibility
+}       // end of enum Accessibility
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Create Type information 						*/
-/*										*/
+/*                                                                              */
+/*      Create Type information                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 enum CreateType {
@@ -178,23 +178,23 @@ enum CreateType {
 
    public static CreateType fromString(String text) {
       if (text != null) {
-	 for (CreateType b : CreateType.values()) {
-	    if (text.equalsIgnoreCase(b.type_label))
-	       return b;
-	  }
+         for (CreateType b : CreateType.values()) {
+            if (text.equalsIgnoreCase(b.type_label))
+               return b;
+          }
        }
 
       throw new IllegalArgumentException("No constant with text " + text + " found");
     }
-}	// end of enum CreateType
+}       // end of enum CreateType
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Font definitions							*/
-/*										*/
+/*                                                                              */
+/*      Font definitions                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 Font BWIZ_FONT_SIZE_MAIN = new Font("Sans Serif", Font.BOLD,16);
@@ -205,9 +205,9 @@ Font BWIZ_FONT_OPTION = BWIZ_FONT_SIZE_MAIN.deriveFont((float) 12);
 
 
 /********************************************************************************/
-/*										*/
-/*	String text definitions						*/
-/*										*/
+/*                                                                              */
+/*      String text definitions                                         */
+/*                                                                              */
 /********************************************************************************/
 
 String CREATE_WORKSPACE_TEXT = "Create New Workspace";
@@ -223,9 +223,9 @@ String CREATE_ENUM_TEXT = "New Enum";
 
 
 /********************************************************************************/
-/*										*/
-/*	Overhead Panel definitions						*/
-/*										*/
+/*                                                                              */
+/*      Overhead Panel definitions                                              */
+/*                                                                              */
 /********************************************************************************/
 
 String PANEL_OVERVIEW_COLOR_PROP = "Bwiz.PanelOverviewColor";
@@ -233,9 +233,9 @@ String PANEL_OVERVIEW_COLOR_PROP = "Bwiz.PanelOverviewColor";
 
 
 /********************************************************************************/
-/*										*/
-/*	Accessibility flags							*/
-/*										*/
+/*                                                                              */
+/*      Accessibility flags                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 int SHOW_PRIVATE = 0x1;
@@ -249,7 +249,7 @@ int SHOW_INTERFACE = 0x40;
 
 
 
-}	// end of interface BwizConstants
+}       // end of interface BwizConstants
 
 
 

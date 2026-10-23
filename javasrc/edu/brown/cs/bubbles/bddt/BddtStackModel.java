@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtStackModel.java						*/
-/*										*/
-/*	Bubbles Environment debugger tool tree model for stack/frame/values	*/
-/*										*/
+/*                                                                              */
+/*              BddtStackModel.java                                             */
+/*                                                                              */
+/*      Bubbles Environment debugger tool tree model for stack/frame/values     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,24 +56,24 @@ class BddtStackModel implements SwingTreeTable.TreeTableModel, BddtConstants, Bu
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private SwingEventListenerList<TreeModelListener> model_listeners;
-private AbstractNode		root_node;
-private RunEventHandler 	event_handler;
-private BddtStackModel	parent_model;
-private List<BddtStackModel>	sub_models;
-private Lock			model_lock;
+private AbstractNode            root_node;
+private RunEventHandler         event_handler;
+private BddtStackModel  parent_model;
+private List<BddtStackModel>    sub_models;
+private Lock                    model_lock;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtStackModel(BddtStackModel parent,ValueTreeNode root)
@@ -162,23 +162,23 @@ void dispose()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-BumpThread getThread()		{ return root_node.getThread(); }
-BumpStackFrame getFrame()		{ return root_node.getFrame(); }
+BumpThread getThread()          { return root_node.getThread(); }
+BumpStackFrame getFrame()               { return root_node.getFrame(); }
 
 
-String getLabel()			{ return root_node.getLabel(); }
+String getLabel()                       { return root_node.getLabel(); }
 
-BumpRunValue getRunValue()		{ return root_node.getRunValue(); }
+BumpRunValue getRunValue()              { return root_node.getRunValue(); }
 
 
-boolean hasBeenFrozen() 		{ return root_node.isFrozen(); }
+boolean hasBeenFrozen()                 { return root_node.isFrozen(); }
 
-boolean showValueArea() 		{ return root_node.showValueArea(); }
+boolean showValueArea()                 { return root_node.showValueArea(); }
 
 
 
@@ -224,9 +224,9 @@ void unlock()
 
 
 /********************************************************************************/
-/*										*/
-/*	Listener methods							*/
-/*										*/
+/*                                                                              */
+/*      Listener methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addTreeModelListener(TreeModelListener l)
@@ -308,9 +308,9 @@ void fixRoot()
 
 
 /********************************************************************************/
-/*										*/
-/*	Freeze and update methods						*/
-/*										*/
+/*                                                                              */
+/*      Freeze and update methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupUpdate()
@@ -355,9 +355,9 @@ void updateValues()
 
    SwingUtilities.invokeLater(
       new Runnable() {
-	 @Override public void run() {
-	    noteChange(this);
-	  }
+         @Override public void run() {
+            noteChange(this);
+          }
        }
       );
 }
@@ -365,9 +365,9 @@ void updateValues()
 
 
 /********************************************************************************/
-/*										*/
-/*	Run event handler							*/
-/*										*/
+/*                                                                              */
+/*      Run event handler                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private final class RunEventHandler implements BumpRunEventHandler {
@@ -391,7 +391,7 @@ private final class RunEventHandler implements BumpRunEventHandler {
        }
     }
 
-}	// end of inner class RunEventHandler
+}       // end of inner class RunEventHandler
 
 
 
@@ -407,9 +407,9 @@ private final class ValueUpdater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	TreeModel interface							*/
-/*										*/
+/*                                                                              */
+/*      TreeModel interface                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Object getChild(Object par,int idx)
@@ -437,7 +437,7 @@ private final class ValueUpdater implements Runnable {
 
 
 
-@Override public Object getRoot()			{ return root_node; }
+@Override public Object getRoot()                       { return root_node; }
 
 
 @Override public boolean isLeaf(Object node)
@@ -457,12 +457,12 @@ private final class ValueUpdater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	TreeTableModel interface						*/
-/*										*/
+/*                                                                              */
+/*      TreeTableModel interface                                                */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public int getColumnCount()			{ return 2; }
+@Override public int getColumnCount()                   { return 2; }
 
 @Override public String getColumnName(int col)
 {
@@ -516,15 +516,15 @@ private final class ValueUpdater implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Generalized frame/value node						*/
-/*										*/
+/*                                                                              */
+/*      Generalized frame/value node                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
 
    private AbstractNode parent_node;
-   private boolean	children_known;
+   private boolean      children_known;
    private Vector<AbstractNode> child_nodes;
    private Set<AbstractNode> sorted_children;
 
@@ -536,32 +536,32 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
     }
 
    abstract String getName();
-   @Override public Object getValue()				{ return null; }
+   @Override public Object getValue()                           { return null; }
    abstract ValueSetType getType();
    abstract BumpThread getThread();
-   @Override public BumpStackFrame getFrame()			{ return null; }
-   @Override public BumpRunValue getRunValue()			{ return null; }
-   @Override public boolean showValueArea()			{ return false; }
+   @Override public BumpStackFrame getFrame()                   { return null; }
+   @Override public BumpRunValue getRunValue()                  { return null; }
+   @Override public boolean showValueArea()                     { return false; }
 
-   void fixAfterChange()					{ }
-   boolean sameNode(AbstractNode an)				{ return false; }
-   boolean matchNode(AbstractNode an)				{ return false; }
-   boolean isFrozen()						{ return false; }
+   void fixAfterChange()                                        { }
+   boolean sameNode(AbstractNode an)                            { return false; }
+   boolean matchNode(AbstractNode an)                           { return false; }
+   boolean isFrozen()                                           { return false; }
 
-   protected AbstractNode getBddtParent()			{ return parent_node; }
+   protected AbstractNode getBddtParent()                       { return parent_node; }
 
-   @Override public String getKey()				{ return getName(); }
+   @Override public String getKey()                             { return getName(); }
 
-   @Override public TreeNode getParent()			{ return parent_node; }
+   @Override public TreeNode getParent()                        { return parent_node; }
 
-   @Override public boolean isLeaf()				{ return false; }
+   @Override public boolean isLeaf()                            { return false; }
 
    @Override public Enumeration<AbstractNode> children()  {
       computeChildren();
       return child_nodes.elements();
     }
 
-   @Override public boolean getAllowsChildren() 		{ return true; }
+   @Override public boolean getAllowsChildren()                 { return true; }
 
    @Override public TreeNode getChildAt(int idx) {
       computeChildren();
@@ -571,7 +571,7 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
 
    @Override public int getChildCount() {
       if (children_known && getType() == ValueSetType.THREAD && child_nodes.isEmpty())
-	 children_known = false;
+         children_known = false;
       computeChildren();
       return child_nodes.size();
     }
@@ -584,19 +584,19 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
    private synchronized void computeChildren() {
       if (children_known) return;
       if (isLeaf() || !getAllowsChildren()) {
-	 child_nodes = new Vector<AbstractNode>();
+         child_nodes = new Vector<AbstractNode>();
        }
       else {
-	 sorted_children = new TreeSet<AbstractNode>(new ValueSorter());
-	 expandChildren();
-	 if (sorted_children == null) return;
-	 child_nodes = new Vector<>(sorted_children);
-	 sorted_children = null;
-	 children_known = true;
+         sorted_children = new TreeSet<AbstractNode>(new ValueSorter());
+         expandChildren();
+         if (sorted_children == null) return;
+         child_nodes = new Vector<>(sorted_children);
+         sorted_children = null;
+         children_known = true;
        }
     }
 
-   protected void expandChildren()					{ }
+   protected void expandChildren()                                      { }
 
    void update() {
       if (isLeaf()) return;
@@ -627,13 +627,13 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
    void freeze(int lvls) {
       if (isLeaf()) return;
       if (!children_known) {
-	 computeChildren();
-	 lvls -= 1;
+         computeChildren();
+         lvls -= 1;
        }
       if (lvls > 0) {
-	 for (AbstractNode an : child_nodes) {
-	    an.freeze(lvls);
-	  }
+         for (AbstractNode an : child_nodes) {
+            an.freeze(lvls);
+          }
        }
     }
 
@@ -647,72 +647,72 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
 
    abstract String getLabel();
 
-}	// end of inner class AbstractNode
+}       // end of inner class AbstractNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Value sorter								*/
-/*										*/
+/*                                                                              */
+/*      Value sorter                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ValueSorter implements Comparator<AbstractNode> {
 
    @Override public int compare(AbstractNode n1,AbstractNode n2) {
       if (n1.getType() != n2.getType()) {
-	 return n1.getType().ordinal() - n2.getType().ordinal();
+         return n1.getType().ordinal() - n2.getType().ordinal();
        }
       switch (n1.getType()) {
-	 default :
-	 case THREAD :
-	 case STACK :
-	    int v = n1.getName().compareTo(n2.getName());
-	    if (v != 0) return v;
-	    return n1.hashCode() - n2.hashCode();
-	 case FRAME :
-	    return n1.getFrame().getLevel() - n2.getFrame().getLevel();
-	 case VALUE :
-	    // locals first
-	    if (n1.getRunValue().isLocal() != n2.getRunValue().isLocal()) {
-	       if (n1.getRunValue().isLocal()) return -1;
-	       return 1;
-	     }
-	    String nm1 = n1.getName();
-	    String nm2 = n2.getName();
-	    int idx1 = nm1.lastIndexOf('?');
-	    int idx2 = nm2.lastIndexOf('?');
-	    if (idx1 >= 0 && idx1 == idx2 && nm2.startsWith(nm1.substring(0,idx1)) &&
-		   nm1.length() > idx1+1 && nm2.length() > idx2+1 &&
-		   nm1.charAt(idx1+1) == '[' && nm2.charAt(idx2+1) == '[') {
-	       int idx3 = nm1.indexOf("]",idx1+1);
-	       int idx4 = nm2.indexOf("]",idx2+1);
-	       try {
-		  int v1 = Integer.parseInt(nm1.substring(idx1+2,idx3));
-		  int v2 = Integer.parseInt(nm2.substring(idx2+2,idx4));
-		  if (v1 < v2) return -1;
-		  if (v1 > v2) return 1;
-		}
-	       catch (NumberFormatException e) { }
-	     }
+         default :
+         case THREAD :
+         case STACK :
+            int v = n1.getName().compareTo(n2.getName());
+            if (v != 0) return v;
+            return n1.hashCode() - n2.hashCode();
+         case FRAME :
+            return n1.getFrame().getLevel() - n2.getFrame().getLevel();
+         case VALUE :
+            // locals first
+            if (n1.getRunValue().isLocal() != n2.getRunValue().isLocal()) {
+               if (n1.getRunValue().isLocal()) return -1;
+               return 1;
+             }
+            String nm1 = n1.getName();
+            String nm2 = n2.getName();
+            int idx1 = nm1.lastIndexOf('?');
+            int idx2 = nm2.lastIndexOf('?');
+            if (idx1 >= 0 && idx1 == idx2 && nm2.startsWith(nm1.substring(0,idx1)) &&
+                   nm1.length() > idx1+1 && nm2.length() > idx2+1 &&
+                   nm1.charAt(idx1+1) == '[' && nm2.charAt(idx2+1) == '[') {
+               int idx3 = nm1.indexOf("]",idx1+1);
+               int idx4 = nm2.indexOf("]",idx2+1);
+               try {
+                  int v1 = Integer.parseInt(nm1.substring(idx1+2,idx3));
+                  int v2 = Integer.parseInt(nm2.substring(idx2+2,idx4));
+                  if (v1 < v2) return -1;
+                  if (v1 > v2) return 1;
+                }
+               catch (NumberFormatException e) { }
+             }
 
-	    // check if inherited and put last if so
-	    // put static after class variables
-	    v = nm1.compareTo(nm2);
-	    if (v != 0) return v;
-	    return n1.hashCode() - n2.hashCode();
+            // check if inherited and put last if so
+            // put static after class variables
+            v = nm1.compareTo(nm2);
+            if (v != 0) return v;
+            return n1.hashCode() - n2.hashCode();
        }
     }
 
-}	// end of inner class ValueSorter
+}       // end of inner class ValueSorter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Root node								*/
-/*										*/
+/*                                                                              */
+/*      Root node                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class RootNode extends AbstractNode {
@@ -728,47 +728,47 @@ private class RootNode extends AbstractNode {
       is_frozen = false;
     }
 
-   @Override String getName()				{ return base_node.getName(); }
-   @Override public Object getValue()			{ return base_node.getValue(); }
-   @Override ValueSetType getType()			{ return base_node.getType(); }
-   @Override BumpThread getThread()			{ return base_node.getThread(); }
-   @Override public BumpStackFrame getFrame()		{ return base_node.getFrame(); }
-   @Override public BumpRunValue getRunValue()		{ return base_node.getRunValue(); }
-   @Override public boolean showValueArea()		{ return base_node.showValueArea(); }
+   @Override String getName()                           { return base_node.getName(); }
+   @Override public Object getValue()                   { return base_node.getValue(); }
+   @Override ValueSetType getType()                     { return base_node.getType(); }
+   @Override BumpThread getThread()                     { return base_node.getThread(); }
+   @Override public BumpStackFrame getFrame()           { return base_node.getFrame(); }
+   @Override public BumpRunValue getRunValue()          { return base_node.getRunValue(); }
+   @Override public boolean showValueArea()             { return base_node.showValueArea(); }
 
-   @Override boolean isFrozen() 			{ return is_frozen; }
+   @Override boolean isFrozen()                         { return is_frozen; }
 
-   @Override public TreeNode getParent()		{ return null; }
+   @Override public TreeNode getParent()                { return null; }
 
-   @Override public boolean isLeaf()			{ return base_node.isLeaf(); }
+   @Override public boolean isLeaf()                    { return base_node.isLeaf(); }
 
    @Override public Enumeration<AbstractNode> children() { return base_node.children(); }
 
-   @Override public boolean getAllowsChildren() 	{ return base_node.getAllowsChildren(); }
+   @Override public boolean getAllowsChildren()         { return base_node.getAllowsChildren(); }
 
-   @Override public TreeNode getChildAt(int idx)	{ return base_node.getChildAt(idx); }
+   @Override public TreeNode getChildAt(int idx)        { return base_node.getChildAt(idx); }
 
-   @Override public int getChildCount() 		{ return base_node.getChildCount(); }
+   @Override public int getChildCount()                 { return base_node.getChildCount(); }
 
-   @Override public int getIndex(TreeNode tn)		{ return base_node.getIndex(tn); }
+   @Override public int getIndex(TreeNode tn)           { return base_node.getIndex(tn); }
 
-   @Override protected void expandChildren()		{ base_node.expandChildren(); }
+   @Override protected void expandChildren()            { base_node.expandChildren(); }
 
    @Override void freeze(int lvls) {
       base_node.freeze(lvls);
       is_frozen = true;
     }
 
-   @Override void update()				{ base_node.update(); }
+   @Override void update()                              { base_node.update(); }
 
-   @Override String getLabel()				{ return base_node.getLabel(); }
+   @Override String getLabel()                          { return base_node.getLabel(); }
 
    @Override void fixAfterChange() {
       if (updateInterimNodes()) {
-	 if (interim_nodes.size() == 0)
-	    System.err.println("BAD INTERIM NODES");
-	 else
-	 base_node = interim_nodes.get(0);
+         if (interim_nodes.size() == 0)
+            System.err.println("BAD INTERIM NODES");
+         else
+         base_node = interim_nodes.get(0);
       }
       else freeze(0);
     }
@@ -799,33 +799,33 @@ private class RootNode extends AbstractNode {
       AbstractNode newbase = null;
       int ct = pn.getChildCount();
       for (int i = 0; i < ct; ++i) {
-	 AbstractNode cn = (AbstractNode) pn.getChildAt(i);
-	 if (cn == xn) return cn;
-	 if (cn.getType() == xn.getType() && cn.sameNode(xn))
-	    newbase = cn;
-	 else if (i == idx && cn.getType() == xn.getType() && cn.matchNode(xn))
-	    newbase = cn;
+         AbstractNode cn = (AbstractNode) pn.getChildAt(i);
+         if (cn == xn) return cn;
+         if (cn.getType() == xn.getType() && cn.sameNode(xn))
+            newbase = cn;
+         else if (i == idx && cn.getType() == xn.getType() && cn.matchNode(xn))
+            newbase = cn;
        }
       if (newbase == null) {
-	 BoardLog.logW("BDDT","REPLACEMENT FOR " + pn + " :: " + xn + " NOT FOUND");
+         BoardLog.logW("BDDT","REPLACEMENT FOR " + pn + " :: " + xn + " NOT FOUND");
       }
       return newbase;
     }
 
-}	// end of inner class RootNode
+}       // end of inner class RootNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread tree node							*/
-/*										*/
+/*                                                                              */
+/*      Thread tree node                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ThreadNode extends AbstractNode {
 
-   private BumpThread		for_thread;
+   private BumpThread           for_thread;
 
    ThreadNode(AbstractNode par,BumpThread thr) {
       super(par);
@@ -840,36 +840,36 @@ private class ThreadNode extends AbstractNode {
        }
     }
 
-   @Override String getName()		{ return for_thread.getName(); }
+   @Override String getName()           { return for_thread.getName(); }
 
-   @Override ValueSetType getType()	{ return ValueSetType.THREAD; }
+   @Override ValueSetType getType()     { return ValueSetType.THREAD; }
 
-   @Override BumpThread getThread()	{ return for_thread; }
+   @Override BumpThread getThread()     { return for_thread; }
 
-   @Override String getLabel()		{ return for_thread.getName(); }
+   @Override String getLabel()          { return for_thread.getName(); }
 
    @Override boolean sameNode(AbstractNode an) {
       if (an instanceof ThreadNode) {
-	 return for_thread == an.getThread();
+         return for_thread == an.getThread();
        }
       return false;
     }
 
-}	// end of inner class StackTreeNode
+}       // end of inner class StackTreeNode
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Stack tree node 							*/
-/*										*/
+/*                                                                              */
+/*      Stack tree node                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class StackNode extends AbstractNode {
 
-   private BumpThreadStack	for_stack;
+   private BumpThreadStack      for_stack;
 
    StackNode(AbstractNode par,BumpThreadStack stk) {
       super(par);
@@ -878,36 +878,36 @@ private class StackNode extends AbstractNode {
 
    @Override protected void expandChildren() {
       for (int i = 0; i < for_stack.getNumFrames(); ++i) {
-	 addChild(new FrameNode(this,for_stack.getFrame(i)));
+         addChild(new FrameNode(this,for_stack.getFrame(i)));
        }
     }
 
-   @Override String getName()		{ return for_stack.getThread().getName(); }
+   @Override String getName()           { return for_stack.getThread().getName(); }
 
-   @Override ValueSetType getType()	{ return ValueSetType.STACK; }
+   @Override ValueSetType getType()     { return ValueSetType.STACK; }
 
-   @Override BumpThread getThread()	{ return for_stack.getThread(); }
+   @Override BumpThread getThread()     { return for_stack.getThread(); }
 
-   @Override String getLabel()		{ return getName(); }
+   @Override String getLabel()          { return getName(); }
 
    @Override boolean sameNode(AbstractNode an) {
       if (an instanceof StackNode) {
-	 StackNode sn = (StackNode) an;
-	 return for_stack == sn.for_stack;
+         StackNode sn = (StackNode) an;
+         return for_stack == sn.for_stack;
        }
       return false;
     }
 
-}	// end of inner class StackTreeNode
+}       // end of inner class StackTreeNode
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Frame tree node 							*/
-/*										*/
+/*                                                                              */
+/*      Frame tree node                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class FrameNode extends AbstractNode {
@@ -935,16 +935,16 @@ private class FrameNode extends AbstractNode {
          else if (v.getDeclaredType().equals(for_frame.getFrameClass())) {
             if (v.isStatic()) {
                if (thisstatic == null) {
-        	  thisstatic = new CategoryNode(this,"<this.static>");
-        	  addChild(thisstatic);
-        	}
+                  thisstatic = new CategoryNode(this,"<this.static>");
+                  addChild(thisstatic);
+                }
                thisstatic.addChild(an);
              }
             else {
                if (thisnode == null) {
-        	  thisnode = new CategoryNode(this,"this");
-        	  addChild(thisnode);
-        	}
+                  thisnode = new CategoryNode(this,"this");
+                  addChild(thisnode);
+                }
                thisnode.addChild(an);
              }
           }
@@ -976,12 +976,12 @@ private class FrameNode extends AbstractNode {
       return for_frame.getDisplayString();
     }
 
-   @Override public String getKey()	{ return for_frame.getMethod(); }
+   @Override public String getKey()     { return for_frame.getMethod(); }
 
-   @Override ValueSetType getType()	{ return ValueSetType.FRAME; }
+   @Override ValueSetType getType()     { return ValueSetType.FRAME; }
 
-   @Override BumpThread getThread()	{ return for_frame.getThread(); }
-   @Override public BumpStackFrame getFrame()	{ return for_frame; }
+   @Override BumpThread getThread()     { return for_frame.getThread(); }
+   @Override public BumpStackFrame getFrame()   { return for_frame; }
 
    @Override String getLabel() {
       return getThread().getName() + " :: " + for_frame.getMethod() + " @ " + for_frame.getLineNumber();
@@ -989,32 +989,32 @@ private class FrameNode extends AbstractNode {
 
    @Override boolean sameNode(AbstractNode an) {
       if (an instanceof FrameNode) {
-	 FrameNode fn = (FrameNode) an;
-	 if (for_frame.getId().equals(fn.for_frame.getId())) return true;
+         FrameNode fn = (FrameNode) an;
+         if (for_frame.getId().equals(fn.for_frame.getId())) return true;
        }
       return false;
     }
 
    @Override boolean matchNode(AbstractNode an) {
       if (an instanceof FrameNode) {
-	 FrameNode fn = (FrameNode) an;
-	 if (for_frame.getId().equals(fn.for_frame.getId())) return true;
-	 if (for_frame.getMethod().equals(fn.for_frame.getMethod())) return true;
+         FrameNode fn = (FrameNode) an;
+         if (for_frame.getId().equals(fn.for_frame.getId())) return true;
+         if (for_frame.getMethod().equals(fn.for_frame.getMethod())) return true;
        }
       return false;
     }
 
 
 
-}	// end of inner class FrameNode
+}       // end of inner class FrameNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Frame Category tree node						*/
-/*										*/
+/*                                                                              */
+/*      Frame Category tree node                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class CategoryNode extends AbstractNode {
@@ -1026,36 +1026,36 @@ private class CategoryNode extends AbstractNode {
       category_name = name;
     }
 
-   @Override protected void expandChildren()		{ }
+   @Override protected void expandChildren()            { }
 
-   @Override String getName()				{ return category_name; }
+   @Override String getName()                           { return category_name; }
 
-   @Override ValueSetType getType()			{ return ValueSetType.CATEGORY; }
-   @Override BumpThread getThread()			{ return getBddtParent().getThread(); }
-   @Override public BumpStackFrame getFrame()		{ return getBddtParent().getFrame(); }
+   @Override ValueSetType getType()                     { return ValueSetType.CATEGORY; }
+   @Override BumpThread getThread()                     { return getBddtParent().getThread(); }
+   @Override public BumpStackFrame getFrame()           { return getBddtParent().getFrame(); }
 
    @Override String getLabel() {
       return getThread().getName() + " :: " + getFrame().getMethod() +
-	 " @ " + getFrame().getLineNumber() + " :: " + category_name;
+         " @ " + getFrame().getLineNumber() + " :: " + category_name;
     }
 
    @Override boolean sameNode(AbstractNode an) {
       if (an instanceof CategoryNode) {
-	 CategoryNode cn = (CategoryNode) an;
-	 return category_name.equals(cn.category_name);
+         CategoryNode cn = (CategoryNode) an;
+         return category_name.equals(cn.category_name);
        }
       return false;
     }
 
-}	// end of inner class CategoryNode
+}       // end of inner class CategoryNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Value tree node 							*/
-/*										*/
+/*                                                                              */
+/*      Value tree node                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private AbstractNode getValueNode(AbstractNode par,BumpRunValue val)
@@ -1064,18 +1064,18 @@ private AbstractNode getValueNode(AbstractNode par,BumpRunValue val)
 
    switch (val.getKind()) {
       case UNKNOWN :
-	 return null;
+         return null;
       case PRIMITIVE :
-	 return new PrimitiveValueNode(par,val);
+         return new PrimitiveValueNode(par,val);
       case STRING :
-	 return new StringValueNode(par,val);
+         return new StringValueNode(par,val);
       case CLASS :
-	 return new ClassValueNode(par,val);
+         return new ClassValueNode(par,val);
       case OBJECT :
       case SCOPE :
-	 return new ObjectValueNode(par,val);
+         return new ObjectValueNode(par,val);
       case ARRAY :
-	 return new ArrayValueNode(par,val);
+         return new ArrayValueNode(par,val);
     }
 
    return null;
@@ -1092,16 +1092,16 @@ private abstract class ValueNode extends AbstractNode {
       for_value = val;
     }
 
-   @Override String getName()			{ return for_value.getName(); }
+   @Override String getName()                   { return for_value.getName(); }
 
-   @Override public Object getValue()		{ return for_value.getValue(); }
+   @Override public Object getValue()           { return for_value.getValue(); }
 
-   @Override ValueSetType getType()		{ return ValueSetType.VALUE; }
+   @Override ValueSetType getType()             { return ValueSetType.VALUE; }
 
-   @Override BumpThread getThread()		{ return for_value.getThread(); }
-   @Override public BumpStackFrame getFrame()	{ return for_value.getFrame(); }
-   @Override public BumpRunValue getRunValue()	{ return for_value; }
-   @Override public boolean showValueArea()	{ return true; }
+   @Override BumpThread getThread()             { return for_value.getThread(); }
+   @Override public BumpStackFrame getFrame()   { return for_value.getFrame(); }
+   @Override public BumpRunValue getRunValue()  { return for_value; }
+   @Override public boolean showValueArea()     { return true; }
    
    boolean isEditable()                         { return false; }
    void setValue(Object value)                  { }
@@ -1118,25 +1118,25 @@ private abstract class ValueNode extends AbstractNode {
 
    @Override String getLabel() {
       return getThread().getName() + " :: " + getFrame().getMethod() +
-	 " @ " + getFrame().getLineNumber() + " :: " + for_value.getName();
+         " @ " + getFrame().getLineNumber() + " :: " + for_value.getName();
     }
 
    @Override boolean sameNode(AbstractNode an) {
       if (an instanceof ValueNode) {
-	 return getName().equals(an.getName());
+         return getName().equals(an.getName());
        }
       return false;
     }
 
-}	// end of abstract inner class ValueNode
+}       // end of abstract inner class ValueNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Primitive value tree node						*/
-/*										*/
+/*                                                                              */
+/*      Primitive value tree node                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class PrimitiveValueNode extends ValueNode {
@@ -1145,7 +1145,7 @@ private class PrimitiveValueNode extends ValueNode {
       super(par,val);
     }
 
-   @Override public boolean isLeaf()		{ return true; }
+   @Override public boolean isLeaf()            { return true; }
    @Override public boolean getAllowsChildren() { return false; }
    
    @Override boolean isEditable()               { return true; }
@@ -1157,15 +1157,15 @@ private class PrimitiveValueNode extends ValueNode {
    
    
 
-}	// end of inner class PrimitiveValueNode
+}       // end of inner class PrimitiveValueNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	String value tree node							*/
-/*										*/
+/*                                                                              */
+/*      String value tree node                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class StringValueNode extends ValueNode {
@@ -1174,7 +1174,7 @@ private class StringValueNode extends ValueNode {
       super(par,val);
     }
 
-   @Override public boolean isLeaf()		{ return true; }
+   @Override public boolean isLeaf()            { return true; }
    @Override public boolean getAllowsChildren() { return false; }
    @Override public Object getValue() {
       String v = super.getValue().toString();
@@ -1197,15 +1197,15 @@ private class StringValueNode extends ValueNode {
       changeValue(sv);
     }
 
-}	// end of inner class StringValueNode
+}       // end of inner class StringValueNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class value tree node							*/
-/*										*/
+/*                                                                              */
+/*      Class value tree node                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class ClassValueNode extends ValueNode {
@@ -1214,18 +1214,18 @@ private class ClassValueNode extends ValueNode {
       super(par,val);
     }
 
-   @Override public boolean isLeaf()		{ return true; }
+   @Override public boolean isLeaf()            { return true; }
    @Override public boolean getAllowsChildren() { return false; }
 
-}	// end of inner class ClassValueNode
+}       // end of inner class ClassValueNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Object value tree node							*/
-/*										*/
+/*                                                                              */
+/*      Object value tree node                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class ObjectValueNode extends ValueNode {
@@ -1234,16 +1234,16 @@ private class ObjectValueNode extends ValueNode {
       super(par,val);
     }
 
-   @Override public boolean isLeaf()		{ return !for_value.hasContents(); }
+   @Override public boolean isLeaf()            { return !for_value.hasContents(); }
    @Override public boolean getAllowsChildren() { return for_value.hasContents(); }
 
    @Override public Object getValue() {
       if (for_value.getType() == null) {
-	 return for_value.getValue();
+         return for_value.getValue();
       }
       if (for_value.getType().equals("null")) return "null";
       else if (for_value.getType().equals("java.lang.String")) {
-	 return "\"" + for_value.getValue() + "\"";
+         return "\"" + for_value.getValue() + "\"";
        }
       return for_value.getType() + " " + for_value.getValue();
     }
@@ -1254,37 +1254,37 @@ private class ObjectValueNode extends ValueNode {
       CategoryNode superstatic = null;
 
       for (String s : for_value.getVariables()) {
-	 BumpRunValue v = for_value.getValue(s);
-	 if (v == null) continue;
-	 AbstractNode an = getValueNode(this,v);
-	 if (an == null) continue;
-	 if (v.getDeclaredType() == null) addChild(an);
-	 else if (v.getDeclaredType().equals(for_value.getType())) {
-	    if (v.isStatic()) {
-	       if (thisstatic == null) {
-		  thisstatic = new CategoryNode(this,"<static>");
-		  addChild(thisstatic);
-		}
-	       thisstatic.addChild(an);
-	     }
-	    else addChild(an);
-	  }
-	 else {
-	    if (v.isStatic()) {
-	       if (superstatic == null) {
-		  superstatic = new CategoryNode(this,"<super.static>");
-		  addChild(superstatic);
-		}
-	       superstatic.addChild(an);
-	     }
-	    else {
-	       if (supernode == null) {
-		  supernode = new CategoryNode(this,"<super>");
-		  addChild(supernode);
-		}
-	       supernode.addChild(an);
-	     }
-	  }
+         BumpRunValue v = for_value.getValue(s);
+         if (v == null) continue;
+         AbstractNode an = getValueNode(this,v);
+         if (an == null) continue;
+         if (v.getDeclaredType() == null) addChild(an);
+         else if (v.getDeclaredType().equals(for_value.getType())) {
+            if (v.isStatic()) {
+               if (thisstatic == null) {
+                  thisstatic = new CategoryNode(this,"<static>");
+                  addChild(thisstatic);
+                }
+               thisstatic.addChild(an);
+             }
+            else addChild(an);
+          }
+         else {
+            if (v.isStatic()) {
+               if (superstatic == null) {
+                  superstatic = new CategoryNode(this,"<super.static>");
+                  addChild(superstatic);
+                }
+               superstatic.addChild(an);
+             }
+            else {
+               if (supernode == null) {
+                  supernode = new CategoryNode(this,"<super>");
+                  addChild(supernode);
+                }
+               supernode.addChild(an);
+             }
+          }
        }
 
       if (thisstatic != null) thisstatic.sortChildren();
@@ -1293,15 +1293,15 @@ private class ObjectValueNode extends ValueNode {
     }
 
 
-}	// end of inner class ObjectValueNode
+}       // end of inner class ObjectValueNode
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Array value tree node							*/
-/*										*/
+/*                                                                              */
+/*      Array value tree node                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private class ArrayValueNode extends ValueNode {
@@ -1312,7 +1312,7 @@ private class ArrayValueNode extends ValueNode {
       // that correspond to subranges of varying size as is done in eclipse
     }
 
-   @Override public boolean isLeaf()		{ return !for_value.hasContents(); }
+   @Override public boolean isLeaf()            { return !for_value.hasContents(); }
    @Override public boolean getAllowsChildren() { return for_value.hasContents(); }
    @Override public Object getValue() {
       String typ = for_value.getType();
@@ -1325,17 +1325,17 @@ private class ArrayValueNode extends ValueNode {
 
    @Override protected void expandChildren() {
       for (String s : for_value.getVariables()) {
-	 AbstractNode an = getValueNode(this,for_value.getValue(s));
-	 if (an != null) addChild(an);
+         AbstractNode an = getValueNode(this,for_value.getValue(s));
+         if (an != null) addChild(an);
        }
     }
 
-}	// end of inner class ArrayValueNode
+}       // end of inner class ArrayValueNode
 
 
 
 
-}	// end of class BddtStackModel
+}       // end of class BddtStackModel
 
 
 

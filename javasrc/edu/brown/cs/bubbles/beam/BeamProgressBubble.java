@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BeamProgressBubble.java 					*/
-/*										*/
-/*	Bubble to show progress of long-running tasks				*/
-/*										*/
+/*                                                                              */
+/*              BeamProgressBubble.java                                         */
+/*                                                                              */
+/*      Bubble to show progress of long-running tasks                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -64,26 +64,26 @@ class BeamProgressBubble implements BeamConstants, BumpConstants.BumpProgressHan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot	buda_root;
+private BudaRoot        buda_root;
 private Map<String,ProgressDisplay> all_displays;
 private Map<String,Long> last_id;
 
-private Color		done_color;
-private Color		todo_color;
+private Color           done_color;
+private Color           todo_color;
 
 private static final int MAX_RANGE = 512;
 private static final long DONE_ID = Long.MAX_VALUE;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamProgressBubble(BudaRoot br)
@@ -102,9 +102,9 @@ BeamProgressBubble(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup bubbles								*/
-/*										*/
+/*                                                                              */
+/*      Setup bubbles                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private synchronized void startProgress(String id,String task,long sid)
@@ -156,9 +156,9 @@ private class ProgressViewer implements Runnable {
 
 
 /********************************************************************************/
-/*										*/
-/*	Progress message handling						*/
-/*										*/
+/*                                                                              */
+/*      Progress message handling                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public synchronized void handleProgress(long sid,String id,String kind,
@@ -173,8 +173,8 @@ private class ProgressViewer implements Runnable {
    last_id.put(id,sid);
    if (last_id.size() > MAX_RANGE) {
       for (Iterator<Long> it = last_id.values().iterator(); it.hasNext(); ) {
-	 Long l = it.next();
-	 if (sid - l > MAX_RANGE) it.remove();
+         Long l = it.next();
+         if (sid - l > MAX_RANGE) it.remove();
        }
     }
 
@@ -192,10 +192,10 @@ private class ProgressViewer implements Runnable {
       ProgressDisplay pd = all_displays.remove(id);
       last_id.put(id,DONE_ID);
       if (pd != null) {
-	 pd.setVisible(false);
-	 BoardLog.logD("BEAM","End progress " + id + " " + pd.hashCode());
-	 Remover rm = new Remover(pd);
-	 SwingUtilities.invokeLater(rm);
+         pd.setVisible(false);
+         BoardLog.logD("BEAM","End progress " + id + " " + pd.hashCode());
+         Remover rm = new Remover(pd);
+         SwingUtilities.invokeLater(rm);
        }
       else BoardLog.logD("BEAM","Unexpected progress message " + id + " " + kind);
    }
@@ -222,14 +222,14 @@ private static class Remover implements Runnable {
       else if (bba != null) bba.remove(for_display);
     }
 
-}	// end of inner class Remover
+}       // end of inner class Remover
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Progress Display							*/
-/*										*/
+/*                                                                              */
+/*      Progress Display                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private class ProgressDisplay extends JLabel {
@@ -280,13 +280,13 @@ private class ProgressDisplay extends JLabel {
       super.paintComponent(g);
     }
 
-}	// end of inner class Progress Display
+}       // end of inner class Progress Display
 
 
 
 
 
-}	// end of class BeamProgressBubble
+}       // end of class BeamProgressBubble
 
 
 

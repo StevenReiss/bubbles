@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpClient.java 						*/
-/*										*/
-/*	BUblles Mint Partnership main class					*/
-/*										*/
+/*                                                                              */
+/*              BumpClient.java                                                 */
+/*                                                                              */
+/*      BUblles Mint Partnership main class                                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko	*/
+/*      Copyright 2009 Brown University -- Steven P. Reiss, Hsu-Sheng Ko        */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -67,11 +67,11 @@ import java.util.regex.Pattern;
 
 
 /**
- *	This class provides an interface between Code Bubbles and the back-end
- *	IDE.  This particular implementation works for ECLIPSE.
+ *      This class provides an interface between Code Bubbles and the back-end
+ *      IDE.  This particular implementation works for ECLIPSE.
  *
- *	At some point, this should be converted into an interface that can then
- *	be implemented by an appropriate class for each back end IDE.
+ *      At some point, this should be converted into an interface that can then
+ *      be implemented by an appropriate class for each back end IDE.
  *
  **/
 
@@ -80,31 +80,31 @@ public abstract class BumpClient implements BumpConstants, BoardConstants, MintC
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected MintControl	mint_control;
-protected String	mint_name;
-private String		source_id;
-private BumpProblemSet	problem_set;
-private BumpBreakSet	break_set;
-private BumpRunManager	run_manager;
+protected MintControl   mint_control;
+protected String        mint_name;
+private String          source_id;
+private BumpProblemSet  problem_set;
+private BumpBreakSet    break_set;
+private BumpRunManager  run_manager;
 private Map<BumpFileHandler,File> file_handlers;
 private Map<String,String> option_map;
 private Map<String,NameCollector> name_collects;
 private Map<String,EvalData> eval_handlers;
-private int		collect_id;
+private int             collect_id;
 private Map<BumpChangeHandler,Boolean> change_handlers;
 private SwingEventListenerList<BumpOpenEditorBubbleHandler> open_editor_bubble_handlers;
 private SwingEventListenerList<BumpProgressHandler> progress_handlers;
-private List<String>	debug_jvm_args;
-private Element 	language_data;
+private List<String>    debug_jvm_args;
+private Element         language_data;
 
-private boolean 	ide_active;
-private boolean 	doing_exit;
-private boolean 	same_host;
+private boolean         ide_active;
+private boolean         doing_exit;
+private boolean         same_host;
 
 private int             serial_number;
 
@@ -120,13 +120,13 @@ private static final int STACK_DELAY = 20000;
 
 
 /********************************************************************************/
-/*										*/
-/*	Static constructors							*/
-/*										*/
+/*                                                                              */
+/*      Static constructors                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Get the singular instance of the IDE interface.
+ *      Get the singular instance of the IDE interface.
  **/
 
 public static synchronized BumpClient getBump()
@@ -134,23 +134,23 @@ public static synchronized BumpClient getBump()
    if (default_client == null) {
       BoardLanguage bl = BoardSetup.getSetup().getLanguage();
       if (bl == null) {
-	 bl = BoardLanguage.JAVA;
-	 BoardSetup.getSetup().setLanguage(bl);
+         bl = BoardLanguage.JAVA;
+         BoardSetup.getSetup().setLanguage(bl);
        }
       // choose client based on language
       switch (bl) {
-	 case JAVA :
-	    default_client = new BumpClientEclipse();
-	    break;
-	 case JAVA_IDEA :
-	    default_client = new BumpClientIdea();
-	    break;
-	 case JS :
-	    default_client = new BumpClientJS();
-	    break;
-	 default :
-	    default_client = new BumpClientLsp(bl.getName());
-	    break;
+         case JAVA :
+            default_client = new BumpClientEclipse();
+            break;
+         case JAVA_IDEA :
+            default_client = new BumpClientIdea();
+            break;
+         case JS :
+            default_client = new BumpClientJS();
+            break;
+         default :
+            default_client = new BumpClientLsp(bl.getName());
+            break;
        }
       loadProperties();
     }
@@ -162,9 +162,9 @@ public static synchronized BumpClient getBump()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BumpClient()
@@ -197,16 +197,16 @@ protected BumpClient()
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case SERVER :
-	 mint_control.register("<BUMP TYPE='FILEGET'/>",new FileGetServerHandler());
-	 mint_control.register("<BUMP TYPE='SERVEREXIT'/>",new ServerExitHandler());
-	 mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
-	 mint_control.register("<BUMP TYPE='SAVEWORKSPACE'/>",new SaveWorkspaceHandler());
-	 break;
+         mint_control.register("<BUMP TYPE='FILEGET'/>",new FileGetServerHandler());
+         mint_control.register("<BUMP TYPE='SERVEREXIT'/>",new ServerExitHandler());
+         mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
+         mint_control.register("<BUMP TYPE='SAVEWORKSPACE'/>",new SaveWorkspaceHandler());
+         break;
       case CLIENT :
-	 Runtime.getRuntime().addShutdownHook(new ForceServerExit());
-	 break;
+         Runtime.getRuntime().addShutdownHook(new ForceServerExit());
+         break;
       default:
-	 break;
+         break;
     }
 }
 
@@ -214,9 +214,9 @@ protected BumpClient()
 
 
 /********************************************************************************/
-/*										*/
-/*	Web interaction methods 						*/
-/*										*/
+/*                                                                              */
+/*      Web interaction methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public void useWebMint(String key,String url)
@@ -233,13 +233,13 @@ public void useWebMint(String key,String url)
 
 
 /********************************************************************************/
-/*										*/
-/*	Abstract backend interaction methods					*/
-/*										*/
+/*                                                                              */
+/*      Abstract backend interaction methods                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the name of the back end.
+ *      Return the name of the back end.
  **/
 
 public abstract String getName();
@@ -248,8 +248,8 @@ public abstract String getServerName();
 
 
 /**
- *	Start the back end running.  This routine will return immediately.  If the user
- *	actually needs to use the backend, they should use waitForIDE.
+ *      Start the back end running.  This routine will return immediately.  If the user
+ *      actually needs to use the backend, they should use waitForIDE.
  **/
 
 private void startIDE(BoardSetup bs)
@@ -280,10 +280,10 @@ private void startIDE(BoardSetup bs)
    Element pxml = getXmlReply("PROJECTS",null,null,null,180000);
    if (!IvyXml.isElement(pxml,"RESULT")) {
       if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
-	 JOptionPane.showMessageDialog(null,
-	       "<html><p>" + getName() + " was not started correctly.<p>Perhaps it hadn't terminated yet." +
-	       "<p>Please try starting again.",
-	       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null,
+               "<html><p>" + getName() + " was not started correctly.<p>Perhaps it hadn't terminated yet." +
+               "<p>Please try starting again.",
+               "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
        }
       // should find and dump the eclipse log at this point?
       System.exit(1);
@@ -313,8 +313,8 @@ abstract void localStartIDE();
 
 
 /**
- *	Shut down the back end IDE if we started it.  This should have no effect if the user is running
- *	the back end with a full user interface.
+ *      Shut down the back end IDE if we started it.  This should have no effect if the user is running
+ *      the back end with a full user interface.
  **/
 
 public void stopIDE()
@@ -340,7 +340,7 @@ public void stopIDE()
 
 
 /**
- *	Save workspace data
+ *      Save workspace data
  **/
 
 public void saveWorkspace()
@@ -350,7 +350,7 @@ public void saveWorkspace()
 
 
 /**
- *	Start the back end if necessary and wait for it to be ready.
+ *      Start the back end if necessary and wait for it to be ready.
  **/
 
 public void waitForIDE()
@@ -370,10 +370,10 @@ public void waitForIDE(BoardSetup bs)
 
    synchronized (this) {
       while (!ide_active) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
     }
 }
@@ -382,20 +382,20 @@ public void waitForIDE(BoardSetup bs)
 
 
 /********************************************************************************/
-/*										*/
-/*	File editing methods							*/
-/*										*/
+/*                                                                              */
+/*      File editing methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Open a file.  This causes the IDE to track changes to the given file.  If
- *	getcnts is specified or if the file is open in the IDE and is different
- *	than it is on disk, the contents of the file is returned.  Otherwise
- *	null is returned.
- *	@param pname The project name
- *	@param file The file to open
- *	@param getcnts A flag that forces the IDE to return the file contents
- *	@param id The current edit-id to indicate which edit this represents
+ *      Open a file.  This causes the IDE to track changes to the given file.  If
+ *      getcnts is specified or if the file is open in the IDE and is different
+ *      than it is on disk, the contents of the file is returned.  Otherwise
+ *      null is returned.
+ *      @param pname The project name
+ *      @param file The file to open
+ *      @param getcnts A flag that forces the IDE to return the file contents
+ *      @param id The current edit-id to indicate which edit this represents
  **/
 
 public Element startFile(String pname,File file,boolean getcnts,int id) throws BumpException
@@ -430,24 +430,24 @@ public Element startFile(String pname,File file,boolean getcnts,int id) throws B
 
 
 /**
- *	Note an edit to the specified file.  The region from start to end is first
- *	deleted and then the given string is inserted in its place.  If start == end,
- *	then no deletion occurs.  If txt is null, then no insertion occurs.
+ *      Note an edit to the specified file.  The region from start to end is first
+ *      deleted and then the given string is inserted in its place.  If start == end,
+ *      then no deletion occurs.  If txt is null, then no insertion occurs.
  *
- *	This routine causes the IDE and any other bubbles instances to update their
- *	version of the file in sync with this update.
+ *      This routine causes the IDE and any other bubbles instances to update their
+ *      version of the file in sync with this update.
  *
- *	The side effect of an edit is that a new elision structure as well as the
- *	set of problems associated with the file will be sent back to BUMP
- *	asynchronously and then reported to the user.
+ *      The side effect of an edit is that a new elision structure as well as the
+ *      set of problems associated with the file will be sent back to BUMP
+ *      asynchronously and then reported to the user.
  *
- *	The id field indicates the edit number.  These are checked when reporting the
- *	asynchronous results.  If the last edit number for the file is different than
- *	the edit number associated with problems or the AST, then no asynchronous
- *	notifications are given.  This lets multiple edits be quickly done without
- *	having to report all the intermediate results.	Note that because of timing
- *	issues, the user might also want to compare the edit id associated with the
- *	asynchronouos results against what it perceives as the current edit id.
+ *      The id field indicates the edit number.  These are checked when reporting the
+ *      asynchronous results.  If the last edit number for the file is different than
+ *      the edit number associated with problems or the AST, then no asynchronous
+ *      notifications are given.  This lets multiple edits be quickly done without
+ *      having to report all the intermediate results.  Note that because of timing
+ *      issues, the user might also want to compare the edit id associated with the
+ *      asynchronouos results against what it perceives as the current edit id.
  **/
 
 public void editFile(String pname,File file,int id,int start,int end,String txt)
@@ -479,15 +479,15 @@ public void editFile(String pname,File file,int id,int start,int end,String txt)
 
 
 /**
- *	This call sets up AST feedback from the back end for a file.  Since files can be
- *	large and we generally only want a small part of them, this routine lets the user
- *	set up a list of file regions that should be reported.	 The rgns parameter is a
- *	set of XML descriptions of the form <REGION START='offset' END='endoffset' />.
+ *      This call sets up AST feedback from the back end for a file.  Since files can be
+ *      large and we generally only want a small part of them, this routine lets the user
+ *      set up a list of file regions that should be reported.   The rgns parameter is a
+ *      set of XML descriptions of the form <REGION START='offset' END='endoffset' />.
  *
- *	The compute parameter will force an immediate computation of the elision structure
- *	which will be returned in XML.	If the parameter is false, no tree is computed
- *	at this point.	In either case, the region settings are used the next time the file
- *	is edited.
+ *      The compute parameter will force an immediate computation of the elision structure
+ *      which will be returned in XML.  If the parameter is false, no tree is computed
+ *      at this point.  In either case, the region settings are used the next time the file
+ *      is edited.
  **/
 
 public Element setupElision(String pname,File file,String rgns,boolean compute)
@@ -502,14 +502,14 @@ public Element setupElision(String pname,File file,String rgns,boolean compute)
 
 
 /**
- *	This lets code bubbles control how the IDE interface works.  The properties that
- *	can be set here include:
+ *      This lets code bubbles control how the IDE interface works.  The properties that
+ *      can be set here include:
  *
- *	AUTOELIDE	TRUE or FALSE		If true, then return elision after each edit
+ *      AUTOELIDE       TRUE or FALSE           If true, then return elision after each edit
  *
- *	ELIDEDELAY	integer 		Delay in milliseconds before sending AST data
+ *      ELIDEDELAY      integer                 Delay in milliseconds before sending AST data
  *
- *	LINESEP 	string			The line separator to be used in the file.
+ *      LINESEP         string                  The line separator to be used in the file.
  *
  **/
 
@@ -525,7 +525,7 @@ public boolean setEditParameter(String key,String value)
 
 
 /**
- *	Reverts the given file to the last saved version.
+ *      Reverts the given file to the last saved version.
  **/
 
 public Element revertFile(String pname,File file)
@@ -541,7 +541,7 @@ public Element revertFile(String pname,File file)
 
 
 /**
- *	Save the given file.
+ *      Save the given file.
  **/
 
 public Element saveFile(String pname,File file)
@@ -559,7 +559,7 @@ public Element saveFile(String pname,File file)
 
 
 /**
- *	Commit the given file.
+ *      Commit the given file.
  **/
 
 public Element commitFile(String pname,File file)
@@ -592,7 +592,7 @@ public Element compileFile(String pname,File file)
 
 
 /**
- *	Save all open files
+ *      Save all open files
  **/
 
 public Element saveAll()
@@ -611,7 +611,7 @@ public Element saveAll()
 
 
 /**
- *	Revert all open files
+ *      Revert all open files
  **/
 
 public Element revertAll()
@@ -639,13 +639,13 @@ public Element commitAll()
 
 
 /********************************************************************************/
-/*										*/
-/*	Private buffer management						*/
-/*										*/
+/*                                                                              */
+/*      Private buffer management                                               */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a private buffer
+ *      Create a private buffer
  **/
 
 public String createPrivateBuffer(String proj,String file,String bid)
@@ -670,7 +670,7 @@ public String createPrivateBuffer(String proj,String file,String bid,String from
 
 
 /**
- *	Remove a private buffer
+ *      Remove a private buffer
  **/
 
 public void removePrivateBuffer(String proj,String file,String bid)
@@ -687,7 +687,7 @@ public void removePrivateBuffer(String proj,String file,String bid)
 
 
 /**
- *	Begin a private edit
+ *      Begin a private edit
  **/
 
 public void beginPrivateEdit(String file,String pid)
@@ -698,7 +698,7 @@ public void beginPrivateEdit(String file,String pid)
 
 
 /**
- *	Do a private edit
+ *      Do a private edit
  **/
 
 public void editPrivateFile(String pname,File file,String privid,int start,int end,String txt)
@@ -721,7 +721,7 @@ public void editPrivateFile(String pname,File file,String privid,int start,int e
 
 
 /**
- *	Get error messages associated with a private buffer
+ *      Get error messages associated with a private buffer
  **/
 
 public Collection<BumpProblem> getPrivateProblems(String file,String pid)
@@ -732,9 +732,9 @@ public Collection<BumpProblem> getPrivateProblems(String file,String pid)
 
 
 /********************************************************************************/
-/*										*/
-/*	Remote file methods							*/
-/*										*/
+/*                                                                              */
+/*      Remote file methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 public File getRemoteFile(File lcl,String kind,File rem)
@@ -753,10 +753,10 @@ public File remoteFileAction(String act,File lcl,String kind,File rem)
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
       case SERVER :
-	 if (rem == null) return lcl;
-	 return rem;
+         if (rem == null) return lcl;
+         return rem;
       default:
-	 break;
+         break;
     }
 
    String id = source_id + "_" + (++collect_id);
@@ -796,69 +796,69 @@ private final class FileGetServerHandler implements MintHandler {
       File f = null;
       if (kind != null && kind.equals("BDOC")) f = BoardSetup.getDocumentationFile();
       else if (kind != null && kind.equals("NOTE")) {
-	 if (act != null && act.equals("LIST")) {
-	    try {
-	       File f2 = File.createTempFile("notelist","dir");
-	       f2.deleteOnExit();
-	       File f1 = BoardSetup.getBubblesWorkingDirectory();
-	       PrintWriter fw = new PrintWriter(new FileWriter(f2));
-	       for (File nmf : f1.listFiles()) {
-		  if (nmf.isDirectory()) continue;
-		  if (!nmf.canRead()) continue;
-		  if (!nmf.getName().endsWith(".html")) continue;
-		  fw.println(nmf.getName());
-		}
-	       fw.close();
-	       f = f2;
-	     }
-	    catch (IOException e) {
-	       msg.replyTo("<FAIL/>");
-	       return;
-	     }
-	  }
-	 File f1 = BoardSetup.getBubblesWorkingDirectory();
-	 File f2 = new File(filenm);
-	 f = new File(f1,f2.getName());
-	 if (act != null && act.equals("DELETE")) {
-	    f.delete();
-	    msg.replyTo("<OK/>");
-	    return;
-	  }
+         if (act != null && act.equals("LIST")) {
+            try {
+               File f2 = File.createTempFile("notelist","dir");
+               f2.deleteOnExit();
+               File f1 = BoardSetup.getBubblesWorkingDirectory();
+               PrintWriter fw = new PrintWriter(new FileWriter(f2));
+               for (File nmf : f1.listFiles()) {
+                  if (nmf.isDirectory()) continue;
+                  if (!nmf.canRead()) continue;
+                  if (!nmf.getName().endsWith(".html")) continue;
+                  fw.println(nmf.getName());
+                }
+               fw.close();
+               f = f2;
+             }
+            catch (IOException e) {
+               msg.replyTo("<FAIL/>");
+               return;
+             }
+          }
+         File f1 = BoardSetup.getBubblesWorkingDirectory();
+         File f2 = new File(filenm);
+         f = new File(f1,f2.getName());
+         if (act != null && act.equals("DELETE")) {
+            f.delete();
+            msg.replyTo("<OK/>");
+            return;
+          }
        }
       else f = new File(filenm);
       BoardLog.logD("BUMP","Remote file request " + f + " " + filenm + " " + id);
 
       try {
-	 FileInputStream fr = new FileInputStream(f);
-	 long len = f.length();
-	 int pos = 0;
-	 byte [] buf = new byte[40960];
-	 while (pos < len) {
-	    int ct = fr.read(buf,0,buf.length);
-	    MintDefaultReply mr = new MintDefaultReply();
-	    IvyXmlWriter xw = new IvyXmlWriter();
-	    xw.begin("BUMPFILE");
-	    xw.field("ID",id);
-	    xw.field("POS",pos);
-	    xw.field("LEN",len);
-	    xw.field("CT",ct);
-	    xw.bytesElement("CNTS",buf,0,ct);
-	    xw.end("BUMPFILE");
-	    mint_control.send(xw.toString(),mr,MintConstants.MINT_MSG_FIRST_NON_NULL);
-	    xw.close();
-	    mr.waitFor();
-	    pos += ct;
-	  }
-	 fr.close();
-	 msg.replyTo("<OK/>");
+         FileInputStream fr = new FileInputStream(f);
+         long len = f.length();
+         int pos = 0;
+         byte [] buf = new byte[40960];
+         while (pos < len) {
+            int ct = fr.read(buf,0,buf.length);
+            MintDefaultReply mr = new MintDefaultReply();
+            IvyXmlWriter xw = new IvyXmlWriter();
+            xw.begin("BUMPFILE");
+            xw.field("ID",id);
+            xw.field("POS",pos);
+            xw.field("LEN",len);
+            xw.field("CT",ct);
+            xw.bytesElement("CNTS",buf,0,ct);
+            xw.end("BUMPFILE");
+            mint_control.send(xw.toString(),mr,MintConstants.MINT_MSG_FIRST_NON_NULL);
+            xw.close();
+            mr.waitFor();
+            pos += ct;
+          }
+         fr.close();
+         msg.replyTo("<OK/>");
        }
       catch (IOException e) {
-	 msg.replyTo("<FAIL/>");
+         msg.replyTo("<FAIL/>");
        }
 
     }
 
-}	// end of inner class FileGetServerHandler
+}       // end of inner class FileGetServerHandler
 
 
 
@@ -885,19 +885,19 @@ private static class FileGetClientHandler implements MintHandler {
    FileGetClientHandler(File f) {
       file_writer = null;
       if (f == null) {
-	 is_okay = true;
-	 file_writer = null;
+         is_okay = true;
+         file_writer = null;
        }
       else {
-	 is_okay = false;
-	 try {
-	    file_writer = new FileOutputStream(f);
-	  }
-	 catch (IOException e) { }
+         is_okay = false;
+         try {
+            file_writer = new FileOutputStream(f);
+          }
+         catch (IOException e) { }
        }
     }
 
-   boolean isOkay()				{ return is_okay; }
+   boolean isOkay()                             { return is_okay; }
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       Element xml = msg.getXml();
@@ -906,27 +906,27 @@ private static class FileGetClientHandler implements MintHandler {
       int pos = IvyXml.getAttrInt(xml,"POS");
       int len = IvyXml.getAttrInt(xml,"LEN");
       try {
-	 if (file_writer != null) {
-	    file_writer.write(buf,0,ct);
-	    if (ct + pos >= len) file_writer.close();
-	    is_okay = true;
-	  }
+         if (file_writer != null) {
+            file_writer.write(buf,0,ct);
+            if (ct + pos >= len) file_writer.close();
+            is_okay = true;
+          }
        }
       catch (IOException e) {
-	 file_writer = null;
-	 is_okay = false;
+         file_writer = null;
+         is_okay = false;
        }
       msg.replyTo("<OK/>");
     }
 
-}	// end of inner class FileGetClientHandler
+}       // end of inner class FileGetClientHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Remote exit message						  */
-/*										*/
+/*                                                                              */
+/*      Remote exit message                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ServerExitHandler implements MintHandler {
@@ -939,14 +939,14 @@ private final class ServerExitHandler implements MintHandler {
       System.exit(0);
     }
 
-}	// en of inner class ServerExitHandler
+}       // en of inner class ServerExitHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Remote save workspace message						*/
-/*										*/
+/*                                                                              */
+/*      Remote save workspace message                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class SaveWorkspaceHandler implements MintHandler {
@@ -957,7 +957,7 @@ private final class SaveWorkspaceHandler implements MintHandler {
    msg.replyTo("<OK>");
 }
 
-}	// en of inner class ServerExitHandler
+}       // en of inner class ServerExitHandler
 
 
 
@@ -968,21 +968,21 @@ private final class ForceServerExit extends Thread {
       String msg = "<BUMP TYPE='SERVEREXIT' />";
       mint_control.send(msg);
       try {
-	 Thread.sleep(100);
+         Thread.sleep(100);
        }
       catch (InterruptedException e) { }
     }
 
-}	// end of inner class ForceServerExit
+}       // end of inner class ForceServerExit
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Local file editing methods						*/
-/*										*/
+/*                                                                              */
+/*      Local file editing methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 public Element getElisionForFile(File f)
@@ -997,12 +997,12 @@ public Element getElisionForFile(File f)
    try {
       FileInputStream ins = new FileInputStream(f);
       while (ct < ln) {
-	 int rln = ins.read(b,ct,ln-ct);
-	 if (rln <= 0) {
-	    ins.close();
-	    return null;
-	  }
-	 ct += rln;
+         int rln = ins.read(b,ct,ln-ct);
+         if (rln <= 0) {
+            ins.close();
+            return null;
+          }
+         ct += rln;
        }
       ins.close();
     }
@@ -1026,19 +1026,19 @@ public Element getElisionForFile(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Project methods 							*/
-/*										*/
+/*                                                                              */
+/*      Project methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Compile all active projects.  The parameters provide for different types
- *	of builds.
- *	@param clean If set, then a clean will be done before the build
- *	@param full If set, then everything will be recompiled, even files that have
- *	not been changed.
- *	@param refresh If set, then eclipse will refresh all projects from the current
- *	contents of the disk.
+ *      Compile all active projects.  The parameters provide for different types
+ *      of builds.
+ *      @param clean If set, then a clean will be done before the build
+ *      @param full If set, then everything will be recompiled, even files that have
+ *      not been changed.
+ *      @param refresh If set, then eclipse will refresh all projects from the current
+ *      contents of the disk.
  **/
 
 public void compile(boolean clean,boolean full,boolean refresh)
@@ -1073,7 +1073,7 @@ public void build(String proj,boolean clean,boolean full,boolean refresh)
 
 
 /**
- *	Open a project (if not already open) and return class information for project
+ *      Open a project (if not already open) and return class information for project
  **/
 
 public Element openProject(String name)
@@ -1094,7 +1094,7 @@ public Element openProject(String name)
 
 
 /**
- *	Open a project (if not already open) and return project information
+ *      Open a project (if not already open) and return project information
  **/
 
 public Element getProjectData(String name)
@@ -1157,32 +1157,32 @@ private class ContractData implements BumpContractType {
       use_assertions = false;
       use_annotations = false;
       for (Element e : IvyXml.children(xml,"PROPERTY")) {
-	 String q = IvyXml.getAttrString(e,"QUAL");
-	 String k = IvyXml.getAttrString(e,"NAME");
-	 if (q.equals("edu.brown.cs.bubbles.bedrock")) {
-	    boolean fg = IvyXml.getAttrBool(e,"VALUE",false);
-	    if (k.equals("useContractsForJava")) use_cofoja = fg;
-	    else if (k.equals("useJunit")) use_junit = fg;
-	    else if (k.equals("useAssertions")) use_assertions = fg;
-	    else if (k.equals("useTypeAnnotations")) use_annotations = fg;
-	  }
+         String q = IvyXml.getAttrString(e,"QUAL");
+         String k = IvyXml.getAttrString(e,"NAME");
+         if (q.equals("edu.brown.cs.bubbles.bedrock")) {
+            boolean fg = IvyXml.getAttrBool(e,"VALUE",false);
+            if (k.equals("useContractsForJava")) use_cofoja = fg;
+            else if (k.equals("useJunit")) use_junit = fg;
+            else if (k.equals("useAssertions")) use_assertions = fg;
+            else if (k.equals("useTypeAnnotations")) use_annotations = fg;
+          }
        }
     }
 
-   @Override public boolean useContractsForJava()	{ return use_cofoja; }
-   @Override public boolean useJunit()			{ return use_junit; }
-   @Override public boolean enableAssertions()		{ return use_assertions; }
-   @Override public boolean useTypeAnnotations()	{ return use_annotations; }
+   @Override public boolean useContractsForJava()       { return use_cofoja; }
+   @Override public boolean useJunit()                  { return use_junit; }
+   @Override public boolean enableAssertions()          { return use_assertions; }
+   @Override public boolean useTypeAnnotations()        { return use_annotations; }
 
 
-}	// end of inner class ContractData
+}       // end of inner class ContractData
 
 
 
 
 
 /**
- *	Return the list of all projects
+ *      Return the list of all projects
  **/
 
 public Element getAllProjects()
@@ -1252,7 +1252,7 @@ public boolean createProject(String nm,File dir,String typ,Map<String,Object> pr
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("PROPS");
       for (Map.Entry<String,Object> ent : props.entrySet()) {
-	 outputPropertyValue(ent.getKey(),ent.getValue(),xw);
+         outputPropertyValue(ent.getKey(),ent.getValue(),xw);
        }
       xw.end("PROPS");
       cnts = xw.toString();
@@ -1299,16 +1299,16 @@ private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
       xw.field("TYPE","List");
       List<?> lval = (List<?>) val;
       for (Object o : lval) {
-	 outputPropertyValue(null,o,xw);
+         outputPropertyValue(null,o,xw);
        }
     }
    else if (val instanceof Map<?,?>) {
       xw.field("TYPE","Map");
       Map<?,?> mval = (Map<?,?>) val;
       for (Map.Entry<?,?> ent1 : mval.entrySet()) {
-	 String nm1 = ent1.getKey().toString();
-	 Object val1 = ent1.getValue();
-	 outputPropertyValue(nm1,val1,xw);
+         String nm1 = ent1.getKey().toString();
+         Object val1 = ent1.getValue();
+         outputPropertyValue(nm1,val1,xw);
        }
     }
    xw.end("PROP");
@@ -1325,15 +1325,15 @@ public void importProject(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Java Search queries							*/
-/*										*/
+/*                                                                              */
+/*      Java Search queries                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Find the loction of a method given the project and name.  If the name is
- *	ambiguous, mutliple locations may be returned.	The name can contain a
- *	parenthesized argument list, i.e. package.method(int,java.lang.String).
+ *      Find the loction of a method given the project and name.  If the name is
+ *      ambiguous, mutliple locations may be returned.  The name can contain a
+ *      parenthesized argument list, i.e. package.method(int,java.lang.String).
  **/
 
 public List<BumpLocation> findMethod(String proj,String name,boolean system)
@@ -1344,12 +1344,12 @@ public List<BumpLocation> findMethod(String proj,String name,boolean system)
 
 
 /**
- *	Return matches for methods, either references or definitions.  The cnstr parameter
- *	distinguishes normal methods from constructors.
+ *      Return matches for methods, either references or definitions.  The cnstr parameter
+ *      distinguishes normal methods from constructors.
  **/
 
 public List<BumpLocation> findMethods(String proj,String pat,boolean refs,boolean defs,
-					 boolean cnstr,boolean system)
+                                         boolean cnstr,boolean system)
 {
    pat = localFixupName(pat);
 
@@ -1377,14 +1377,14 @@ public List<BumpLocation> findMethods(String proj,String pat,boolean refs,boolea
 }
 
 
-protected String localFixupName(String nm)		{ return nm; }
+protected String localFixupName(String nm)              { return nm; }
 
 
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all the fields
- *	matching the given name pattern.
+ *      Return a list of BumpLocations containing the definitions of all the fields
+ *      matching the given name pattern.
  **/
 
 public List<BumpLocation> findFields(String proj,File file,String clsn)
@@ -1408,8 +1408,8 @@ public List<BumpLocation> findFields(String proj,File file,String clsn)
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all the fields
- *	of the given class.
+ *      Return a list of BumpLocations containing the definitions of all the fields
+ *      of the given class.
  **/
 
 public List<BumpLocation> findFields(String proj,String pat,boolean refs,boolean defs)
@@ -1442,9 +1442,9 @@ public List<BumpLocation> findFields(String proj,String pat,boolean refs,boolean
 
 
 /**
- *	Return a list of BumpLocations containing the class prefix.  This includes any
- *	initial comments, the package and import definitions, the class declaration line
- *	with extends and implements and the end of class brace and any subsequent comments.
+ *      Return a list of BumpLocations containing the class prefix.  This includes any
+ *      initial comments, the package and import definitions, the class declaration line
+ *      with extends and implements and the end of class brace and any subsequent comments.
  **/
 
 public List<BumpLocation> findClassPrefix(String proj,File file,String clsn)
@@ -1465,7 +1465,7 @@ public List<BumpLocation> findClassPrefix(String proj,File file,String clsn)
 
 
 /**
- *	Return a list of the compilation units that contain the given class.
+ *      Return a list of the compilation units that contain the given class.
  **/
 
 public List<BumpLocation> findCompilationUnit(String proj,File fil,String clsn)
@@ -1489,8 +1489,8 @@ public List<BumpLocation> findCompilationUnit(String proj,File fil,String clsn)
 
 
 /**
- *	Return a list of BumpLocations containing all the static initializers of
- *	the given class.  This does not include field definitions that have assignments.
+ *      Return a list of BumpLocations containing all the static initializers of
+ *      the given class.  This does not include field definitions that have assignments.
  **/
 
 public List<BumpLocation> findClassInitializers(String proj,String clsn,File file)
@@ -1522,7 +1522,7 @@ public List<BumpLocation> findClassInitializers(String proj,String clsn,File fil
 
 
 /**
- *	Return information about headers in a file
+ *      Return information about headers in a file
 **/
 
 public List<BumpLocation> findClassHeader(String proj,File file,String clsn,boolean pkg,boolean imp)
@@ -1549,8 +1549,8 @@ public List<BumpLocation> findClassHeader(String proj,File file,String clsn,bool
 
 
 /**
- *	Return a list of BumpLocations (generally only a singleton) containing
- *	the complete class definition for the given class.
+ *      Return a list of BumpLocations (generally only a singleton) containing
+ *      the complete class definition for the given class.
  **/
 
 public List<BumpLocation> findClassDefinition(String proj,String clsn)
@@ -1577,8 +1577,8 @@ public List<BumpLocation> findClassDefinition(String proj,String clsn)
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all packages
- *	matching the given pattern
+ *      Return a list of BumpLocations containing the definitions of all packages
+ *      matching the given pattern
  **/
 
 // NOT USED
@@ -1603,8 +1603,8 @@ public List<BumpLocation> findPackages(String proj,String nm)
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all packages
- *	matching the given pattern
+ *      Return a list of BumpLocations containing the definitions of all packages
+ *      matching the given pattern
  **/
 
 public List<BumpLocation> findPackage(String proj,String nm)
@@ -1624,8 +1624,8 @@ public List<BumpLocation> findPackage(String proj,String nm)
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all types
- *	matching the given pattern
+ *      Return a list of BumpLocations containing the definitions of all types
+ *      matching the given pattern
  **/
 
 public List<BumpLocation> findTypes(String proj,String nm)
@@ -1724,12 +1724,12 @@ public List<BumpLocation> findAllTypes(String nm)
 
 
 /**
- *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.					
- *	@param proj the project to search in, null implies all projects
- *	@param nm the search pattern
- *	@param def if true, include definitions in the output set
- *	@param ref if true, include references in the output set
+ *      Return a list of BumpLocations containing the definitions of all annotations
+ *      matching the given pattern.                                     
+ *      @param proj the project to search in, null implies all projects
+ *      @param nm the search pattern
+ *      @param def if true, include definitions in the output set
+ *      @param ref if true, include references in the output set
  **/
 // NOT USED?
 public List<BumpLocation> findAnnotations(String proj,String nm,boolean def,boolean ref)
@@ -1750,8 +1750,8 @@ public List<BumpLocation> findAnnotations(String proj,String nm,boolean def,bool
 
 
 /**
- *	Return a list of all declarations of the given class.  This includes
- *	fields, methods, static initializers, and nested classes and interfaces.
+ *      Return a list of all declarations of the given class.  This includes
+ *      fields, methods, static initializers, and nested classes and interfaces.
  **/
 
 public List<BumpLocation> findAllDeclarations(String proj,File fil,String clsn,boolean top)
@@ -1806,32 +1806,32 @@ private static List<BumpLocation> getSearchResults(String proj,Element xml,boole
 
    if (mtch) {
       for (Element me : IvyXml.children(xml,"MATCH")) {
-	 String fnm = IvyXml.getTextElement(me,"FILE");
-	 int offset = IvyXml.getAttrInt(me,"STARTOFFSET");
-	 int length = IvyXml.getAttrInt(me,"LENGTH");
-	 Element mi = IvyXml.getChild(me,"ITEM");
-	 String pnm = IvyXml.getAttrString(me,"PROJECT");
-	 if (pnm == null) pnm = IvyXml.getAttrString(mi,"PROJECT");
-	 if (pnm == null) pnm = proj;
-//	 int acc = IvyXml.getAttrInt(me,"ACCURACY");
-//	 if (acc > 0) continue;
-	 BumpLocation bl = new BumpLocation(pnm,fnm,
+         String fnm = IvyXml.getTextElement(me,"FILE");
+         int offset = IvyXml.getAttrInt(me,"STARTOFFSET");
+         int length = IvyXml.getAttrInt(me,"LENGTH");
+         Element mi = IvyXml.getChild(me,"ITEM");
+         String pnm = IvyXml.getAttrString(me,"PROJECT");
+         if (pnm == null) pnm = IvyXml.getAttrString(mi,"PROJECT");
+         if (pnm == null) pnm = proj;
+//       int acc = IvyXml.getAttrInt(me,"ACCURACY");
+//       if (acc > 0) continue;
+         BumpLocation bl = new BumpLocation(pnm,fnm,
                offset,length,srctyp,mi);
-	 rslt.add(bl);
+         rslt.add(bl);
        }
     }
    else {
       for (Element m : IvyXml.children(xml,"MATCH")) {
-	 Element mi = IvyXml.getChild(m,"ITEM");
-	 if (mi != null) {
-	    String fnm = IvyXml.getAttrString(mi,"PATH");
-	    int offset = IvyXml.getAttrInt(mi,"STARTOFFSET");
-	    int length = IvyXml.getAttrInt(mi,"LENGTH");
-	    String pnm = IvyXml.getAttrString(mi,"PROJECT");
-	    if (pnm == null) pnm = proj;
-	    BumpLocation bl = new BumpLocation(pnm,fnm,offset,length,mi);
-	    rslt.add(bl);
-	  }
+         Element mi = IvyXml.getChild(m,"ITEM");
+         if (mi != null) {
+            String fnm = IvyXml.getAttrString(mi,"PATH");
+            int offset = IvyXml.getAttrInt(mi,"STARTOFFSET");
+            int length = IvyXml.getAttrInt(mi,"LENGTH");
+            String pnm = IvyXml.getAttrString(mi,"PROJECT");
+            if (pnm == null) pnm = proj;
+            BumpLocation bl = new BumpLocation(pnm,fnm,offset,length,mi);
+            rslt.add(bl);
+          }
        }
     }
 
@@ -1867,28 +1867,28 @@ private static List<BumpLocation> getSearchResults(String proj,Element xml,boole
 
 
 /********************************************************************************/
-/*										*/
-/*	Text search queries							*/
-/*										*/
+/*                                                                              */
+/*      Text search queries                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return a list of BumpLocations containing all text fragments in the
- *	given project that match the given text string.  Each location contains
- *	the match string and includes as its definition, the containing entity,
- *	i.e. method or field definition.  The flags control the type of search.
+ *      Return a list of BumpLocations containing all text fragments in the
+ *      given project that match the given text string.  Each location contains
+ *      the match string and includes as its definition, the containing entity,
+ *      i.e. method or field definition.  The flags control the type of search.
  *
- *	@param proj The project to search; use null for all open projects
- *	@param text The pattern to search for
- *	@param literal If true, then the pattern is taken as a literal string; otherwise
- *	it is assumed to be a regular expression using Java regular expression syntax.
- *	@param nocase If true, ignore case during matching (literal or regular expression)
- *	@param multiline Allow multiple line patterns if true
+ *      @param proj The project to search; use null for all open projects
+ *      @param text The pattern to search for
+ *      @param literal If true, then the pattern is taken as a literal string; otherwise
+ *      it is assumed to be a regular expression using Java regular expression syntax.
+ *      @param nocase If true, ignore case during matching (literal or regular expression)
+ *      @param multiline Allow multiple line patterns if true
  **/
 
 
 public Collection<BumpLocation> textSearch(String proj,String text,boolean literal,
-					      boolean nocase,boolean multiline,int max)
+                                              boolean nocase,boolean multiline,int max)
 {
    waitForIDE();
 
@@ -1914,17 +1914,17 @@ public Collection<BumpLocation> textSearch(String proj,String text,boolean liter
 
 
 /********************************************************************************/
-/*										*/
-/*	Definition and reference queries					*/
-/*										*/
+/*                                                                              */
+/*      Definition and reference queries                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return a list of BumpLocations contain all references to the identifier at
- *	the given source positions.  If spos == epos, then the identifier is whatever
- *	is at that position.  Otherwise, spos and epos should bound the identifier. The
- *	match value of the returned locations indicates the use/definition of the identifier
- *	while the containing entity is returned as the source in the location.
+ *      Return a list of BumpLocations contain all references to the identifier at
+ *      the given source positions.  If spos == epos, then the identifier is whatever
+ *      is at that position.  Otherwise, spos and epos should bound the identifier. The
+ *      match value of the returned locations indicates the use/definition of the identifier
+ *      while the containing entity is returned as the source in the location.
  **/
 
 public List<BumpLocation> findReferences(String proj,File file,int spos,int epos)
@@ -1949,20 +1949,20 @@ public List<BumpLocation> findReferences(String proj,File file,int spos,int epos
 
 
 /**
- *	This routine is similar to findReferences except that for fields and variables
- *	it restricts the search to either read references (write == false), or write
- *	references (write == true).  Note that for non-variables and fields, it returns
- *	exactly the same list as findReferences.
+ *      This routine is similar to findReferences except that for fields and variables
+ *      it restricts the search to either read references (write == false), or write
+ *      references (write == true).  Note that for non-variables and fields, it returns
+ *      exactly the same list as findReferences.
  **/
 
 public List<BumpLocation> findRWReferences(String proj,File file,int spos,int epos,
-	 boolean write)
+         boolean write)
 {
    return findRWReferences(proj,file,spos,epos,write,0);
 }
 
 public List<BumpLocation> findRWReferences(String proj,File file,int spos,int epos,
-						  boolean write,long delay)
+                                                  boolean write,long delay)
 {
    waitForIDE();
 
@@ -1981,9 +1981,9 @@ public List<BumpLocation> findRWReferences(String proj,File file,int spos,int ep
 
 
 /**
- *	This routine returns a list of the definitions of the identifier denoted by the
- *	given positions.  If spos == epos then the position can be anywhere in an identiier.
- *	Otherwise the positions should bound the identifier.
+ *      This routine returns a list of the definitions of the identifier denoted by the
+ *      given positions.  If spos == epos then the position can be anywhere in an identiier.
+ *      Otherwise the positions should bound the identifier.
  **/
 
 public List<BumpLocation> findDefinition(String proj,File file,int spos,int epos)
@@ -2023,9 +2023,9 @@ public List<BumpLocation> findSystemDefinitions(String proj,File file,int spos)
 
 
 /**
- *	This routine finds all implementations of a method.  It is similar to findDefinitions
- *	except that for a method, it will find not only the declared definition, but any other
- *	definitions that implement or override that definition.
+ *      This routine finds all implementations of a method.  It is similar to findDefinitions
+ *      except that for a method, it will find not only the declared definition, but any other
+ *      definitions that implement or override that definition.
  **/
 
 public List<BumpLocation> findImplementations(String proj,File file,int spos,int epos)
@@ -2045,9 +2045,9 @@ public List<BumpLocation> findImplementations(String proj,File file,int spos,int
 
 
 /**
- *	This routine returns a list of the definitions of the identifier denoted by the
- *	given positions.  If spos == epos then the position can be anywhere in an identiier.
- *	Otherwise the positions should bound the identifier.
+ *      This routine returns a list of the definitions of the identifier denoted by the
+ *      given positions.  If spos == epos then the position can be anywhere in an identiier.
+ *      Otherwise the positions should bound the identifier.
  **/
 
 public List<BumpLocation> findTypeDefinition(String proj,File file,int spos,int epos)
@@ -2067,10 +2067,10 @@ public List<BumpLocation> findTypeDefinition(String proj,File file,int spos,int 
 
 
 /**
- *	This routine will find all the names in the given project.  For small and moderate sized
- *	projects this is practical.  For very large projects this routine should probably be
- *	rewritten so that it only finds top level names (e.g. packages) and then another routine
- *	is made available to get the names internal to those.
+ *      This routine will find all the names in the given project.  For small and moderate sized
+ *      projects this is practical.  For very large projects this routine should probably be
+ *      rewritten so that it only finds top level names (e.g. packages) and then another routine
+ *      is made available to get the names internal to those.
  **/
 
 
@@ -2096,7 +2096,7 @@ public Collection<BumpLocation> findAllNames(String proj,List<String> files,bool
    if (files != null) {
       fls = "";
       for (String s : files) {
-	 fls += "<FILE>" + s + "</FILE>\n";
+         fls += "<FILE>" + s + "</FILE>\n";
        }
     }
 
@@ -2106,14 +2106,14 @@ public Collection<BumpLocation> findAllNames(String proj,List<String> files,bool
    if (nid == null || nc == null) {
       Collection<BumpLocation> rslt = new ArrayList<BumpLocation>();
       for (Element fe : IvyXml.children(xml,"FILE")) {
-	 String path = IvyXml.getTextElement(fe,"PATH");
-	 for (Element itm : IvyXml.children(fe,"ITEM")) {
-	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-	    int length = IvyXml.getAttrInt(itm,"LENGTH");
-	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
-	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-	    rslt.add(bl);
-	  }
+         String path = IvyXml.getTextElement(fe,"PATH");
+         for (Element itm : IvyXml.children(fe,"ITEM")) {
+            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+            int length = IvyXml.getAttrInt(itm,"LENGTH");
+            String pnm = IvyXml.getAttrString(itm,"PROJECT");
+            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+            rslt.add(bl);
+          }
        }
       return rslt;
     }
@@ -2124,10 +2124,10 @@ public Collection<BumpLocation> findAllNames(String proj,List<String> files,bool
 
 
 /**
- *	This routine will find the fully qualified name of the identifier denoted by the
- *	given position.  For classes and interfaces it returns the full class name; for
- *	fields it returns the fully qualified field name; for methods it returns the fully
- *	qualified method name followed by a parenthesized list of the argument types.
+ *      This routine will find the fully qualified name of the identifier denoted by the
+ *      given position.  For classes and interfaces it returns the full class name; for
+ *      fields it returns the fully qualified field name; for methods it returns the fully
+ *      qualified method name followed by a parenthesized list of the argument types.
  **/
 
 public String getFullyQualifiedName(String proj,File file,int start,int end,long delay)
@@ -2144,15 +2144,15 @@ public String getFullyQualifiedName(String proj,File file,int start,int end,long
    if (sgn != null) {
       int idx0 = sgn.indexOf('(');
       if (idx0 >= 0) {
-	 int idx1 = sgn.lastIndexOf(')');
-	 String ps = sgn.substring(idx0,idx1+1);
-	 try {
-	    String p = IvyFormat.formatTypeName(ps);
-	    nm += p;
-	  }
-	 catch (Throwable t) {
-	    BoardLog.logE("BUMP","Problem formating type " + ps,t);
-	  }
+         int idx1 = sgn.lastIndexOf(')');
+         String ps = sgn.substring(idx0,idx1+1);
+         try {
+            String p = IvyFormat.formatTypeName(ps);
+            nm += p;
+          }
+         catch (Throwable t) {
+            BoardLog.logE("BUMP","Problem formating type " + ps,t);
+          }
 
       }
     }
@@ -2171,17 +2171,17 @@ public List<BumpLocation> findByLineOffset(String proj,File file,int line,int of
 }
 
 /********************************************************************************/
-/*										*/
-/*	Auto completion methods 						*/
-/*										*/
+/*                                                                              */
+/*      Auto completion methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This returns the list of possible completions for the given file at the
- *	given offset.  Since this routine can take a bit of time to evaluate, the
- *	passed in id is the current edit id and can be checked as part of the
- *	result to see if the user has made further changes since the request was
- *	made.
+ *      This returns the list of possible completions for the given file at the
+ *      given offset.  Since this routine can take a bit of time to evaluate, the
+ *      passed in id is the current edit id and can be checked as part of the
+ *      result to see if the user has made further changes since the request was
+ *      made.
  **/
 
 public Collection<BumpCompletion> getCompletions(String proj,File file,int id,int off)
@@ -2209,14 +2209,14 @@ public Collection<BumpCompletion> getCompletions(String proj,File file,int id,in
 
 
 /********************************************************************************/
-/*										*/
-/*	Find expected type so we can auto create declaration			*/
-/*										*/
+/*                                                                              */
+/*      Find expected type so we can auto create declaration                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This returns the expected type for an assignment so that the assignment
- *	can be made into a declaration with an inferred type.
+ *      This returns the expected type for an assignment so that the assignment
+ *      can be made into a declaration with an inferred type.
  **/
 
 public Element getExpectedType(String proj,File file,int line)
@@ -2237,9 +2237,9 @@ public Element getExpectedType(String proj,File file,int line)
 
 
 /********************************************************************************/
-/*										*/
-/*	Renaming methods							*/
-/*										*/
+/*                                                                              */
+/*      Renaming methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public Element rename(String proj,File file,int spos,int epos,String newname)
@@ -2264,9 +2264,9 @@ public Element rename(String proj,File file,int spos,int epos,String newname)
 
 
 /********************************************************************************/
-/*										*/
-/*	Move methods								*/
-/*										*/
+/*                                                                              */
+/*      Move methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public Element moveClass(String proj,String cls,BumpLocation loc,String topkg)
@@ -2334,9 +2334,9 @@ public boolean delete(String proj,String what,String path,boolean rebuild)
 
 
 /********************************************************************************/
-/*										*/
-/*	Formatting methods							*/
-/*										*/
+/*                                                                              */
+/*      Formatting methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 public Element format(String proj,File file,int spos,int epos)
@@ -2416,14 +2416,14 @@ public Element fixImports(String proj,File file,String order,int demand,int stat
 
 
 /********************************************************************************/
-/*										*/
-/*	Type hierarchy methods							*/
-/*										*/
+/*                                                                              */
+/*      Type hierarchy methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return a structure representing type hierarchy information for the given
- *	package or class
+ *      Return a structure representing type hierarchy information for the given
+ *      package or class
  **/
 
 public Element getTypeHierarchy(String proj,String pkg,String cls,boolean all)
@@ -2455,20 +2455,20 @@ public Element getTypeHierarchy(String proj,String pkg,String cls,boolean all)
 
 
 /********************************************************************************/
-/*										*/
-/*	Call path methods							*/
-/*										*/
+/*                                                                              */
+/*      Call path methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	This routine computes the set of calls between the from routine and the
- *	to routine.  Both are given as fully qualified method names (i.e. should
- *	include parameter types).  What is returned is a XML tree denoting the
- *	various calls.	The tree is truncated at either 4 levels deep or when
- *	a path is found.  The returned tree includes the locations of the various
- *	calls.
+ *      This routine computes the set of calls between the from routine and the
+ *      to routine.  Both are given as fully qualified method names (i.e. should
+ *      include parameter types).  What is returned is a XML tree denoting the
+ *      various calls.  The tree is truncated at either 4 levels deep or when
+ *      a path is found.  The returned tree includes the locations of the various
+ *      calls.
  *
- *	TODO: document the return XML
+ *      TODO: document the return XML
  **/
 
 public List<BumpLocation> getCallPath(String proj,String from,String to)
@@ -2490,11 +2490,11 @@ public List<BumpLocation> getCallPath(String proj,String from,String to)
    while (!workqueue.isEmpty()) {
       Element next = workqueue.poll();
       for (Element c : IvyXml.children(next,"CALL")) {
-	 if (IvyXml.getAttrBool(c,"TARGET")) {
-	    rslt = c;
-	    break;
-	  }
-	 workqueue.add(c);
+         if (IvyXml.getAttrBool(c,"TARGET")) {
+            rslt = c;
+            break;
+          }
+         workqueue.add(c);
        }
     }
    if (rslt == null) return null;
@@ -2524,19 +2524,19 @@ public List<BumpLocation> getCallPath(String proj,String from,String to)
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint commands							*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint commands                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Insert a breakpoint at the given line of the given file.  The class parameter
- *	is optional.  The breakpoint will cause the current thread to suspend unless
- *	suspendvm is true in which case all threads will suspend.
+ *      Insert a breakpoint at the given line of the given file.  The class parameter
+ *      is optional.  The breakpoint will cause the current thread to suspend unless
+ *      suspendvm is true in which case all threads will suspend.
  **/
 
 boolean addLineBreakpoint(String proj,File file,String cls,int line,
-				 boolean suspendvm,boolean istrace)
+                                 boolean suspendvm,boolean istrace)
 {
    waitForIDE();
 
@@ -2554,13 +2554,13 @@ boolean addLineBreakpoint(String proj,File file,String cls,int line,
 
 
 /**
- *	Insert a breakpoint for when an exception is thrown.  This can be specialized
- *	by whether the exception is caught or uncaught or both.
- *	@param cls The class name of the exception (e.g. java.lang.NullPointerException)
+ *      Insert a breakpoint for when an exception is thrown.  This can be specialized
+ *      by whether the exception is caught or uncaught or both.
+ *      @param cls The class name of the exception (e.g. java.lang.NullPointerException)
  **/
 
 boolean addExceptionBreakpoint(String proj,String cls,boolean caught,
-					 boolean uncaught,boolean suspendvm,boolean subclass)
+                                         boolean uncaught,boolean suspendvm,boolean subclass)
 {
    waitForIDE();
 
@@ -2579,7 +2579,7 @@ boolean addExceptionBreakpoint(String proj,String cls,boolean caught,
 
 
 /**
- *	Remove any breakpoints at the given line of the given file.
+ *      Remove any breakpoints at the given line of the given file.
  **/
 
 boolean clearLineBreakpoint(String proj,File file,String cls,int line)
@@ -2598,7 +2598,7 @@ boolean clearLineBreakpoint(String proj,File file,String cls,int line)
 
 
 /**
- *	Edit breakpoint properties
+ *      Edit breakpoint properties
  **/
 
 public boolean editBreakpoint(String id,String prop,String... args)
@@ -2611,7 +2611,7 @@ public boolean editBreakpoint(String id,String prop,String... args)
       int j = i/2 + 1;
       q += " PROP" + j + "='" + args[i] + "'";
       if (i+1 < args.length) {
-	 q += " VALUE" + j + "='" + args[i+1] + "'";
+         q += " VALUE" + j + "='" + args[i+1] + "'";
        }
     }
 
@@ -2621,9 +2621,9 @@ public boolean editBreakpoint(String id,String prop,String... args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Quick fix testing							*/
-/*										*/
+/*                                                                              */
+/*      Quick fix testing                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public Element computeQuickFix(BumpProblem bp,int off,int len,boolean save)
@@ -2650,13 +2650,13 @@ public Element computeQuickFix(BumpProblem bp,int off,int len,boolean save)
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback management							*/
-/*										*/
+/*                                                                              */
+/*      Callback management                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Add a callback for file events for the given file.
+ *      Add a callback for file events for the given file.
  **/
 
 public void addFileHandler(File file,BumpFileHandler hdlr)
@@ -2667,7 +2667,7 @@ public void addFileHandler(File file,BumpFileHandler hdlr)
 
 
 /**
- *	Remove a file callback previously added with addFileHandler.
+ *      Remove a file callback previously added with addFileHandler.
  **/
 
 public void removeFileHandler(BumpFileHandler hdlr)
@@ -2677,9 +2677,9 @@ public void removeFileHandler(BumpFileHandler hdlr)
 
 
 /**
- *	Add a callback for handling additions/deletions and changes to the set
- *	of projects associated with a file.  If the file argument is null, the
- *	callback is invoked for all problems.
+ *      Add a callback for handling additions/deletions and changes to the set
+ *      of projects associated with a file.  If the file argument is null, the
+ *      callback is invoked for all problems.
  **/
 
 public void addProblemHandler(File file,BumpProblemHandler hdlr)
@@ -2689,7 +2689,7 @@ public void addProblemHandler(File file,BumpProblemHandler hdlr)
 
 
 /**
- *	Remove a previously registered problem handler.
+ *      Remove a previously registered problem handler.
  **/
 
 public void removeProblemHandler(BumpProblemHandler hdlr)
@@ -2700,9 +2700,9 @@ public void removeProblemHandler(BumpProblemHandler hdlr)
 
 
 /**
- *	Add a callback for handling additions/deletions and changes to the set
- *	of breakpoints associated with a file.	If the file argument isn't null, the
- *	callback is invoked for all breakpoints.
+ *      Add a callback for handling additions/deletions and changes to the set
+ *      of breakpoints associated with a file.  If the file argument isn't null, the
+ *      callback is invoked for all breakpoints.
  **/
 
 public void addBreakpointHandler(File file,BumpBreakpointHandler hdlr)
@@ -2712,7 +2712,7 @@ public void addBreakpointHandler(File file,BumpBreakpointHandler hdlr)
 
 
 /**
- *	Remove a previously registered breakpoint callback.
+ *      Remove a previously registered breakpoint callback.
  **/
 
 public void removeBreakpointHandler(BumpBreakpointHandler hdlr)
@@ -2723,7 +2723,7 @@ public void removeBreakpointHandler(BumpBreakpointHandler hdlr)
 
 
 /**
- *	Add a callback for handling new files, deleted files and changed files
+ *      Add a callback for handling new files, deleted files and changed files
  **/
 
 public void addChangeHandler(BumpChangeHandler hdlr)
@@ -2733,7 +2733,7 @@ public void addChangeHandler(BumpChangeHandler hdlr)
 
 
 /**
- *	Remove a previously registered breakpoint callback.
+ *      Remove a previously registered breakpoint callback.
  **/
 
 public void removeChangeHandler(BumpChangeHandler hdlr)
@@ -2742,7 +2742,7 @@ public void removeChangeHandler(BumpChangeHandler hdlr)
 }
 
 /**
- *	Add a callback for handling open editor bubble from eclipse
+ *      Add a callback for handling open editor bubble from eclipse
  **/
 
 public void addOpenEditorBubbleHandler(BumpOpenEditorBubbleHandler hdlr)
@@ -2752,7 +2752,7 @@ public void addOpenEditorBubbleHandler(BumpOpenEditorBubbleHandler hdlr)
 
 
 /**
- *	Remove a previously registered callback for handling open editor bubble from eclipse.
+ *      Remove a previously registered callback for handling open editor bubble from eclipse.
  **/
 
 public void removeOpenEditorBubbleHandler(BumpOpenEditorBubbleHandler hdlr)
@@ -2763,7 +2763,7 @@ public void removeOpenEditorBubbleHandler(BumpOpenEditorBubbleHandler hdlr)
 
 
 /**
- *	Add a progress handler
+ *      Add a progress handler
  **/
 public void addProgressHandler(BumpProgressHandler hdlr)
 {
@@ -2772,7 +2772,7 @@ public void addProgressHandler(BumpProgressHandler hdlr)
 
 
 /**
- *	Remove previously registered progress handler
+ *      Remove previously registered progress handler
  **/
 public void removeProgressHandler(BumpProgressHandler hdlr)
 {
@@ -2782,13 +2782,13 @@ public void removeProgressHandler(BumpProgressHandler hdlr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Error repository access 						*/
-/*										*/
+/*                                                                              */
+/*      Error repository access                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Return the set of all active problems (errors/warnings/notices).
+ *      Return the set of all active problems (errors/warnings/notices).
  **/
 
 public List<BumpProblem> getAllProblems()
@@ -2804,7 +2804,7 @@ public BumpErrorType getErrorType(String cat)
 
 
 /**
- *	Return the set of all active problems (errors/warnings/notices) for the given file.
+ *      Return the set of all active problems (errors/warnings/notices) for the given file.
  **/
 
 public List<BumpProblem> getProblems(File f)
@@ -2834,9 +2834,9 @@ public void endTask()
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint repository access						*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint repository access                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadBreakpoints()
@@ -2852,7 +2852,7 @@ private void loadBreakpoints()
 
 
 /**
- *	Return the set of all active breakpoints
+ *      Return the set of all active breakpoints
  **/
 
 public List<BumpBreakpoint> getAllBreakpoints()
@@ -2862,7 +2862,7 @@ public List<BumpBreakpoint> getAllBreakpoints()
 
 
 /**
- *	Return the set of all active breakpoints for the given file
+ *      Return the set of all active breakpoints for the given file
  **/
 
 public List<BumpBreakpoint> getBreakpoints(File f)
@@ -2873,9 +2873,9 @@ public List<BumpBreakpoint> getBreakpoints(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Run/debug methods							*/
-/*										*/
+/*                                                                              */
+/*      Run/debug methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public BumpBreakModel getBreakModel()
@@ -2886,9 +2886,9 @@ public BumpBreakModel getBreakModel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle hover data							*/
-/*										*/
+/*                                                                              */
+/*      Handle hover data                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 public Element getHoverData(String proj,File file,int soff,int eoff,int delay)
@@ -2904,9 +2904,9 @@ public Element getHoverData(String proj,File file,int soff,int eoff,int delay)
 
 
 /********************************************************************************/
-/*										*/
-/*	Language data methods							*/
-/*										*/
+/*                                                                              */
+/*      Language data methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 public Element getLanguageData()
@@ -2922,8 +2922,8 @@ public Element getLanguageData(BoardLanguage lang)
       if (lang != null) q = "LANGUAGE='" + lang.toString() + "'";
       Element e = getXmlReply("LANGUAGEDATA",null,q,null,0);
       if (IvyXml.isElement(e,"RESULT")) {
-	 Element ld = IvyXml.getChild(e,"LANGUAGE");
-	 e = ld;
+         Element ld = IvyXml.getChild(e,"LANGUAGE");
+         e = ld;
        }
       language_data = e;
     }
@@ -2933,9 +2933,9 @@ public Element getLanguageData(BoardLanguage lang)
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugger action methods 						*/
-/*										*/
+/*                                                                              */
+/*      Debugger action methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 public Element doLaunchQuery(String proj,String query,String option)
@@ -2984,7 +2984,7 @@ Element getNewRunConfiguration(String name,String clone,BumpLaunchType typ)
       q += " TYPE='" + typ.getDescription() + "'";
       q += " KIND='" + typ.getName() + "'";
     }
-   if (clone != null) { 	// must have a new name
+   if (clone != null) {         // must have a new name
       q += " CLONE='" + clone + "'";
     }
 
@@ -3094,19 +3094,19 @@ private String getDebugArgs(String id)
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
-	 MintDefaultReply mdr = new MintDefaultReply();
-	 mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",
-	       mdr,MINT_MSG_FIRST_NON_NULL);
-	 Element xml = mdr.waitForXml();
-	 if (xml != null) {
-	    xtr = IvyXml.getText(xml);
-	    if (xtr != null && xtr.trim().length() == 0) xtr = null;
-	  }
-	 break;
+         MintDefaultReply mdr = new MintDefaultReply();
+         mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",
+               mdr,MINT_MSG_FIRST_NON_NULL);
+         Element xml = mdr.waitForXml();
+         if (xml != null) {
+            xtr = IvyXml.getText(xml);
+            if (xtr != null && xtr.trim().length() == 0) xtr = null;
+          }
+         break;
       case SERVER :
       case NORMAL :
-	 xtr = run_manager.startDebugArgs(id);
-	 break;
+         xtr = run_manager.startDebugArgs(id);
+         break;
     }
 
    synchronized (debug_jvm_args) {
@@ -3268,9 +3268,9 @@ public boolean consoleInput(BumpLaunch bl,String txt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Value access methods							*/
-/*										*/
+/*                                                                              */
+/*      Value access methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 Element getVariableValue(BumpStackFrame frm,String var,String saveid,int lvls)
@@ -3320,7 +3320,7 @@ boolean evaluateExpression(BumpStackFrame frm,String expr,boolean impl,boolean b
 
 
 boolean evaluateExpression(BumpStackFrame frm,String expr,boolean impl,boolean brk,
-				     String saveid,BumpEvaluationHandler hdlr)
+                                     String saveid,BumpEvaluationHandler hdlr)
 {
    if (frm == null || frm.getThread() == null) return false;
    String proj = frm.getThread().getLaunch().getConfiguration().getProject();
@@ -3365,7 +3365,7 @@ private class EvalData {
       run_manager.handleEvaluationResult(for_frame,xml,for_handler);
     }
 
-}	// end of class EvalData
+}       // end of class EvalData
 
 
 
@@ -3375,13 +3375,13 @@ public BumpTrieData getTrieData(BumpProcess bp)
 }
 
 /********************************************************************************/
-/*										*/
-/*	New methods								*/
-/*										*/
+/*                                                                              */
+/*      New methods                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Create a new class with the given contents in the given project.
+ *      Create a new class with the given contents in the given project.
  **/
 
 public File createNewClass(String proj,String name,boolean force,String cnts)
@@ -3410,7 +3410,7 @@ public File createNewClass(String proj,String name,boolean force,String cnts)
 
 
 /**
- *	Create a new package with the given name
+ *      Create a new package with the given name
  **/
 
 public File createNewDirectory(String proj,String dir,boolean force)
@@ -3439,9 +3439,9 @@ public File createNewPackage(String proj,String pkg,boolean force)
 
 
 /********************************************************************************/
-/*										*/
-/*	Host checking								*/
-/*										*/
+/*                                                                              */
+/*      Host checking                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean isIdeOnSameHost()
@@ -3468,9 +3468,9 @@ private boolean isIdeOnSameHost()
 
 
 /********************************************************************************/
-/*										*/
-/*	Higher level messages							*/
-/*										*/
+/*                                                                              */
+/*      Higher level messages                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 protected boolean tryPing()
@@ -3484,9 +3484,9 @@ protected boolean tryPing()
 
 
 /********************************************************************************/
-/*										*/
-/*	Send message to IDE							*/
-/*										*/
+/*                                                                              */
+/*      Send message to IDE                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 protected void sendMessage(String cmd)
@@ -3582,9 +3582,9 @@ protected void sendMessage(String cmd,String proj,String flds,String cnts,MintRe
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle reply error checking						*/
-/*										*/
+/*                                                                              */
+/*      Handle reply error checking                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ReplyHandler extends MintDefaultReply {
@@ -3595,27 +3595,27 @@ private static final class ReplyHandler extends MintDefaultReply {
       BoardLog.logD("BUMP","REPLY: " + hadReply());
 
       if (rply != null) {
-	 Element xml = rply.getXml();
-	 if (IvyXml.isElement(xml,"ERROR")) {
-	    String stk = IvyXml.getTextElement(xml,"STACK");
-	    if (stk != null) {
-	       String txt = IvyXml.getTextElement(xml,"MESSAGE");
-	       String id = IvyXml.getTextElement(xml,"EXCEPTION");
-	       BoardLog.logE(default_client.getServerName(),txt,id,stk);
-	     }
-	  }
+         Element xml = rply.getXml();
+         if (IvyXml.isElement(xml,"ERROR")) {
+            String stk = IvyXml.getTextElement(xml,"STACK");
+            if (stk != null) {
+               String txt = IvyXml.getTextElement(xml,"MESSAGE");
+               String id = IvyXml.getTextElement(xml,"EXCEPTION");
+               BoardLog.logE(default_client.getServerName(),txt,id,stk);
+             }
+          }
        }
     }
 
-}	// end of inner class ReplyHandler
+}       // end of inner class ReplyHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static void loadProperties()
@@ -3630,9 +3630,9 @@ private static void loadProperties()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to send elision data to editors via callbacks			*/
-/*										*/
+/*                                                                              */
+/*      Methods to send elision data to editors via callbacks                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleElision(String bid,String fnm,int id,Element data)
@@ -3642,7 +3642,7 @@ private void handleElision(String bid,String fnm,int id,Element data)
       BumpFileHandler hdlr = ent.getKey();
       File hf = ent.getValue();
       if (hf == null || f.equals(hf)) {
-	 hdlr.handleElisionData(f,id,data);
+         hdlr.handleElisionData(f,id,data);
        }
     }
 }
@@ -3650,9 +3650,9 @@ private void handleElision(String bid,String fnm,int id,Element data)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle remote edits							*/
-/*										*/
+/*                                                                              */
+/*      Handle remote edits                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private boolean handleEdit(String bid,String fnm,int len,int off,boolean complete,boolean remove,String txt)
@@ -3672,7 +3672,7 @@ private boolean handleEdit(String bid,String fnm,int len,int off,boolean complet
       BumpFileHandler hdlr = ent.getKey();
       File hf = ent.getValue();
       if (hf == null || f.equals(hf)) {
-	 hdlr.handleRemoteEdit(f,xlen,off,txt);
+         hdlr.handleRemoteEdit(f,xlen,off,txt);
        }
     }
 
@@ -3682,9 +3682,9 @@ private boolean handleEdit(String bid,String fnm,int len,int off,boolean complet
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle resource changes					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle resource changes                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleResourceChange(Element de)
@@ -3696,23 +3696,23 @@ private void handleResourceChange(Element de)
       String fp = IvyXml.getAttrString(re,"LOCATION");
       String proj = IvyXml.getAttrString(re,"PROJECT");
       switch (k) {
-	 case "ADDED" :
-	 case "ADDED_PHANTOM" :
-	    for (BumpChangeHandler bch : change_handlers.keySet()) {
-	       bch.handleFileAdded(proj,fp);
-	     }
-	    break;
-	 case "REMOVED" :
-	 case "REMOVED_PHANTOM" :
-	    for (BumpChangeHandler bch : change_handlers.keySet()) {
-	       bch.handleFileRemoved(proj,fp);
-	     }
-	    break;
-	 default :
-	    for (BumpChangeHandler bch : change_handlers.keySet()) {
-	       bch.handleFileChanged(proj,fp);
-	     }
-	    break;
+         case "ADDED" :
+         case "ADDED_PHANTOM" :
+            for (BumpChangeHandler bch : change_handlers.keySet()) {
+               bch.handleFileAdded(proj,fp);
+             }
+            break;
+         case "REMOVED" :
+         case "REMOVED_PHANTOM" :
+            for (BumpChangeHandler bch : change_handlers.keySet()) {
+               bch.handleFileRemoved(proj,fp);
+             }
+            break;
+         default :
+            for (BumpChangeHandler bch : change_handlers.keySet()) {
+               bch.handleFileChanged(proj,fp);
+             }
+            break;
        }
     }
 }
@@ -3729,9 +3729,9 @@ private void handleProjectOpen(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle preferences						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle preferences                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void grabPreferences()
@@ -3746,7 +3746,7 @@ private void grabPreferences()
       String vl = IvyXml.getAttrString(pr,"VALUE");
       if (IvyXml.getAttrBool(pr,"OPTS")) {
          BoardLog.logD("BUMP","ADD Option " + nm + " = " + vl);
-	 option_map.put(nm,vl);
+         option_map.put(nm,vl);
        }
     }
 }
@@ -3754,7 +3754,7 @@ private void grabPreferences()
 
 
 /**
- *	Load a default options specification for formatting, etc.
+ *      Load a default options specification for formatting, etc.
  **/
 
 public void loadPreferences(String proj,String xml)
@@ -3769,14 +3769,14 @@ public void loadPreferences(String proj,String xml)
 
 
 /**
- *	Return the string value of the IDE option with the given name.
+ *      Return the string value of the IDE option with the given name.
  **/
 
-public String getOption(String nm)		{ return option_map.get(nm); }
+public String getOption(String nm)              { return option_map.get(nm); }
 
 
 /**
- *	Return the boolean value of the IDE option with the given name
+ *      Return the boolean value of the IDE option with the given name
  **/
 
 public boolean getOptionBool(String nm) 
@@ -3796,16 +3796,16 @@ public boolean getOptionBool(String nm,boolean dflt)
 
 
 /**
- *	Return the integer value of the IDE option with the given name.  If the option
- *	is not defined, return 0.
+ *      Return the integer value of the IDE option with the given name.  If the option
+ *      is not defined, return 0.
  **/
 
-public int getOptionInt(String nm)		{ return getOptionInt(nm,0); }
+public int getOptionInt(String nm)              { return getOptionInt(nm,0); }
 
 
 /**
- *	Return the integer value of the IDE option with the given name.  If the option
- *	is not defined, return the given default value.
+ *      Return the integer value of the IDE option with the given name.  If the option
+ *      is not defined, return the given default value.
  **/
 
 public int getOptionInt(String nm,int dflt)
@@ -3823,9 +3823,9 @@ public int getOptionInt(String nm,int dflt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle initial build 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle initial build                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean nosave)
@@ -3841,7 +3841,7 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
    for (Element p : IvyXml.children(e,"PROJECT")) {
       String pnm = IvyXml.getAttrString(p,"NAME");
       if (!IvyXml.getAttrBool(p,"OPEN")) {
-	 getStringReply("OPENPROJECT",pnm,addWorkspace(null),null,0);
+         getStringReply("OPENPROJECT",pnm,addWorkspace(null),null,0);
        }
       Element probs = getXmlReply("BUILDPROJECT",pnm,q,null,BUILD_DELAY);
       if (IvyXml.getAttrBool(probs,"DEFERERRORS")) {
@@ -3866,9 +3866,9 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
 
 
 /********************************************************************************/
-/*										*/
-/*	IDE message handling							*/
-/*										*/
+/*                                                                              */
+/*      IDE message handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 protected class IDEHandler implements MintHandler {
@@ -3882,34 +3882,34 @@ protected class IDEHandler implements MintHandler {
       BoardLog.logD("BUMP","Eclipse command " + cmd);
 
       try {
-	 if (cmd == null) {
-	    BoardLog.logE("BUMP","Bad eclipse message:" + msg.getText());
-	  }
-	 else if (doing_exit) {
-	    if (cmd.startsWith("PING")) msg.replyTo();
-	    else msg.replyTo("<OK/>");
-	  }
-	 else switch (cmd) {
-	    case "ELISION" :
-	       handleElision(IvyXml.getAttrString(e,"BID"),
-		     IvyXml.getAttrString(e,"FILE"),
-		     IvyXml.getAttrInt(e,"ID"),
-		     IvyXml.getChild(e,"ELISION"));
-	       break;
-	    case "EDITERROR" :
-	       problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
-		     new File(IvyXml.getAttrString(e,"FILE")),
+         if (cmd == null) {
+            BoardLog.logE("BUMP","Bad eclipse message:" + msg.getText());
+          }
+         else if (doing_exit) {
+            if (cmd.startsWith("PING")) msg.replyTo();
+            else msg.replyTo("<OK/>");
+          }
+         else switch (cmd) {
+            case "ELISION" :
+               handleElision(IvyXml.getAttrString(e,"BID"),
+                     IvyXml.getAttrString(e,"FILE"),
+                     IvyXml.getAttrInt(e,"ID"),
+                     IvyXml.getChild(e,"ELISION"));
+               break;
+            case "EDITERROR" :
+               problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
+                     new File(IvyXml.getAttrString(e,"FILE")),
                      IvyXml.getAttrString(e,"CATEGORY","IDE"),
-		     IvyXml.getAttrInt(e,"ID"),
-		     IvyXml.getChild(e,"MESSAGES"));
-	       break;
-	    case "FILEERROR" :
-	       problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
-		     new File(IvyXml.getAttrString(e,"FILE")),
+                     IvyXml.getAttrInt(e,"ID"),
+                     IvyXml.getChild(e,"MESSAGES"));
+               break;
+            case "FILEERROR" :
+               problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
+                     new File(IvyXml.getAttrString(e,"FILE")),
                      IvyXml.getAttrString(e,"CATEGORY","IDE"),
-		     -1,
-		     IvyXml.getChild(e,"MESSAGES")); 
-	       break;
+                     -1,
+                     IvyXml.getChild(e,"MESSAGES")); 
+               break;
             case "FILEERRORS" :
                for (Element ferr : IvyXml.children(e,"FILEERROR")) {
                   problem_set.handleErrors(IvyXml.getAttrString(ferr,"PROJECT"),
@@ -3919,158 +3919,158 @@ protected class IDEHandler implements MintHandler {
                         IvyXml.getChild(ferr,"MESSAGES")); 
                 }
                break;
-	    case "PRIVATEERROR" :
-	       problem_set.handlePrivateErrors(IvyXml.getAttrString(e,"PROJECT"),
-		     new File(IvyXml.getAttrString(e,"FILE")),
-		     IvyXml.getAttrString(e,"ID"),
-		     IvyXml.getAttrBool(e,"FAILURE"),
-		     IvyXml.getChild(e,"MESSAGES"));
-	       break;
-	    case "AUTOBUILDDONE" :
-	       break;
-	    case "EDIT" :
-	       String bid = IvyXml.getAttrString(e,"BID");
-	       if (bid != null && !bid.equals(source_id)) {
-		  msg.replyTo();
-		  return;
-		}
-	       BoardLog.logD("BUMP","REMOTE EDIT: " + IvyXml.convertXmlToString(e));
-	       String txt = IvyXml.getText(e);
-	       boolean complete = IvyXml.getAttrBool(e,"COMPLETE");
-	       boolean remove = IvyXml.getAttrBool(e,"REMOVE");
-	       if (complete) {
-		  byte [] data = IvyXml.getBytesElement(e,"CONTENTS");
-		  if (data != null) txt = new String(data);
-		  else remove = true;
-		}
-	       if (handleEdit(bid,
-		     IvyXml.getAttrString(e,"FILE"),
-		     IvyXml.getAttrInt(e,"LENGTH"),
-		     IvyXml.getAttrInt(e,"OFFSET"),
-		     complete,remove,
-		     txt)) {
-		  msg.replyTo("<OK/>");
-		}
-	       else msg.replyTo();
-	       break;
-	    case "BREAKEVENT" :
-	       BoardLog.logD("BUMP","BREAK EVENT: " + IvyXml.convertXmlToString(e));
-	       break_set.handleUpdate(IvyXml.getChild(e,"BREAKPOINTS"));
-	       msg.replyTo("<OK/>");
-	       break;
-	    case "LAUNCHCONFIGEVENT" :
-	       BoardLog.logD("BUMP","LAUNCH EVENT: " + IvyXml.convertXmlToString(e));
-	       run_manager.handleLaunchEvent(IvyXml.getChild(e,"LAUNCH"));
-	       break;
-	    case "RUNEVENT" :
-	       BoardLog.logD("BUMP","RUNEVENT: " + IvyXml.convertXmlToString(e));
-	       long when = IvyXml.getAttrLong(e,"TIME");
-	       for (Element re : IvyXml.children(e,"RUNEVENT")) {
-		  run_manager.handleRunEvent(re,when);
-		}
+            case "PRIVATEERROR" :
+               problem_set.handlePrivateErrors(IvyXml.getAttrString(e,"PROJECT"),
+                     new File(IvyXml.getAttrString(e,"FILE")),
+                     IvyXml.getAttrString(e,"ID"),
+                     IvyXml.getAttrBool(e,"FAILURE"),
+                     IvyXml.getChild(e,"MESSAGES"));
+               break;
+            case "AUTOBUILDDONE" :
+               break;
+            case "EDIT" :
+               String bid = IvyXml.getAttrString(e,"BID");
+               if (bid != null && !bid.equals(source_id)) {
+                  msg.replyTo();
+                  return;
+                }
+               BoardLog.logD("BUMP","REMOTE EDIT: " + IvyXml.convertXmlToString(e));
+               String txt = IvyXml.getText(e);
+               boolean complete = IvyXml.getAttrBool(e,"COMPLETE");
+               boolean remove = IvyXml.getAttrBool(e,"REMOVE");
+               if (complete) {
+                  byte [] data = IvyXml.getBytesElement(e,"CONTENTS");
+                  if (data != null) txt = new String(data);
+                  else remove = true;
+                }
+               if (handleEdit(bid,
+                     IvyXml.getAttrString(e,"FILE"),
+                     IvyXml.getAttrInt(e,"LENGTH"),
+                     IvyXml.getAttrInt(e,"OFFSET"),
+                     complete,remove,
+                     txt)) {
+                  msg.replyTo("<OK/>");
+                }
+               else msg.replyTo();
+               break;
+            case "BREAKEVENT" :
+               BoardLog.logD("BUMP","BREAK EVENT: " + IvyXml.convertXmlToString(e));
+               break_set.handleUpdate(IvyXml.getChild(e,"BREAKPOINTS"));
+               msg.replyTo("<OK/>");
+               break;
+            case "LAUNCHCONFIGEVENT" :
+               BoardLog.logD("BUMP","LAUNCH EVENT: " + IvyXml.convertXmlToString(e));
+               run_manager.handleLaunchEvent(IvyXml.getChild(e,"LAUNCH"));
+               break;
+            case "RUNEVENT" :
+               BoardLog.logD("BUMP","RUNEVENT: " + IvyXml.convertXmlToString(e));
+               long when = IvyXml.getAttrLong(e,"TIME");
+               for (Element re : IvyXml.children(e,"RUNEVENT")) {
+                  run_manager.handleRunEvent(re,when);
+                }
                BoardLog.logD("BUMP","Finished run event");
-	       msg.replyTo("<OK/>");
-	       break;
-	    case "NAMES" :
-	       if (name_collects != null) {
-		  BoardLog.logD("BUMP","NAMES RECEIVED");
-		  String nid = IvyXml.getAttrString(e,"NID");
-		  NameCollector nc = name_collects.get(nid);
-		  if (nc != null) {
-		     nc.addNames(e);
-		     BoardLog.logD("BUMP","NAMES: " + nc.getSize());
-		   }
-		  msg.replyTo("<OK/>");
-		  // wait until add to ensure end doesn't come before we are all processed
-		}
-	       break;
-	    case "ENDNAMES" :
-	       msg.replyTo("<OK/>");
-//	       BoardLog.logD("BUMP","ENDNAMES: " + IvyXml.convertXmlToString(e));
-	       String nid = IvyXml.getAttrString(e,"NID");
-	       NameCollector nc = name_collects.remove(nid);
-	       if (nc != null) nc.noteDone();
-	       break;
-	    case "PING" :
-	    case "PING1" :
-	    case "PING2" :
-	    case "PING3" :
-	    case "PING4" :
-	    case "PING5" :
-	       msg.replyTo("<PONG/>");
-	       break;
-	    case "PROGRESS" :
-	       long sid = IvyXml.getAttrLong(e,"S");
-	       String id = IvyXml.getAttrString(e,"ID");
-	       String kind = IvyXml.getAttrString(e,"KIND");
-	       String task = IvyXml.getAttrString(e,"TASK");
-	       String subtask = IvyXml.getAttrString(e,"SUBTASK","");
-	       double work = IvyXml.getAttrDouble(e,"WORK",0);
-	       BoardLog.logD("BUMP","Progress " + sid + " " + id + " " + kind + " " +
-		     task + " " + subtask + " " + work);
-	       for (BumpProgressHandler hdlr : progress_handlers) {
-		  hdlr.handleProgress(sid,id,kind,task,subtask,work);
-		}
-	       msg.replyTo("<OK/>");
-	       break;
-	    case "RESOURCE" :
-	       BoardLog.logD("BUMP","RESOURCE: " + IvyXml.convertXmlToString(e));
-	       for (Element re : IvyXml.children(e,"DELTA")) {
-		  handleResourceChange(re);
-		}
-	       break;
-	    case "CONSOLE" :
-	       run_manager.handleConsoleEvent(e);
-	       msg.replyTo("<OK/>");
-	       break;
-	    case "EVALUATION" :
-	       String ebid = IvyXml.getAttrString(e,"BID");
-	       String eid = IvyXml.getAttrString(e,"ID");
-	       if ((ebid == null || ebid.equals(source_id)) && eid != null) {
-		  BoardLog.logD("BUMP","EVALUATION RESULT: " + IvyXml.convertXmlToString(e));
-		  EvalData ed = eval_handlers.remove(eid);
-		  if (ed != null) {
-		     ed.handleResult(e);
-		   }
-		}
-	       msg.replyTo("<OK/>");
-	       break;
-	    case "BUILDDONE" :
-	    case "FILECHANGE" :
-	    case "PROJECTDATA" :
-	       break;
-	    case "PROJECTOPEN" :
-	       String proj = IvyXml.getAttrString(e,"PROJECT");
-	       if (proj != null) handleProjectOpen(proj);
-	       break;
-	    case "STOP" :
-	       BoardLog.logI("BUMP","STOP received from eclipse");
-	       BoardProperties sysprops = BoardProperties.getProperties("System");
-	       if (sysprops.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND)) System.exit(0);
-	       JOptionPane.showMessageDialog(null,
-						"Eclipse exited -- Bubbles must exit as well",
-						"Bubbles Eclipse Problem",JOptionPane.ERROR_MESSAGE);
-	       System.exit(1);
-	       break;
-	    default :
-	       BoardLog.logX("BUMP","Received " + cmd + " FROM ECLIPSE: " + IvyXml.convertXmlToString(e));
-	       break;
-	  }
+               msg.replyTo("<OK/>");
+               break;
+            case "NAMES" :
+               if (name_collects != null) {
+                  BoardLog.logD("BUMP","NAMES RECEIVED");
+                  String nid = IvyXml.getAttrString(e,"NID");
+                  NameCollector nc = name_collects.get(nid);
+                  if (nc != null) {
+                     nc.addNames(e);
+                     BoardLog.logD("BUMP","NAMES: " + nc.getSize());
+                   }
+                  msg.replyTo("<OK/>");
+                  // wait until add to ensure end doesn't come before we are all processed
+                }
+               break;
+            case "ENDNAMES" :
+               msg.replyTo("<OK/>");
+//             BoardLog.logD("BUMP","ENDNAMES: " + IvyXml.convertXmlToString(e));
+               String nid = IvyXml.getAttrString(e,"NID");
+               NameCollector nc = name_collects.remove(nid);
+               if (nc != null) nc.noteDone();
+               break;
+            case "PING" :
+            case "PING1" :
+            case "PING2" :
+            case "PING3" :
+            case "PING4" :
+            case "PING5" :
+               msg.replyTo("<PONG/>");
+               break;
+            case "PROGRESS" :
+               long sid = IvyXml.getAttrLong(e,"S");
+               String id = IvyXml.getAttrString(e,"ID");
+               String kind = IvyXml.getAttrString(e,"KIND");
+               String task = IvyXml.getAttrString(e,"TASK");
+               String subtask = IvyXml.getAttrString(e,"SUBTASK","");
+               double work = IvyXml.getAttrDouble(e,"WORK",0);
+               BoardLog.logD("BUMP","Progress " + sid + " " + id + " " + kind + " " +
+                     task + " " + subtask + " " + work);
+               for (BumpProgressHandler hdlr : progress_handlers) {
+                  hdlr.handleProgress(sid,id,kind,task,subtask,work);
+                }
+               msg.replyTo("<OK/>");
+               break;
+            case "RESOURCE" :
+               BoardLog.logD("BUMP","RESOURCE: " + IvyXml.convertXmlToString(e));
+               for (Element re : IvyXml.children(e,"DELTA")) {
+                  handleResourceChange(re);
+                }
+               break;
+            case "CONSOLE" :
+               run_manager.handleConsoleEvent(e);
+               msg.replyTo("<OK/>");
+               break;
+            case "EVALUATION" :
+               String ebid = IvyXml.getAttrString(e,"BID");
+               String eid = IvyXml.getAttrString(e,"ID");
+               if ((ebid == null || ebid.equals(source_id)) && eid != null) {
+                  BoardLog.logD("BUMP","EVALUATION RESULT: " + IvyXml.convertXmlToString(e));
+                  EvalData ed = eval_handlers.remove(eid);
+                  if (ed != null) {
+                     ed.handleResult(e);
+                   }
+                }
+               msg.replyTo("<OK/>");
+               break;
+            case "BUILDDONE" :
+            case "FILECHANGE" :
+            case "PROJECTDATA" :
+               break;
+            case "PROJECTOPEN" :
+               String proj = IvyXml.getAttrString(e,"PROJECT");
+               if (proj != null) handleProjectOpen(proj);
+               break;
+            case "STOP" :
+               BoardLog.logI("BUMP","STOP received from eclipse");
+               BoardProperties sysprops = BoardProperties.getProperties("System");
+               if (sysprops.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND)) System.exit(0);
+               JOptionPane.showMessageDialog(null,
+                                                "Eclipse exited -- Bubbles must exit as well",
+                                                "Bubbles Eclipse Problem",JOptionPane.ERROR_MESSAGE);
+               System.exit(1);
+               break;
+            default :
+               BoardLog.logX("BUMP","Received " + cmd + " FROM ECLIPSE: " + IvyXml.convertXmlToString(e));
+               break;
+          }
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUMP","Problem processing eclipse message " + cmd,t);
-	 msg.replyTo();
+         BoardLog.logE("BUMP","Problem processing eclipse message " + cmd,t);
+         msg.replyTo();
        }
     }
 
-}	// end of inner class IDEHandler
+}       // end of inner class IDEHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Name collection methods 						*/
-/*										*/
+/*                                                                              */
+/*      Name collection methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 protected static class NameCollector {
@@ -4088,28 +4088,28 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-	 String path = IvyXml.getTextElement(fe,"PATH");
-	 for (Element itm : IvyXml.children(fe,"ITEM")) {
-	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-	    int length = IvyXml.getAttrInt(itm,"LENGTH");
-	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
-	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-	    result_names.add(bl);
-	    ++ctr;
-	  }
+         String path = IvyXml.getTextElement(fe,"PATH");
+         for (Element itm : IvyXml.children(fe,"ITEM")) {
+            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+            int length = IvyXml.getAttrInt(itm,"LENGTH");
+            String pnm = IvyXml.getAttrString(itm,"PROJECT");
+            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+            result_names.add(bl);
+            ++ctr;
+          }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
-	 String pth = IvyXml.getAttrString(itm,"PATH");
-	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-	 result_names.add(bl);
-	 // BoardLog.logD("BUMP","Added project name " + bl);
+         String pnm = IvyXml.getAttrString(itm,"PROJECT");
+         String pth = IvyXml.getAttrString(itm,"PATH");
+         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+         result_names.add(bl);
+         // BoardLog.logD("BUMP","Added project name " + bl);
        }
       BoardSetup.getSetup().noteNamesLoaded(result_names.size(),max_sym);
     }
 
-   int getSize()				{ return result_names.size(); }
+   int getSize()                                { return result_names.size(); }
 
    synchronized void noteDone() {
       is_done = true;
@@ -4118,24 +4118,24 @@ protected static class NameCollector {
 
    synchronized Collection<BumpLocation> getNames() {
       while (!is_done) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
 
       return result_names;
     }
 
-}	// end of inner class NameCollector
+}       // end of inner class NameCollector
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Exit handling								*/
-/*										*/
+/*                                                                              */
+/*      Exit handling                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CloseIDE extends Thread {
@@ -4144,11 +4144,11 @@ private final class CloseIDE extends Thread {
       stopIDE();
     }
 
-}	// end of inner class CloseIDE
+}       // end of inner class CloseIDE
 
 
 
-}	// end of class BumpClient
+}       // end of class BumpClient
 
 
 

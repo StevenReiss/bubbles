@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BandaidAgentSwing.java						*/
-/*										*/
-/*	Swing debugging assistant agent 					*/
-/*										*/
+/*                                                                              */
+/*              BandaidAgentSwing.java                                          */
+/*                                                                              */
+/*      Swing debugging assistant agent                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -46,14 +46,14 @@ import javax.swing.SwingUtilities;
 
 
 public class BandaidAgentSwing extends BandaidAgent implements BandaidConstants,
-		ClassFileTransformer
+                ClassFileTransformer
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static Map<Object,StackTraceElement []>     create_map;
@@ -70,9 +70,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BandaidAgentSwing(BandaidController bc)
@@ -83,9 +83,9 @@ BandaidAgentSwing(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override ClassFileTransformer getTransformer()
@@ -96,9 +96,9 @@ BandaidAgentSwing(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Command handling							*/
-/*										*/
+/*                                                                              */
+/*      Command handling                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void handleCommand(String cmd,String args)
@@ -112,13 +112,13 @@ BandaidAgentSwing(BandaidController bc)
       xw.field("SWING",the_control.getProcessId());
       Correlator c = new Correlator();
       if (c.correlate(xw,x,y)) {
-	 xw.end();
-	 the_control.sendMessage(xw.getContents());
+         xw.end();
+         the_control.sendMessage(xw.getContents());
        }
       else {
-	 xw.field("FAIL",true);
-	 xw.end();
-	 the_control.sendMessage(xw.getContents());
+         xw.field("FAIL",true);
+         xw.end();
+         the_control.sendMessage(xw.getContents());
        }
       scn.close();
     }
@@ -127,9 +127,9 @@ BandaidAgentSwing(BandaidController bc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Component allocation methods						*/
-/*										*/
+/*                                                                              */
+/*      Component allocation methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void handleComponent(Object c)
@@ -143,11 +143,11 @@ public static void handleComponent(Object c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to handle correlation						*/
-/*										*/
-/*	Any access to awt/swing needs to be in here				*/
-/*										*/
+/*                                                                              */
+/*      Class to handle correlation                                             */
+/*                                                                              */
+/*      Any access to awt/swing needs to be in here                             */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Correlator {
@@ -157,13 +157,13 @@ private final class Correlator {
       Window best = null;
       Point bestpt = null;
       for (Window w : wins) {
-	 Point pt = new Point(x,y);
-	 SwingUtilities.convertPointFromScreen(pt,w);
-	 if (pt.x < 0 || pt.x >= w.getWidth()) continue;
-	 if (pt.y < 0 || pt.y >= w.getHeight()) continue;
-	 if (w.getGraphics() == null) continue;
-	 best = w;
-	 bestpt = pt;
+         Point pt = new Point(x,y);
+         SwingUtilities.convertPointFromScreen(pt,w);
+         if (pt.x < 0 || pt.x >= w.getWidth()) continue;
+         if (pt.y < 0 || pt.y >= w.getHeight()) continue;
+         if (w.getGraphics() == null) continue;
+         best = w;
+         bestpt = pt;
        }
       if (best == null || bestpt == null) return false;
       Component c = SwingUtilities.getDeepestComponentAt(best,bestpt.x,bestpt.y);
@@ -177,13 +177,13 @@ private final class Correlator {
 
       BandaidGraphics bg = new BandaidGraphics(where,best);
       try {
-	 best.paint(bg);
-	 String s = bg.getResult();
-	 xw.write(s);
+         best.paint(bg);
+         String s = bg.getResult();
+         xw.write(s);
        }
       catch (Throwable t) {
-	 System.err.println("BANDAID: Problem computing drawing information: " + t);
-	 t.printStackTrace();
+         System.err.println("BANDAID: Problem computing drawing information: " + t);
+         t.printStackTrace();
        }
 
       xw.end();
@@ -202,39 +202,39 @@ private final class Correlator {
       xw.field("CLASS",c.getClass().getName());
       if (c.getName() != null) xw.field("NAME",c.getName());
       if (c.getParent() != null) {
-	 outputComponentData(xw,c.getParent());
+         outputComponentData(xw,c.getParent());
        }
 
       StackTraceElement [] elts = create_map.get(c);
       if (elts != null) {
-	 xw.begin("CREATE");
-	 for (int i = 2; i < elts.length; ++i) {
-	    xw.begin("FRAME");
-	    xw.field("CLASS",elts[i].getClassName());
-	    xw.field("METHOD",elts[i].getMethodName());
-	    xw.field("FILE",elts[i].getFileName());
-	    xw.field("LINE",elts[i].getLineNumber());
-	    xw.end();
-	  }
-	 xw.end();
+         xw.begin("CREATE");
+         for (int i = 2; i < elts.length; ++i) {
+            xw.begin("FRAME");
+            xw.field("CLASS",elts[i].getClassName());
+            xw.field("METHOD",elts[i].getMethodName());
+            xw.field("FILE",elts[i].getFileName());
+            xw.field("LINE",elts[i].getLineNumber());
+            xw.end();
+          }
+         xw.end();
        }
 
       xw.end();
     }
 
-}	// end of inner class Correlator
+}       // end of inner class Correlator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Transformer methods							*/
-/*										*/
+/*                                                                              */
+/*      Transformer methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public byte [] transform(ClassLoader ldr,String nm,Class<?> redef,ProtectionDomain dom,
-				   byte [] buf)
+                                   byte [] buf)
 {
    if (nm != null && nm.equals("java/awt/Component")) return patchComponent(buf);
 
@@ -264,12 +264,12 @@ private byte [] patchComponent(byte [] buf)
 
 
 /********************************************************************************/
-/*										*/
-/*	Transform for java.awt.Component					*/
-/*										*/
+/*                                                                              */
+/*      Transform for java.awt.Component                                        */
+/*                                                                              */
 /********************************************************************************/
 
-private CodeSizeEvaluator	size_eval;
+private CodeSizeEvaluator       size_eval;
 
 private class ComponentTransformer extends ClassVisitor {
 
@@ -294,7 +294,7 @@ private class ComponentTransformer extends ClassVisitor {
       return mv;
     }
 
-}	// end of inner class ComponentTransformer
+}       // end of inner class ComponentTransformer
 
 
 private class ComponentPatcher extends MethodVisitor {
@@ -312,19 +312,19 @@ private class ComponentPatcher extends MethodVisitor {
          super_class = null;
          super.visitVarInsn(Opcodes.ALOAD,0);
          super.visitMethodInsn(Opcodes.INVOKESTATIC,"edu/brown/cs/bubbles/bandaid/BandaidAgentSwing",
-        			  "handleComponent","(Ljava/lang/Object;)V",false);
+                                  "handleComponent","(Ljava/lang/Object;)V",false);
        }
     }
 
-}	// end of inner class ComponentPatcher
+}       // end of inner class ComponentPatcher
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods and classes						*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods and classes                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class Tracer extends MethodVisitor {
@@ -345,13 +345,13 @@ private static class Tracer extends MethodVisitor {
        }
     }
 
-}	// end of inner class Tracer
+}       // end of inner class Tracer
 
 
 
 
 
-}	// end of class BandaidAgentSwing
+}       // end of class BandaidAgentSwing
 
 
 

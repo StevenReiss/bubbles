@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BurpChangeData.java						*/
-/*										*/
-/*	Bubble Undo/Redo Processor information for a particular edit		*/
-/*										*/
+/*                                                                              */
+/*              BurpChangeData.java                                             */
+/*                                                                              */
+/*      Bubble Undo/Redo Processor information for a particular edit            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -44,9 +44,9 @@ class BurpChangeData implements BurpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BurpHistory for_history;
@@ -63,9 +63,9 @@ private BurpChangeData link_back;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BurpChangeData(BurpHistory bh,UndoableEdit ue,BurpChangeData prior)
@@ -100,11 +100,11 @@ BurpChangeData(BurpHistory bh,ChangeType cty,BurpChangeData prior,BurpChangeData
    switch (cty) {
       case START_UNDO :
       case START_REDO :
-	 is_significant = true;
-	 break;
+         is_significant = true;
+         break;
       default :
-	 is_significant = false;
-	 break;
+         is_significant = false;
+         break;
     }
    link_back = link;
 }
@@ -113,9 +113,9 @@ BurpChangeData(BurpHistory bh,ChangeType cty,BurpChangeData prior,BurpChangeData
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BurpChangeData getPriorChange()
@@ -146,9 +146,9 @@ BurpPlayableEdit getPlayableEdit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for getting next edit and associated editors			*/
-/*										*/
+/*                                                                              */
+/*      Methods for getting next edit and associated editors                    */
+/*                                                                              */
 /********************************************************************************/
 
 BurpChangeData getNext(BurpEditorData ed)
@@ -183,7 +183,7 @@ boolean removeEditor(BurpEditorData ed)
    if (!next_editor.containsKey(ed)) return false;
    next_editor.remove(ed);
    prior_editor.remove(ed);
-   if (next_editor.size() == 0) return true;	     // should be removed globally
+   if (next_editor.size() == 0) return true;         // should be removed globally
    return false;
 }
 
@@ -201,9 +201,9 @@ void removeGlobal()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for managing dependencies					*/
-/*										*/
+/*                                                                              */
+/*      Methods for managing dependencies                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void addDependencies(List<BurpChangeData> dep0,List<BurpChangeData> done)
@@ -218,7 +218,7 @@ void addDependencies(List<BurpChangeData> dep0,List<BurpChangeData> done)
 
    if (next_editor != null) {
       for (BurpEditorData ed : next_editor.keySet()) {
-	 if (ed.getCurrentChange() != this) eddeps.add(ed);
+         if (ed.getCurrentChange() != this) eddeps.add(ed);
        }
     }
 
@@ -226,22 +226,22 @@ void addDependencies(List<BurpChangeData> dep0,List<BurpChangeData> done)
    // THAN ONCE
 
    for (BurpChangeData cd = next_global;
-	 cd != null && cd != this && !eddeps.isEmpty();
-	 cd = cd.next_global) {
+         cd != null && cd != this && !eddeps.isEmpty();
+         cd = cd.next_global) {
       if (done != null && done.contains(cd)) continue;
       Set<BurpEditorData> rem = new HashSet<BurpEditorData>();
       for (BurpEditorData ed : eddeps) {
-	 if (cd.next_editor.containsKey(ed)) rem.add(ed);
+         if (cd.next_editor.containsKey(ed)) rem.add(ed);
        }
       boolean usefg = !rem.isEmpty();
 
       if (usefg) {
-	 eddeps.removeAll(rem);
-	 if (depend_upons == null) depend_upons = new ArrayList<BurpChangeData>();
-	 if (!depend_upons.contains(cd)) depend_upons.add(cd);
-	 if (done == null) done = new ArrayList<BurpChangeData>();
-	 done.add(cd);
-	 cd.addDependencies(null,done);
+         eddeps.removeAll(rem);
+         if (depend_upons == null) depend_upons = new ArrayList<BurpChangeData>();
+         if (!depend_upons.contains(cd)) depend_upons.add(cd);
+         if (done == null) done = new ArrayList<BurpChangeData>();
+         done.add(cd);
+         cd.addDependencies(null,done);
        }
     }
 }
@@ -249,28 +249,28 @@ void addDependencies(List<BurpChangeData> dep0,List<BurpChangeData> done)
 
 
 /********************************************************************************/
-/*										*/
-/*	Significant event determination 					*/
-/*										*/
+/*                                                                              */
+/*      Significant event determination                                         */
+/*                                                                              */
 /********************************************************************************/
 
-void setSignificant(boolean fg) 		{ is_significant = fg; }
+void setSignificant(boolean fg)                 { is_significant = fg; }
 
 boolean isSignificant()
 {
    if (is_significant) return true;
    if (depend_upons != null) {
       for (BurpChangeData cd : depend_upons) {
-	 if (cd.isSignificant()) return true;
+         if (cd.isSignificant()) return true;
        }
     }
    return false;
 }
 
-ChangeType getChangeType()			{ return change_type; }
+ChangeType getChangeType()                      { return change_type; }
 
-BurpChangeData getBackLink()			{ return link_back; }
-void setBackLink(BurpChangeData bcd)		{ link_back = bcd; }
+BurpChangeData getBackLink()                    { return link_back; }
+void setBackLink(BurpChangeData bcd)            { link_back = bcd; }
 
 
 UndoableEdit getRootEdit()
@@ -291,9 +291,9 @@ UndoableEdit getRootEdit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle undo/redo						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle undo/redo                                             */
+/*                                                                              */
 /********************************************************************************/
 
 boolean canUndo()
@@ -302,7 +302,7 @@ boolean canUndo()
    if (!base_edit.canUndo()) return false;
    if (depend_upons != null) {
       for (BurpChangeData cd : depend_upons) {
-	 if (!cd.canUndo()) return false;
+         if (!cd.canUndo()) return false;
        }
     }
    return true;
@@ -315,7 +315,7 @@ boolean canRedo()
    if (!base_edit.canRedo()) return false;
    if (depend_upons != null) {
       for (BurpChangeData cd : depend_upons) {
-	 if (!cd.canRedo()) return false;
+         if (!cd.canRedo()) return false;
        }
     }
    return true;
@@ -329,10 +329,10 @@ void undo()
 
    if (depend_upons != null) {
       for (BurpChangeData cd : depend_upons) {
-	 if (cd.canUndo()) cd.undo();
-	 else {
-	    BoardLog.logD("BURP","Can't undo dependency " + cd + " " + cd.depend_upons);
-	  }
+         if (cd.canUndo()) cd.undo();
+         else {
+            BoardLog.logD("BURP","Can't undo dependency " + cd + " " + cd.depend_upons);
+          }
        }
     }
 
@@ -360,10 +360,10 @@ void playUndo(BurpRange rng)
 
    if (depend_upons != null) {
       for (BurpChangeData cd : depend_upons) {
-	 if (cd.canUndo()) cd.playUndo(rng);
-	 else {
-	    BoardLog.logD("BURP","Can't undo dependency " + cd + " " + cd.depend_upons);
-	  }
+         if (cd.canUndo()) cd.playUndo(rng);
+         else {
+            BoardLog.logD("BURP","Can't undo dependency " + cd + " " + cd.depend_upons);
+          }
        }
     }
 
@@ -393,15 +393,15 @@ void redo()
 
    if (depend_upons != null) {
       for (int i = depend_upons.size()-1; i >= 0; --i) {
-	 BurpChangeData cd = depend_upons.get(i);
-	 if (cd.canRedo()) cd.redo();
+         BurpChangeData cd = depend_upons.get(i);
+         if (cd.canRedo()) cd.redo();
        }
     }
 }
 
 
 
-}	// end of class BurpChangeData
+}       // end of class BurpChangeData
 
 
 

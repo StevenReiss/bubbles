@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BemaMain.java							*/
-/*										*/
-/*	Bubbles Environment Main Application main program			*/
-/*										*/
+/*                                                                              */
+/*              BemaMain.java                                                   */
+/*                                                                              */
+/*      Bubbles Environment Main Application main program                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -89,7 +89,7 @@ import java.util.zip.ZipEntry;
 
 
 /**
- *	Bubbles main program.
+ *      Bubbles main program.
  **/
 
 public final class BemaMain implements BemaConstants
@@ -98,13 +98,13 @@ public final class BemaMain implements BemaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Starting point for the bubbles environment.
+ *      Starting point for the bubbles environment.
  **/
 
 public static void main(String [] args)
@@ -113,10 +113,10 @@ public static void main(String [] args)
 
    if (System.getProperty("os.name").startsWith("Mac")) {
       try {
-	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
        }
       catch (Throwable t) {
-	 System.err.println("BEMA: Problem setting l&f: " + t);
+         System.err.println("BEMA: Problem setting l&f: " + t);
        }
     }
 
@@ -126,42 +126,42 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	restore_session;
-private boolean 	force_setup;
-private boolean 	force_metrics;
-private boolean 	force_update;
-private boolean 	skip_setup;
-private boolean 	skip_splash;
-private boolean 	allow_debug;
-private boolean 	use_web;
-private boolean 	use_cloud;
-private Boolean 	auto_update;
-private String		use_workspace;
-private boolean 	new_workspace;
-private Boolean 	ask_workspace;
-private Element 	load_config;
-private String []	java_args;
-private RunMode 	run_mode;
-private String		course_name;
-private BoardLanguage	for_language;
-private String		palette_name;
-private boolean 	install_only;
-private boolean 	no_bedrock;
-private List<File>	add_plugins;
+private boolean         restore_session;
+private boolean         force_setup;
+private boolean         force_metrics;
+private boolean         force_update;
+private boolean         skip_setup;
+private boolean         skip_splash;
+private boolean         allow_debug;
+private boolean         use_web;
+private boolean         use_cloud;
+private Boolean         auto_update;
+private String          use_workspace;
+private boolean         new_workspace;
+private Boolean         ask_workspace;
+private Element         load_config;
+private String []       java_args;
+private RunMode         run_mode;
+private String          course_name;
+private BoardLanguage   for_language;
+private String          palette_name;
+private boolean         install_only;
+private boolean         no_bedrock;
+private List<File>      add_plugins;
 
 private static Map<String,ClassLoader> class_loaders = new HashMap<>();
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BemaMain(String [] args)
@@ -199,9 +199,9 @@ private BemaMain(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument scanning methods						*/
-/*										*/
+/*                                                                              */
+/*      Argument scanning methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
@@ -210,110 +210,110 @@ private void scanArgs(String [] args)
 
    for (int i = 0; i < ln; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-nosetup")) {                  // -nosetup
-	    skip_setup = true;
-	  }
-	 else if (args[i].startsWith("-nor")) {                 // -norestore
-	    restore_session = false;
-	  }
-	 else if (args[i].startsWith("-u")) {                   // -update
-	    auto_update = true;
-	  }
-	 else if (args[i].startsWith("-nou")) {                 // -noupdate
-	    auto_update = false;
-	  }
-	 else if (args[i].startsWith("-f")) {                   // -force
-	    force_setup = true;
-	  }
-	 else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
-	    force_update = true;
-	  }
-	 else if (args[i].startsWith("-course") && i+1 < ln) {  // -course <course>
-	    course_name = args[++i];
-	    File fa = new File(System.getProperty("user.home"));
-	    fa = new File(fa,".suds" + course_name);
-	    // Don't use IvyFile here since it trys to use ivy without initializing it
-	    BoardProperties.setPropertyDirectory(fa.getPath());
-	  }
-	 else if (args[i].startsWith("-cl")) {                  // -cloud
-	    useCloud();
-	  }
-	 else if (args[i].startsWith("-collect")) {             // -collect
-	    force_metrics = true;
-	  }
-	 else if (args[i].startsWith("-w") && i+1 < ln) {       // -workspace <ws>
-	    use_workspace = args[++i];
-	  }
-	 else if (args[i].startsWith("-n")) {                   // -new
-	    new_workspace = true;
-	    ask_workspace = true;
-	  }
-	 else if (args[i].startsWith("-a")) {                   // -askworkspace
-	    ask_workspace = true;
-	  }
-	 else if (args[i].startsWith("-nosp")) {                // -nosplash
-	    skip_splash = true;
-	  }
-	 else if (args[i].startsWith("-prop") && i+1 < ln) {    // -prop <propdir>
-	    BoardProperties.setPropertyDirectory(args[++i]);
-	  }
-	 else if (args[i].startsWith("-plug") && i+1 < ln) {    // -plugin <jarfile>
-	    add_plugins.add(new File(args[++i]));
-	  }
-	 else if (args[i].startsWith("-Debug")) {               // -Debug
-	    allow_debug = true;
-	  }
-	 else if (args[i].startsWith("-m") && i+1 < ln) {       // -msg <id>
-	    System.setProperty("edu.brown.cs.bubbles.MINT",args[++i]);
-	  }
-	 else if (args[i].startsWith("-W")) {                   // -WEB
-	    use_web = true;
-	  }
-	 else if (args[i].startsWith("-C")) {                   // -Client
-	    run_mode = RunMode.CLIENT;
-	  }
-	 else if (args[i].startsWith("-S")) {                   // -Server
-	    run_mode = RunMode.SERVER;
-	    skip_splash = true;
-	    restore_session = false;
-	  }
-	 else if (args[i].startsWith("-Dfile.encoding")) ;
-	 else if (args[i].startsWith("-r")) {                   // -restore
-	    restore_session = true;
-	  }
-	 else if (args[i].startsWith("-install")) {             // -install - force installation
-	    install_only = true;
-	  }
-	 else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
-	    no_bedrock = true;
-	  }
-	 else if (args[i].startsWith("-pal") && i+1 < ln) {     // -palette <file>
-	    palette_name = args[++i];
-	  }
-	 else if (args[i].startsWith("-inv")) {                 // -inverse
-	    if (palette_name == null) palette_name = "inverse_bubbles.palette";
-	    else if (palette_name.startsWith("inverse_")) {
-	       palette_name = palette_name.substring(8);
-	     }
-	    else palette_name = "inverse_" + palette_name;
-	  }
-	 else {
-	    boolean fnd = false;
-	    if (args[i].length() >= 3) {
-	       String match = args[i].toLowerCase();
-	       for (BoardLanguage bl : BoardLanguage.values()) {
-		  String arg = bl.getBubblesArg();
-		  if (arg != null) {
-		     if (arg.startsWith(match)) {
-			setLanguage(bl);
-			fnd = true;
-			break;
-		      }
-		   }
-		}
-	     }
-	    if (!fnd) badArgs();
-	  }
+         if (args[i].startsWith("-nosetup")) {                  // -nosetup
+            skip_setup = true;
+          }
+         else if (args[i].startsWith("-nor")) {                 // -norestore
+            restore_session = false;
+          }
+         else if (args[i].startsWith("-u")) {                   // -update
+            auto_update = true;
+          }
+         else if (args[i].startsWith("-nou")) {                 // -noupdate
+            auto_update = false;
+          }
+         else if (args[i].startsWith("-f")) {                   // -force
+            force_setup = true;
+          }
+         else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
+            force_update = true;
+          }
+         else if (args[i].startsWith("-course") && i+1 < ln) {  // -course <course>
+            course_name = args[++i];
+            File fa = new File(System.getProperty("user.home"));
+            fa = new File(fa,".suds" + course_name);
+            // Don't use IvyFile here since it trys to use ivy without initializing it
+            BoardProperties.setPropertyDirectory(fa.getPath());
+          }
+         else if (args[i].startsWith("-cl")) {                  // -cloud
+            useCloud();
+          }
+         else if (args[i].startsWith("-collect")) {             // -collect
+            force_metrics = true;
+          }
+         else if (args[i].startsWith("-w") && i+1 < ln) {       // -workspace <ws>
+            use_workspace = args[++i];
+          }
+         else if (args[i].startsWith("-n")) {                   // -new
+            new_workspace = true;
+            ask_workspace = true;
+          }
+         else if (args[i].startsWith("-a")) {                   // -askworkspace
+            ask_workspace = true;
+          }
+         else if (args[i].startsWith("-nosp")) {                // -nosplash
+            skip_splash = true;
+          }
+         else if (args[i].startsWith("-prop") && i+1 < ln) {    // -prop <propdir>
+            BoardProperties.setPropertyDirectory(args[++i]);
+          }
+         else if (args[i].startsWith("-plug") && i+1 < ln) {    // -plugin <jarfile>
+            add_plugins.add(new File(args[++i]));
+          }
+         else if (args[i].startsWith("-Debug")) {               // -Debug
+            allow_debug = true;
+          }
+         else if (args[i].startsWith("-m") && i+1 < ln) {       // -msg <id>
+            System.setProperty("edu.brown.cs.bubbles.MINT",args[++i]);
+          }
+         else if (args[i].startsWith("-W")) {                   // -WEB
+            use_web = true;
+          }
+         else if (args[i].startsWith("-C")) {                   // -Client
+            run_mode = RunMode.CLIENT;
+          }
+         else if (args[i].startsWith("-S")) {                   // -Server
+            run_mode = RunMode.SERVER;
+            skip_splash = true;
+            restore_session = false;
+          }
+         else if (args[i].startsWith("-Dfile.encoding")) ;
+         else if (args[i].startsWith("-r")) {                   // -restore
+            restore_session = true;
+          }
+         else if (args[i].startsWith("-install")) {             // -install - force installation
+            install_only = true;
+          }
+         else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
+            no_bedrock = true;
+          }
+         else if (args[i].startsWith("-pal") && i+1 < ln) {     // -palette <file>
+            palette_name = args[++i];
+          }
+         else if (args[i].startsWith("-inv")) {                 // -inverse
+            if (palette_name == null) palette_name = "inverse_bubbles.palette";
+            else if (palette_name.startsWith("inverse_")) {
+               palette_name = palette_name.substring(8);
+             }
+            else palette_name = "inverse_" + palette_name;
+          }
+         else {
+            boolean fnd = false;
+            if (args[i].length() >= 3) {
+               String match = args[i].toLowerCase();
+               for (BoardLanguage bl : BoardLanguage.values()) {
+                  String arg = bl.getBubblesArg();
+                  if (arg != null) {
+                     if (arg.startsWith(match)) {
+                        setLanguage(bl);
+                        fnd = true;
+                        break;
+                      }
+                   }
+                }
+             }
+            if (!fnd) badArgs();
+          }
        }
       else if (args[i].equals("")) ;
       else if (args[i].equals("edu.brown.cs.bubbles.bema.BemaMain")) ;
@@ -334,9 +334,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to actually run bubbles 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to actually run bubbles                                         */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
@@ -363,15 +363,15 @@ private void start()
       bs.setSplashTask("Getting Cloud Information");
       BemaCloudSetup bcs = new BemaCloudSetup(bs);
       if (!bcs.doSetup()) {
-	 System.exit(0);
+         System.exit(0);
        }
       bs.setSplashTask("Starting Cloud Server");
       if (!bcs.startServer()) {
-	 JOptionPane.showMessageDialog(null,
-	       "<html><p>Cloud Bubbles was not started correctly." +
-	       "<p>Please try starting again.",
-	       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	 System.exit(1);
+         JOptionPane.showMessageDialog(null,
+               "<html><p>Cloud Bubbles was not started correctly." +
+               "<p>Please try starting again.",
+               "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+         System.exit(1);
        }
     }
 
@@ -383,40 +383,40 @@ private void start()
    if (use_web) {
       String url = bp.getProperty("Bema.web.url");
       if (url == null) {
-	 BoardLog.logE("BEMA","Bema.web.url property not defined");
-	 use_web = false;
+         BoardLog.logE("BEMA","Bema.web.url property not defined");
+         use_web = false;
        }
       else {
-	 File f = BoardSetup.getPropertyBase();
-	 File f1 = new File(f,"webkey");
-	 if (!f1.exists()) {
-	    BoardLog.logE("BEMA","Can't find webkey file in property directory");
-	    use_web = false;
-	  }
-	 else {
-	    try {
-	       BufferedReader br = new BufferedReader(new FileReader(f1));
-	       String ln = br.readLine();
-	       if (ln == null) {
-		  BoardLog.logE("BEMA","No key defined in webkey file");
-		  use_web = false;
-		}
-	       else {
-		  ln = ln.trim();
-		  BumpClient bc = BumpClient.getBump();
-		  bc.useWebMint(ln,url);
-		}
-	       br.close();
-	     }
-	    catch (IOException e) {
-	       BoardLog.logE("BEMA","Unable to read webkey file");
-	       use_web = false;
-	     }
-	    catch (Throwable e) {
-	       BoardLog.logE("BEMA","Problem setting up mint",e);
-	       use_web = false;
-	     }
-	  }
+         File f = BoardSetup.getPropertyBase();
+         File f1 = new File(f,"webkey");
+         if (!f1.exists()) {
+            BoardLog.logE("BEMA","Can't find webkey file in property directory");
+            use_web = false;
+          }
+         else {
+            try {
+               BufferedReader br = new BufferedReader(new FileReader(f1));
+               String ln = br.readLine();
+               if (ln == null) {
+                  BoardLog.logE("BEMA","No key defined in webkey file");
+                  use_web = false;
+                }
+               else {
+                  ln = ln.trim();
+                  BumpClient bc = BumpClient.getBump();
+                  bc.useWebMint(ln,url);
+                }
+               br.close();
+             }
+            catch (IOException e) {
+               BoardLog.logE("BEMA","Unable to read webkey file");
+               use_web = false;
+             }
+            catch (Throwable e) {
+               BoardLog.logE("BEMA","Problem setting up mint",e);
+               use_web = false;
+             }
+          }
        }
     }
 
@@ -433,7 +433,7 @@ private void start()
 
    if (bc == null) {
       JOptionPane.showMessageDialog(null,"Can't setup messaging environment ",
-	    "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
+            "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
       return;
     }
@@ -545,12 +545,12 @@ private void setOptions(BoardSetup bs)
 
    if (bs.getCourseName() != null) {
       try {
-	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactoy");
-	 Method m = c.getMethod("getFactory");
-	 m.invoke(null);
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactoy");
+         Method m = c.getMethod("getFactory");
+         m.invoke(null);
        }
       catch (Throwable t) {
-	 bs.setCourseName(null);
+         bs.setCourseName(null);
        }
     }
 }
@@ -567,25 +567,25 @@ private static class ProjectBubbleAdder implements Runnable {
    @Override public void run() {
       BudaBubble bb = BuenoFactory.getFactory().getCreateProjectBubble();
       if (bb != null) {
-	 buda_root.waitForSetup();
-	 BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
-	 Dimension d = bb.getSize();
-	 Rectangle r = bba.getViewport();
-	 int x0 = r.x + r.width/2 - d.width/2;
-	 int y0 = r.y + r.height/2 - d.height/2;
-	 bba.addBubble(bb, x0, y0);
+         buda_root.waitForSetup();
+         BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
+         Dimension d = bb.getSize();
+         Rectangle r = bba.getViewport();
+         int x0 = r.x + r.width/2 - d.width/2;
+         int y0 = r.y + r.height/2 - d.height/2;
+         bba.addBubble(bb, x0, y0);
        }
     }
 
-}	// end of inner class ProjectBubbleAdder
+}       // end of inner class ProjectBubbleAdder
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Plugin management							*/
-/*										*/
+/*                                                                              */
+/*      Plugin management                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadPlugins(BudaRoot buda)
@@ -596,23 +596,23 @@ private void loadPlugins(BudaRoot buda)
       List<String> names= new ArrayList<>();
       StringTokenizer tok = new StringTokenizer(pinf);
       while (tok.hasMoreTokens()) {
-	 String pdir = tok.nextToken();
-	 File dir = new File(pdir);
-	 if (!dir.isAbsolute()) {
-	    File root = BoardSetup.getSetup().getRootDirectory();
-	    dir = new File(root,pdir);
-	  }
-	 if (dir.exists() && dir.isDirectory()) {
-	    loadPlugins(dir,buda,names);
-	  }
+         String pdir = tok.nextToken();
+         File dir = new File(pdir);
+         if (!dir.isAbsolute()) {
+            File root = BoardSetup.getSetup().getRootDirectory();
+            dir = new File(root,pdir);
+          }
+         if (dir.exists() && dir.isDirectory()) {
+            loadPlugins(dir,buda,names);
+          }
        }
       for (File f : add_plugins) {
-	 if (f.exists() && f.canRead()) {
-	    loadPlugin(f,buda,names);
-	  }
+         if (f.exists() && f.canRead()) {
+            loadPlugin(f,buda,names);
+          }
        }
       for (String s : names) {
-	 finishPackage(s);
+         finishPackage(s);
        }
     }
 }
@@ -624,7 +624,7 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
    File [] cands = dir.listFiles();
    if (cands != null) {
       for (File jfn : cands) {
-	 loadPlugin(jfn,root,names);
+         loadPlugin(jfn,root,names);
        }
     }
 }
@@ -633,75 +633,75 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
 private void loadPlugin(File jfn,BudaRoot root,List<String> names)
 {
     if (jfn.isDirectory()) {
-	// assume all plugins are at top level, rather than inside directories
-	// loadPlugins(jfn,root);
+        // assume all plugins are at top level, rather than inside directories
+        // loadPlugins(jfn,root);
      }
     else if (jfn.getPath().endsWith(".jar")) {
-	BoardLog.logD("BEMA","Load plugin " + jfn);
-	try (JarFile jf = new JarFile(jfn)) {
-	    Manifest mf = jf.getManifest();
-	    if (mf != null) {
-		Attributes at = mf.getMainAttributes();
-		String starts = at.getValue("Bubbles-start");
-		String dep = at.getValue("Bubbles-depends");
-		String palette = at.getValue("Bubbles-palette");
-		String res = at.getValue("Bubbles-resource");
-		String lib = at.getValue("Bubbles-lib");
-		String load = jfn.getAbsolutePath();
-		String basename = null;
-		if (dep != null && !dep.isBlank()) {
-		    dep = dep.trim();
-		    if (dep.length() > 0) load += File.pathSeparator + dep;
-		 }
-		if (res != null) {
-		    StringTokenizer tok = new StringTokenizer(res);
-		    while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			setupPluginResource(jf,nm);
-		     }
-		 }
-		if (lib != null) {
-		    StringTokenizer tok = new StringTokenizer(lib);
-		    while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			setupPluginLibrary(jf,nm);
-		     }
-		 }
-		if (starts != null) {
-		    StringTokenizer tok = new StringTokenizer(starts);
-		    while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			if (basename == null) basename = nm;
-			setupPackage(nm,load);
-			initializePackage(nm,root);
-			names.add(nm);
-		     }
-		 }
-		if (basename != null && palette != null) {
-		    ClassLoader cldr = class_loaders.get(basename);
-		    if (cldr == null) cldr = BemaMain.class.getClassLoader();
-		    URL u = cldr.getResource(palette);
-		    if (u != null) {
-			BoardLog.logD("BEMA","Add plugin palette " + u);
-			BoardColors.addPalette(u);
-		     }
-		    else {
-			String s1 = "jar:file:" + jfn + "!/" + palette;
-			try {
-			    URL u1 = new URI(s1).toURL();
-			    BoardColors.addPalette(u1);
-			 }
-			catch (URISyntaxException e) { }
-		     }
-		 }
-	     }
-	 }
-	catch (IOException e) {
-	    BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
-	    JOptionPane.showMessageDialog(null,
-		    "Problem loading plugin " + jfn,
-		    "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
-	 }
+        BoardLog.logD("BEMA","Load plugin " + jfn);
+        try (JarFile jf = new JarFile(jfn)) {
+            Manifest mf = jf.getManifest();
+            if (mf != null) {
+                Attributes at = mf.getMainAttributes();
+                String starts = at.getValue("Bubbles-start");
+                String dep = at.getValue("Bubbles-depends");
+                String palette = at.getValue("Bubbles-palette");
+                String res = at.getValue("Bubbles-resource");
+                String lib = at.getValue("Bubbles-lib");
+                String load = jfn.getAbsolutePath();
+                String basename = null;
+                if (dep != null && !dep.isBlank()) {
+                    dep = dep.trim();
+                    if (dep.length() > 0) load += File.pathSeparator + dep;
+                 }
+                if (res != null) {
+                    StringTokenizer tok = new StringTokenizer(res);
+                    while (tok.hasMoreTokens()) {
+                        String nm = tok.nextToken();
+                        setupPluginResource(jf,nm);
+                     }
+                 }
+                if (lib != null) {
+                    StringTokenizer tok = new StringTokenizer(lib);
+                    while (tok.hasMoreTokens()) {
+                        String nm = tok.nextToken();
+                        setupPluginLibrary(jf,nm);
+                     }
+                 }
+                if (starts != null) {
+                    StringTokenizer tok = new StringTokenizer(starts);
+                    while (tok.hasMoreTokens()) {
+                        String nm = tok.nextToken();
+                        if (basename == null) basename = nm;
+                        setupPackage(nm,load);
+                        initializePackage(nm,root);
+                        names.add(nm);
+                     }
+                 }
+                if (basename != null && palette != null) {
+                    ClassLoader cldr = class_loaders.get(basename);
+                    if (cldr == null) cldr = BemaMain.class.getClassLoader();
+                    URL u = cldr.getResource(palette);
+                    if (u != null) {
+                        BoardLog.logD("BEMA","Add plugin palette " + u);
+                        BoardColors.addPalette(u);
+                     }
+                    else {
+                        String s1 = "jar:file:" + jfn + "!/" + palette;
+                        try {
+                            URL u1 = new URI(s1).toURL();
+                            BoardColors.addPalette(u1);
+                         }
+                        catch (URISyntaxException e) { }
+                     }
+                 }
+             }
+         }
+        catch (IOException e) {
+            BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+            JOptionPane.showMessageDialog(null,
+                    "Problem loading plugin " + jfn,
+                    "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
+         }
      }
 }
 
@@ -712,8 +712,8 @@ private void setupPluginResource(JarFile jf,String res)
    try {
       ZipEntry ze = jf.getEntry(res);
       if (ze == null) {
-	  BoardLog.logE("BEMA","Resource " + res + " not found");
-	  return;
+          BoardLog.logE("BEMA","Resource " + res + " not found");
+          return;
        }
       File resdir = BoardSetup.getSetup().getResourceDirectory();
       File tgt = new File(resdir,res);
@@ -746,9 +746,9 @@ private void setupPluginLibrary(JarFile jf,String res)
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization by name							*/
-/*										*/
+/*                                                                              */
+/*      Initialization by name                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPackage(String nm,String load)
@@ -758,57 +758,57 @@ private void setupPackage(String nm,String load)
 
    if (load != null) {
       try {
-	 Class.forName(nm,true,cldr);
-	 load = null;
+         Class.forName(nm,true,cldr);
+         load = null;
        }
       catch (ClassNotFoundException e) { }
     }
 
    if (load != null) {
       try {
-	 List<URL> urls = new ArrayList<>();
-	 StringTokenizer tok = new StringTokenizer(load,File.pathSeparator);
-	 while (tok.hasMoreTokens()) {
-	    String path = tok.nextToken();
-	    if (path.startsWith(File.separator)) {
-	       String pnm = "jar:file:" + path + "!/";
-	       URI u = new URI(pnm);
-	       urls.add(u.toURL());
-	     }
-	    else if (path.startsWith("lib/")) {
-	       String path1 = path.substring(4);
-	       String path2 = BoardSetup.getSetup().getLibraryPath(path1);
-	       if (path2 != null) {
-		  File p2f = new File(path2);
-		  if (!p2f.exists()) path2 = null;
-		}
-	       if (path2 != null) {
-		  String pnm = "jar:file:" + path2 + "!/";
-		  URI u = new URI(pnm);
-		  urls.add(u.toURL());
-		}
-	       else {
-		  URL ustr = cldr.getResource(path1);
-		  if (ustr != null) {
-		     urls.add(ustr);
-		     continue;
-		   }
-		  else {
-		     BoardLog.logE("BEMA","Can't load jar file " + load);
-		     return;
-		   }
-		}
-	     }
-	  }
-	 URL [] urlarr = urls.toArray(new URL[urls.size()]);
-	 cldr = new URLClassLoader(urlarr,cldr);
-	 class_loaders.put(nm,cldr);
+         List<URL> urls = new ArrayList<>();
+         StringTokenizer tok = new StringTokenizer(load,File.pathSeparator);
+         while (tok.hasMoreTokens()) {
+            String path = tok.nextToken();
+            if (path.startsWith(File.separator)) {
+               String pnm = "jar:file:" + path + "!/";
+               URI u = new URI(pnm);
+               urls.add(u.toURL());
+             }
+            else if (path.startsWith("lib/")) {
+               String path1 = path.substring(4);
+               String path2 = BoardSetup.getSetup().getLibraryPath(path1);
+               if (path2 != null) {
+                  File p2f = new File(path2);
+                  if (!p2f.exists()) path2 = null;
+                }
+               if (path2 != null) {
+                  String pnm = "jar:file:" + path2 + "!/";
+                  URI u = new URI(pnm);
+                  urls.add(u.toURL());
+                }
+               else {
+                  URL ustr = cldr.getResource(path1);
+                  if (ustr != null) {
+                     urls.add(ustr);
+                     continue;
+                   }
+                  else {
+                     BoardLog.logE("BEMA","Can't load jar file " + load);
+                     return;
+                   }
+                }
+             }
+          }
+         URL [] urlarr = urls.toArray(new URL[urls.size()]);
+         cldr = new URLClassLoader(urlarr,cldr);
+         class_loaders.put(nm,cldr);
        }
       catch (URISyntaxException e) {
-	 BoardLog.logE("BEMA","Can't load jar file " + load);
+         BoardLog.logE("BEMA","Can't load jar file " + load);
        }
       catch (MalformedURLException e) {
-	 BoardLog.logE("BEMA","Can't load jar file " + load);
+         BoardLog.logE("BEMA","Can't load jar file " + load);
        }
     }
 
@@ -844,8 +844,8 @@ private void initializePackage(String nm,BudaRoot br)
     }
    catch (ClassNotFoundException e) {
       if (nm.contains("bubbles.bicex.") ||
-	    nm.contains("bubbles.brepair") ||
-	    nm.contains("bubbles.bsean")) return;
+            nm.contains("bubbles.brepair") ||
+            nm.contains("bubbles.bsean")) return;
       BoardLog.logE("BEMA","Package " + nm + " doesn't exist");
     }
    catch (NoSuchMethodException e) {
@@ -869,8 +869,8 @@ private void finishPackage(String nm)
     }
    catch (ClassNotFoundException e) {
       if (nm.contains("bubbles.bicex.") ||
-	    nm.contains("bubbles.brepair") ||
-	    nm.contains("bubbles.bsean")) return;
+            nm.contains("bubbles.brepair") ||
+            nm.contains("bubbles.bsean")) return;
       BoardLog.logE("BEMA","Package " + nm + " doesn't exist");
     }
    catch (NoSuchMethodException e) {
@@ -893,7 +893,7 @@ public static Class<?> findClass(String nm)
 
    for (ClassLoader cldr : class_loaders.values()) {
       try {
-	 return Class.forName(nm,true,cldr);
+         return Class.forName(nm,true,cldr);
        }
       catch (ClassNotFoundException e) { }
     }
@@ -914,23 +914,23 @@ private Collection<String> getSetupPackageProperties()
       boolean use = false;
       if (s.startsWith("Bema.plugin.") && s.lastIndexOf(".") == 11) use = true;
       switch (bs.getRunMode()) {
-	 case NORMAL :
-	    if (s.startsWith("Bema.plugin.normal.")) use = true;
-	    break;
-	 case CLIENT :
-	    if (s.startsWith("Bema.plugin.client.")) use = true;
-	    break;
-	 case SERVER :
-	    if (s.startsWith("Beam.plugin.server.")) use = true;
-	    break;
+         case NORMAL :
+            if (s.startsWith("Bema.plugin.normal.")) use = true;
+            break;
+         case CLIENT :
+            if (s.startsWith("Bema.plugin.client.")) use = true;
+            break;
+         case SERVER :
+            if (s.startsWith("Beam.plugin.server.")) use = true;
+            break;
        }
       if (use) {
-	 int idx = s.lastIndexOf(".");
-	 try {
-	    int v = Integer.parseInt(s.substring(idx+1));
-	    loads.put(v,s);
-	  }
-	 catch (NumberFormatException e) { }
+         int idx = s.lastIndexOf(".");
+         try {
+            int v = Integer.parseInt(s.substring(idx+1));
+            loads.put(v,s);
+          }
+         catch (NumberFormatException e) { }
        }
     }
 
@@ -938,10 +938,10 @@ private Collection<String> getSetupPackageProperties()
       String key = it.next();
       String val = bp.getProperty(key);
       if (val == null || val.isBlank() || done.contains(val)) {
-	 it.remove();
+         it.remove();
        }
       else {
-	 done.add(val);
+         done.add(val);
        }
     }
 
@@ -960,18 +960,18 @@ private void checkDefaultLanguage()
       int idx = elt.lastIndexOf(File.separator);
       if (idx > 0) elt = elt.substring(idx+1);
       if (elt.equals("cloudbb.jar")) {
-	 useCloud();
-	 break;
+         useCloud();
+         break;
        }
       else if (elt.endsWith(".jar")) {
-	 boolean fnd = false;
-	 for (BoardLanguage bl : BoardLanguage.values()) {
-	    if (elt.equals(bl.getJarRunner())) {
-	       setLanguage(bl);
-	       fnd = true;
-	     }
-	  }
-	 if (fnd) break;
+         boolean fnd = false;
+         for (BoardLanguage bl : BoardLanguage.values()) {
+            if (elt.equals(bl.getJarRunner())) {
+               setLanguage(bl);
+               fnd = true;
+             }
+          }
+         if (fnd) break;
        }
     }
 }
@@ -996,10 +996,10 @@ private void useCloud()
    String mid = System.getProperty("edu.brown.cs.bubbles.MINT");
    if (mid == null) {
       for (int i = 0; i < java_args.length-1; ++i) {
-	 if (java_args[i].startsWith("-m")) {
-	    mid = java_args[i+1];
-	    break;
-	  }
+         if (java_args[i].startsWith("-m")) {
+            mid = java_args[i+1];
+            break;
+          }
        }
     }
    if (mid == null) {
@@ -1030,9 +1030,9 @@ private void useCloud()
 
 
 /********************************************************************************/
-/*										*/
-/*	Server mode dialog							*/
-/*										*/
+/*                                                                              */
+/*      Server mode dialog                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void waitForServerExit(BudaRoot root)
@@ -1040,9 +1040,9 @@ private void waitForServerExit(BudaRoot root)
    System.out.println(SERVER_READY_STRING);
 
    JOptionPane.showConfirmDialog(root,"Exit from Code Bubbles Server",
-	    "Exit When Done",
-	    JOptionPane.DEFAULT_OPTION,
-	    JOptionPane.QUESTION_MESSAGE);
+            "Exit When Done",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
 
    root.handleSaveAllRequest();
 
@@ -1052,9 +1052,9 @@ private void waitForServerExit(BudaRoot root)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to save session at the end					*/
-/*										*/
+/*                                                                              */
+/*      Methods to save session at the end                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SaveConfiguration extends Thread {
@@ -1069,20 +1069,20 @@ private static class SaveConfiguration extends Thread {
    @Override public void run() {
       File cf = BoardSetup.getConfigurationFile();
       try {
-	 // for_root.handleSaveAllRequest();
-	 for_root.handleCheckpointAllRequest();
-	 for_root.saveConfiguration(cf);
+         // for_root.handleSaveAllRequest();
+         for_root.handleCheckpointAllRequest();
+         for_root.saveConfiguration(cf);
        }
       catch (IOException e) {
-	 BoardLog.logE("BEMA","Problem saving session: " + e);
+         BoardLog.logE("BEMA","Problem saving session: " + e);
        }
     }
 
-}	// end of inner class SaveConfiguration
+}       // end of inner class SaveConfiguration
 
 
 
-}	// end of class BemaMain
+}       // end of class BemaMain
 
 
 

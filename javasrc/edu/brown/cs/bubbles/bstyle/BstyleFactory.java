@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BstyleFactory.java						*/
-/*										*/
-/*	Bstyle interface inside code bubbles					*/
-/*										*/
+/*                                                                              */
+/*              BstyleFactory.java                                              */
+/*                                                                              */
+/*      Bstyle interface inside code bubbles                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -53,23 +53,23 @@ public final class BstyleFactory implements BstyleConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	server_running;
-private boolean 	server_started;
-private Boolean 	factory_setup;
+private boolean         server_running;
+private boolean         server_started;
+private Boolean         factory_setup;
 
 private static BstyleFactory the_factory = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized BstyleFactory getFactory()
@@ -92,9 +92,9 @@ private BstyleFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -117,8 +117,8 @@ public static void initialize(BudaRoot root)
    boolean use = false;
    for (Element proj : IvyXml.children(projs,"PROJECT")) {
       if (useBstyleForProject(IvyXml.getAttrString(proj,"NAME"))) {
-	 use = true;
-	 break;
+         use = true;
+         break;
        }
     }
    if (use) {
@@ -142,9 +142,9 @@ private static boolean useBstyleForProject(String proj)
 
 
 /********************************************************************************/
-/*										*/
-/*	Button handling 							*/
-/*										*/
+/*                                                                              */
+/*      Button handling                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class ConfigAction implements BudaConstants.ButtonListener {
@@ -164,14 +164,14 @@ private static final class ConfigAction implements BudaConstants.ButtonListener 
             BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
     }
 
-}	// end of inner class ConfigAction
+}       // end of inner class ConfigAction
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Server code								*/
-/*										*/
+/*                                                                              */
+/*      Server code                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void startBstyleServer()
@@ -188,24 +188,24 @@ void startBstyleServer()
       BoardProperties bp = BoardProperties.getProperties("Bstyle");
       String dbgargs = bp.getProperty("Bstyle.jvm.args");
       if (dbgargs != null && dbgargs.contains("###")) {
-	 int port = (int) (Math.random() * 1000 + 3000);
-	 BoardLog.logI("BVCR","Bvcr debugging port " + port);
-	 dbgargs = dbgargs.replace("###",Integer.toString(port));
+         int port = (int) (Math.random() * 1000 + 3000);
+         BoardLog.logI("BVCR","Bvcr debugging port " + port);
+         dbgargs = dbgargs.replace("###",Integer.toString(port));
        }
 
       List<String> args = new ArrayList<String>();
       args.add(IvyExecQuery.getJavaPath());
       args.add("-Xmx" + Long.toString(mxmem));
       if (dbgargs != null) {
-	 StringTokenizer tok = new StringTokenizer(dbgargs);
-	 while (tok.hasMoreTokens()) {
-	    args.add(tok.nextToken());
-	  }
+         StringTokenizer tok = new StringTokenizer(dbgargs);
+         while (tok.hasMoreTokens()) {
+            args.add(tok.nextToken());
+          }
        }
       String cp = System.getProperty("java.class.path");
       if (!cp.contains("checkstyle.jar")) {
-	 String cspath = bs.getLibraryPath("checkstyle.jar");
-	 cp = cp + File.pathSeparator + cspath;
+         String cspath = bs.getLibraryPath("checkstyle.jar");
+         cp = cp + File.pathSeparator + cspath;
        }
       args.add("-cp");
       args.add(cp);
@@ -214,10 +214,10 @@ void startBstyleServer()
       args.add(bs.getMintName());
       String opts = bp.getProperty("Bstyle.options");
       if (opts != null) {
-	 StringTokenizer tok = new StringTokenizer(opts);
-	 while (tok.hasMoreTokens()) {
-	    args.add(tok.nextToken());
-	  }
+         StringTokenizer tok = new StringTokenizer(opts);
+         while (tok.hasMoreTokens()) {
+            args.add(tok.nextToken());
+          }
        }
       
       String lvl = BoardLog.getLogLevel().toString();
@@ -236,41 +236,41 @@ void startBstyleServer()
       args.add(nlog.getPath());
       
       for (int i = 0; i < 100; ++i) {
-	 MintDefaultReply rply = new MintDefaultReply();
-	 mc.send("<BSTYLE CMD='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
-	 String rslt = rply.waitForString(1000);
-	 if (rslt != null) {
-	    server_running = true;
-	    break;
-	  }
-	 if (i == 0) {
-	    try {
-	       exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
-	       server_started = true;
-	       BoardLog.logD("BSTYLE","Run " + exec.getCommand());
-	     }
-	    catch (IOException e) {
-	       break;
-	     }
-	  }
-	 else {
-	    try {
-	       if (exec != null) {
-		  // check if process exited (nothing to do)
-		  exec.exitValue();
-		  break;
-		}
-	     }
-	    catch (IllegalThreadStateException e) { }
-	  }
-	
-	 try {
-	    wait(2000);
-	  }
-	 catch (InterruptedException e) { }
+         MintDefaultReply rply = new MintDefaultReply();
+         mc.send("<BSTYLE CMD='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
+         String rslt = rply.waitForString(1000);
+         if (rslt != null) {
+            server_running = true;
+            break;
+          }
+         if (i == 0) {
+            try {
+               exec = new IvyExec(args,null,IvyExec.ERROR_OUTPUT);
+               server_started = true;
+               BoardLog.logD("BSTYLE","Run " + exec.getCommand());
+             }
+            catch (IOException e) {
+               break;
+             }
+          }
+         else {
+            try {
+               if (exec != null) {
+                  // check if process exited (nothing to do)
+                  exec.exitValue();
+                  break;
+                }
+             }
+            catch (IllegalThreadStateException e) { }
+          }
+        
+         try {
+            wait(2000);
+          }
+         catch (InterruptedException e) { }
        }
       if (!server_running) {
-	 BoardLog.logW("BSTYLE","Unable to start bstyle server: " + args);
+         BoardLog.logW("BSTYLE","Unable to start bstyle server: " + args);
        }
     }
 
@@ -298,7 +298,7 @@ private synchronized void waitForSetup()
    for ( ; ; ) {
       if (factory_setup != null) break;
       try {
-	 wait(5000);
+         wait(5000);
        }
       catch (InterruptedException e) { }
     }
@@ -310,7 +310,7 @@ private static final class BstyleStarter implements Runnable {
       getFactory().startBstyleServer();
     }
 
-}	// end of inner class BvcrStarter
+}       // end of inner class BvcrStarter
 
 
 
@@ -321,11 +321,11 @@ private final class ServerSetup implements Runnable {
       noteSetup(true);
     }
 
-}	// end of inner class ServerSetup
+}       // end of inner class ServerSetup
 
 
 
-}	// end of class BstyleFactory
+}       // end of class BstyleFactory
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleInfoBubble.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor information bubble			*/
-/*										*/
+/*                                                                              */
+/*              BaleInfoBubble.java                                             */
+/*                                                                              */
+/*      Bubble Annotated Language Editor information bubble                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Yu Li				*/
+/*      Copyright 2010 Brown University -- Yu Li                                */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,14 +56,14 @@ final class BaleInfoBubble extends BudaBubble implements BaleConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
-private BaleEditorPane	  bale_editor;
-private JPanel	    info_panel;
+private BaleEditorPane    bale_editor;
+private JPanel      info_panel;
 
 private static Map<String, String> action_names;
 
@@ -78,56 +78,56 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 static void createInfoBubble(BaleEditorPane target,String elmtype,
-	 BaleInfoBubbleType type,Position sp)
+         BaleInfoBubbleType type,Position sp)
 {
    BaleInfoBubble bib = null;
    switch (type) {
       case DOC:
-	 if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {
-		  "Go to Definition", "Find All References" },
-		  "No documentation found! Suggestions: ",BaleInfoBubbleIconType.WARNING,
-		  sp);
-	 else if (elmtype.equals("LocalDeclId")) bib = new BaleInfoBubble(target,
-		  new String[] { "Find All References" },
-		  "No documentation found! Suggestions: ",BaleInfoBubbleIconType.WARNING,
-		  sp);
-	 else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation",
-		  "Find All References" },"No documentation found! Suggestions: ",
-		  BaleInfoBubbleIconType.WARNING,sp);
-	 break;
+         if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {
+                  "Go to Definition", "Find All References" },
+                  "No documentation found! Suggestions: ",BaleInfoBubbleIconType.WARNING,
+                  sp);
+         else if (elmtype.equals("LocalDeclId")) bib = new BaleInfoBubble(target,
+                  new String[] { "Find All References" },
+                  "No documentation found! Suggestions: ",BaleInfoBubbleIconType.WARNING,
+                  sp);
+         else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation",
+                  "Find All References" },"No documentation found! Suggestions: ",
+                  BaleInfoBubbleIconType.WARNING,sp);
+         break;
       case DEFDOC:
-	 if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {},
-		  "No definition found!",BaleInfoBubbleIconType.WARNING,sp);
-	 else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation" },
-		  "No definition found! Suggestions: ",BaleInfoBubbleIconType.WARNING,sp);
-	 break;
+         if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {},
+                  "No definition found!",BaleInfoBubbleIconType.WARNING,sp);
+         else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation" },
+                  "No definition found! Suggestions: ",BaleInfoBubbleIconType.WARNING,sp);
+         break;
       case IMPLDOC:
-	 if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {},
-		  "Source for implementation not found!",BaleInfoBubbleIconType.WARNING,sp);
-	 else bib = new BaleInfoBubble(target,new String[] {},"Source for implementation not found!",
-		  BaleInfoBubbleIconType.WARNING,sp);
-	 break;
+         if (elmtype.equals("FieldId")) bib = new BaleInfoBubble(target,new String[] {},
+                  "Source for implementation not found!",BaleInfoBubbleIconType.WARNING,sp);
+         else bib = new BaleInfoBubble(target,new String[] {},"Source for implementation not found!",
+                  BaleInfoBubbleIconType.WARNING,sp);
+         break;
       case UNDEFINED:
-	 bib = new BaleInfoBubble(target,new String[] {},
-		  "Name is not defined",BaleInfoBubbleIconType.ERROR,sp);
-	 break;
+         bib = new BaleInfoBubble(target,new String[] {},
+                  "Name is not defined",BaleInfoBubbleIconType.ERROR,sp);
+         break;
       case NOIDENTIFIER:
-	 bib = new BaleInfoBubble(target,new String[] {},
-		  "Please select a valid element name!",BaleInfoBubbleIconType.ERROR,sp);
-	 break;
+         bib = new BaleInfoBubble(target,new String[] {},
+                  "Please select a valid element name!",BaleInfoBubbleIconType.ERROR,sp);
+         break;
       case REF:
-	 if (elmtype.equals("FieldId") || elmtype.equals("LocalDeclId")) bib = new BaleInfoBubble(
-		  target,new String[] { "Go to Definition" },
-		  "0 references! Suggestions:",BaleInfoBubbleIconType.WARNING,sp);
-	 else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation" },
-		  "0 references! Suggestions:",BaleInfoBubbleIconType.WARNING,sp);
-	 break;
+         if (elmtype.equals("FieldId") || elmtype.equals("LocalDeclId")) bib = new BaleInfoBubble(
+                  target,new String[] { "Go to Definition" },
+                  "0 references! Suggestions:",BaleInfoBubbleIconType.WARNING,sp);
+         else bib = new BaleInfoBubble(target,new String[] { "Go to Implementation" },
+                  "0 references! Suggestions:",BaleInfoBubbleIconType.WARNING,sp);
+         break;
     }
 
    if (bib == null) return;
@@ -145,9 +145,9 @@ static void createInfoBubble(BaleEditorPane target,String elmtype,
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -156,7 +156,7 @@ static void createInfoBubble(BaleEditorPane target,String elmtype,
  **/
 
 private BaleInfoBubble(BaleEditorPane target,String[] btnmsg,String bbmsg,
-	 BaleInfoBubbleIconType icontype,Position sp)
+         BaleInfoBubbleIconType icontype,Position sp)
 {
    info_panel = new JPanel();
    info_panel.setOpaque(false);
@@ -170,7 +170,7 @@ private BaleInfoBubble(BaleEditorPane target,String[] btnmsg,String bbmsg,
 
    JLabel label;
    label = new JLabel("<html><font color=red>" + bbmsg + "</font></html>",icon,
-	    SwingConstants.CENTER);
+            SwingConstants.CENTER);
    label.addMouseListener(new QuitAction());
    info_panel.add(label);
 
@@ -179,12 +179,12 @@ private BaleInfoBubble(BaleEditorPane target,String[] btnmsg,String bbmsg,
    if (btnmsg != null && btnmsg.length != 0) {
       JLabel lb;
       for (int i = 0; i < btnmsg.length; i++) {
-	 lb = new JLabel("<html><font color=blue><u>" + btnmsg[i] + "</u></font></html>",
-		  SwingConstants.CENTER);
-	 lb.setToolTipText(btnmsg[i]);
-	 lb.setOpaque(false);
-	 lb.addMouseListener(actionhandler);
-	 info_panel.add(lb);
+         lb = new JLabel("<html><font color=blue><u>" + btnmsg[i] + "</u></font></html>",
+                  SwingConstants.CENTER);
+         lb.setToolTipText(btnmsg[i]);
+         lb.setOpaque(false);
+         lb.addMouseListener(actionhandler);
+         info_panel.add(lb);
        }
     }
 
@@ -224,9 +224,9 @@ private void addBubbleLink(Position p)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action Handler								*/
-/*										*/
+/*                                                                              */
+/*      Action Handler                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class QuitAction extends MouseAdapter {
@@ -235,7 +235,7 @@ private final class QuitAction extends MouseAdapter {
       setVisible(false);
     }
 
-}	// end of inner calss QuitAction
+}       // end of inner calss QuitAction
 
 
 private final class ContextActionHandler extends MouseAdapter {
@@ -256,10 +256,10 @@ private final class ContextActionHandler extends MouseAdapter {
       setVisible(false);
     }
 
-}	// end of inner class ContextActionHandler
+}       // end of inner class ContextActionHandler
 
 
-}	// end of class BaleInfoBubble
+}       // end of class BaleInfoBubble
 
 
 

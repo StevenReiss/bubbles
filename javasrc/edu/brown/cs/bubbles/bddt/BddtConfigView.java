@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtConfigView.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool configurations viewer 	*/
-/*										*/
+/*                                                                              */
+/*              BddtConfigView.java                                             */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool configurations viewer         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -73,15 +73,15 @@ class BddtConfigView extends BudaBubble implements BddtConstants, BumpConstants,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpRunModel	run_model;
-private BumpClient	bump_client;
-private ConfigModel	config_model;
-private ConfigTable	config_table;
+private BumpRunModel    run_model;
+private BumpClient      bump_client;
+private ConfigModel     config_model;
+private ConfigTable     config_table;
 
 
 private List<BumpLaunchConfig> active_configs;
@@ -116,9 +116,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtConfigView()
@@ -151,9 +151,9 @@ BddtConfigView()
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu methods							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -177,9 +177,9 @@ BddtConfigView()
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -193,9 +193,9 @@ BddtConfigView()
 
 
 /********************************************************************************/
-/*										*/
-/*	Sorting methods 							*/
-/*										*/
+/*                                                                              */
+/*      Sorting methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 BumpLaunchConfig getActualConfig(int idx)
@@ -204,8 +204,8 @@ BumpLaunchConfig getActualConfig(int idx)
 
    synchronized (active_configs) {
       if (config_table != null) {
-	 RowSorter<?> rs = config_table.getRowSorter();
-	 if (rs != null) idx = rs.convertRowIndexToModel(idx);
+         RowSorter<?> rs = config_table.getRowSorter();
+         if (rs != null) idx = rs.convertRowIndexToModel(idx);
       }
 
       return active_configs.get(idx);
@@ -215,9 +215,9 @@ BumpLaunchConfig getActualConfig(int idx)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private String getToolTip(BumpLaunchConfig blc)
@@ -229,9 +229,9 @@ private String getToolTip(BumpLaunchConfig blc)
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handling							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handling                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private static class RunAction extends AbstractAction {
@@ -250,9 +250,9 @@ private static class RunAction extends AbstractAction {
       BoardMetrics.noteCommand("BDDT","StartDebug");
     }
 
-   @Override public boolean isEnabled() 		{ return true; }
+   @Override public boolean isEnabled()                 { return true; }
 
-}	// end of inner class RunAction
+}       // end of inner class RunAction
 
 
 
@@ -273,9 +273,9 @@ private static class DebugAction extends AbstractAction {
       c.startDebug(the_launch,null);
     }
 
-   @Override public boolean isEnabled() 		{ return true; }
+   @Override public boolean isEnabled()                 { return true; }
 
-}	// end of inner class DebugAction
+}       // end of inner class DebugAction
 
 
 
@@ -292,32 +292,32 @@ private static class NewAction extends AbstractAction {
       BoardMetrics.noteCommand("BDDT","NewLaunchConfiguration");
     }
 
-}	// end of inner class NewAction
+}       // end of inner class NewAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleLaunchEvent(BumpRunEvent evt) {
       switch (evt.getEventType()) {
-	 case LAUNCH_ADD :
-	 case LAUNCH_CHANGE :
-	    if (!evt.getLaunchConfiguration().isWorkingCopy()) {
-	       active_configs.add(evt.getLaunchConfiguration());
-	     }
-	    break;
-	 case LAUNCH_REMOVE :
-	    active_configs.remove(evt.getLaunchConfiguration());
-	    break;
-	 default:
-	    break;
+         case LAUNCH_ADD :
+         case LAUNCH_CHANGE :
+            if (!evt.getLaunchConfiguration().isWorkingCopy()) {
+               active_configs.add(evt.getLaunchConfiguration());
+             }
+            break;
+         case LAUNCH_REMOVE :
+            active_configs.remove(evt.getLaunchConfiguration());
+            break;
+         default:
+            break;
        }
       config_model.fireTableDataChanged();
     }
@@ -326,15 +326,15 @@ private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
       // might want to track number of processes for each launch configuration
     }
 
-}	// end of inner class ModelHandler
+}       // end of inner class ModelHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration table model						*/
-/*										*/
+/*                                                                              */
+/*      Configuration table model                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConfigModel extends AbstractTableModel {
@@ -343,14 +343,14 @@ private class ConfigModel extends AbstractTableModel {
 
    ConfigModel() { }
 
-   @Override public int getColumnCount()		{ return col_names.length; }
-   @Override public String getColumnName(int idx)	{ return col_names[idx]; }
-   @Override public Class<?> getColumnClass(int idx)	{ return col_types[idx]; }
+   @Override public int getColumnCount()                { return col_names.length; }
+   @Override public String getColumnName(int idx)       { return col_names[idx]; }
+   @Override public Class<?> getColumnClass(int idx)    { return col_types[idx]; }
    @Override public boolean isCellEditable(int r,int c) {
       if (c==0||c==2||c==3) return true;
       return false;
    }
-   @Override public int getRowCount()			{ return active_configs.size(); }
+   @Override public int getRowCount()                   { return active_configs.size(); }
 
    @Override public Object getValueAt(int r,int c) {
       BumpLaunchConfig blc;
@@ -371,14 +371,14 @@ private class ConfigModel extends AbstractTableModel {
       return null;
     }
 
-}	// end of inner class ConfigModel
+}       // end of inner class ConfigModel
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration table							*/
-/*										*/
+/*                                                                              */
+/*      Configuration table                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConfigTable extends JTable implements BudaConstants.BudaBubbleOutputer
@@ -395,15 +395,15 @@ private class ConfigTable extends JTable implements BudaConstants.BudaBubbleOutp
       setToolTipText("");
       setOpaque(false);
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
       cell_drawer = new CellDrawer[col_names.length];
     }
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));;
        }
       return cell_drawer[c];
     }
@@ -411,10 +411,10 @@ private class ConfigTable extends JTable implements BudaConstants.BudaBubbleOutp
    private void fixColumnSizes() {
       TableColumnModel tcm = getColumnModel();
       for (int i = 0; i < col_sizes.length; ++i) {
-	 TableColumn tc = tcm.getColumn(i);
-	 tc.setPreferredWidth(col_sizes[i]);
-	 if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
-	 if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
+         TableColumn tc = tcm.getColumn(i);
+         tc.setPreferredWidth(col_sizes[i]);
+         if (col_max_size[i] != 0) tc.setMaxWidth(col_max_size[i]);
+         if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
        }
     }
 
@@ -427,29 +427,29 @@ private class ConfigTable extends JTable implements BudaConstants.BudaBubbleOutp
 
    @Override protected void paintComponent(Graphics g) {
       synchronized (active_configs) {
-	 Dimension sz = getSize();
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 Graphics2D g2 = (Graphics2D) g.create();
-	 Color tc = BoardColors.getColor(BDDT_CONFIG_TOP_COLOR_PROP);
-	 Color bc = BoardColors.getColor(BDDT_CONFIG_BOTTOM_COLOR_PROP);
-	 if (tc.getRGB() != bc.getRGB()) {
-	    Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
-	    g2.setPaint(p);
-	  }
-	 else {
-	    g2.setColor(tc);
-	  }
-	 g2.fill(r);
-	 super.paintComponent(g);
+         Dimension sz = getSize();
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         Graphics2D g2 = (Graphics2D) g.create();
+         Color tc = BoardColors.getColor(BDDT_CONFIG_TOP_COLOR_PROP);
+         Color bc = BoardColors.getColor(BDDT_CONFIG_BOTTOM_COLOR_PROP);
+         if (tc.getRGB() != bc.getRGB()) {
+            Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
+            g2.setPaint(p);
+          }
+         else {
+            g2.setColor(tc);
+          }
+         g2.fill(r);
+         super.paintComponent(g);
        }
     }
 
-   @Override public String getConfigurator()			{ return "BDDT"; }
+   @Override public String getConfigurator()                    { return "BDDT"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","CONFIGS");
     }
 
-}	// end of inner class ConfigTable
+}       // end of inner class ConfigTable
 
 
 private final class ConfigMouser extends BoardMouser {
@@ -470,9 +470,9 @@ private final class ConfigMouser extends BoardMouser {
 
 
 /********************************************************************************/
-/*										*/
-/*	Renderers								*/
-/*										*/
+/*                                                                              */
+/*      Renderers                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class HeaderDrawer implements TableCellRenderer {
@@ -486,18 +486,18 @@ private static class HeaderDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (bold_font == null) {
-	 bold_font = cmp.getFont();
-	 bold_font = bold_font.deriveFont(Font.BOLD);
+         bold_font = cmp.getFont();
+         bold_font = bold_font.deriveFont(Font.BOLD);
        }
       cmp.setFont(bold_font);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class HeaderRenderer
+}       // end of inner class HeaderRenderer
 
 
 
@@ -511,18 +511,18 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+                                                               boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
     }
 
-}	// end of inner class ErrorRenderer
+}       // end of inner class ErrorRenderer
 
 
 
 
-}	// end of class BddtConfigView
+}       // end of class BddtConfigView
 
 
 

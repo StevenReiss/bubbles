@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BanalConstants.java						*/
-/*										*/
-/*	Bubbles ANALysis package constants					*/
-/*										*/
+/*                                                                              */
+/*              BanalConstants.java                                             */
+/*                                                                              */
+/*      Bubbles ANALysis package constants                                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,28 +42,28 @@ int ASM_API = JcodeConstants.ASM_API;
 
 
 /********************************************************************************/
-/*										*/
-/*	Definitions for package graph data					*/
-/*										*/
+/*                                                                              */
+/*      Definitions for package graph data                                      */
+/*                                                                              */
 /********************************************************************************/
 
 enum PackageRelationType {
-   NONE,			// no relation
-   SUPERCLASS,			// subclass - superclass relationship
-   IMPLEMENTS,			// implements an interface
-   EXTENDS,			// extends an interface
-   INNERCLASS,			// inner class (nested)
-   ALLOCATES,			// allocates an instance of
-   CALLS,			// calls a method in
-   CATCHES,			// catches an exeception of
-   ACCESSES,			// accesses a field of
-   WRITES,			// writes a field of
-   CONSTANT,			// access a constant from (enum or final static)
-   FIELD,			// has a field of
-   LOCAL,			// has a local of
-   PACKAGE,			// in package
-   CLASSMETHOD, 		// method of a class
-   OVERRIDES,			// method overriding method of superclass
+   NONE,                        // no relation
+   SUPERCLASS,                  // subclass - superclass relationship
+   IMPLEMENTS,                  // implements an interface
+   EXTENDS,                     // extends an interface
+   INNERCLASS,                  // inner class (nested)
+   ALLOCATES,                   // allocates an instance of
+   CALLS,                       // calls a method in
+   CATCHES,                     // catches an exeception of
+   ACCESSES,                    // accesses a field of
+   WRITES,                      // writes a field of
+   CONSTANT,                    // access a constant from (enum or final static)
+   FIELD,                       // has a field of
+   LOCAL,                       // has a local of
+   PACKAGE,                     // in package
+   CLASSMETHOD,                 // method of a class
+   OVERRIDES,                   // method overriding method of superclass
 }
 
 
@@ -103,19 +103,19 @@ interface BanalPackageNode {
    String getProjectName();
    
    void outputXml(IvyXmlWriter xw);
-}	// end of inner class BanalPackageNode
+}       // end of inner class BanalPackageNode
 
 
 
 interface BanalPackageClass extends BanalPackageNode {
 
 
-}	// end of inner class BanalPackageClass
+}       // end of inner class BanalPackageClass
 
 
 interface BanalPackageMethod  extends BanalPackageNode {
 
-}	// end of inner class BanalPackageMethod
+}       // end of inner class BanalPackageMethod
 
 
 interface BanalPackageLink {
@@ -129,9 +129,9 @@ interface BanalPackageLink {
 
 
 /********************************************************************************/
-/*										*/
-/*	Hierarchy interfaces							*/
-/*										*/
+/*                                                                              */
+/*      Hierarchy interfaces                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 interface BanalHierarchyNode {
@@ -140,14 +140,14 @@ interface BanalHierarchyNode {
    int getLevel();
    int getCycle();
    
-}	// end of inner class BanalHierarchyNode
+}       // end of inner class BanalHierarchyNode
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Database constants							*/
-/*										*/
+/*                                                                              */
+/*      Database constants                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 String FILE_DIRECTORY = System.getProperty("java.io.tmpdir");
@@ -167,9 +167,9 @@ String []  TABLE_NAMES = new String [] {
 
 
 /********************************************************************************/
-/*										*/
-/*	Class Repository							*/
-/*										*/
+/*                                                                              */
+/*      Class Repository                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 interface BanalClassData {
@@ -179,32 +179,32 @@ interface BanalClassData {
    String getProject();
    InputStream getClassStream();
 
-}	// end of inner interface BanalClassData
+}       // end of inner interface BanalClassData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Visitor for Static Analysis						*/
-/*										*/
+/*                                                                              */
+/*      Visitor for Static Analysis                                             */
+/*                                                                              */
 /********************************************************************************/
 
 
 interface BanalClass {
 
-   String getInternalName();		// Lxxx/xxx/xxx$xxx;
-   String getJavaName();		// xxx.xxx.xxx$xxx
+   String getInternalName();            // Lxxx/xxx/xxx$xxx;
+   String getJavaName();                // xxx.xxx.xxx$xxx
 
-}	// end of inner interface BanalClass
+}       // end of inner interface BanalClass
 
 
 
 interface BanalMethod {
 
    BanalClass getOwnerClass();
-   String getName();			// simple name
-   BanalClass [] getArgumentTypes();	// set of argument types
+   String getName();                    // simple name
+   BanalClass [] getArgumentTypes();    // set of argument types
    BanalClass getReturnType();
    String getFullName();
 
@@ -216,7 +216,7 @@ interface BanalField {
    BanalClass getOwnerClass();
    String getName();
 
-}	// end of inner interface BanalField
+}       // end of inner interface BanalField
 
 
 
@@ -257,7 +257,7 @@ interface BanalVisitor {
 
 
 
-}	// end of interface BanalConstants
+}       // end of interface BanalConstants
 
 
 

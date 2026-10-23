@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseResolver.java						*/
-/*										*/
-/*	Handle symbol and type resolution for JavaScript			*/
-/*										*/
+/*                                                                              */
+/*              NobaseResolver.java                                             */
+/*                                                                              */
+/*      Handle symbol and type resolution for JavaScript                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -38,22 +38,22 @@ class NobaseResolver implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private NobaseScope		global_scope;
-private NobaseProject		for_project;
+private NobaseScope             global_scope;
+private NobaseProject           for_project;
 
-private static final Pattern	INTERNAL_NAME = Pattern.compile("_L\\d+");
+private static final Pattern    INTERNAL_NAME = Pattern.compile("_L\\d+");
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseResolver(NobaseProject proj,NobaseScope glbl)
@@ -66,9 +66,9 @@ NobaseResolver(NobaseProject proj,NobaseScope glbl)
 
 
 /********************************************************************************/
-/*										*/
-/*	Remove Resolution methods						*/
-/*										*/
+/*                                                                              */
+/*      Remove Resolution methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void unresolve(ASTNode node)
@@ -84,14 +84,14 @@ private static final class UnresolveVisitor extends ASTVisitor {
       NobaseAst.clearResolve(n);
     }
 
-}	// end of inner class UnresolveVisitor
+}       // end of inner class UnresolveVisitor
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Resolution methods							*/
-/*										*/
+/*                                                                              */
+/*      Resolution methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void resolveSymbols(ISemanticData isd)
@@ -117,9 +117,9 @@ void resolveSymbols(ISemanticData isd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Name methods								*/
-/*										*/
+/*                                                                              */
+/*      Name methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 static boolean isGeneratedName(NobaseSymbol ns)
@@ -140,7 +140,7 @@ static boolean isGeneratedName(String name)
 
 
 
-}	// end of class NobaseResolver
+}       // end of class NobaseResolver
 
 
 

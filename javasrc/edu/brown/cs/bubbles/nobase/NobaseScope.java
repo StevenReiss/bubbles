@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseScope.java						*/
-/*										*/
-/*	Representation of a javascript scope					*/
-/*										*/
+/*                                                                              */
+/*              NobaseScope.java                                                */
+/*                                                                              */
+/*      Representation of a javascript scope                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -38,25 +38,25 @@ class NobaseScope implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Map<String,NobaseSymbol>	defined_names;
-private Map<String,Set<NobaseSymbol>>	all_names;
-private ScopeType			scope_type;
-private NobaseScope			parent_scope;
+private Map<String,NobaseSymbol>        defined_names;
+private Map<String,Set<NobaseSymbol>>   all_names;
+private ScopeType                       scope_type;
+private NobaseScope                     parent_scope;
 private NobaseScope                     super_scope;
-private NobaseValue			object_value;
-private int				temp_counter;
+private NobaseValue                     object_value;
+private int                             temp_counter;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseScope(ScopeType typ,NobaseScope par)
@@ -74,14 +74,14 @@ NobaseScope(ScopeType typ,NobaseScope par)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-ScopeType getScopeType()		{ return scope_type; }
+ScopeType getScopeType()                { return scope_type; }
 
-NobaseScope getParent() 		{ return parent_scope; }
+NobaseScope getParent()                 { return parent_scope; }
 
 void setSuperScope(NobaseScope scp)     {super_scope = scp; }
 
@@ -90,7 +90,7 @@ NobaseValue getThisValue()
    return object_value;
 }
 
-int getNextTemp()			{ return ++temp_counter; }
+int getNextTemp()                       { return ++temp_counter; }
 
 void setValue(NobaseValue nv)
 {
@@ -144,13 +144,13 @@ void defineAll(NobaseSymbol sym,String nm)
     }
    else {
       switch (sym.getNameType()) {
-	 case FUNCTION :
-	 case VARIABLE :
+         case FUNCTION :
+         case VARIABLE :
          case CLASS :
-	    break;
-	 case MODULE :
-	 case LOCAL :
-	    return;
+            break;
+         case MODULE :
+         case LOCAL :
+            return;
        }
       if (nm == null) return;
       int idx = nm.lastIndexOf(".");
@@ -158,8 +158,8 @@ void defineAll(NobaseSymbol sym,String nm)
       if (NobaseResolver.isGeneratedName(nm)) return;
       Set<NobaseSymbol> syms = all_names.get(nm);
       if (syms == null) {
-	 syms = new HashSet<NobaseSymbol>(2);
-	 all_names.put(nm,syms);
+         syms = new HashSet<NobaseSymbol>(2);
+         all_names.put(nm,syms);
        }
       syms.add(sym);
     }
@@ -211,11 +211,11 @@ NobaseValue lookupValue(String name,boolean lhs)
       case MEMBER :
       case WITH :
       default :
-	 if (object_value != null) {
-	    NobaseValue nv = object_value.getProperty(name,lhs);
-	    if (nv != null) return nv;
-	  }
-	 break;
+         if (object_value != null) {
+            NobaseValue nv = object_value.getProperty(name,lhs);
+            if (nv != null) return nv;
+          }
+         break;
     }
 
    if (ns == null) return null;
@@ -234,7 +234,7 @@ NobaseScope getDefaultScope()
       case CATCH :
       case OBJECT :
       case LOCAL :
-	return parent_scope.getDefaultScope();
+        return parent_scope.getDefaultScope();
       case FILE :
       case GLOBAL :
       case FUNCTION :
@@ -242,7 +242,7 @@ NobaseScope getDefaultScope()
          break;
       case MEMBER :
       case WITH :
-	 break;
+         break;
     }
    return this;
 }
@@ -262,7 +262,7 @@ NobaseScope getDefaultScope()
    return base;
 }
 
-}	// end of class NobaseScope
+}       // end of class NobaseScope
 
 
 

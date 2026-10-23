@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BattTestCase.java						*/
-/*										*/
-/*	Bubble Automated Testing Tool representation of a test case		*/
-/*										*/
+/*                                                                              */
+/*              BattTestCase.java                                               */
+/*                                                                              */
+/*      Bubble Automated Testing Tool representation of a test case             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,29 +42,29 @@ class BattTestCase implements BattConstants, BattConstants.BattTest, Comparable<
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		test_name;
-private String		class_name;
-private String		method_name;
-private TestStatus	test_status;
-private TestState	test_state;
-private String		fail_message;
-private String		fail_trace;
-private BattCountData	count_data;
-private long		update_time;
-private String		test_class;
-private Set<String>	annotation_types;
+private String          test_name;
+private String          class_name;
+private String          method_name;
+private TestStatus      test_status;
+private TestState       test_state;
+private String          fail_message;
+private String          fail_trace;
+private BattCountData   count_data;
+private long            update_time;
+private String          test_class;
+private Set<String>     annotation_types;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BattTestCase(String name)
@@ -81,22 +81,22 @@ BattTestCase(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public synchronized String getName()		{ return test_name; }
-@Override public synchronized String getClassName()		{ return class_name; }
-@Override public synchronized String getMethodName()		{ return method_name; }
+@Override public synchronized String getName()          { return test_name; }
+@Override public synchronized String getClassName()             { return class_name; }
+@Override public synchronized String getMethodName()            { return method_name; }
 
-@Override public synchronized TestStatus getStatus()		{ return test_status; }
-@Override public synchronized TestState getState()		{ return test_state; }
+@Override public synchronized TestStatus getStatus()            { return test_status; }
+@Override public synchronized TestState getState()              { return test_state; }
 
-@Override public BattCountData getCountData()			{ return count_data; }
+@Override public BattCountData getCountData()                   { return count_data; }
 
-@Override public String getFailMessage()			{ return fail_message; }
-@Override public String getFailTrace()			{ return fail_trace; }
+@Override public String getFailMessage()                        { return fail_message; }
+@Override public String getFailTrace()                  { return fail_trace; }
 
 synchronized void setStatus(TestStatus sts)
 {
@@ -116,9 +116,9 @@ synchronized void setState(TestState st)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to take data from the tester					*/
-/*										*/
+/*                                                                              */
+/*      Methods to take data from the tester                                    */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized boolean handleTestState(Element e)
@@ -146,14 +146,14 @@ synchronized boolean handleTestState(Element e)
    if (sts.equals("FAILURE")) {
       test_status = TestStatus.FAILURE;
       if (test_state == TestState.RUNNING || test_state == TestState.TO_BE_RUN ||
-	    test_state == TestState.UNKNOWN)
-	 test_state = TestState.UP_TO_DATE;
+            test_state == TestState.UNKNOWN)
+         test_state = TestState.UP_TO_DATE;
     }
    else if (sts.equals("SUCCESS")) {
       test_status = TestStatus.SUCCESS;
       if (test_state == TestState.RUNNING || test_state == TestState.TO_BE_RUN ||
-	    test_state == TestState.UNKNOWN)
-	 test_state = TestState.UP_TO_DATE;
+            test_state == TestState.UNKNOWN)
+         test_state = TestState.UP_TO_DATE;
     }
    else {
       if (ignore) test_state = TestState.IGNORED;
@@ -167,9 +167,9 @@ synchronized boolean handleTestState(Element e)
       fail_message = IvyXml.getTextElement(e,"EXCEPTION");
       fail_trace = IvyXml.getTextElement(e,"TRACE");
       if (fail_trace != null && fail_message == null) {
-	 int idx = fail_trace.indexOf("\n");
-	 if (idx < 0) fail_message = fail_trace;
-	 else fail_message = fail_trace.substring(0,idx);
+         int idx = fail_trace.indexOf("\n");
+         if (idx < 0) fail_message = fail_trace;
+         else fail_message = fail_trace.substring(0,idx);
        }
       if (omsg == null && fail_message != null) chng = true;
       else if (omsg != null && fail_message == null) chng = true;
@@ -183,7 +183,7 @@ synchronized boolean handleTestState(Element e)
    String st = IvyXml.getAttrString(e,"STATE");
    if (st != null) {
       try {
-	 test_state = TestState.valueOf(st);
+         test_state = TestState.valueOf(st);
        }
       catch (IllegalArgumentException ex) { }
     }
@@ -212,9 +212,9 @@ synchronized void handleTestCounts(Element e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Check for class change							*/
-/*										*/
+/*                                                                              */
+/*      Check for class change                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized FileState usesClasses(Map<String,FileState> clsmap)
@@ -244,7 +244,7 @@ public synchronized UseMode usesClass(String clss)
 }
 
 
-long getUpdateTime()			{ return update_time; }
+long getUpdateTime()                    { return update_time; }
 
 
 private void update()
@@ -256,9 +256,9 @@ private void update()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void shortReport(IvyXmlWriter xw)
@@ -303,9 +303,9 @@ synchronized void longReport(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip methods							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized String getToolTip()
@@ -332,8 +332,8 @@ synchronized String getToolTip()
       String s1 = tok.nextToken();
       buf.append("<tr><td>TRACE</td><td>" + IvyXml.htmlSanitize(s1) + "</td></tr>");
       while (tok.hasMoreTokens()) {
-	 String s = tok.nextToken();
-	 buf.append("<tr><td></td><td>&nbsp;&nbsp;" + IvyXml.htmlSanitize(s) + "</td></tr>");
+         String s = tok.nextToken();
+         buf.append("<tr><td></td><td>&nbsp;&nbsp;" + IvyXml.htmlSanitize(s) + "</td></tr>");
       }
 
     }
@@ -346,9 +346,9 @@ synchronized String getToolTip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparison methods							*/
-/*										*/
+/*                                                                              */
+/*      Comparison methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int compareTo(BattTestCase btc)
@@ -360,9 +360,9 @@ synchronized String getToolTip()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -371,7 +371,7 @@ synchronized String getToolTip()
 }
 
 
-}	// end of class BattTestCase
+}       // end of class BattTestCase
 
 
 

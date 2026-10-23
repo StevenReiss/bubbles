@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleAnnotationArea.java 					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment editor annotation panel	*/
-/*										*/
+/*                                                                              */
+/*              BaleAnnotationArea.java                                         */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment editor annotation panel       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -84,19 +84,19 @@ class BaleAnnotationArea extends JPanel implements DocumentListener, BaleConstan
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private transient BaleEditor	for_editor;
-private BaleDocument	for_document;
+private transient BaleEditor    for_editor;
+private BaleDocument    for_document;
 private transient Set<BaleAnnotation> annot_set;
-private transient LineData []	line_data;
-private int		start_line;
+private transient LineData []   line_data;
+private int             start_line;
 private transient Map<Integer,Collection<BaleAnnotation>> annot_map;
-private boolean 	update_needed;
-private boolean 	show_line_numbers;
+private boolean         update_needed;
+private boolean         show_line_numbers;
 private transient BumpBreakModel break_model;
 
 private static final long serialVersionUID = 1;
@@ -105,9 +105,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleAnnotationArea(BaleEditor be)
@@ -144,9 +144,9 @@ BaleAnnotationArea(BaleEditor be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void showLineNumbers(boolean fg)
@@ -171,9 +171,9 @@ void showLineNumbers(boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Annotation information							*/
-/*										*/
+/*                                                                              */
+/*      Annotation information                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 BaleAnnotation addAnnotation(BaleAnnotation an)
@@ -195,8 +195,8 @@ void removeAnnotation(BaleAnnotation ba)
 
    synchronized (annot_set) {
       if (annot_set.remove(ba)) {
-	 chng = true;
-	 annot_map = null;
+         chng = true;
+         annot_map = null;
        }
     }
 
@@ -217,12 +217,12 @@ void removeAll(BalePosition start,BalePosition end)
 
    synchronized (annot_set) {
       for (Iterator<BaleAnnotation> it = annot_set.iterator(); it.hasNext(); ) {
-	 BaleAnnotation an = it.next();
-	 int off = for_document.getFragmentOffset(an.getDocumentOffset());
-	 if (off >= soff && off < eoff) {
-	    it.remove();
-	    chng = true;
-	  }
+         BaleAnnotation an = it.next();
+         int off = for_document.getFragmentOffset(an.getDocumentOffset());
+         if (off >= soff && off < eoff) {
+            it.remove();
+            chng = true;
+          }
        }
     }
 
@@ -232,9 +232,9 @@ void removeAll(BalePosition start,BalePosition end)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting interface							*/
-/*										*/
+/*                                                                              */
+/*      Painting interface                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void paintComponent(Graphics g)
@@ -248,7 +248,7 @@ void removeAll(BalePosition start,BalePosition end)
     }
    else {
       p = new GradientPaint(0f,0f, BoardColors.getColor(BALE_EDITOR_TOP_COLOR_PROP), 0f,
-	    bnd.height, BoardColors.getColor(BALE_EDITOR_BOTTOM_COLOR_PROP));
+            bnd.height, BoardColors.getColor(BALE_EDITOR_BOTTOM_COLOR_PROP));
     }
 
    g2.setPaint(p);
@@ -263,57 +263,57 @@ void removeAll(BalePosition start,BalePosition end)
       recheckLines();
 
       if (show_line_numbers) {
-	 g2.setFont(BALE_PROPERTIES.getFont(BALE_ANNOT_FONT));
-	 g2.setColor(BoardColors.getColor(BALE_ANNOT_LINE_NUMBER_COLOR));
-	 Rectangle2D.Double r2 = new Rectangle2D.Double();
-	 for (int lno = start_line; lno < start_line + line_data.length; ++lno) {
-	    LineData ld = line_data[lno-start_line];
-	    if (ld == null) continue;
-	    int y0 = ld.getTop();
-	    int y1 = ld.getBottom();
-	    r2.setFrame(0,y0,BALE_ANNOT_NUMBER_WIDTH-3,y1-y0);
-	    SwingText.drawTextRight(Integer.toString(lno),g2,r2);
-	  }
+         g2.setFont(BALE_PROPERTIES.getFont(BALE_ANNOT_FONT));
+         g2.setColor(BoardColors.getColor(BALE_ANNOT_LINE_NUMBER_COLOR));
+         Rectangle2D.Double r2 = new Rectangle2D.Double();
+         for (int lno = start_line; lno < start_line + line_data.length; ++lno) {
+            LineData ld = line_data[lno-start_line];
+            if (ld == null) continue;
+            int y0 = ld.getTop();
+            int y1 = ld.getBottom();
+            r2.setFrame(0,y0,BALE_ANNOT_NUMBER_WIDTH-3,y1-y0);
+            SwingText.drawTextRight(Integer.toString(lno),g2,r2);
+          }
        }
 
       Map<Integer,Collection<BaleAnnotation>> amap = setupAnnotationMap();
 
       for (Map.Entry<Integer,Collection<BaleAnnotation>> ent : amap.entrySet()) {
-	 int lno = ent.getKey();
-	 if (lno - start_line < 0 || lno - start_line >= line_data.length) {
-	    BoardLog.logE("BALE",
-		  "Annotation beyond bounds " + lno + " " + start_line + " " + line_data.length);
-	    continue;
-	  }
-	 LineData ld = line_data[lno-start_line];
-	 if (ld == null) continue;
-	 int y0 = ld.getTop();
-	 int y1 = ld.getBottom();
-	 Collection<BaleAnnotation> lan = ent.getValue();
-	 for (BaleAnnotation an : lan) {
-	    Color c = an.getBackgroundColor();
-	    if (c != null) {
-	       g2.setColor(c);
-	       g2.fillRect(bnd.x,y0,bnd.width,y1-y0);
-	       break;			// only allow one color for now
-	     }
-	  }
-	 for (BaleAnnotation an : lan) {
-	    BudaBubble bbl = BudaRoot.findBudaBubble(this);
-	    Icon ic = an.getIcon(bbl);
-	    if (ic == null) continue;
-	    int wid = ic.getIconWidth();
-	    int ht = ic.getIconHeight();
-	    int x = bnd.x + bnd.width/2 - wid/2;
-	    int y = (y0 + y1)/2 - ht/2;
-	    try {
-	       ic.paintIcon(this,g,x,y);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BALE","Problem drawing annotation " + an.getToolTip() + " " + 
+         int lno = ent.getKey();
+         if (lno - start_line < 0 || lno - start_line >= line_data.length) {
+            BoardLog.logE("BALE",
+                  "Annotation beyond bounds " + lno + " " + start_line + " " + line_data.length);
+            continue;
+          }
+         LineData ld = line_data[lno-start_line];
+         if (ld == null) continue;
+         int y0 = ld.getTop();
+         int y1 = ld.getBottom();
+         Collection<BaleAnnotation> lan = ent.getValue();
+         for (BaleAnnotation an : lan) {
+            Color c = an.getBackgroundColor();
+            if (c != null) {
+               g2.setColor(c);
+               g2.fillRect(bnd.x,y0,bnd.width,y1-y0);
+               break;                   // only allow one color for now
+             }
+          }
+         for (BaleAnnotation an : lan) {
+            BudaBubble bbl = BudaRoot.findBudaBubble(this);
+            Icon ic = an.getIcon(bbl);
+            if (ic == null) continue;
+            int wid = ic.getIconWidth();
+            int ht = ic.getIconHeight();
+            int x = bnd.x + bnd.width/2 - wid/2;
+            int y = (y0 + y1)/2 - ht/2;
+            try {
+               ic.paintIcon(this,g,x,y);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BALE","Problem drawing annotation " + an.getToolTip() + " " + 
                      ic + " " + an.getClass(),t);
-	     }
-	  }
+             }
+          }
        }
     }
    finally { for_document.baleReadUnlock(); }
@@ -340,11 +340,11 @@ void paintEditor(Graphics2D g)
       int y1 = ld.getBottom();
       Collection<BaleAnnotation> lan = ent.getValue();
       for (BaleAnnotation an : lan) {
-	 Color c = an.getLineColor(bbl);
-	 if (c != null) {
-	    g.setColor(c);
-	    g.fillRect(r.x,y0,r.width,y1-y0);
-	  }
+         Color c = an.getLineColor(bbl);
+         if (c != null) {
+            g.setColor(c);
+            g.fillRect(r.x,y0,r.width,y1-y0);
+          }
        }
     }
 }
@@ -358,19 +358,19 @@ private Map<Integer,Collection<BaleAnnotation>> setupAnnotationMap()
 
    synchronized (annot_set) {
       if (annot_map == null && line_data != null) {
-	 annot_map = new HashMap<>();
+         annot_map = new HashMap<>();
 
-	 for (BaleAnnotation an : annot_set) {
-	    int off = for_document.getFragmentOffset(an.getDocumentOffset());
-	    int lno = for_document.findLineNumber(off);
-	    if (lno < start_line || lno >= start_line + line_data.length) continue;
-	    Collection<BaleAnnotation> lan = annot_map.get(lno);
-	    if (lan == null) {
-	       lan = new TreeSet<BaleAnnotation>(new AnnotComparator());
-	       annot_map.put(lno,lan);
-	    }
-	    lan.add(an);
-	 }
+         for (BaleAnnotation an : annot_set) {
+            int off = for_document.getFragmentOffset(an.getDocumentOffset());
+            int lno = for_document.findLineNumber(off);
+            if (lno < start_line || lno >= start_line + line_data.length) continue;
+            Collection<BaleAnnotation> lan = annot_map.get(lno);
+            if (lan == null) {
+               lan = new TreeSet<BaleAnnotation>(new AnnotComparator());
+               annot_map.put(lno,lan);
+            }
+            lan.add(an);
+         }
        }
       else if (annot_map == null) return new HashMap<>();
       return annot_map;
@@ -389,15 +389,15 @@ private static final class AnnotComparator implements Comparator<BaleAnnotation>
       return a1.hashCode() - a2.hashCode();
     }
 
-}	// end of inner class AnnotComparator
+}       // end of inner class AnnotComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu interface							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu interface                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void handleContextMenu(MouseEvent evt)
@@ -414,7 +414,7 @@ void handleContextMenu(MouseEvent evt)
 
    if (lan != null) {
       for (BaleAnnotation ba : lan) {
-	 ba.addPopupButtons(((Component) for_editor),menu);
+         ba.addPopupButtons(((Component) for_editor),menu);
        }
     }
 
@@ -455,12 +455,12 @@ private class AnnotationContext implements BaleContextConfig {
       return for_document.getDocumentOffset(getOffset());
     }
 
-   @Override public String getToken()				{ return null; }
-   @Override public BaleContextType getTokenType()		{ return BaleContextType.NONE; }
-   @Override public String getMethodName()			{ return null; }
+   @Override public String getToken()                           { return null; }
+   @Override public BaleContextType getTokenType()              { return BaleContextType.NONE; }
+   @Override public String getMethodName()                      { return null; }
    @Override public String getFullName()                        { return null; }
-   @Override public int getLineNumber() 			{ return line_number; }
-   @Override public boolean inAnnotationArea()		{ return true; }
+   @Override public int getLineNumber()                         { return line_number; }
+   @Override public boolean inAnnotationArea()          { return true; }
    
    @Override public int getSelectionStart() {
       if (for_editor instanceof BaleEditorPane) {
@@ -503,9 +503,9 @@ private int findLine(MouseEvent evt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Tool tip interface							*/
-/*										*/
+/*                                                                              */
+/*      Tool tip interface                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getToolTipText(MouseEvent evt)
@@ -522,8 +522,8 @@ private int findLine(MouseEvent evt)
 
    if (lan != null) {
       for (BaleAnnotation an : lan) {
-	 String tt = an.getToolTip();
-	 if (tt != null) tips.add(tt);
+         String tt = an.getToolTip();
+         if (tt != null) tips.add(tt);
        }
     }
 
@@ -538,8 +538,8 @@ private int findLine(MouseEvent evt)
       buf.append("<html><body>");
       buf.append("Line " + lno + " multiple annotations:");
       for (String tt : tips) {
-	 buf.append("<br>&nbsp;&nbsp;");
-	 buf.append(tt);
+         buf.append("<br>&nbsp;&nbsp;");
+         buf.append(tt);
        }
     }
 
@@ -554,9 +554,9 @@ private int findLine(MouseEvent evt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find line boundaries 					*/
-/*										*/
+/*                                                                              */
+/*      Methods to find line boundaries                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void recheckLines()
@@ -576,7 +576,7 @@ private void recheckLines()
       int len = endlno-start_line+1;
       if (len < 0) return;
       if (line_data == null || line_data.length < len) {
-	 line_data = new LineData[len];
+         line_data = new LineData[len];
        }
       chng = checkElement(root);
     }
@@ -584,7 +584,7 @@ private void recheckLines()
 
    if (chng) {
       synchronized (annot_set) {
-	 annot_map = null;
+         annot_map = null;
        }
       repaint();
     }
@@ -605,10 +605,10 @@ private boolean checkElement(BaleElement be)
       int y0;
       try {
          r = SwingText.modelToView2D(for_editor,off);
-	 if (r == null) return chng;
-	 if (eoff < be.getDocument().getLength()-1) r1 = SwingText.modelToView2D(for_editor,eoff);
-	 if (r1 == null) y0 = r.y + r.height;
-	 else y0 = r1.y;
+         if (r == null) return chng;
+         if (eoff < be.getDocument().getLength()-1) r1 = SwingText.modelToView2D(for_editor,eoff);
+         if (r1 == null) y0 = r.y + r.height;
+         else y0 = r1.y;
        }
       catch (BadLocationException e) {
          // shouldn't happen
@@ -617,8 +617,8 @@ private boolean checkElement(BaleElement be)
       int lno = for_document.findLineNumber(off)-start_line;
       if (lno < 0 || lno >= line_data.length) ;
       else if (line_data[lno] == null) {
-	 line_data[lno] = new LineData(start_line+lno,r.y,y0); //-1);
-	 chng = true;
+         line_data[lno] = new LineData(start_line+lno,r.y,y0); //-1);
+         chng = true;
        }
       else chng |= line_data[lno].set(start_line+lno,r.y,y0); //-1);
     }
@@ -627,7 +627,7 @@ private boolean checkElement(BaleElement be)
       int eoff = be.getEndOffset();
       try {
          r = SwingText.modelToView2D(for_editor,soff);
-	 if (r == null) return chng;
+         if (r == null) return chng;
        }
       catch (BadLocationException e) {
          return chng; 
@@ -636,18 +636,18 @@ private boolean checkElement(BaleElement be)
       int elno = for_document.findLineNumber(eoff)-start_line;
       if (slno < 0) slno = elno+1;
       for (int lno = slno; lno <= elno; ++lno) {
-	 if (line_data[lno] == null) {
-	    line_data[lno] = new LineData(start_line+lno,r.y,r.y+r.height); //-1);
-	    chng = true;
-	  }
-	 else chng |= line_data[lno].set(start_line+lno,r.y,r.y+r.height); //-1);
+         if (line_data[lno] == null) {
+            line_data[lno] = new LineData(start_line+lno,r.y,r.y+r.height); //-1);
+            chng = true;
+          }
+         else chng |= line_data[lno].set(start_line+lno,r.y,r.y+r.height); //-1);
        }
     }
    else if (!be.isLeaf()) {
       int n = be.getChildCount();
       for (int i = 0; i < n; ++i) {
-	 BaleElement ce = be.getBaleElement(i);
-	 chng |= checkElement(ce);
+         BaleElement ce = be.getBaleElement(i);
+         chng |= checkElement(ce);
        }
     }
 
@@ -658,14 +658,14 @@ private boolean checkElement(BaleElement be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Document event handlers 						*/
-/*										*/
-/*		Note that this check is done later to ensure that the views	*/
-/*	associated with the element buffer have been updated already. This	*/
-/*	might be done in a separate thread after getting a read lock on the	*/
-/*	document.								*/
-/*										*/
+/*                                                                              */
+/*      Document event handlers                                                 */
+/*                                                                              */
+/*              Note that this check is done later to ensure that the views     */
+/*      associated with the element buffer have been updated already. This      */
+/*      might be done in a separate thread after getting a read lock on the     */
+/*      document.                                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void changedUpdate(DocumentEvent e)
@@ -695,29 +695,29 @@ private final class LineChecker implements Runnable {
       recheckLines();
     }
 
-}	// end of inner class Runnable
+}       // end of inner class Runnable
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Editor event handlers							*/
-/*										*/
+/*                                                                              */
+/*      Editor event handlers                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private final class CheckUpdater extends ComponentAdapter {
 
-   @Override public void componentResized(ComponentEvent e)	{ update_needed = true; }
+   @Override public void componentResized(ComponentEvent e)     { update_needed = true; }
 
-}	// end of inner class CheckUpdater
+}       // end of inner class CheckUpdater
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	LineData class -- holder of information about a line			*/
-/*										*/
+/*                                                                              */
+/*      LineData class -- holder of information about a line                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LineData {
@@ -738,18 +738,18 @@ private static class LineData {
       return true;
     }
 
-   int getTop() 		{ return start_y; }
-   int getBottom()		{ return end_y; }
+   int getTop()                 { return start_y; }
+   int getBottom()              { return end_y; }
 
-}	// end of inner class LineData
+}       // end of inner class LineData
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handler								*/
-/*										*/
+/*                                                                              */
+/*      Mouse handler                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class Mouser extends MouseAdapter {
@@ -761,14 +761,14 @@ private final class Mouser extends MouseAdapter {
       BoardMetrics.noteCommand("BALE","ANNOT_TOGGLEBREAK");
     }
 
-}	// end of interface Mouser
+}       // end of interface Mouser
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Action for showing / hiding line numbers				*/
-/*										*/
+/*                                                                              */
+/*      Action for showing / hiding line numbers                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class ShowLineAction extends AbstractAction {
@@ -783,12 +783,12 @@ private class ShowLineAction extends AbstractAction {
       showLineNumbers(!show_line_numbers);
     }
 
-}	// end of inner class ShowLineAction
+}       // end of inner class ShowLineAction
 
 
 
 
-}	// end of class BaleAnnotationArea
+}       // end of class BaleAnnotationArea
 
 
 

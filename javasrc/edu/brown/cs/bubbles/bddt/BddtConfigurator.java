@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtConfigurator.java						*/
-/*										*/
-/*	Bubbles Environment Dynamic Debugger Tool bubble load configurator	*/
-/*										*/
+/*                                                                              */
+/*              BddtConfigurator.java                                           */
+/*                                                                              */
+/*      Bubbles Environment Dynamic Debugger Tool bubble load configurator      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -43,9 +43,9 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -102,9 +102,9 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
 
 
 /********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
+/*                                                                              */
+/*      I/O methods                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void outputXml(BudaXmlWriter xw,boolean history)
@@ -112,9 +112,9 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
    if (!history) {
       BumpLaunchConfig blc = BddtFactory.getFactory().getCurrentLaunchConfig();
       if (blc != null) {
-	 xw.begin("BDDT");
-	 xw.field("CONFIG",blc.getConfigName());
-	 xw.end("BDDT");
+         xw.begin("BDDT");
+         xw.field("CONFIG",blc.getConfigName());
+         xw.end("BDDT");
        }
     }
 }
@@ -129,10 +129,10 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
       String cnm = IvyXml.getAttrString(de,"CONFIG");
       BumpRunModel rm = BumpClient.getBump().getRunModel();
       for (BumpLaunchConfig blc : rm.getLaunchConfigurations()) {
-	 if (!blc.isWorkingCopy() && blc.getConfigName().equals(cnm)) {
-	    BddtFactory.getFactory().setCurrentLaunchConfig(blc);
-	    break;
-	 }
+         if (!blc.isWorkingCopy() && blc.getConfigName().equals(cnm)) {
+            BddtFactory.getFactory().setCurrentLaunchConfig(blc);
+            break;
+         }
       }
    }
 }
@@ -140,7 +140,7 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
 
 
 
-}	// end of class BddtConfigurator
+}       // end of class BddtConfigurator
 
 
 

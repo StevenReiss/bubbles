@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BedrockTest.java						*/
-/*										*/
-/*	Test program for BEDROCK bubbles-eclipse interface			*/
-/*										*/
+/*                                                                              */
+/*              BedrockTest.java                                                */
+/*                                                                              */
+/*      Test program for BEDROCK bubbles-eclipse interface                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2006 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -50,9 +50,9 @@ public final class BedrockTest implements MintConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -62,12 +62,12 @@ public static void main(String [] args)
    int ntest = 0;
    for (int i = 0; i < args.length; ++i) {
       if (args[i].equals("0")) {
-	 bt.test00();
-	 ++ntest;
+         bt.test00();
+         ++ntest;
        }
       else if (args[i].equals("1")) {
-	 bt.test01();
-	 ++ntest;
+         bt.test01();
+         ++ntest;
        }
     }
 
@@ -80,20 +80,20 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private MintControl	mint_control;
+private MintControl     mint_control;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BedrockTest(String [] args)
@@ -109,9 +109,9 @@ private BedrockTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Test cases								*/
-/*										*/
+/*                                                                              */
+/*      Test cases                                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private void test00()
@@ -148,16 +148,16 @@ private void test00()
 
    sendCommand("STARTFILE",proj,"FILE='" + src1 + "'",null);
    sendCommand("EDITFILE",proj,"FILE='" + src1 + "'",
-		  "<EDIT START='41' END='41'>TrialTest(</EDIT>");
+                  "<EDIT START='41' END='41'>TrialTest(</EDIT>");
    sendCommand("EDITFILE",proj,"FILE='" + src1 + "' ID='1'",
-		  "<EDIT START='51' END='51'><![CDATA[)$$#__CARR_RETURN\n{\nint x;\n}]]></EDIT>");
+                  "<EDIT START='51' END='51'><![CDATA[)$$#__CARR_RETURN\n{\nint x;\n}]]></EDIT>");
    sendCommand("EDITFILE",proj,"FILE='" + src1 + "' ID='2'",
-		  "<EDIT START='54' END='54'>System.</EDIT>");
+                  "<EDIT START='54' END='54'>System.</EDIT>");
    sendCommand("GETCOMPLETIONS",proj,"FILE='" + src1 + "' OFFSET='61'",null);
 
    synchronized (this) {
       try {
-	 wait(10000);
+         wait(10000);
        }
       catch (InterruptedException e) { }
     }
@@ -172,24 +172,24 @@ private void test01()
 
    sendCommand("STARTFILE",proj,"FILE='" + src2 + "'",null);
    sendCommand("FORMATMETHOD",proj,"FILE='" + src2 + "'",
-		  "<REGION START='2473' END='2474' />");
+                  "<REGION START='2473' END='2474' />");
    sendCommand("ELIDESET",proj,"FILE='" + src2 + "' COMPUTE='true'",
-		  "<REGION START='1671' END='2000' />" +
-		  "<REGION START='2006' END='2192' />" +
-		  "<REGION START='1953' END='1955' PRIORITY='1.0' />" +
-		  "<REGION START='1808' END='1808' PRIORITY='1.0' />");
+                  "<REGION START='1671' END='2000' />" +
+                  "<REGION START='2006' END='2192' />" +
+                  "<REGION START='1953' END='1955' PRIORITY='1.0' />" +
+                  "<REGION START='1808' END='1808' PRIORITY='1.0' />");
 
    sendCommand("RENAME",proj,"FILE='" + src2 +"' START='1708' END='1708' NEWNAME='hello' UPDATEREFS='true'",null);
    sendCommand("PATTERNSEARCH",proj,"PATTERN='getWhen' FOR='METHOD' DEFS='false' REFS='true'",null);
    sendCommand("CALLPATH",proj,"FROM='trial.PlotSun.main(*)' TO='trial.PlotSun.get4(*)'",null);
    sendCommand("FORMATMETHOD",proj,"FILE='" + src2 + "'",
-		  "<REGION START='1671' END='2000' />");
+                  "<REGION START='1671' END='2000' />");
    sendCommand("PATTERNSEARCH",proj,"PATTERN='PlotSun.process' FOR='METHOD' DEFS='true' REFS='false'",null);
    sendCommand("PATTERNSEARCH",null,"PATTERN='PlotSun.process' FOR='METHOD' DEFS='true' REFS='false'",null);
 
    synchronized (this) {
       try {
-	 wait(10000);
+         wait(10000);
        }
       catch (InterruptedException e) { }
     }
@@ -198,9 +198,9 @@ private void test01()
 
 
 /********************************************************************************/
-/*										*/
-/*	Mint handling routines							*/
-/*										*/
+/*                                                                              */
+/*      Mint handling routines                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private ReplyHandler sendCommand(String cmd,String proj,String flds,String args)
@@ -228,9 +228,9 @@ private ReplyHandler sendCommand(String cmd,String proj,String flds,String args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Routines for handling run events					*/
-/*										*/
+/*                                                                              */
+/*      Routines for handling run events                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private static int action_count = 0;
@@ -244,10 +244,10 @@ private void processRunEvent(Element re)
 
    if (kind.equals("CREATE")) {
       if (thr != null) {
-	 // handle new thread
+         // handle new thread
        }
       else if (tgt != null) {
-	 // handle new target
+         // handle new target
        }
     }
    else if (kind.equals("RESUME")) {
@@ -258,44 +258,44 @@ private void processRunEvent(Element re)
     }
    else if (kind.equals("SUSPEND")) {
       if (thr != null) {
-	 String tid = IvyXml.getAttrString(thr,"ID");
-	 String ttag = IvyXml.getAttrString(thr,"TAG");
-	 String fid = null;
-	 ReplyHandler rh = sendCommand("GETSTACKFRAMES",null,"THREAD='" + tid + "'",null);
-	 Element sfinfo = rh.waitForXml();
-	 Element sfs = IvyXml.getChild(sfinfo,"STACKFRAMES");
-	 for (Element sft : IvyXml.children(sfs,"THREAD")) {
-	    if (!tid.equals(IvyXml.getAttrString(sft,"ID"))) continue;
-	    for (Element sff : IvyXml.children(sft,"STACKFRAME")) {
-	       fid = IvyXml.getAttrString(sff,"ID");
-	       break;
-	     }
-	  }
+         String tid = IvyXml.getAttrString(thr,"ID");
+         String ttag = IvyXml.getAttrString(thr,"TAG");
+         String fid = null;
+         ReplyHandler rh = sendCommand("GETSTACKFRAMES",null,"THREAD='" + tid + "'",null);
+         Element sfinfo = rh.waitForXml();
+         Element sfs = IvyXml.getChild(sfinfo,"STACKFRAMES");
+         for (Element sft : IvyXml.children(sfs,"THREAD")) {
+            if (!tid.equals(IvyXml.getAttrString(sft,"ID"))) continue;
+            for (Element sff : IvyXml.children(sft,"STACKFRAME")) {
+               fid = IvyXml.getAttrString(sff,"ID");
+               break;
+             }
+          }
 
-	 switch (action_count) {
-	    case 0 :
-	       sendCommand("VARVAL",null,
+         switch (action_count) {
+            case 0 :
+               sendCommand("VARVAL",null,
                      "THREAD='" + tid + "' FRAME='" + fid + "' VAR='var'",null);
-	       sendCommand("VARVAL",null,
+               sendCommand("VARVAL",null,
                      "THREAD='" + ttag + "' FRAME='" + fid + "' VAR='args'",null);
-	       sendCommand("DEBUGACTION",null,
+               sendCommand("DEBUGACTION",null,
                      "THREAD='" + tid + "' ACTION='STEP_INTO'",null);
-	       break;
-	    case 1 :
-	       sendCommand("VARVAL",null,"THREAD='" + tid + "' FRAME='" + fid + "' VAR='this'",null);
-	       sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='STEP_RETURN'",null);
-	       break;
-	    case 2 :
-	       sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='STEP_OVER'",null);
-	       break;
-	    case 3 :
-	       sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='RESUME'",null);
-	       break;
-	    case 4 :
-	       sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='TERMINATE'",null);
-	       break;
-	  }
-	 ++action_count;
+               break;
+            case 1 :
+               sendCommand("VARVAL",null,"THREAD='" + tid + "' FRAME='" + fid + "' VAR='this'",null);
+               sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='STEP_RETURN'",null);
+               break;
+            case 2 :
+               sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='STEP_OVER'",null);
+               break;
+            case 3 :
+               sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='RESUME'",null);
+               break;
+            case 4 :
+               sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='TERMINATE'",null);
+               break;
+          }
+         ++action_count;
        }
     }
 }
@@ -303,9 +303,9 @@ private void processRunEvent(Element re)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle messages from eclipse						*/
-/*										*/
+/*                                                                              */
+/*      Handle messages from eclipse                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public class MessageHandler implements MintHandler {
@@ -316,23 +316,23 @@ public class MessageHandler implements MintHandler {
       System.err.println("BEDROCKTEST: End of MESSAGE");
       String typ = args.getArgument(0);
       if (typ.equals("RUNEVENT")) {
-	 Element elt = msg.getXml();
-	 for (Element re : IvyXml.children(elt,"RUNEVENT")) {
-	    processRunEvent(re);
-	  }
+         Element elt = msg.getXml();
+         for (Element re : IvyXml.children(elt,"RUNEVENT")) {
+            processRunEvent(re);
+          }
        }
       msg.replyTo();
     }
 
-}	// end of inner class MessageHandler
+}       // end of inner class MessageHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Reply handlers								*/
-/*										*/
+/*                                                                              */
+/*      Reply handlers                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ReplyHandler extends MintDefaultReply {
@@ -360,12 +360,12 @@ private static class ReplyHandler extends MintDefaultReply {
        }
     }
 
-}	// end of inner class ReplyHandler
+}       // end of inner class ReplyHandler
 
 
 
 
-}	 // end of class BedrockTest
+}        // end of class BedrockTest
 
 
 

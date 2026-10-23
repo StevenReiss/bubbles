@@ -66,9 +66,9 @@ BstyleLineOffsets(String newline,FileText ft)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupIde(CharSequence cnts,String nl)
@@ -105,9 +105,9 @@ private void addIde(int i)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods after edits						*/
-/*										*/
+/*                                                                              */
+/*      Update methods after edits                                              */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void update(int soff,int eoff,String cnts)
@@ -129,15 +129,15 @@ synchronized void update(int soff,int eoff,String cnts)
    IvyLog.logD("BSTYLE","UPDATE LINE OFFSETS " + soff + " " + eoff + " " +
          ct + " " + delta + " " + oct);
    
-   grow(max_local + ct - oct);	     // ensure we fit
+   grow(max_local + ct - oct);       // ensure we fit
    if (ct > oct) {
       for (int i = max_local-1; i > idx1; --i) {
-	 local_offset[i+ct-oct] = local_offset[i] + delta;
+         local_offset[i+ct-oct] = local_offset[i] + delta;
        }
     }
    else if (ct < oct || delta != 0) {
       for (int i = idx1+1; i < max_local; ++i) {
-	 local_offset[i+ct-oct] = local_offset[i] + delta;
+         local_offset[i+ct-oct] = local_offset[i] + delta;
        }
     }
    
@@ -147,17 +147,17 @@ synchronized void update(int soff,int eoff,String cnts)
    if (cnts != null) {
       int lct = newline_adjust;
       for (int idx = cnts.indexOf('\n'); idx >= 0; idx = cnts.indexOf('\n',idx+1)) {
-	 local_offset[idx2] = soff + idx + 1 + lct;
-	 ++idx2;
+         local_offset[idx2] = soff + idx + 1 + lct;
+         ++idx2;
        }
     }
 }
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to find lines and line offsets for Java 			*/
-/*										*/
+/*                                                                              */
+/*      Methods to find lines and line offsets for Java                         */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized int findOffset(int line)
@@ -185,9 +185,9 @@ synchronized int findLine(int off)
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods for maintaining the offset arrays			*/
-/*										*/
+/*                                                                              */
+/*      Helper methods for maintaining the offset arrays                        */
+/*                                                                              */
 /********************************************************************************/
 
 private int findIndex(int off)

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixOrderTokenizer.java 					*/
-/*										*/
-/*	Tokenizer for finding comments, headers, etc.				*/
-/*										*/
+/*                                                                              */
+/*              BfixOrderTokenizer.java                                         */
+/*                                                                              */
+/*      Tokenizer for finding comments, headers, etc.                           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -31,14 +31,14 @@ class BfixOrderTokenizer implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Segment 	file_text;
-private int		cur_offset;
-private State		cur_state;
+private Segment         file_text;
+private int             cur_offset;
+private State           cur_state;
 
 
 
@@ -55,9 +55,9 @@ enum State {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixOrderTokenizer(Segment s)
@@ -70,9 +70,9 @@ BfixOrderTokenizer(Segment s)
 
 
 /********************************************************************************/
-/*										*/
-/*	Next token method							*/
-/*										*/
+/*                                                                              */
+/*      Next token method                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 BfixToken getNextToken()
@@ -82,134 +82,134 @@ BfixToken getNextToken()
    while (cur_offset < file_text.length()) {
       char c = file_text.charAt(cur_offset++);
       switch (cur_state) {
-	 case NORMAL :
-	    switch (c) {
-	       case '\n' :
-		  return newToken(BfixTokenType.EOL,start);
-	       case '/' :
-		  char c1 = file_text.charAt(cur_offset);
-		  switch (c1) {
-		     case '/' :
-			cur_state = State.IN_LINE_CMMT;
-			++cur_offset;
-			break;
-		     case '*' :
-			if (file_text.charAt(cur_offset+1) == '*' &&
-			      file_text.charAt(cur_offset+2) != '/')
-			   cur_state = State.IN_DOC_CMMT;
-			else cur_state = State.IN_BLOCK_CMMT;
-			++cur_offset;
-			break;
-		     default :
-			cur_state = State.IN_OTHER;
-			break;
-		   }
-		  break;
-	       case '"' :
-		  cur_state = State.IN_STRING;
-		  break;
-	       case '\'' :
-		  cur_state = State.IN_CHAR;
-		  break;
-	       case ' ' :
-	       case '\t' :
-	       case '\f' :
-		  start = cur_offset;
-		  break;
-	       default :
-		  cur_state = State.IN_OTHER;
-		  break;
-	     }
-	    break;
-	 case IN_OTHER :
-	    switch (c) {
-	       case '\n' :
-		  --cur_offset;
-		  cur_state = State.NORMAL;
-		  return newToken(BfixTokenType.OTHER,start);
-	       case '"' :
-		  cur_state = State.IN_STRING;
-		  break;
-	       case '\'' :
-		  cur_state = State.IN_CHAR;
-		  break;
-	       case '/' :
-		  char c1 = file_text.charAt(cur_offset);
-		  if (c1 == '*' || c1 == '/') {
-		     --cur_offset;
-		     cur_state = State.NORMAL;
-		     return newToken(BfixTokenType.OTHER,start);
-		   }
-	     }
-	    break;
-	 case IN_STRING :
-	    switch (c) {
-	       case '\\' :
-		  if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
-		  break;
-	       case '"' :
-		  cur_state = State.IN_OTHER;
-		  break;
-	       case '\n' :
-		  --cur_offset;
-		  cur_state = State.IN_OTHER;
-		  break;
-	     }
-	    break;
-	 case IN_CHAR :
-	    switch (c) {
-	       case '\\' :
-		  if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
-		  break;
-	       case '\'' :
-		  cur_state = State.IN_OTHER;
-		  break;
-	       case '\n' :
-		  --cur_offset;
-		  cur_state = State.IN_OTHER;
-		  break;
-	     }
-	    break;
-	 case IN_LINE_CMMT :
-	    switch (c) {
-	       case '\n' :
-		  --cur_offset;
-		  cur_state = State.NORMAL;
-		  return newToken(BfixTokenType.LINE_CMMT,start);
-	     }
-	    break;
-	 case IN_BLOCK_CMMT :
-	    switch (c) {
-	       case '\n' :
-		  if (cur_offset - start == 1)
-		     return newToken(BfixTokenType.EOL,start);
-		  --cur_offset;
-		  return newToken(BfixTokenType.BLOCK_CMMT,start);
-	       case '*' :
-		  if (file_text.charAt(cur_offset) == '/') {
-		     ++cur_offset;
-		     cur_state = State.NORMAL;
-		     return newToken(BfixTokenType.BLOCK_CMMT,start);
-		   }
-		  break;
-	     }
-	    break;
-	 case IN_DOC_CMMT :
-	    switch (c) {
-	       case '\n' :
-		  if (cur_offset - start == 1)
-		     return newToken(BfixTokenType.EOL,start);
-		  --cur_offset;
-		  return newToken(BfixTokenType.DOC_CMMT,start);
-	       case '*' :
-		  if (file_text.charAt(cur_offset) == '/') {
-		     ++cur_offset;
-		     cur_state = State.NORMAL;
-		     return newToken(BfixTokenType.DOC_CMMT,start);
-		   }
-		  break;
-	     }
-	    break;
+         case NORMAL :
+            switch (c) {
+               case '\n' :
+                  return newToken(BfixTokenType.EOL,start);
+               case '/' :
+                  char c1 = file_text.charAt(cur_offset);
+                  switch (c1) {
+                     case '/' :
+                        cur_state = State.IN_LINE_CMMT;
+                        ++cur_offset;
+                        break;
+                     case '*' :
+                        if (file_text.charAt(cur_offset+1) == '*' &&
+                              file_text.charAt(cur_offset+2) != '/')
+                           cur_state = State.IN_DOC_CMMT;
+                        else cur_state = State.IN_BLOCK_CMMT;
+                        ++cur_offset;
+                        break;
+                     default :
+                        cur_state = State.IN_OTHER;
+                        break;
+                   }
+                  break;
+               case '"' :
+                  cur_state = State.IN_STRING;
+                  break;
+               case '\'' :
+                  cur_state = State.IN_CHAR;
+                  break;
+               case ' ' :
+               case '\t' :
+               case '\f' :
+                  start = cur_offset;
+                  break;
+               default :
+                  cur_state = State.IN_OTHER;
+                  break;
+             }
+            break;
+         case IN_OTHER :
+            switch (c) {
+               case '\n' :
+                  --cur_offset;
+                  cur_state = State.NORMAL;
+                  return newToken(BfixTokenType.OTHER,start);
+               case '"' :
+                  cur_state = State.IN_STRING;
+                  break;
+               case '\'' :
+                  cur_state = State.IN_CHAR;
+                  break;
+               case '/' :
+                  char c1 = file_text.charAt(cur_offset);
+                  if (c1 == '*' || c1 == '/') {
+                     --cur_offset;
+                     cur_state = State.NORMAL;
+                     return newToken(BfixTokenType.OTHER,start);
+                   }
+             }
+            break;
+         case IN_STRING :
+            switch (c) {
+               case '\\' :
+                  if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
+                  break;
+               case '"' :
+                  cur_state = State.IN_OTHER;
+                  break;
+               case '\n' :
+                  --cur_offset;
+                  cur_state = State.IN_OTHER;
+                  break;
+             }
+            break;
+         case IN_CHAR :
+            switch (c) {
+               case '\\' :
+                  if (file_text.charAt(cur_offset) != '\n') ++cur_offset;
+                  break;
+               case '\'' :
+                  cur_state = State.IN_OTHER;
+                  break;
+               case '\n' :
+                  --cur_offset;
+                  cur_state = State.IN_OTHER;
+                  break;
+             }
+            break;
+         case IN_LINE_CMMT :
+            switch (c) {
+               case '\n' :
+                  --cur_offset;
+                  cur_state = State.NORMAL;
+                  return newToken(BfixTokenType.LINE_CMMT,start);
+             }
+            break;
+         case IN_BLOCK_CMMT :
+            switch (c) {
+               case '\n' :
+                  if (cur_offset - start == 1)
+                     return newToken(BfixTokenType.EOL,start);
+                  --cur_offset;
+                  return newToken(BfixTokenType.BLOCK_CMMT,start);
+               case '*' :
+                  if (file_text.charAt(cur_offset) == '/') {
+                     ++cur_offset;
+                     cur_state = State.NORMAL;
+                     return newToken(BfixTokenType.BLOCK_CMMT,start);
+                   }
+                  break;
+             }
+            break;
+         case IN_DOC_CMMT :
+            switch (c) {
+               case '\n' :
+                  if (cur_offset - start == 1)
+                     return newToken(BfixTokenType.EOL,start);
+                  --cur_offset;
+                  return newToken(BfixTokenType.DOC_CMMT,start);
+               case '*' :
+                  if (file_text.charAt(cur_offset) == '/') {
+                     ++cur_offset;
+                     cur_state = State.NORMAL;
+                     return newToken(BfixTokenType.DOC_CMMT,start);
+                   }
+                  break;
+             }
+            break;
        }
     }
 
@@ -220,9 +220,9 @@ BfixToken getNextToken()
 
 
 /********************************************************************************/
-/*										*/
-/*	Token creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Token creation methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private TokenImpl newToken(BfixTokenType typ,int start)
@@ -245,20 +245,20 @@ private static class TokenImpl implements BfixToken {
       token_length = len;
     }
 
-   @Override public int getStart()			{ return start_offset; }
-   @Override public int getLength()			{ return token_length; }
-   @Override public BfixTokenType getTokenType()	{ return token_type; }
+   @Override public int getStart()                      { return start_offset; }
+   @Override public int getLength()                     { return token_length; }
+   @Override public BfixTokenType getTokenType()        { return token_type; }
 
    @Override public String toString() {
       return token_type.toString() + "@" + start_offset + ":" +
-	 (start_offset+token_length);
+         (start_offset+token_length);
     }
 
-}	// end of inner class TokenImpl
+}       // end of inner class TokenImpl
 
 
 
-}	// end of class BfixOrderTokenizer
+}       // end of class BfixOrderTokenizer
 
 
 

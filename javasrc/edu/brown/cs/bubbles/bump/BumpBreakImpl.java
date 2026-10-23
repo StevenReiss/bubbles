@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpBreakImpl.java						*/
-/*										*/
-/*	BUblles Mint Partnership problem description holder			*/
-/*										*/
+/*                                                                              */
+/*              BumpBreakImpl.java                                              */
+/*                                                                              */
+/*      BUblles Mint Partnership problem description holder                     */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -46,22 +46,22 @@ class BumpBreakImpl implements BumpConstants.BumpBreakpoint, BumpConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	breakpoint_id;
+private String  breakpoint_id;
 private Map<String,Object> break_props;
-private String	break_desc;
+private String  break_desc;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BumpBreakImpl(Element d)
@@ -74,9 +74,9 @@ BumpBreakImpl(Element d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean update(Element d)
@@ -91,9 +91,9 @@ boolean update(Element d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Property setting methods						*/
-/*										*/
+/*                                                                              */
+/*      Property setting methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void setProperties(Element d)
@@ -126,15 +126,15 @@ private void setProperties(Element d)
       StringBuffer buf = new StringBuffer();
       int ct = 0;
       for (Element e : IvyXml.children(d,"EXCLUDE")) {
-	 if (ct++ > 0) buf.append(",");
-	 buf.append(IvyXml.getText(e));
+         if (ct++ > 0) buf.append(",");
+         buf.append(IvyXml.getText(e));
        }
       if (ct > 0) break_props.put("EXCLUDE",buf.toString());
       buf = new StringBuffer();
       ct = 0;
       for (Element e : IvyXml.children(d,"INCLUDE")) {
-	 if (ct++ > 0) buf.append(",");
-	 buf.append(IvyXml.getText(e));
+         if (ct++ > 0) buf.append(",");
+         buf.append(IvyXml.getText(e));
        }
       if (ct > 0) break_props.put("INCLUDE",buf.toString());
       break_desc = "Throw " + break_props.get("EXCEPTION");
@@ -178,9 +178,9 @@ private void setProperties(Element d)
    else if (typ.equals("LINE")) {
       Element ce = IvyXml.getChild(d,"CONDITION");
       if (ce != null) {
-	 break_props.put("CONDITION",IvyXml.getText(ce));
-	 break_props.put("CONDENABLE",Boolean.valueOf(IvyXml.getAttrBool(ce,"ENABLED")));
-	 break_props.put("CONDSUSPEND",Boolean.valueOf(IvyXml.getAttrBool(ce,"SUSPEND")));
+         break_props.put("CONDITION",IvyXml.getText(ce));
+         break_props.put("CONDENABLE",Boolean.valueOf(IvyXml.getAttrBool(ce,"ENABLED")));
+         break_props.put("CONDSUSPEND",Boolean.valueOf(IvyXml.getAttrBool(ce,"SUSPEND")));
        }
       break_desc = "Line " + getProperty("LINE") + ":" + getProperty("FILE");
     }
@@ -190,15 +190,15 @@ private void setProperties(Element d)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getBreakId()			{ return breakpoint_id; }
-@Override public File getFile() 			{ return (File) break_props.get("FILE"); }
-@Override public int getLineNumber()			{ return getIntProperty("LINE"); }
-@Override public String getDescription()		{ return break_desc; }
+@Override public String getBreakId()                    { return breakpoint_id; }
+@Override public File getFile()                         { return (File) break_props.get("FILE"); }
+@Override public int getLineNumber()                    { return getIntProperty("LINE"); }
+@Override public String getDescription()                { return break_desc; }
 
 
 @Override public String getProperty(String id)
@@ -251,9 +251,9 @@ boolean isEquivalentTo(BumpBreakpoint bp)
 
 
 /********************************************************************************/
-/*										*/
-/*	Debugging methods							*/
-/*										*/
+/*                                                                              */
+/*      Debugging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -275,7 +275,7 @@ boolean isEquivalentTo(BumpBreakpoint bp)
 
 
 
-}	// end of class BumpBreakImpl
+}       // end of class BumpBreakImpl
 
 
 

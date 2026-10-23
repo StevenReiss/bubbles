@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BbookQueryBubble.java						*/
-/*										*/
-/*	Bubble with programmer's logbook query interface                        */
-/*										*/
+/*                                                                              */
+/*              BbookQueryBubble.java                                           */
+/*                                                                              */
+/*      Bubble with programmer's logbook query interface                        */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -75,24 +75,24 @@ class BbookQueryBubble extends BudaBubble implements BbookConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BbookRegion	task_region;
-private String		current_project;
-private BnoteTask	current_task;
+private BbookRegion     task_region;
+private String          current_project;
+private BnoteTask       current_task;
 private JComboBox<Object> task_selector;
-private String		current_user;
+private String          current_user;
 private JComboBox<String> user_selector;
-private String		current_class;
-private String		current_method;
+private String          current_class;
+private String          current_method;
 private JComboBox<String> class_selector;
 private JComboBox<String> method_selector;
-private Orderings	current_order;
+private Orderings       current_order;
 
-private boolean 	show_users;
+private boolean         show_users;
 
 private static final long serialVersionUID = 1;
 
@@ -102,9 +102,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BbookQueryBubble(BudaBubbleArea bba,Point pt)
@@ -135,9 +135,9 @@ BbookQueryBubble(BudaBubbleArea bba,Point pt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Query panel setup							*/
-/*										*/
+/*                                                                              */
+/*      Query panel setup                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private JPanel setupQueryPanel()
@@ -173,9 +173,9 @@ private JPanel setupQueryPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Project management methods						*/
-/*										*/
+/*                                                                              */
+/*      Project management methods                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private void addProjectSelector(SwingGridPanel pnl)
@@ -188,8 +188,8 @@ private void addProjectSelector(SwingGridPanel pnl)
    if (current_project != null) {
       idx = plist.indexOf(current_project);
       if (idx < 0) {
-	 idx = 0;
-	 current_project = null;
+         idx = 0;
+         current_project = null;
        }
     }
 
@@ -213,15 +213,15 @@ private final class ProjectHandler implements ActionListener {
       resetTasks();
     }
 
-}	// end of inner class ProjectHandler
+}       // end of inner class ProjectHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Task selector methods							*/
-/*										*/
+/*                                                                              */
+/*      Task selector methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void addTaskSelector(SwingGridPanel pnl)
@@ -247,8 +247,8 @@ private void resetTasks()
       int idx = tasks.indexOf(current_task);
       if (idx >= 0) task_selector.setSelectedIndex(idx+1);
       else {
-	 current_task = null;
-	 task_selector.setSelectedIndex(0);
+         current_task = null;
+         task_selector.setSelectedIndex(0);
        }
     }
 }
@@ -271,15 +271,15 @@ private final class TaskHandler implements ActionListener {
       resetNames();
     }
 
-}	// end of inner class TaskHandler
+}       // end of inner class TaskHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	User selectors								*/
-/*										*/
+/*                                                                              */
+/*      User selectors                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void addUserSelector(SwingGridPanel pnl)
@@ -308,8 +308,8 @@ private void resetUsers()
       int idx = usrs.indexOf(current_user);
       if (idx >= 0) user_selector.setSelectedIndex(idx+1);
       else {
-	 current_user = null;
-	 user_selector.setSelectedIndex(0);
+         current_user = null;
+         user_selector.setSelectedIndex(0);
        }
     }
 }
@@ -331,15 +331,15 @@ private final class UserHandler implements ActionListener {
       // reset next selectors
     }
 
-}	// end of inner class UserHandler
+}       // end of inner class UserHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Name selector methods							*/
-/*										*/
+/*                                                                              */
+/*      Name selector methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void addNameSelector(SwingGridPanel pnl)
@@ -369,8 +369,8 @@ private void resetNames()
       int idx = cnms.indexOf(current_class);
       if (idx >= 0) class_selector.setSelectedIndex(idx+1);
       else {
-	 current_class = null;
-	 class_selector.setSelectedIndex(0);
+         current_class = null;
+         class_selector.setSelectedIndex(0);
        }
     }
 
@@ -381,8 +381,8 @@ private void resetNames()
       int idx = mnms.indexOf(current_method);
       if (idx >= 0) method_selector.setSelectedIndex(idx+1);
       else {
-	 current_method = null;
-	 method_selector.setSelectedIndex(0);
+         current_method = null;
+         method_selector.setSelectedIndex(0);
        }
     }
 }
@@ -451,9 +451,9 @@ private void addClassSets(String nm,int idx,Map<String,Set<String>> found,Set<St
     }
    if (nxt.size() == last.size()) {
       if (idx > 0) {
-	 String lkey = nm.substring(0,idx+1);
-	 found.remove(lkey);
-	 found.put(key,nxt);
+         String lkey = nm.substring(0,idx+1);
+         found.remove(lkey);
+         found.put(key,nxt);
        }
     }
    else {
@@ -472,23 +472,23 @@ private final class NameHandler implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
       if (evt.getActionCommand().equals("Class")) {
-	 current_class = (String) cbx.getSelectedItem();
-	 if (current_class != null && current_class == "< Any Class >") current_class = null;
+         current_class = (String) cbx.getSelectedItem();
+         if (current_class != null && current_class == "< Any Class >") current_class = null;
        }
       else {
-	 current_method = (String) cbx.getSelectedItem();
-	 if (current_method != null && current_method == "< Any Method >") current_method = null;
+         current_method = (String) cbx.getSelectedItem();
+         if (current_method != null && current_method == "< Any Method >") current_method = null;
        }
     }
 
-}	// end of inner class NameHandler
+}       // end of inner class NameHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Ordering methods							*/
-/*										*/
+/*                                                                              */
+/*      Ordering methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class OrderHandler implements ActionListener {
@@ -498,14 +498,14 @@ private final class OrderHandler implements ActionListener {
       current_order = (Orderings) cbx.getSelectedItem();
     }
 
-}	// end of inner class OrderHandler
+}       // end of inner class OrderHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Display Setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Display Setup methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 private void closeDialog(ActionEvent evt) {
@@ -515,15 +515,15 @@ private void closeDialog(ActionEvent evt) {
    if (bb != null) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
       if (bba != null) {
-	 bba.remove(bb);
-	 return;
+         bba.remove(bb);
+         return;
        }
     }
 
    while (c != null) {
       if (c instanceof Dialog) {
-	 c.setVisible(false);
-	 break;
+         c.setVisible(false);
+         break;
        }
       c = c.getParent();
     }
@@ -558,14 +558,14 @@ private final class DisplayHandler implements ActionListener {
       }
    }
 
-}	// end of inner class DisplayHandler
+}       // end of inner class DisplayHandler
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Paint methods								*/
-/*										*/
+/*                                                                              */
+/*      Paint methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
@@ -578,7 +578,7 @@ private final class DisplayHandler implements ActionListener {
 
 
 
-}	// end of class BbookQueryBubble
+}       // end of class BbookQueryBubble
 
 
 

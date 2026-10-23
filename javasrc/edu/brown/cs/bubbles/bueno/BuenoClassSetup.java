@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoClassSetup.java						*/
-/*										*/
-/*	Compute initial imports and methods for a class 			*/
-/*										*/
+/*                                                                              */
+/*              BuenoClassSetup.java                                            */
+/*                                                                              */
+/*      Compute initial imports and methods for a class                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -37,25 +37,25 @@ class BuenoClassSetup implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BuenoProperties property_set;
-private BumpClient	bump_client;
-private String		class_name;
-private String		package_name;
-private String		full_class_name;
-private boolean 	is_abstract;
-private String		abstract_methods;
+private BumpClient      bump_client;
+private String          class_name;
+private String          package_name;
+private String          full_class_name;
+private boolean         is_abstract;
+private String          abstract_methods;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoClassSetup(BuenoProperties props,BuenoType what)
@@ -85,9 +85,9 @@ BuenoClassSetup(BuenoProperties props,BuenoType what)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void extendProperties()
@@ -108,9 +108,9 @@ void extendProperties()
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle Type references							*/
-/*										*/
+/*                                                                              */
+/*      Handle Type references                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void addTypeReference(String typ)
@@ -130,9 +130,9 @@ private void addTypeReference(String typ)
       boolean fnd = false;
       String imp = "import " + nm + ";";
       if (property_set.getImports() != null) {
-	 for (String s : property_set.getImports()) {
-	    if (s.equals(imp)) fnd = true;
-	 }
+         for (String s : property_set.getImports()) {
+            if (s.equals(imp)) fnd = true;
+         }
       }
       if (!fnd) property_set.addToArrayProperty(BuenoKey.KEY_IMPORTS,imp);
     }
@@ -143,31 +143,31 @@ private void addTypeReference(String typ)
       BuenoFactory bf = BuenoFactory.getFactory();
       List<BumpLocation> mthds = bf.findClassMethods(nm);
       if (mthds == null) {
-	 mthds = bump_client.findMethods(bl.getProject(),mpat,false,true,false,true);
+         mthds = bump_client.findMethods(bl.getProject(),mpat,false,true,false,true);
        }
       if (mthds != null) {
-	 for (BumpLocation mbl : mthds) {
-	    int mods = mbl.getModifiers();
-	    if (Modifier.isAbstract(mods)) {
+         for (BumpLocation mbl : mthds) {
+            int mods = mbl.getModifiers();
+            if (Modifier.isAbstract(mods)) {
                String m = mbl.getSymbolName();
                int idx0 = m.lastIndexOf(".");
                if (idx0 > 0) m = m.substring(idx+1);
                if (m.startsWith("<") || m.contains("$")) continue;
-	       String mtxt = getMethodCode(mbl);
-	       if (mtxt != null) {
-		  if (abstract_methods == null) {
-		     StringBuffer buf = new StringBuffer();
-		     buf.append("\n\n");
-		     BuenoCreator bc = BuenoFactory.getFactory().getCreator();
-		     BuenoProperties cprops = new BuenoProperties();
-		     cprops.put(BuenoKey.KEY_COMMENT,"Abstract Method Implementations");
-		     bc.setupMarquisComment(buf,cprops);
-		     abstract_methods = buf.toString();
-		   }
-		  abstract_methods += mtxt + "\n\n";
-		}
-	     }
-	  }
+               String mtxt = getMethodCode(mbl);
+               if (mtxt != null) {
+                  if (abstract_methods == null) {
+                     StringBuffer buf = new StringBuffer();
+                     buf.append("\n\n");
+                     BuenoCreator bc = BuenoFactory.getFactory().getCreator();
+                     BuenoProperties cprops = new BuenoProperties();
+                     cprops.put(BuenoKey.KEY_COMMENT,"Abstract Method Implementations");
+                     bc.setupMarquisComment(buf,cprops);
+                     abstract_methods = buf.toString();
+                   }
+                  abstract_methods += mtxt + "\n\n";
+                }
+             }
+          }
        }
     }
 }
@@ -187,8 +187,8 @@ private BumpLocation findLocation(String typ)
       int idx = nm.lastIndexOf(".");
       String npfx = "";
       if (idx >= 0) {
-	 npfx = nm.substring(0,idx);
-	 nm = nm.substring(idx+1);
+         npfx = nm.substring(0,idx);
+         nm = nm.substring(idx+1);
        }
       if (!nm.equals(typ)) continue;
       boolean use = false;
@@ -201,10 +201,10 @@ private BumpLocation findLocation(String typ)
       else if (npfx.startsWith("org.w3c.dom")) use = true;
       else if (npfx.startsWith("java") && pfx != null && !pfx.startsWith("java")) use = true;
       else if (npfx.startsWith("java") && pfx != null && pfx.startsWith("java") &&
-	       npfx.length() < pfx.length()) use = true;
+               npfx.length() < pfx.length()) use = true;
       if (use) {
-	 pref = bl;
-	 pfx = npfx;
+         pref = bl;
+         pfx = npfx;
       }
    }
 
@@ -251,7 +251,7 @@ private String getMethodCode(BumpLocation mloc)
 
 
 
-}	// end of class BuenoClassSetup
+}       // end of class BuenoClassSetup
 
 
 

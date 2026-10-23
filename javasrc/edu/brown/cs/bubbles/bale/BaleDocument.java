@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleDocument.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor abstract base document 		*/
-/*										*/
+/*                                                                              */
+/*              BaleDocument.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor abstract base document                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -61,32 +61,32 @@ abstract class BaleDocument extends AbstractDocument
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private transient BaleElementBuffer element_buffer;
-private DummyElement		dummy_element;
-private BaleElideMode		elide_mode;
-private BaleSplitMode		split_mode;
+private DummyElement            dummy_element;
+private BaleElideMode           elide_mode;
+private BaleSplitMode           split_mode;
 private transient BaleTabHandler tab_handler;
-private transient BaleIndenter	our_indenter;
+private transient BaleIndenter  our_indenter;
 
-private int			id_counter;		// count # of edits
-private long			last_edit;
+private int                     id_counter;             // count # of edits
+private long                    last_edit;
 
 private transient Map<Position,String> created_text;
 
-private static AtomicInteger	edit_counter = new AtomicInteger();
+private static AtomicInteger    edit_counter = new AtomicInteger();
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleDocument(AbstractDocument.Content data)
@@ -130,17 +130,17 @@ protected void handleLoaded()
 
 
 /********************************************************************************/
-/*										*/
-/*	Element methods 							*/
-/*										*/
+/*                                                                              */
+/*      Element methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Element getDefaultRootElement()
 {
    if (element_buffer == null) {
       synchronized (this) {
-	 if (dummy_element == null) dummy_element = new DummyElement(null,null,0,getLength()-1);
-	 return dummy_element;
+         if (dummy_element == null) dummy_element = new DummyElement(null,null,0,getLength()-1);
+         return dummy_element;
        }
     }
 
@@ -169,8 +169,8 @@ protected void resetElements()
    if (element_buffer != null) {
       baleWriteLock();
       try {
-	 BaleElementEvent ee = element_buffer.setup();
-	 if (ee != null) reportEvent(this,0,getLength(),DocumentEvent.EventType.CHANGE,null,ee);
+         BaleElementEvent ee = element_buffer.setup();
+         if (ee != null) reportEvent(this,0,getLength(),DocumentEvent.EventType.CHANGE,null,ee);
        }
       finally { baleWriteUnlock(); }
     }
@@ -186,7 +186,7 @@ protected void resetElements()
 
 
 /**
- *	Used to implement StyledDocument
+ *      Used to implement StyledDocument
  **/
 
 public BaleElement getCharacterElement(int pos)
@@ -195,8 +195,8 @@ public BaleElement getCharacterElement(int pos)
    try {
       Element e = null;
       for (e = getDefaultRootElement(); e != null && !e.isLeaf() && !isElided(e); ) {
-	 int idx = e.getElementIndex(pos);
-	 e = e.getElement(idx);
+         int idx = e.getElementIndex(pos);
+         e = e.getElement(idx);
        }
       if (e instanceof BaleElement) return (BaleElement) e;
       return null;
@@ -212,8 +212,8 @@ BaleElement getActualCharacterElement(int pos)
    try {
       Element e = null;
       for (e = getDefaultRootElement(); e != null && !e.isLeaf(); ) {
-	 int idx = e.getElementIndex(pos);
-	 e = e.getElement(idx);
+         int idx = e.getElementIndex(pos);
+         e = e.getElement(idx);
        }
       if (e != null && !(e instanceof BaleElement)) return null;
       return (BaleElement) e;
@@ -289,27 +289,27 @@ private boolean isElided(Element e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Locking methods 							*/
-/*										*/
+/*                                                                              */
+/*      Locking methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-void baleWriteLock()			
+void baleWriteLock()                    
 { 
    writeLock(); 
 }
 
-void baleWriteUnlock()				
+void baleWriteUnlock()                          
 { 
    writeUnlock();
 }
 
-void baleReadLock()			
+void baleReadLock()                     
 {
    readLock();
 }
 
-void baleReadUnlock()			
+void baleReadUnlock()                   
 { 
    readUnlock(); 
 }
@@ -319,10 +319,10 @@ void checkWriteLock()
    Thread th = getCurrentWriter();
    if (th != Thread.currentThread()) {
       try {
-	 throw new Exception("Attempt to change document without write lock");
+         throw new Exception("Attempt to change document without write lock");
        }
       catch (Exception e) {
-	 BoardLog.logE("BALE","Locking problems",e);
+         BoardLog.logE("BALE","Locking problems",e);
        }
     }
 }
@@ -330,9 +330,9 @@ void checkWriteLock()
 
 
 /********************************************************************************/
-/*										*/
-/*	Editing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Editing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void remove(int off,int len) throws BadLocationException
@@ -348,7 +348,7 @@ void checkWriteLock()
 
 
 @Override public void replace(int off,int len,String txt,AttributeSet attr)
-	throws BadLocationException
+        throws BadLocationException
 {
    baleWriteLock();
    try {
@@ -362,7 +362,7 @@ void checkWriteLock()
 
 
 @Override public void insertString(int off,String txt,AttributeSet attr)
-	throws BadLocationException
+        throws BadLocationException
 {
    baleWriteLock();
    try {
@@ -372,7 +372,7 @@ void checkWriteLock()
 }
 
 
-public void markChanged()				{ }
+public void markChanged()                               { }
 
 
 
@@ -393,23 +393,23 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
       sp = createPosition(soff);
       ep = createPosition(eoff);
       if (fmt) {
-	 int dsoff = mapOffsetToEclipse(soff);
-	 int deoff = mapOffsetToEclipse(eoff);
-	 BumpClient bc = BumpClient.getBump();
-	 org.w3c.dom.Element edits = bc.format(getProjectName(),getFile(),dsoff,deoff);
-	 if (edits != null) {
-	    BaleApplyEdits bae = new BaleApplyEdits(this);
-	    bae.applyEdits(edits);
-	 }
+         int dsoff = mapOffsetToEclipse(soff);
+         int deoff = mapOffsetToEclipse(eoff);
+         BumpClient bc = BumpClient.getBump();
+         org.w3c.dom.Element edits = bc.format(getProjectName(),getFile(),dsoff,deoff);
+         if (edits != null) {
+            BaleApplyEdits bae = new BaleApplyEdits(this);
+            bae.applyEdits(edits);
+         }
       }
       if (ind) {
-	 int isoff = sp.getOffset();
-	 int ieoff = ep.getOffset();
-	 int slno = findLineNumber(isoff);
-	 int elno = findLineNumber(ieoff-1);
-	 for (int i = slno; i <= elno; ++i) {
-	    fixLineIndent(i);
-	 }
+         int isoff = sp.getOffset();
+         int ieoff = ep.getOffset();
+         int slno = findLineNumber(isoff);
+         int elno = findLineNumber(ieoff-1);
+         for (int i = slno; i <= elno; ++i) {
+            fixLineIndent(i);
+         }
       }
    }
    catch (BadLocationException e) {
@@ -423,10 +423,10 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 
 
 
-BaleDocument getBaseEditDocument()			{ return this; }
+BaleDocument getBaseEditDocument()                      { return this; }
 
 
-void setupDummyEditor() 				{ }
+void setupDummyEditor()                                 { }
 
 
 
@@ -464,9 +464,9 @@ void format(int soff,int eoff)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for external use of documents					*/
-/*										*/
+/*                                                                              */
+/*      Methods for external use of documents                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getWindowText(int offset,int length)
@@ -487,13 +487,13 @@ void format(int soff,int eoff)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle AST information and use with elements 		*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle AST information and use with elements                 */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Used to implement BaleFragment.handleAstUpdated in subclasses.
+ *      Used to implement BaleFragment.handleAstUpdated in subclasses.
  **/
 
 public void handleAstUpdated(List<BaleAstNode> nodes)
@@ -524,8 +524,8 @@ public void handleAstUpdated(List<BaleAstNode> nodes)
     }
 
    if (oast == null) {
-      synchronized (this) {		// notify that AST is now ready
-	 notifyAll();
+      synchronized (this) {             // notify that AST is now ready
+         notifyAll();
        }
     }
 }
@@ -558,15 +558,15 @@ void waitForAst()
    synchronized (this) {
       int ctr = 0;
       while (be.getAstNode() == null && ctr < 4) {
-	 BoardLog.logW("BALE","AST timeout " + ctr);
-	 try {
-	    ++ctr;
-	    wait(1000*ctr);
-	  }
-	 catch (InterruptedException e) { }
+         BoardLog.logW("BALE","AST timeout " + ctr);
+         try {
+            ++ctr;
+            wait(1000*ctr);
+          }
+         catch (InterruptedException e) { }
        }
       if (be.getAstNode() == null) {
-	 BoardLog.logE("BALE","AST not found for " + be);
+         BoardLog.logE("BALE","AST not found for " + be);
        }
     }
 }
@@ -575,13 +575,13 @@ void waitForAst()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle breakpoints						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle breakpoints                                           */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Used to implement BaleFragment.handleProblemsUpdated in subclasses.
+ *      Used to implement BaleFragment.handleProblemsUpdated in subclasses.
  **/
 
 public void handleProblemsUpdated()
@@ -590,7 +590,7 @@ public void handleProblemsUpdated()
    if (element_buffer != null) {
       baleWriteLock();
       try {
-	  element_buffer.updateProblems();
+          element_buffer.updateProblems();
        }
       finally { baleWriteUnlock(); }
     }
@@ -618,9 +618,9 @@ Iterable<BumpProblem> getProblems()
 
 
 /********************************************************************************/
-/*										*/
-/*	Line number methods							*/
-/*										*/
+/*                                                                              */
+/*      Line number methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public abstract int findLineNumber(int offset);
@@ -648,7 +648,7 @@ int getColumnPosition(int offset)
    for (int i = 0; i < s.length(); ++i) {
       char ch = s.charAt(i);
       if (ch == '\t') {
-	 pos = tab_handler.nextTabPosition(pos);
+         pos = tab_handler.nextTabPosition(pos);
        }
       else pos += 1;
     }
@@ -700,15 +700,15 @@ float getFontHeight()
 
 
 /********************************************************************************/
-/*										*/
-/*	Fragment methods							*/
-/*										*/
+/*                                                                              */
+/*      Fragment methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProjectName()	{ return null; }
-@Override public File getFile() 	{ return null; }
-String getFragmentName()			{ return null; }
-BaleFragmentType getFragmentType()		{ return BaleFragmentType.NONE; }
+@Override public String getProjectName()        { return null; }
+@Override public File getFile()         { return null; }
+String getFragmentName()                        { return null; }
+BaleFragmentType getFragmentType()              { return BaleFragmentType.NONE; }
 @Override public BoardLanguage getLanguage()
 {
    String f = getFile().getName();
@@ -719,11 +719,11 @@ BaleFragmentType getFragmentType()		{ return BaleFragmentType.NONE; }
 }
 
 
-boolean isEditable()				{ return true; }
+boolean isEditable()                            { return true; }
 
 
-int getEditCounter()				{ return id_counter; }
-long getLastEditTime()				{ return last_edit; }
+int getEditCounter()                            { return id_counter; }
+long getLastEditTime()                          { return last_edit; }
 protected int nextEditCounter()
 {
    last_edit = System.currentTimeMillis();
@@ -743,19 +743,19 @@ BaleRegion getRegionFromLocation(BumpLocation l)
    return getRegionFromEclipse(l.getOffset(),l.getEndOffset());
 }
 
-BaleRegion getRegionFromEclipse(int soff,int eoff)	{ return null; }
+BaleRegion getRegionFromEclipse(int soff,int eoff)      { return null; }
 
-void save()					{ }
-void commit()					{ }
-void compile()					{ }
-void revert()					{ }
-void checkpoint()				{ }
+void save()                                     { }
+void commit()                                   { }
+void compile()                                  { }
+void revert()                                   { }
+void checkpoint()                               { }
 
-boolean canSave()				{ return false; }
+boolean canSave()                               { return false; }
 
 
-public int getFragmentOffset(int docoffset)	       { return docoffset; }
-public int getDocumentOffset(int localoffset)	       { return localoffset; }
+public int getFragmentOffset(int docoffset)            { return docoffset; }
+public int getDocumentOffset(int localoffset)          { return localoffset; }
 BaleSimpleRegion getFragmentRegion(int docoffset,int len)
 {
    return new BaleSimpleRegion(getFragmentOffset(docoffset),len);
@@ -763,14 +763,14 @@ BaleSimpleRegion getFragmentRegion(int docoffset,int len)
 
 
 BaleRegion createDocumentRegion(Position start,Position end,boolean incleol)
-	throws BadLocationException
+        throws BadLocationException
 {
    return new BaleRegion(savePosition(start),savePosition(end),incleol);
 }
 
 
 BaleRegion createDocumentRegion(int soff,int eoff,boolean inceol)
-		throws BadLocationException
+                throws BadLocationException
 {
    Position sp = BaleStartPosition.createStartPosition(this,soff);
    Position ep = createPosition(eoff);
@@ -781,11 +781,11 @@ BaleRegion createDocumentRegion(int soff,int eoff,boolean inceol)
 
 
 
-void removeRegions(List<BaleRegion> rgns)		{ }
+void removeRegions(List<BaleRegion> rgns)               { }
 
 
 @Override public Position createHistoryPosition(int off) throws BadLocationException
-{					
+{                                       
    return getBaseEditDocument().createPosition(getDocumentOffset(off));
 }
 
@@ -793,13 +793,13 @@ void removeRegions(List<BaleRegion> rgns)		{ }
 
 
 /********************************************************************************/
-/*										*/
-/*	Position methods							*/
-/*										*/
+/*                                                                              */
+/*      Position methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Ensure the position is correct across file saves
+ *      Ensure the position is correct across file saves
  **/
 
 public BalePosition savePosition(Position p)
@@ -815,9 +815,9 @@ public BalePosition savePosition(Position p)
 
 
 /********************************************************************************/
-/*										*/
-/*	Highlighting methods							*/
-/*										*/
+/*                                                                              */
+/*      Highlighting methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 BaleHighlightContext getHighlightContext()
@@ -829,16 +829,16 @@ BaleHighlightContext getHighlightContext()
 
 
 /********************************************************************************/
-/*										*/
-/*	Elision methods 							*/
-/*										*/
+/*                                                                              */
+/*      Elision methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-BaleElideMode getElideMode()		{ return elide_mode; }
+BaleElideMode getElideMode()            { return elide_mode; }
 
-void setElideMode(BaleElideMode md)	{ elide_mode = md; }
+void setElideMode(BaleElideMode md)     { elide_mode = md; }
 
-BaleSplitMode getSplitMode()		{ return split_mode; }
+BaleSplitMode getSplitMode()            { return split_mode; }
 
 
 void recheckElisions()
@@ -866,10 +866,10 @@ void redoElision()
       case ELIDE_CHECK_NEVER :
       case ELIDE_NONE :
       case ELIDE_COMMENTS :
-	 elide_mode = BaleElideMode.ELIDE_CHECK_ONCE;
-	 break;
+         elide_mode = BaleElideMode.ELIDE_CHECK_ONCE;
+         break;
       default:
-	 break;
+         break;
     }
 }
 
@@ -908,8 +908,8 @@ private void outputElisions(BaleElement e,BudaXmlWriter xw)
    else if (e != null && !e.isLeaf()) {
       int ct = e.getChildCount();
       for (int i = 0; i < ct; ++i) {
-	 BaleElement e1 = e.getBaleElement(i);
-	 outputElisions(e1,xw);
+         BaleElement e1 = e.getBaleElement(i);
+         outputElisions(e1,xw);
        }
     }
 }
@@ -923,12 +923,12 @@ void applyElisions(List<BaleElisionData> elides)
    baleWriteLock();
    try {
       if (getElideMode() == BaleElideMode.ELIDE_CHECK_ONCE ||
-	 getElideMode() == BaleElideMode.ELIDE_CHECK_NEVER) {
-	 BaleElement e = element_buffer.getRootElement();
-	 int idx = matchElisions(elides,0,e);
-	 if (idx < elides.size()) return;
-	 applyElisions(elides,0,e);
-	 setElideMode(BaleElideMode.ELIDE_CHECK_NEVER);
+         getElideMode() == BaleElideMode.ELIDE_CHECK_NEVER) {
+         BaleElement e = element_buffer.getRootElement();
+         int idx = matchElisions(elides,0,e);
+         if (idx < elides.size()) return;
+         applyElisions(elides,0,e);
+         setElideMode(BaleElideMode.ELIDE_CHECK_NEVER);
        }
     }
    finally {
@@ -942,15 +942,15 @@ private int matchElisions(List<BaleElisionData> elides,int idx,BaleElement e)
    if (idx >= elides.size()) return idx;
    BaleElisionData bed = elides.get(idx);
    if (e.getStartOffset() == bed.getStartOffset() &&
-	 e.getEndOffset() == bed.getEndOffset() &&
-	 bed.getElementName().equals(e.getName())) {
+         e.getEndOffset() == bed.getEndOffset() &&
+         bed.getElementName().equals(e.getName())) {
       ++idx;
     }
    else if (!e.isLeaf()) {
       int ct = e.getChildCount();
       for (int i = 0; i < ct; ++i) {
-	 BaleElement e1 = e.getBaleElement(i);
-	 idx = matchElisions(elides,idx,e1);
+         BaleElement e1 = e.getBaleElement(i);
+         idx = matchElisions(elides,idx,e1);
        }
     }
    return idx;
@@ -962,9 +962,9 @@ private int applyElisions(List<BaleElisionData> elides,int idx,BaleElement e)
    BaleElisionData bed = null;
    if (idx < elides.size()) bed = elides.get(idx);
    if (bed != null &&
-	    e.getStartOffset() == bed.getStartOffset() &&
-	    e.getEndOffset() == bed.getEndOffset() &&
-	    bed.getElementName().equals(e.getName())) {
+            e.getStartOffset() == bed.getStartOffset() &&
+            e.getEndOffset() == bed.getEndOffset() &&
+            bed.getElementName().equals(e.getName())) {
       e.setElided(true);
       ++idx;
     }
@@ -972,8 +972,8 @@ private int applyElisions(List<BaleElisionData> elides,int idx,BaleElement e)
       e.setElided(false);
       int ct = e.getChildCount();
       for (int i = 0; i < ct; ++i) {
-	 BaleElement e1 = e.getBaleElement(i);
-	 idx = applyElisions(elides,idx,e1);
+         BaleElement e1 = e.getBaleElement(i);
+         idx = applyElisions(elides,idx,e1);
        }
     }
    return idx;
@@ -983,13 +983,13 @@ private int applyElisions(List<BaleElisionData> elides,int idx,BaleElement e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Event methods								*/
-/*										*/
+/*                                                                              */
+/*      Event methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 protected void reportEvent(Document d,int off,int len,DocumentEvent.EventType et,UndoableEdit ed,
-			      BaleElementEvent ee)
+                              BaleElementEvent ee)
 {
    BaleDocumentEvent be = new BaleDocumentEvent((BaleDocument) d,off,len,et,ed,ee);
 
@@ -1017,17 +1017,17 @@ protected void reportEvent(Document d,int off,int len,DocumentEvent.EventType et
 
 
 
-protected void noteEvent(BaleDocumentEvent be)			{ }
+protected void noteEvent(BaleDocumentEvent be)                  { }
 
-void noteOpen() 						{ }
+void noteOpen()                                                 { }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Indentation methods							*/
-/*										*/
+/*                                                                              */
+/*      Indentation methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 int getSplitIndent(int off)
@@ -1055,25 +1055,25 @@ void fixLineIndent(int lno)
       int eoff = findLineOffset(lno+1);
       Segment s = new Segment();
       try {
-	 getText(soff,eoff-soff-1,s);	      // ignore new line
+         getText(soff,eoff-soff-1,s);         // ignore new line
        }
       catch (BadLocationException e) {
-	 return;
+         return;
        }
 
       for (int i = 0; i < s.length(); ++i) {
-	 char ch = s.charAt(i);
-	 if (!Character.isWhitespace(ch)) break;
-	 ++deleteln;
+         char ch = s.charAt(i);
+         if (!Character.isWhitespace(ch)) break;
+         ++deleteln;
        }
     }
 
    try {
       if (deleteln > 0) remove(soff,deleteln);
       if (nind > 0) {
-	 StringBuffer buf = new StringBuffer();
-	 for (int i = 0; i < nind; ++i) buf.append(" ");           // don't use tabs for now
-	 insertString(soff,buf.toString(),null);
+         StringBuffer buf = new StringBuffer();
+         for (int i = 0; i < nind; ++i) buf.append(" ");           // don't use tabs for now
+         insertString(soff,buf.toString(),null);
        }
     }
    catch (BadLocationException e) {
@@ -1087,14 +1087,14 @@ BaleIndenter getIndenter()
 {
    if (our_indenter == null) {
       switch (getLanguage()) {
-	 case JAVA :
-	 case JAVA_IDEA :
-	 default :
-	    our_indenter = new BaleIndenterJava(this);
-	    break;
-	 case JS :
-	    our_indenter = new BaleIndenterJS(this);
-	    break;
+         case JAVA :
+         case JAVA_IDEA :
+         default :
+            our_indenter = new BaleIndenterJava(this);
+            break;
+         case JS :
+            our_indenter = new BaleIndenterJS(this);
+            break;
          case DART :
             our_indenter = new BaleIndenterLsp(this);
             break;
@@ -1113,20 +1113,20 @@ protected void clearIndenter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Orphan Management							*/
-/*										*/
+/*                                                                              */
+/*      Orphan Management                                                       */
+/*                                                                              */
 /********************************************************************************/
 
-protected void checkOrphan()		{ }
-boolean isOrphan()			{ return false; }
+protected void checkOrphan()            { }
+boolean isOrphan()                      { return false; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Auto-inserted typeover management					*/
-/*										*/
+/*                                                                              */
+/*      Auto-inserted typeover management                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void setCreatedTypeover(String cnt,int off)
@@ -1134,8 +1134,8 @@ void setCreatedTypeover(String cnt,int off)
    for (int i = 0; i < cnt.length(); ++i) {
       String c = cnt.substring(i,i+1);
       try {
-	 Position p = createPosition(off+i);
-	 created_text.put(p,c);
+         Position p = createPosition(off+i);
+         created_text.put(p,c);
        }
       catch (BadLocationException e) { }
     }
@@ -1148,10 +1148,10 @@ boolean checkTypeover(String txt,int off)
       Map.Entry<Position,String> ent = it.next();
       int poff = ent.getKey().getOffset();
       if (poff == off) {
-	 if (txt.equals(ent.getValue())) {
-	    it.remove();
-	    return true;
-	  }
+         if (txt.equals(ent.getValue())) {
+            it.remove();
+            return true;
+          }
        }
     }
    return false;
@@ -1170,9 +1170,9 @@ void handleReplaceTypeover(int soff,int eoff)
 
 
 /********************************************************************************/
-/*										*/
-/*	Dummy element								*/
-/*										*/
+/*                                                                              */
+/*      Dummy element                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private class DummyElement extends AbstractDocument.LeafElement
@@ -1183,15 +1183,15 @@ private class DummyElement extends AbstractDocument.LeafElement
       super(par,a,soff,eoff);
     }
 
-   @Override public int getEndOffset()		{ return getLength()-1; }
-   @Override public int getStartOffset()	{ return 0; }
+   @Override public int getEndOffset()          { return getLength()-1; }
+   @Override public int getStartOffset()        { return 0; }
 
-}	// end of inner class DummyElement
-
-
+}       // end of inner class DummyElement
 
 
-}	// end of class BaleDocument
+
+
+}       // end of class BaleDocument
 
 
 

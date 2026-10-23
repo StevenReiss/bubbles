@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixOrderElement.java						*/
-/*										*/
-/*	Generic element that can be part of an ordering 			*/
-/*										*/
+/*                                                                              */
+/*              BfixOrderElement.java                                           */
+/*                                                                              */
+/*      Generic element that can be part of an ordering                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -39,9 +39,9 @@ abstract class BfixOrderElement implements BfixConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static BfixOrderElement create(BfixCorrector corr,BumpLocation bl)
@@ -51,7 +51,7 @@ static BfixOrderElement create(BfixCorrector corr,BumpLocation bl)
 
 
 static BfixOrderElement create(BfixCorrector corr,int spos,int epos,String type,
-				  CharSequence body)
+                                  CharSequence body)
 {
    if (type.equals("BLANKS"))  
       return new BlankElement(corr,spos,epos,body);
@@ -64,24 +64,24 @@ static BfixOrderElement create(BfixCorrector corr,int spos,int epos,String type,
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private int		start_offset;
-private int		end_offset;
+private int             start_offset;
+private int             end_offset;
 private String          element_type;
-private BumpSymbolType	symbol_type;
-private String		symbol_name;
+private BumpSymbolType  symbol_type;
+private String          symbol_name;
 private BfixOrderElement parent_element;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BfixOrderElement(int start,int end,String name,BumpSymbolType stype)
@@ -109,41 +109,41 @@ protected BfixOrderElement(int start,int end,String name,String etype,
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-int getStartOffset()			{ return start_offset; }
-int getEndOffset()			{ return end_offset; }
+int getStartOffset()                    { return start_offset; }
+int getEndOffset()                      { return end_offset; }
 void setPosition(int start,int end)
 {
    if (start >= 0) start_offset = start;
    if (end >= 0) end_offset = end;
 }
 
-int getModifiers()			{ return 0; }
-String getName()			{ return symbol_name; }
-BumpSymbolType getSymbolType()		{ return symbol_type; }
+int getModifiers()                      { return 0; }
+String getName()                        { return symbol_name; }
+BumpSymbolType getSymbolType()          { return symbol_type; }
 String getElementType()                 { return element_type; }
 String getContents()                    { return null; }
 
-Collection<BfixOrderElement> getChildren()	{ return Collections.emptyList(); }
+Collection<BfixOrderElement> getChildren()      { return Collections.emptyList(); }
 
 void addChild(BfixOrderElement e)
 {
    BoardLog.logE("BFIX", "Attempt to add child to leaf element");
 }
 
-BfixOrderElement getParent()		{ return parent_element; }
-void setParent(BfixOrderElement p)	{ parent_element = p; }
+BfixOrderElement getParent()            { return parent_element; }
+void setParent(BfixOrderElement p)      { parent_element = p; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Output Methods								*/
-/*										*/
+/*                                                                              */
+/*      Output Methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -163,9 +163,9 @@ void setParent(BfixOrderElement p)	{ parent_element = p; }
 
 
 /********************************************************************************/
-/*										*/
-/*	Element based on a BumpLocation 					*/
-/*										*/
+/*                                                                              */
+/*      Element based on a BumpLocation                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LocationElement extends BfixOrderElement {
@@ -187,25 +187,25 @@ private static class LocationElement extends BfixOrderElement {
       e.setParent(this);
     }
 
-}	// end of inner class LocationElement
+}       // end of inner class LocationElement
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Comment element 							*/
-/*										*/
+/*                                                                              */
+/*      Comment element                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static class CommentElement extends BfixOrderElement {
 
    @SuppressWarnings("unused") private String comment_body;
-   @SuppressWarnings("unused") private int	  blank_before;
-   private int	  blank_after;
+   @SuppressWarnings("unused") private int        blank_before;
+   private int    blank_after;
 
    CommentElement(BfixCorrector corr,int start,int end,String type,
-        	     CharSequence body) {
+                     CharSequence body) {
       super(start,end,null,type);
       blank_before = 0;
       blank_after = 0;
@@ -247,14 +247,14 @@ private static class CommentElement extends BfixOrderElement {
       comment_body = body.subSequence(cstart,cend).toString();
     }
    
-}	// end of inner class LocationElement
+}       // end of inner class LocationElement
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Blank element								*/
-/*										*/
+/*                                                                              */
+/*      Blank element                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private static class BlankElement extends BfixOrderElement {
@@ -262,7 +262,7 @@ private static class BlankElement extends BfixOrderElement {
    private int num_lines;
 
    BlankElement(BfixCorrector corr,int start,int end,
-        	   CharSequence body) {
+                   CharSequence body) {
       super(start,end,null,"BLANKS");
       num_lines = 0;
       int len = body.length();
@@ -273,12 +273,12 @@ private static class BlankElement extends BfixOrderElement {
       if (num_lines > 0) --num_lines;
     }
 
-}	// end of inner class LocationElement
+}       // end of inner class LocationElement
 
 
 
 
-}	// end of class BfixOrderElement
+}       // end of class BfixOrderElement
 
 
 

@@ -61,7 +61,7 @@ private boolean is_new;
 private boolean is_modified;
 private boolean is_module;
 private boolean is_system;
-private int	   entry_id;
+private int        entry_id;
 private Set<String> exclude_patterns;
 private Set<String> include_patterns;
 
@@ -153,15 +153,15 @@ BuenoPathEntry(File f,PathType typ,boolean subdirs)
 /*                                                                              */
 /********************************************************************************/
 
-boolean isIndirect()				{ return is_indirect; }
-PathType getPathType()				{ return path_type; }
-String getBinaryPath()				{ return binary_path; }
-String getSourcePath()				{ return source_path; }
-String getJavadocPath()			{ return javadoc_path; }
-boolean isExported() 				{ return is_exported; }
-boolean isOptional() 				{ return is_optional; }
-boolean isSystem()				{ return is_system; }
-boolean isModule()				{ return is_module; }
+boolean isIndirect()                            { return is_indirect; }
+PathType getPathType()                          { return path_type; }
+String getBinaryPath()                          { return binary_path; }
+String getSourcePath()                          { return source_path; }
+String getJavadocPath()                 { return javadoc_path; }
+boolean isExported()                            { return is_exported; }
+boolean isOptional()                            { return is_optional; }
+boolean isSystem()                              { return is_system; }
+boolean isModule()                              { return is_module; }
 boolean resetChanged()     
 {
    boolean chng = is_new || is_modified;

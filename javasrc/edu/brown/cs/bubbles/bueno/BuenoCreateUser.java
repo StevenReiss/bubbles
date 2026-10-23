@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoCreatorUser.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator simple creation methods 	*/
-/*										*/
+/*                                                                              */
+/*              BuenoCreatorUser.java                                           */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator simple creation methods         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -31,17 +31,17 @@ class BuenoCreatorUser extends BuenoCreator implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoCreatorUser()
@@ -50,7 +50,7 @@ BuenoCreatorUser()
 
 
 
-}	// end of class BuenoCreatorUser
+}       // end of class BuenoCreatorUser
 
 
 

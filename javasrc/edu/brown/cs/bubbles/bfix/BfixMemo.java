@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixMemo.java							*/
-/*										*/
-/*	Object describing (memoizing) a pending fix				*/
-/*										*/
+/*                                                                              */
+/*              BfixMemo.java                                                   */
+/*                                                                              */
+/*      Object describing (memoizing) a pending fix                             */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -31,9 +31,9 @@ class BfixMemo implements BfixConstants, Comparable<BfixMemo>
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpProblem for_problem;
@@ -44,9 +44,9 @@ private String id_string;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BfixMemo(BumpProblem bp,Class<?> ba,String id)
@@ -59,9 +59,9 @@ BfixMemo(BumpProblem bp,Class<?> ba,String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 boolean match(BumpProblem bp,Class<?> ba,String id)
@@ -75,9 +75,9 @@ boolean match(BumpProblem bp,Class<?> ba,String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Comparable methods							*/
-/*										*/
+/*                                                                              */
+/*      Comparable methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int compareTo(BfixMemo m)
@@ -96,9 +96,9 @@ boolean match(BumpProblem bp,Class<?> ba,String id)
 
 
 /********************************************************************************/
-/*										*/
-/*	Hashcode and equals for sets						*/
-/*										*/
+/*                                                                              */
+/*      Hashcode and equals for sets                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public int hashCode()
@@ -120,7 +120,7 @@ boolean match(BumpProblem bp,Class<?> ba,String id)
 
 
 
-}	// end of class BfixMemo
+}       // end of class BfixMemo
 
 
 

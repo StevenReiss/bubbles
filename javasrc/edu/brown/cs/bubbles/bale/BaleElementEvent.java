@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleElementEvent.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor document element change events 	*/
-/*										*/
+/*                                                                              */
+/*              BaleElementEvent.java                                           */
+/*                                                                              */
+/*      Bubble Annotated Language Editor document element change events         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -42,14 +42,14 @@ import java.util.List;
 
 
 class BaleElementEvent extends AbstractUndoableEdit implements DocumentEvent.ElementChange,
-		BaleConstants
+                BaleConstants
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private transient Element base_element;
@@ -62,9 +62,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 
@@ -97,8 +97,8 @@ BaleElementEvent(BaleElement par,BaleElement old,List<BaleElement> rep)
    children_removed[0] = old;
    for (int i = 0; i < par.getElementCount(); ++i) {
       if (par.getElement(i) == old) {
-	 element_index = i;
-	 break;
+         element_index = i;
+         break;
        }
     }
    children_added = new Element[rep.size()];
@@ -106,28 +106,28 @@ BaleElementEvent(BaleElement par,BaleElement old,List<BaleElement> rep)
    for (BaleElement be : rep) children_added[j++] = be;
 
    BoardLog.logD("BALE","ELEVENT " + element_index + " " + children_removed.length + " " +
-		    children_added.length);
+                    children_added.length);
 }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public Element [] getChildrenAdded()		{ return children_added; }
-@Override public Element [] getChildrenRemoved()	{ return children_removed; }
-@Override public Element getElement()			{ return base_element; }
-@Override public int getIndex() 			{ return element_index; }
+@Override public Element [] getChildrenAdded()          { return children_added; }
+@Override public Element [] getChildrenRemoved()        { return children_removed; }
+@Override public Element getElement()                   { return base_element; }
+@Override public int getIndex()                         { return element_index; }
 
 
 
 
 
-}	// end of class BaleElementEvent
+}       // end of class BaleElementEvent
 
 
 

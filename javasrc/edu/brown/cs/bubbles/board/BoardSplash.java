@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoardSplash.java						*/
-/*										*/
-/*	Bubbles attribute and property management splash screen 		*/
-/*										*/
+/*                                                                              */
+/*              BoardSplash.java                                                */
+/*                                                                              */
+/*      Bubbles attribute and property management splash screen                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 // animation author: Rachel Gollub, 1995
@@ -50,19 +50,19 @@ class BoardSplash {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JFrame		splash_frame;
-private BubblePanel	bubble_panel;
-private JLabel		current_task;
-private Image		splash_image;
-private Image		brown_image;
-private Image		bubbles_image;
+private JFrame          splash_frame;
+private BubblePanel     bubble_panel;
+private JLabel          current_task;
+private Image           splash_image;
+private Image           brown_image;
+private Image           bubbles_image;
 
-private boolean 	show_bubbles;
+private boolean         show_bubbles;
 
 private static final Color  FIRST_COLOR = new Color(0,0,255);
 private static final Color  SECOND_COLOR = new Color(128,128,255);
@@ -80,9 +80,9 @@ private static int splash_delta = 24;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BoardSplash()
@@ -102,9 +102,9 @@ BoardSplash()
 
 
 /********************************************************************************/
-/*										*/
-/*	Update methods								*/
-/*										*/
+/*                                                                              */
+/*      Update methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void start()
@@ -148,9 +148,9 @@ void remove()
 
 
 /********************************************************************************/
-/*										*/
-/*	Graphics setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Graphics setup methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private void setup()
@@ -195,9 +195,9 @@ private void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Color methods								*/
-/*										*/
+/*                                                                              */
+/*      Color methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 Color getBubbleColor(int v0,int v1)
@@ -215,9 +215,9 @@ Color getBubbleColor(int v0,int v1)
 
 
 /********************************************************************************/
-/*										*/
-/*	Drawing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Drawing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void drawSplash(Graphics g,JPanel obs)
@@ -249,18 +249,18 @@ private void drawSplash(Graphics g,JPanel obs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubbles animation							*/
-/*										*/
+/*                                                                              */
+/*      Bubbles animation                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubblePanel extends JPanel implements Runnable {
 
    private transient Thread drawing_thread;
-   private int		bubble_count;
-   private int		this_bubble;
-   private int		bubble_stepper;
-   private int [][]	bubble_record;
+   private int          bubble_count;
+   private int          this_bubble;
+   private int          bubble_stepper;
+   private int [][]     bubble_record;
 
    private static final int MAX_BUBBLES = 125;
    private static final long SLEEP_TIME = 50;
@@ -285,27 +285,27 @@ private class BubblePanel extends JPanel implements Runnable {
 
    void start() {
       if (drawing_thread == null) {
-	 drawing_thread = new Thread(this,"SplashDrawing");
-	 drawing_thread.start();
+         drawing_thread = new Thread(this,"SplashDrawing");
+         drawing_thread.start();
        }
     }
 
    void stop() {
       if (drawing_thread != null) {
-	 drawing_thread.interrupt();
-	 drawing_thread = null;
+         drawing_thread.interrupt();
+         drawing_thread = null;
        }
     }
 
    @Override public void run() {
       while (drawing_thread != null) {
-	 try {
-	    Thread.sleep(SLEEP_TIME);
-	  }
-	 catch (InterruptedException e) {
-	    break;
-	  }
-	 repaint();
+         try {
+            Thread.sleep(SLEEP_TIME);
+          }
+         catch (InterruptedException e) {
+            break;
+          }
+         repaint();
        }
       drawing_thread = null;
     }
@@ -315,13 +315,13 @@ private class BubblePanel extends JPanel implements Runnable {
       int i;
 
       for (i=x-r; i<=x+r; i++) {     // Draws the upper edge of a circle
-	 g.drawLine(i, y - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
-		       i, y + step - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
+         g.drawLine(i, y - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
+                       i, y + step - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
        }
       g.setColor(getBackground());
       for (i=x-r; i<=x+r; i++) {     // Draws the lower edge of the circle
-	 g.drawLine(i, y + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
-		       i, y + step + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
+         g.drawLine(i, y + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
+                       i, y + step + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
        }
     }
 
@@ -344,8 +344,8 @@ private class BubblePanel extends JPanel implements Runnable {
          col = getBubbleColor(bubble_record[this_bubble][3],bubble_record[this_bubble][4]);
          g.setColor(col);
          g.fillOval(bubble_record[this_bubble][0]-bubble_record[this_bubble][2],
-        	       bubble_record[this_bubble][1]-bubble_record[this_bubble][2],
-        	       bubble_record[this_bubble][2]*2,bubble_record[this_bubble][2]*2);
+                       bubble_record[this_bubble][1]-bubble_record[this_bubble][2],
+                       bubble_record[this_bubble][2]*2,bubble_record[this_bubble][2]*2);
          if (bubble_count < MAX_BUBBLES) {
             bubble_count++;
             this_bubble++;
@@ -361,20 +361,20 @@ private class BubblePanel extends JPanel implements Runnable {
             moveBubble(bubble_record[i][0], bubble_record[i][1], bubble_record[i][2], 1, g);
             for (j=0; j<i; j++) {   // Checks for touching bubbles, pops one
                tmp = ((bubble_record[i][1]-bubble_record[j][1])*(bubble_record[i][1]-bubble_record[j][1]) +
-        		  (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]));
+                          (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]));
                if (j != i && Math.sqrt(tmp) < bubble_record[i][2] + bubble_record[j][2]) {
-        	  g.setColor(getBackground());
-        	  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2) {
-        	     g.fillOval(bubble_record[i][0]-(bubble_record[i][2]-tmp),
-        			   bubble_record[i][1]-(bubble_record[i][2]-tmp),
-        			   (bubble_record[i][2]-tmp)*2, (bubble_record[i][2]-tmp)*2);
+                  g.setColor(getBackground());
+                  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2) {
+                     g.fillOval(bubble_record[i][0]-(bubble_record[i][2]-tmp),
+                                   bubble_record[i][1]-(bubble_record[i][2]-tmp),
+                                   (bubble_record[i][2]-tmp)*2, (bubble_record[i][2]-tmp)*2);
                    }
-        	  col = getBubbleColor(bubble_record[j][3],bubble_record[j][4]);
-        	  g.setColor(col);
-        	  g.fillOval(bubble_record[j][0]-bubble_record[j][2], bubble_record[j][1]-bubble_record[j][2],
-        			bubble_record[j][2]*2, bubble_record[j][2]*2);
-        	  bubble_record[i][1] = -1; bubble_record[i][2]=0;
-        	}
+                  col = getBubbleColor(bubble_record[j][3],bubble_record[j][4]);
+                  g.setColor(col);
+                  g.fillOval(bubble_record[j][0]-bubble_record[j][2], bubble_record[j][1]-bubble_record[j][2],
+                                bubble_record[j][2]*2, bubble_record[j][2]*2);
+                  bubble_record[i][1] = -1; bubble_record[i][2]=0;
+                }
              }
           }
          if (bubble_record[i][1]+bubble_record[i][2] < 0 && bubble_count >= MAX_BUBBLES) {
@@ -385,11 +385,11 @@ private class BubblePanel extends JPanel implements Runnable {
        }
     }
 
-}	// end of inner class BubblePanel
+}       // end of inner class BubblePanel
 
 
 
-}	// end of class BoardSpash
+}       // end of class BoardSpash
 
 
 

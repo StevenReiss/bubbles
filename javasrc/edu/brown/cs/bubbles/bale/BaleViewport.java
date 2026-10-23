@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BaleViewport.java						*/
-/*										*/
-/*	Bubble Annotated Language Editor viewport for fragment editors		*/
-/*										*/
+/*                                                                              */
+/*              BaleViewport.java                                               */
+/*                                                                              */
+/*      Bubble Annotated Language Editor viewport for fragment editors          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -57,21 +57,21 @@ import java.awt.event.MouseWheelListener;
 
 
 class BaleViewport extends JScrollPane implements CaretListener, MouseWheelListener,
-		BaleConstants
+                BaleConstants
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JEditorPane	editor_pane;
-private JPanel		annot_area;
-private CombinedPanel	combined_panel;
-private int		last_height;
+private JEditorPane     editor_pane;
+private JPanel          annot_area;
+private CombinedPanel   combined_panel;
+private int             last_height;
 
 private static final long serialVersionUID = 1;
 
@@ -79,9 +79,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleViewport(JEditorPane editor,JPanel annot)
@@ -117,9 +117,9 @@ BaleViewport(JEditorPane editor,JPanel annot)
 
 
 /********************************************************************************/
-/*										*/
-/*	Sizing logic								*/
-/*										*/
+/*                                                                              */
+/*      Sizing logic                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleViewportSized()
@@ -136,11 +136,11 @@ private void handleViewportSized()
     }
 
    if (sz.height > last_height && last_height != 0) {
-      Dimension psz = editor_pane.getPreferredSize();	// size for current elisions
-      Dimension tsz = editor_pane.getMaximumSize();	// size without elisions
+      Dimension psz = editor_pane.getPreferredSize();   // size for current elisions
+      Dimension tsz = editor_pane.getMaximumSize();     // size without elisions
       // TODO: get max size here doesn't work
       if (sz.height > tsz.height && tsz.height != psz.height) {
-	 bd.recheckElisions();
+         bd.recheckElisions();
        }
     }
 
@@ -196,9 +196,9 @@ private void checkScrollBars()
 
 
 /********************************************************************************/
-/*										*/
-/*	Scrolling logic 							*/
-/*										*/
+/*                                                                              */
+/*      Scrolling logic                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleScroll(int nline,boolean lr)
@@ -227,7 +227,7 @@ private void handleScroll(int nline,boolean lr)
       --delta;
       be = bd.getCharacterElement(off1);
       while (be != null && !be.isLineElement() && !be.isElided()) {
-	 be = be.getBaleParent();
+         be = be.getBaleParent();
        }
     }
    if (be != null) {
@@ -244,15 +244,15 @@ private void handleScroll(int nline,boolean lr)
    try {
       Rectangle r0;
       for ( ; ; ) {
-	 int off1 = bd.findLineOffset(line1);
-	 if (off1 < 0) return;
-	 if (off1 >= bd.getLength()) return;
-	 r0 = SwingText.modelToView2D(editor_pane,off1);
-	 int ybottom = r0.y + sz.height;
-	 if (ybottom < vsz.height + r0.height) break;
-	 line1 -= 1;
-	 if (line1 < linetop) return;
-	 if (line1 == line0) break;
+         int off1 = bd.findLineOffset(line1);
+         if (off1 < 0) return;
+         if (off1 >= bd.getLength()) return;
+         r0 = SwingText.modelToView2D(editor_pane,off1);
+         int ybottom = r0.y + sz.height;
+         if (ybottom < vsz.height + r0.height) break;
+         line1 -= 1;
+         if (line1 < linetop) return;
+         if (line1 == line0) break;
        }
       p0.y = r0.y;
       getViewport().setViewPosition(p0);
@@ -266,9 +266,9 @@ private void handleScroll(int nline,boolean lr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handling methods and classes					*/
-/*										*/
+/*                                                                              */
+/*      Event handling methods and classes                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void validate()
@@ -302,7 +302,7 @@ private final class ViewportManager extends ComponentAdapter {
       handleViewportSized();
     }
 
-}	// end of inner class ViewportManager
+}       // end of inner class ViewportManager
 
 
 
@@ -315,7 +315,7 @@ private final class ViewportManager extends ComponentAdapter {
       BaleDocument bd = (BaleDocument) editor_pane.getDocument();
       bd.baleReadLock();
       try {
-	 handleScroll(nclk,(mods & InputEvent.SHIFT_DOWN_MASK) != 0);
+         handleScroll(nclk,(mods & InputEvent.SHIFT_DOWN_MASK) != 0);
        }
       finally {
          bd.baleReadUnlock();
@@ -337,15 +337,15 @@ private final class ViewManager implements ChangeListener {
        }
     }
 
-}	// end of inner class ViewManager
+}       // end of inner class ViewManager
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to handle combining annotation and editor for viewport		*/
-/*										*/
+/*                                                                              */
+/*      Class to handle combining annotation and editor for viewport            */
+/*                                                                              */
 /********************************************************************************/
 
 private class CombinedPanel extends JPanel implements Scrollable {
@@ -372,13 +372,13 @@ private class CombinedPanel extends JPanel implements Scrollable {
     }
 
    @Override public boolean getScrollableTracksViewportHeight() { return false; }
-   @Override public boolean getScrollableTracksViewportWidth()	{ return true; }
+   @Override public boolean getScrollableTracksViewportWidth()  { return true; }
 
-}	// end of inner class Combined Panel
+}       // end of inner class Combined Panel
 
 
 
-}	// end of class BaleViewport
+}       // end of class BaleViewport
 
 
 

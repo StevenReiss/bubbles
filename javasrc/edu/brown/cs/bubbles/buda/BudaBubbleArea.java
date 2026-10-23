@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaBubbleArea.java						*/
-/*										*/
-/*	BUblles Display Area bubble panel					*/
-/*										*/
+/*                                                                              */
+/*              BudaBubbleArea.java                                             */
+/*                                                                              */
+/*      BUblles Display Area bubble panel                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -91,12 +91,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- *	This class represents the bubble area, the portion of the overall display
- *	in which bubbles are presented.  The bubble area is typically a very large
- *	canvas that is scrolled over using the overview bar or panning commands
- *	inside the canvas.  This is created automatically.  Most clients do not
- *	need to access this class directly, since most of the actions on it such
- *	as adding bubbles can be done in terms of the root, BudaBubbleRoot.
+ *      This class represents the bubble area, the portion of the overall display
+ *      in which bubbles are presented.  The bubble area is typically a very large
+ *      canvas that is scrolled over using the overview bar or panning commands
+ *      inside the canvas.  This is created automatically.  Most clients do not
+ *      need to access this class directly, since most of the actions on it such
+ *      as adding bubbles can be done in terms of the root, BudaBubbleRoot.
  *
  **/
 
@@ -105,35 +105,35 @@ public class BudaBubbleArea extends JLayeredPane implements BudaConstants, BudaH
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot	  for_root;
+private BudaRoot          for_root;
 private BudaLayoutManager layout_manager;
-private BubbleManager	  bubble_manager;
+private BubbleManager     bubble_manager;
 private BudaMoveAnimator  move_animator;
-private BudaPlacement	  bubble_placer;
+private BudaPlacement     bubble_placer;
 private SwingEventListenerList<BubbleAreaCallback> area_callbacks;
-private MouseRegion	  last_mouse;
-private MouseContext	  mouse_context;
-private AutoScroller	  auto_scroller;
-private double		  scale_factor;
-private String		  top_color_name;
-private String		  bottom_color_name;
-private boolean 	  routes_valid;
-private BudaBubble	  focus_bubble;
-private BudaChannelSet	  channel_set;
-private Cursor		  palm_cursor;
-private boolean 	  first_time;
-// private Dimension	  base_size;
-private Map<String,Object>	property_map;
+private MouseRegion       last_mouse;
+private MouseContext      mouse_context;
+private AutoScroller      auto_scroller;
+private double            scale_factor;
+private String            top_color_name;
+private String            bottom_color_name;
+private boolean           routes_valid;
+private BudaBubble        focus_bubble;
+private BudaChannelSet    channel_set;
+private Cursor            palm_cursor;
+private boolean           first_time;
+// private Dimension      base_size;
+private Map<String,Object>      property_map;
 
 private Map<BudaBubble,Point> floating_bubbles;
 private Map<BudaBubble,BudaBubbleDock[]> docked_bubbles;
 private Map<BudaBubble,BudaWorkingSet> working_set_bubbles;
-private Rectangle	  cur_viewport;
+private Rectangle         cur_viewport;
 
 private Collection<BudaBubbleGroup> bubble_groups;
 private Collection<BudaBubble> active_bubbles;
@@ -148,9 +148,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
@@ -226,17 +226,17 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble methods								*/
-/*										*/
+/*                                                                              */
+/*      Bubble methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Convenience method for adding a bubble to the bubble area.  This would
- *	normally be done by add(Component,BubdaConstraint) on either the root
- *	(assuming Component is a BudaBubble) or on the bubble area.  In the latter
- *	case, if the component is not a bubble, a default bubble enclosing it is
- *	created.
+ *      Convenience method for adding a bubble to the bubble area.  This would
+ *      normally be done by add(Component,BubdaConstraint) on either the root
+ *      (assuming Component is a BudaBubble) or on the bubble area.  In the latter
+ *      case, if the component is not a bubble, a default bubble enclosing it is
+ *      created.
  **/
 
 public void addBubble(BudaBubble bb,int x,int y)
@@ -294,8 +294,8 @@ public void addBubble(BudaBubble bb,Component rel,Point relpt,int placement,Buda
 
 
 /**
- *	Convenience method for removing a bubble.  It is sufficient to either set
- *	the bubble as invisible or reset its parent.
+ *      Convenience method for removing a bubble.  It is sufficient to either set
+ *      the bubble as invisible or reset its parent.
  **/
 
 public void removeBubble(BudaBubble bb)
@@ -314,7 +314,7 @@ private void removeBubbleWithHistory(BudaBubble bb)
 
 
 /**
- *	Return the set of active bubbles
+ *      Return the set of active bubbles
  **/
 
 public List<BudaBubble> getBubbles()
@@ -332,7 +332,7 @@ public Iterable<BudaBubbleGroup> getBubbleGroups()
 }
 
 /**
- *	Return all bubbles in a specified region
+ *      Return all bubbles in a specified region
  **/
 
 public Collection<BudaBubble> getBubblesInRegion(Rectangle r)
@@ -341,7 +341,7 @@ public Collection<BudaBubble> getBubblesInRegion(Rectangle r)
 
    synchronized (active_bubbles) {
       for (BudaBubble bb : active_bubbles) {
-	 if (bb.getBounds().intersects(r)) rslt.add(bb);
+         if (bb.getBounds().intersects(r)) rslt.add(bb);
        }
     }
 
@@ -376,9 +376,9 @@ public void removeCurrentBubble(MouseEvent e)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling add and remove of bubbles				*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling add and remove of bubbles                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected void addImpl(Component c,Object cnst,int idx)
@@ -414,8 +414,8 @@ public void removeCurrentBubble(MouseEvent e)
    if (bc == null || bc.getPositionType() == BudaBubblePosition.NONE) {
       if (last_mouse != null) loc = last_mouse.getLocation();
       else if (cur_viewport != null) {
-	 loc = new Point(cur_viewport.x + cur_viewport.width/2 - c.getWidth()/2,
-			    cur_viewport.y + cur_viewport.height/2 - c.getHeight()/2);
+         loc = new Point(cur_viewport.x + cur_viewport.width/2 - c.getWidth()/2,
+                            cur_viewport.y + cur_viewport.height/2 - c.getHeight()/2);
        }
       else loc = new Point(0,0);
     }
@@ -423,47 +423,47 @@ public void removeCurrentBubble(MouseEvent e)
       loc = bc.getLocation();
       Point floc = new Point(loc);
       if (cur_viewport != null) {
-	 floc.x -= cur_viewport.x;
-	 floc.y -= cur_viewport.y;
+         floc.x -= cur_viewport.x;
+         floc.y -= cur_viewport.y;
        }
       if (bc.getPositionType() == BudaBubblePosition.FIXED) {
-	 fixed = true;
+         fixed = true;
        }
       else if (bc.getPositionType() == BudaBubblePosition.HOVER) {
-	 fixed = true;
-	 setLayer(bb,MODAL_LAYER+3);
+         fixed = true;
+         setLayer(bb,MODAL_LAYER+3);
        }
       else if (bc.getPositionType() == BudaBubblePosition.FLOAT) {
-	 fixed = false;
-	 floating_bubbles.put(bb,floc);
-	 loc = setFloatingLocation(bb);
-	 bb.setFloating(true);
-	 setLayer(bb,MODAL_LAYER);
+         fixed = false;
+         floating_bubbles.put(bb,floc);
+         loc = setFloatingLocation(bb);
+         bb.setFloating(true);
+         setLayer(bb,MODAL_LAYER);
        }
       else if (bc.getPositionType() == BudaBubblePosition.USERPOS) {
-	 fixed = true;
-	 setLayer(bb,MODAL_LAYER+4);
+         fixed = true;
+         setLayer(bb,MODAL_LAYER+4);
          bb.setUserPos(true);
        }
       else if (bc.getPositionType() == BudaBubblePosition.DIALOG) {
-	 fixed = false;
-	 floating_bubbles.put(bb,floc);
-	 loc = setFloatingLocation(bb);
-	 bb.setFloating(true);
-	 setLayer(bb,MODAL_LAYER+2);
+         fixed = false;
+         floating_bubbles.put(bb,floc);
+         loc = setFloatingLocation(bb);
+         bb.setFloating(true);
+         setLayer(bb,MODAL_LAYER+2);
        }
       else if (bc.getPositionType() == BudaBubblePosition.STATIC) {
-	 floating_bubbles.put(bb,floc);
-	 loc = setFloatingLocation(bb);
-	 bb.setFloating(true);
-	 setLayer(bb,MODAL_LAYER);
+         floating_bubbles.put(bb,floc);
+         loc = setFloatingLocation(bb);
+         bb.setFloating(true);
+         setLayer(bb,MODAL_LAYER);
        }
       else if (bc.getPositionType() == BudaBubblePosition.DOCKED) {
-	 floating_bubbles.put(bb,floc);
-	 loc = setFloatingLocation(bb);
-	 bb.setFloating(true);
-	 setupDockedBubble(bb);
-	 setLayer(bb,MODAL_LAYER);
+         floating_bubbles.put(bb,floc);
+         loc = setFloatingLocation(bb);
+         bb.setFloating(true);
+         setupDockedBubble(bb);
+         setLayer(bb,MODAL_LAYER);
       }
     }
 
@@ -476,12 +476,12 @@ public void removeCurrentBubble(MouseEvent e)
 
    try {
       if (bb.getParent() != null) {
-	 try {
-	    bb.getParent().remove(bb);
-	  }
-	 catch (Throwable t) {
-	    bb.getParent().remove(bb);
-	  }
+         try {
+            bb.getParent().remove(bb);
+          }
+         catch (Throwable t) {
+            bb.getParent().remove(bb);
+          }
        }
     }
    catch (IllegalArgumentException e) {
@@ -492,12 +492,12 @@ public void removeCurrentBubble(MouseEvent e)
    if (idx < 0) {
       // This should always work if idx < 0; if it fails, retry a few time
       for (int i = 0; i < 3; ++i) {
-	 try {
-	    super.addImpl(bb,null,idx);
-	    added = true;
-	    break;
-	  }
-	 catch (IllegalArgumentException e) { }
+         try {
+            super.addImpl(bb,null,idx);
+            added = true;
+            break;
+          }
+         catch (IllegalArgumentException e) { }
        }
     }
 
@@ -577,7 +577,7 @@ private void localAddBubble(BudaBubble bb,boolean spacer)
       bb.setScaleFactor(scale_factor);
     }
 
-   // routes_valid = false;		// if we take bubbles into account when routing
+   // routes_valid = false;             // if we take bubbles into account when routing
    
    if (spacer) fixupBubble(bb);
    
@@ -613,7 +613,7 @@ private void localRemoveBubble(BudaBubble bb)
        }
     }
    
-   // routes_valid = false;	// if we take bubbles into account when routing
+   // routes_valid = false;     // if we take bubbles into account when routing
    
    if (grp != null) {
       synchronized (bubble_groups) {
@@ -659,13 +659,13 @@ private void localResizeBubble(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Link methods								*/
-/*										*/
+/*                                                                              */
+/*      Link methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Force rerouting
+ *      Force rerouting
  **/
 
 public void forceReroute()
@@ -677,7 +677,7 @@ public void forceReroute()
 
 
 /**
- *	Force rerouting is this bubble has links
+ *      Force rerouting is this bubble has links
  **/
 
 public void forceReroute(BudaBubble bb)
@@ -685,10 +685,10 @@ public void forceReroute(BudaBubble bb)
    boolean fnd = false;
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (bb == bl.getTarget() || bb  == bl.getSource()) {
-	    fnd = true;
-	    break;
-	  }
+         if (bb == bl.getTarget() || bb  == bl.getSource()) {
+            fnd = true;
+            break;
+          }
        }
     }
 
@@ -698,7 +698,7 @@ public void forceReroute(BudaBubble bb)
 
 
 /**
- *	Add a link between bubbles
+ *      Add a link between bubbles
  **/
 
 public void addLink(BudaBubbleLink lnk)
@@ -756,8 +756,8 @@ public Collection<BudaBubbleLink> getLinks(Collection<BudaBubble> bbls)
 
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (bbls.contains(bl.getTarget()) && bbls.contains(bl.getSource()))
-	    rslt.add(bl);
+         if (bbls.contains(bl.getTarget()) && bbls.contains(bl.getSource()))
+            rslt.add(bl);
        }
     }
 
@@ -778,11 +778,11 @@ void setFocusBubble(BudaBubble bb,boolean fg)
 
    synchronized (active_bubbles) {
       for (BudaBubble bbl : active_bubbles) {
-	 String key = bbl.getContentKey();
-	 if (bbl == obb || bbl == bb ||
-		(key != null && (key.equals(okey) || key.equals(nkey)))) {
-	    bbl.repaint();
-	  }
+         String key = bbl.getContentKey();
+         if (bbl == obb || bbl == bb ||
+                (key != null && (key.equals(okey) || key.equals(nkey)))) {
+            bbl.repaint();
+          }
        }
     }
 
@@ -807,13 +807,13 @@ private void focusLinks(BudaBubble bb,boolean fg)
 {
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (bl.getTarget() == bb) {
-	    if (bl.getHasFocus() != fg) {
-	       bl.setHasFocus(fg);
-	       repaint();
-	       focusLinks(bl.getSource(),fg);
-	     }
-	  }
+         if (bl.getTarget() == bb) {
+            if (bl.getHasFocus() != fg) {
+               bl.setHasFocus(fg);
+               repaint();
+               focusLinks(bl.getSource(),fg);
+             }
+          }
        }
     }
 }
@@ -829,13 +829,13 @@ String getFocusKey()
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Set a property associated with this bubble area.
+ *      Set a property associated with this bubble area.
  **/
 
 public void setProperty(String prop,Object v)
@@ -847,7 +847,7 @@ public void setProperty(String prop,Object v)
 
 
 /**
- *	Retrieve a property associated with the bubble area.
+ *      Retrieve a property associated with the bubble area.
  **/
 
 public Object getProperty(String prop)
@@ -856,8 +856,8 @@ public Object getProperty(String prop)
    for (BudaWorkingSetImpl wsi : working_sets) {
       Rectangle r1 = wsi.getRegion();
       if (r.intersects(r1)) {
-	 Object v = wsi.getProperty(prop);
-	 if (v != null) return v;
+         Object v = wsi.getProperty(prop);
+         if (v != null) return v;
        }
     }
 
@@ -867,9 +867,9 @@ public Object getProperty(String prop)
 
 
 /********************************************************************************/
-/*										*/
-/*	Working set methods							*/
-/*										*/
+/*                                                                              */
+/*      Working set methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaWorkingSet createWorkingSet(String lbl,Rectangle rgn,WorkingSetGrowth g,Color c)
@@ -901,15 +901,15 @@ BudaWorkingSetImpl defineWorkingSet(String lbl,Rectangle rgn,WorkingSetGrowth g)
       boolean chng = true;
       int copy = 2;
       while (chng) {
-	 chng = false;
-	 for (BudaWorkingSetImpl ows : working_sets) {
-	    if (lbl.equals(ows.getLabel())) {
-	       lbl = olbl + " (" + copy + ")";
-	       ++copy;
-	       chng = true;
-	       break;
-	     }
-	  }
+         chng = false;
+         for (BudaWorkingSetImpl ows : working_sets) {
+            if (lbl.equals(ows.getLabel())) {
+               lbl = olbl + " (" + copy + ")";
+               ++copy;
+               chng = true;
+               break;
+             }
+          }
        }
     }
 
@@ -932,11 +932,11 @@ void removeWorkingSet(BudaWorkingSetImpl ws)
 {
    if (working_sets.remove(ws)) {
       for (BudaBubble bbl : active_bubbles) {
-	 bbl.clearWorkingSet(ws);
+         bbl.clearWorkingSet(ws);
        }
       for (Iterator<BudaWorkingSet> it = working_set_bubbles.values().iterator(); it.hasNext(); ) {
-	 BudaWorkingSet bws = it.next();
-	 if (bws == ws) it.remove();
+         BudaWorkingSet bws = it.next();
+         if (bws == ws) it.remove();
        }
       for_root.noteWorkingSetRemoved(ws);
       ws.setGrowth(WorkingSetGrowth.NONE);
@@ -998,9 +998,9 @@ Collection<BudaWorkingSetImpl> getWorkingSets()
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble movement handling						*/
-/*										*/
+/*                                                                              */
+/*      Bubble movement handling                                                */
+/*                                                                              */
 /********************************************************************************/
 
 public void moveBubble(BudaBubble bb,Point loc,boolean fg)
@@ -1036,7 +1036,7 @@ public BudaBubbleGroup getBubbleGroup(BudaBubble bb)
 
    synchronized (bubble_groups) {
       for (BudaBubbleGroup bg : bubble_groups) {
-	 if (bg.getBubbles().contains(bb)) return bg;
+         if (bg.getBubbles().contains(bb)) return bg;
        }
     }
 
@@ -1059,9 +1059,9 @@ void fixupBubbleGroup(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle expanding the bubble area					*/
-/*										*/
+/*                                                                              */
+/*      Handle expanding the bubble area                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void checkAreaDimensions()
@@ -1098,17 +1098,17 @@ void checkAreaDimensions()
 
    if (deltax > 0 || deltay > 0) {
       for (Component c : cnts) {
-	 if (c instanceof BudaBubble) {
-	    BudaBubble bb = (BudaBubble) c;
-	    if (bb.isFloating()) continue;
-	  }
-	 r = c.getBounds(r);
-	 r.x += deltax;
-	 r.y += deltay;
-	 c.setBounds(r);
+         if (c instanceof BudaBubble) {
+            BudaBubble bb = (BudaBubble) c;
+            if (bb.isFloating()) continue;
+          }
+         r = c.getBounds(r);
+         r.x += deltax;
+         r.y += deltay;
+         c.setBounds(r);
        }
       if (!auto_scroller.isRunning())
-	 for_root.moveCurrentViewport(deltax,deltay);
+         for_root.moveCurrentViewport(deltax,deltay);
     }
 
    if (maxx > osz.width || maxy > osz.height) {
@@ -1129,16 +1129,16 @@ void expandArea(int base,int width,int left,int right)
    Dimension osz = getSize();
    for (Component c : cnts) {
       if (c instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) c;
-	 if (bb.isFloating()) continue;
+         BudaBubble bb = (BudaBubble) c;
+         if (bb.isFloating()) continue;
        }
       r = c.getBounds(r);
       int delta = 0;
       if (r.x + r.width >= base-left) {
-	 delta += left;
+         delta += left;
        }
       if (r.x >= base + width) {
-	 delta += right;
+         delta += right;
        }
       r.x += delta;
       c.setBounds(r);
@@ -1151,9 +1151,9 @@ void expandArea(int base,int width,int left,int right)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle collapsing links 						*/
-/*										*/
+/*                                                                              */
+/*      Handle collapsing links                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void collapseLinks(Collection<BudaBubbleLink> lnks0)
@@ -1173,10 +1173,10 @@ void collapseLinks(Collection<BudaBubbleLink> lnks0)
       Rectangle r2 = BudaRoot.findBudaLocation(tb);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(sb);
       if (r1 != null && r2 != null && bba != null) {
-	 int x = r1.x + r1.width + BUBBLE_CREATION_NEAR_SPACE;
-	 int y = ps.y - pt.y + r2.y;
-	 bba.moveBubble(tb,new Point(x,y),true);
-	 done.put(tb,new Rectangle(x,y,r2.width,r2.height));
+         int x = r1.x + r1.width + BUBBLE_CREATION_NEAR_SPACE;
+         int y = ps.y - pt.y + r2.y;
+         bba.moveBubble(tb,new Point(x,y),true);
+         done.put(tb,new Rectangle(x,y,r2.width,r2.height));
        }
     }
 }
@@ -1208,18 +1208,18 @@ private static final class LinkComparator implements Comparator<BudaBubbleLink> 
       return 0;
     }
 
-}	// end of inner class LinkComparator
+}       // end of inner class LinkComparator
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Scaling methods 							*/
-/*										*/
+/*                                                                              */
+/*      Scaling methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-public double getScaleFactor()	{ return scale_factor; }
+public double getScaleFactor()  { return scale_factor; }
 
 
 void setScaleFactor(double sf)
@@ -1343,16 +1343,16 @@ private class BubbleScaler implements BudaBubbleScaler {
       return cur_viewport.getCenterY() + y1;
     }
 
-}	// end of inner class BubbleScaler
+}       // end of inner class BubbleScaler
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Color methods								*/
-/*										*/
+/*                                                                              */
+/*      Color methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void setColors(String top,String bottom)
@@ -1365,27 +1365,27 @@ void setColors(String top,String bottom)
 
 
 /********************************************************************************/
-/*										*/
-/*	Channel set methods							*/
-/*										*/
+/*                                                                              */
+/*      Channel set methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
-public boolean isPrimaryArea()			{ return channel_set == null; }
+public boolean isPrimaryArea()                  { return channel_set == null; }
 
 
-public BudaChannelSet getChannelSet()			{ return channel_set; }
+public BudaChannelSet getChannelSet()                   { return channel_set; }
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Region methods								*/
-/*										*/
+/*                                                                              */
+/*      Region methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Compute screen region including given window (or what is displayed)
+ *      Compute screen region including given window (or what is displayed)
  **/
 
 public Rectangle computeRegion(Component base)
@@ -1409,10 +1409,10 @@ public Rectangle computeRegion(Rectangle rloc)
    if (isPrimaryArea()) {
       // check if we are inside a working set and use it if so
       for (BudaConstants.BudaWorkingSet ws : for_root.getWorkingSets()) {
-	 Rectangle r = ws.getRegion();
-	 if (r != null && r.intersects(rloc)) {
-	    return new Rectangle(r);
-	  }
+         Rectangle r = ws.getRegion();
+         if (r != null && r.intersects(rloc)) {
+            return new Rectangle(r);
+          }
        }
     }
 
@@ -1422,19 +1422,19 @@ public Rectangle computeRegion(Rectangle rloc)
    while (chng) {
       chng = false;
       for (BudaBubble bb : getBubbles()) {
-	 Rectangle bloc = BudaRoot.findBudaLocation(bb);
-	 if (bloc != null && bloc.x <= right && bloc.x + bloc.width >= left) {
-	    int l0 = Math.max(0,bloc.x - space);
-	    int r0 = bloc.x + bloc.width + space;
-	    if (l0 < left) {
-	       left = l0;
-	       chng = true;
-	    }
-	    if (r0 > right) {
-	       right = r0;
-	       chng = true;
-	    }
-	 }
+         Rectangle bloc = BudaRoot.findBudaLocation(bb);
+         if (bloc != null && bloc.x <= right && bloc.x + bloc.width >= left) {
+            int l0 = Math.max(0,bloc.x - space);
+            int r0 = bloc.x + bloc.width + space;
+            if (l0 < left) {
+               left = l0;
+               chng = true;
+            }
+            if (r0 > right) {
+               right = r0;
+               chng = true;
+            }
+         }
       }
    }
 
@@ -1457,9 +1457,9 @@ public int getRegionSpace()
 
 
 /********************************************************************************/
-/*										*/
-/*	Help methods								*/
-/*										*/
+/*                                                                              */
+/*      Help methods                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String getHelpLabel(MouseEvent e)
@@ -1473,7 +1473,7 @@ public int getRegionSpace()
 
    if (mr.getBubble() != null) {
       if (mr.getRegion().isBorder()) {
-	 return "bubbleborder";
+         return "bubbleborder";
        }
       return "bubblecontent";
     }
@@ -1505,9 +1505,9 @@ public BudaHelpRegion getHelpRegion(Point pt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void print(Graphics g)
@@ -1523,13 +1523,13 @@ public BudaHelpRegion getHelpRegion(Point pt)
    if (first_time) {
       first_time = false;
       synchronized (active_bubbles) {
-	 for (Component c : getComponents()) {
-	    if (c instanceof BudaBubble) {
-	       BudaBubble bb = (BudaBubble) c;
-	       bb.setScaleFactor(scale_factor);
-	       active_bubbles.add(bb);
-	     }
-	  }
+         for (Component c : getComponents()) {
+            if (c instanceof BudaBubble) {
+               BudaBubble bb = (BudaBubble) c;
+               bb.setScaleFactor(scale_factor);
+               active_bubbles.add(bb);
+             }
+          }
        }
     }
 
@@ -1561,15 +1561,15 @@ public BudaHelpRegion getHelpRegion(Point pt)
    for (BudaWorkingSetImpl ws : working_sets) {
       Rectangle wr = ws.getRegion();
       Paint ps = new GradientPaint(wr.x,wr.y,ws.getTopColor(),
-				      wr.x+wr.width,wr.y+wr.height,ws.getBottomColor());
+                                      wr.x+wr.width,wr.y+wr.height,ws.getBottomColor());
       g2.setPaint(ps);
       g2.fill(wr);
     }
 
    synchronized (bubble_groups) {
       for (BudaBubbleGroup bg : bubble_groups) {
-	 g2 = (Graphics2D) g0.create();
-	 bg.drawGroup(g2,false);
+         g2 = (Graphics2D) g0.create();
+         bg.drawGroup(g2,false);
        }
     }
 
@@ -1581,16 +1581,16 @@ public BudaHelpRegion getHelpRegion(Point pt)
 
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (!bl.getHasFocus()) {
-	    g2 = (Graphics2D) g0.create();
-	    bl.drawLink(g2,false);
-	  }
+         if (!bl.getHasFocus()) {
+            g2 = (Graphics2D) g0.create();
+            bl.drawLink(g2,false);
+          }
        }
       for (BudaBubbleLink bl : bubble_links) {
-	 if (bl.getHasFocus()) {
-	    g2 = (Graphics2D) g0.create();
-	    bl.drawLink(g2,false);
-	  }
+         if (bl.getHasFocus()) {
+            g2 = (Graphics2D) g0.create();
+            bl.drawLink(g2,false);
+          }
        }
     }
 }
@@ -1602,36 +1602,36 @@ void paintOverview(Graphics2D g)
    for (BudaWorkingSetImpl ws : working_sets) {
       Rectangle wr = ws.getRegion();
       Paint ps = new GradientPaint(wr.x,wr.y,ws.getTopColor(),
-				      wr.x+wr.width,wr.y+wr.height,ws.getBottomColor());
+                                      wr.x+wr.width,wr.y+wr.height,ws.getBottomColor());
       g.setPaint(ps);
       g.fill(wr);
       if (ws.isBeingChanged()) {
-	 g.setColor(ws.getBorderColor());
-	 g.draw(wr);
+         g.setColor(ws.getBorderColor());
+         g.draw(wr);
        }
     }
 
    synchronized (bubble_groups) {
       for (BudaBubbleGroup bg : bubble_groups) {
-	 bg.drawGroup(g,true);
+         bg.drawGroup(g,true);
        }
     }
 
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (!bl.getHasFocus()) bl.drawLink(g,true);
+         if (!bl.getHasFocus()) bl.drawLink(g,true);
        }
       for (BudaBubbleLink bl : bubble_links) {
-	 if (bl.getHasFocus()) bl.drawLink(g,true);
+         if (bl.getHasFocus()) bl.drawLink(g,true);
        }
     }
 
    synchronized (active_bubbles) {
       for (BudaBubble bb : active_bubbles) {
-	 Graphics2D g1 = (Graphics2D) g.create();
-	 Point loc = bb.getLocation();
-	 g1.translate(loc.x,loc.y);
-	 bb.paintOverview(g1);
+         Graphics2D g1 = (Graphics2D) g.create();
+         Point loc = bb.getLocation();
+         g1.translate(loc.x,loc.y);
+         bb.paintOverview(g1);
        }
     }
 }
@@ -1665,9 +1665,9 @@ void paintOverview(Graphics2D g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action requests 							*/
-/*										*/
+/*                                                                              */
+/*      Action requests                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 boolean handleQuitRequest()
@@ -1718,9 +1718,9 @@ public Point getCurrentMouse()
 
 
 /********************************************************************************/
-/*										*/
-/*	Callback registration methods						*/
-/*										*/
+/*                                                                              */
+/*      Callback registration methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public void addBubbleAreaCallback(BubbleAreaCallback cb)
@@ -1738,9 +1738,9 @@ public void removeBubbleAreaCallback(BubbleAreaCallback cb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Configuration methods							*/
-/*										*/
+/*                                                                              */
+/*      Configuration methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 void configure(Element xml,Rectangle delta)
@@ -1758,19 +1758,19 @@ void configure(Element xml,Rectangle delta)
       // The groups should be automatically configured by distance at this point
       BudaBubbleGroup grp = null;
       for (Element ebbl : IvyXml.children(egrp,"BUBBLE")) {
-	 String id = IvyXml.getAttrString(ebbl,"ID");
-	 BudaBubble bbl = bubblemap.get(id);
-	 if (bbl != null) {
-	    grp = bbl.getGroup();
-	    if (grp != null) break;
-	  }
+         String id = IvyXml.getAttrString(ebbl,"ID");
+         BudaBubble bbl = bubblemap.get(id);
+         if (bbl != null) {
+            grp = bbl.getGroup();
+            if (grp != null) break;
+          }
        }
       if (grp != null) {
-	 Color lc = IvyXml.getAttrColor(egrp,"LEFTCOLOR");
-	 Color rc = IvyXml.getAttrColor(egrp,"RIGHTCOLOR");
-	 grp.setColor(lc,rc);
-	 String ttl = IvyXml.getTextElement(egrp,"TITLE");
-	 grp.setTitle(ttl);
+         Color lc = IvyXml.getAttrColor(egrp,"LEFTCOLOR");
+         Color rc = IvyXml.getAttrColor(egrp,"RIGHTCOLOR");
+         grp.setColor(lc,rc);
+         String ttl = IvyXml.getTextElement(egrp,"TITLE");
+         grp.setTitle(ttl);
        }
     }
 
@@ -1783,16 +1783,16 @@ void configure(Element xml,Rectangle delta)
       BudaBubble fbbl = bubblemap.get(IvyXml.getAttrString(flnk,"ID"));
       BudaBubble tbbl = bubblemap.get(IvyXml.getAttrString(tlnk,"ID"));
       if (fbbl != null && tbbl != null) {
-	 LinkPort fprt = for_root.createPort(fbbl,IvyXml.getChild(flnk,"PORT"));
-	 LinkPort tprt = for_root.createPort(tbbl,IvyXml.getChild(tlnk,"PORT"));
-	 if (fprt != null && tprt != null) {
-	    BudaBubbleLink blnk = new BudaBubbleLink(fbbl,fprt,tbbl,tprt,rect,sty);
-	    for_root.addLink(blnk);
-	  }
-	 else {
-	    if (fprt != null) fprt.noteRemoved();
-	    if (tprt != null) tprt.noteRemoved();
-	  }
+         LinkPort fprt = for_root.createPort(fbbl,IvyXml.getChild(flnk,"PORT"));
+         LinkPort tprt = for_root.createPort(tbbl,IvyXml.getChild(tlnk,"PORT"));
+         if (fprt != null && tprt != null) {
+            BudaBubbleLink blnk = new BudaBubbleLink(fbbl,fprt,tbbl,tprt,rect,sty);
+            for_root.addLink(blnk);
+          }
+         else {
+            if (fprt != null) fprt.noteRemoved();
+            if (tprt != null) tprt.noteRemoved();
+          }
        }
     }
 
@@ -1804,13 +1804,13 @@ void configure(Element xml,Rectangle delta)
       Element rgn = IvyXml.getChild(wset,"REGION");
       WorkingSetGrowth g = IvyXml.getAttrEnum(wset,"GROWTH",WorkingSetGrowth.NONE);
       Rectangle r = new Rectangle((int) IvyXml.getAttrDouble(rgn,"X",0),
-				     (int) IvyXml.getAttrDouble(rgn,"Y",0),
-				     (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),
-				     (int) IvyXml.getAttrDouble(rgn,"HEIGHT",0));
+                                     (int) IvyXml.getAttrDouble(rgn,"Y",0),
+                                     (int) IvyXml.getAttrDouble(rgn,"WIDTH",0),
+                                     (int) IvyXml.getAttrDouble(rgn,"HEIGHT",0));
       BudaWorkingSetImpl ws = defineWorkingSet(lbl,r,g);
       if (ws != null) {
-	 ws.setColor(c);
-	 if (ctime > 0) ws.setCreateTime(ctime);
+         ws.setColor(c);
+         if (ctime > 0) ws.setCreateTime(ctime);
        }
     }
    
@@ -1821,9 +1821,9 @@ void configure(Element xml,Rectangle delta)
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(BudaXmlWriter xw)
@@ -1832,11 +1832,11 @@ void outputXml(BudaXmlWriter xw)
    int maxy = 0;
    for (BudaBubble bb : getBubbles()) {
       if (!bb.isTransient()) {
-	 Rectangle r = BudaRoot.findBudaLocation(bb);
-	 if (r != null) {
-	    if (r.x + r.width > maxx) maxx = r.x + r.width;
-	    if (r.y + r.height > maxy) maxy = r.y + r.height;
-	  }
+         Rectangle r = BudaRoot.findBudaLocation(bb);
+         if (r != null) {
+            if (r.x + r.width > maxx) maxx = r.x + r.width;
+            if (r.y + r.height > maxy) maxy = r.y + r.height;
+          }
        }
     }
 
@@ -1851,7 +1851,7 @@ void outputXml(BudaXmlWriter xw)
    xw.begin("BUBBLES");
    for (BudaBubble bb : getBubbles()) {
       if (!bb.isTransient() && checkOutput(bb.getBounds())) {
-	 bb.outputBubbleXml(xw,bbs);
+         bb.outputBubbleXml(xw,bbs);
        }
     }
    xw.end("BUBBLES");
@@ -1859,10 +1859,10 @@ void outputXml(BudaXmlWriter xw)
    xw.begin("GROUPS");
    synchronized (bubble_groups) {
       for (BudaBubbleGroup bg : bubble_groups) {
-	 Shape s = bg.getShape();
-	 if (s != null && checkOutput(s)) {
-	    bg.outputXml(xw);
-	  }
+         Shape s = bg.getShape();
+         if (s != null && checkOutput(s)) {
+            bg.outputXml(xw);
+          }
        }
     }
    xw.end("GROUPS");
@@ -1870,10 +1870,10 @@ void outputXml(BudaXmlWriter xw)
    xw.begin("LINKS");
    synchronized (bubble_links) {
       for (BudaBubbleLink bl : bubble_links) {
-	 if (checkOutput(bl.getSource().getBounds()) &&
-	       checkOutput(bl.getTarget().getBounds())) {
-	    bl.outputXml(xw);
-	  }
+         if (checkOutput(bl.getSource().getBounds()) &&
+               checkOutput(bl.getTarget().getBounds())) {
+            bl.outputXml(xw);
+          }
        }
     }
    xw.end("LINKS");
@@ -1895,8 +1895,8 @@ private boolean checkOutput(Shape r)
 
    for (BudaWorkingSetImpl ws : working_sets) {
       if (ws.isSticky()) {
-	 Rectangle r1 = ws.getRegion();
-	 if (r.contains(r1)) return false;
+         Rectangle r1 = ws.getRegion();
+         if (r.contains(r1)) return false;
        }
     }
    return true;
@@ -1906,9 +1906,9 @@ private boolean checkOutput(Shape r)
 
 
 /********************************************************************************/
-/*										*/
-/*	Viewport handling							*/
-/*										*/
+/*                                                                              */
+/*      Viewport handling                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void setViewPosition(Rectangle r)
@@ -1983,7 +1983,7 @@ void viewportMoved()
 }
 
 /**
- *	Ensure the given bubble is visible by scrolling appropriately
+ *      Ensure the given bubble is visible by scrolling appropriately
  **/
 
 public void scrollBubbleVisible(BudaBubble bb)
@@ -1996,17 +1996,17 @@ public void scrollBubbleVisible(BudaBubble bb)
    // adjust visible region to account for docked bubbles
    for (BudaBubble dbb : docked_bubbles.keySet()) {
       if (dbb.isFloating() && dbb.isShowing()) {
-	 Rectangle dr = dbb.getBounds();
-	 if (Math.abs(dr.y - rview.y) < 10 &&
-		Math.abs(dr.height - rview.height) < 10) {
-	    if (Math.abs(dr.x - rview.x) < 10) {
-	       rview.x += dr.width;
-	       rview.width -= dr.width;
-	     }
-	    else if (Math.abs(dr.x + dr.width - rview.x - rview.width) < 10) {
-	       rview.width -= dr.width;
-	     }
-	  }
+         Rectangle dr = dbb.getBounds();
+         if (Math.abs(dr.y - rview.y) < 10 &&
+                Math.abs(dr.height - rview.height) < 10) {
+            if (Math.abs(dr.x - rview.x) < 10) {
+               rview.x += dr.width;
+               rview.width -= dr.width;
+             }
+            else if (Math.abs(dr.x + dr.width - rview.x - rview.width) < 10) {
+               rview.width -= dr.width;
+             }
+          }
        }
     }
 
@@ -2052,11 +2052,11 @@ private Point setFloatingLocation(BudaBubble bb)
       Rectangle r1 = ws.getRegion();
       Rectangle r2 = getViewport();
       if (r1.intersects(r2)) {
-	 Point px = SwingUtilities.convertPoint(for_root,bb.getFixedWorkingSetPosition(),this);
-	 if (r1.contains(px)) {
-	    floating_bubbles.put(bb,px);
-	    p = px;
-	  }
+         Point px = SwingUtilities.convertPoint(for_root,bb.getFixedWorkingSetPosition(),this);
+         if (r1.contains(px)) {
+            floating_bubbles.put(bb,px);
+            p = px;
+          }
        }
     }
 
@@ -2070,12 +2070,12 @@ private Point setFloatingLocation(BudaBubble bb)
       Rectangle r1 = ws.getRegion();
       Rectangle r2 = getViewport();
       if (!r1.intersects(r2)) {
-	 floating_bubbles.remove(bb);
-	 docked_bubbles.remove(bb);
-	 Point p2 = bb.getFixedWorkingSetPosition();
-	 if (p2 == null) return null;
-	 Point p3 = SwingUtilities.convertPoint(for_root,p2,this);
-	 return p3;
+         floating_bubbles.remove(bb);
+         docked_bubbles.remove(bb);
+         Point p2 = bb.getFixedWorkingSetPosition();
+         if (p2 == null) return null;
+         Point p3 = SwingUtilities.convertPoint(for_root,p2,this);
+         return p3;
        }
     }
 
@@ -2154,7 +2154,7 @@ private class ScrollAnimator extends javax.swing.Timer implements ActionListener
        }
     }
 
-}	// end of inner class ScrollAnimator
+}       // end of inner class ScrollAnimator
 
 
 
@@ -2163,9 +2163,9 @@ private class ScrollAnimator extends javax.swing.Timer implements ActionListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Dock Handling methods  (written by Ian Strickman)			*/
-/*										*/
+/*                                                                              */
+/*      Dock Handling methods  (written by Ian Strickman)                       */
+/*                                                                              */
 /********************************************************************************/
 
 private Point setDockedLocation(BudaBubble bb)
@@ -2180,12 +2180,12 @@ private Point setDockedLocation(BudaBubble bb)
    if (r1 == null) {
       if (SwingUtilities.isEventDispatchThread()) return null;
       for (int i = 0; i < 210; ++i) {
-	 r1 = for_root.getShadedViewport();
-	 if (r1 != null) break;
-	 try {
-	    Thread.sleep(10);
-	  }
-	 catch (InterruptedException e) { }
+         r1 = for_root.getShadedViewport();
+         if (r1 != null) break;
+         try {
+            Thread.sleep(10);
+          }
+         catch (InterruptedException e) { }
        }
       if (r1 == null) return null;
     }
@@ -2194,36 +2194,36 @@ private Point setDockedLocation(BudaBubble bb)
    for (int i = 0; i < bbd.length; i++) {
       BudaBubbleDock bbdi = bbd[i];
       if (bbdi == BudaBubbleDock.EAST) {
-	 if (havehadhoriz) {
-	    bb.setSize(cur_viewport.width, bb.getHeight());
-	    bb.setLocation(new Point(cur_viewport.x,p.y));
+         if (havehadhoriz) {
+            bb.setSize(cur_viewport.width, bb.getHeight());
+            bb.setLocation(new Point(cur_viewport.x,p.y));
             sized = true;
-	  }
-	 else bb.setLocation(
+          }
+         else bb.setLocation(
                new Point(cur_viewport.x + cur_viewport.width - bb.getWidth(),p.y));
-	 havehadhoriz = true;
+         havehadhoriz = true;
        }
       else if (bbdi == BudaBubbleDock.WEST) {
-	 if (havehadhoriz) bb.setSize(cur_viewport.width, bb.getHeight());
-	 bb.setLocation(new Point(cur_viewport.x,p.y));
-	 havehadhoriz = true;
+         if (havehadhoriz) bb.setSize(cur_viewport.width, bb.getHeight());
+         bb.setLocation(new Point(cur_viewport.x,p.y));
+         havehadhoriz = true;
        }
       else if (bbdi == BudaBubbleDock.NORTH) {
-	 // need to handle window shade here
-	 if (havehadvert) bb.setSize(bb.getWidth(), r1.height);
-	 bb.setLocation(new Point(p.x,r1.y));
-	 havehadvert = true;
+         // need to handle window shade here
+         if (havehadvert) bb.setSize(bb.getWidth(), r1.height);
+         bb.setLocation(new Point(p.x,r1.y));
+         havehadvert = true;
        }
       else if (bbdi == BudaBubbleDock.SOUTH) {
-	 if (r1 != null) {
-	    if (havehadvert) {
-	       bb.setSize(bb.getWidth(), r1.height);
-	       bb.setLocation(new Point(p.x,r1.y));
+         if (r1 != null) {
+            if (havehadvert) {
+               bb.setSize(bb.getWidth(), r1.height);
+               bb.setLocation(new Point(p.x,r1.y));
                sized = true;
-	     }
-	    else bb.setLocation(new Point(p.x,r1.y + r1.height - bb.getHeight()));
-	    havehadvert = true;
-	  }
+             }
+            else bb.setLocation(new Point(p.x,r1.y + r1.height - bb.getHeight()));
+            havehadvert = true;
+          }
        }
       p = bb.getLocation();
     }
@@ -2242,15 +2242,15 @@ private Point setDockedLocation(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Floating bubble management						*/
-/*										*/
+/*                                                                              */
+/*      Floating bubble management                                              */
+/*                                                                              */
 /********************************************************************************/
 
 // written by Ian Strickman
 /**
- *	Make the given bubble float or not.  This should be used instead of
- *	BudaBubble.setFloating()
+ *      Make the given bubble float or not.  This should be used instead of
+ *      BudaBubble.setFloating()
  **/
 
 public boolean setBubbleFloating(BudaBubble bb, boolean fg)
@@ -2285,17 +2285,17 @@ public boolean setBubbleFloating(BudaBubble bb, boolean fg)
       setupDockedBubble(bb);
       setLayer(bb,MODAL_LAYER);
       if (bbg != null) {
-	 bbg.removeBubble(bb);
-	 checkGroup(bbg);
+         bbg.removeBubble(bb);
+         checkGroup(bbg);
        }
       synchronized (bubble_links) {
-	 for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
-	    BudaBubbleLink bl = it.next();
-	    if (bl.usesBubble(bb)) {
-	       it.remove();
-	       bl.noteRemoved();
-	     }
-	  }
+         for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
+            BudaBubbleLink bl = it.next();
+            if (bl.usesBubble(bb)) {
+               it.remove();
+               bl.noteRemoved();
+             }
+          }
        }
     }
 
@@ -2308,9 +2308,9 @@ public boolean setBubbleFloating(BudaBubble bb, boolean fg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Group management methods						*/
-/*										*/
+/*                                                                              */
+/*      Group management methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private void addBubbleGroup(BudaBubbleGroup bg)
@@ -2319,8 +2319,8 @@ private void addBubbleGroup(BudaBubbleGroup bg)
       bubble_groups.add(bg);
       JComponent c = bg.getTitleComponent();
       if (c != null) {
-	 if (c.getParent() == this) c.setVisible(true);
-	 else add(c);
+         if (c.getParent() == this) c.setVisible(true);
+         else add(c);
        }
     }
 }
@@ -2374,10 +2374,10 @@ private void removeBubbleGroup(BudaBubbleGroup bg)
    synchronized (bubble_groups) {
       JComponent c = bg.getTitleComponent();
       if (c != null) {
-	 c.setVisible(false);
-	 JComponent dmy = new JPanel();
-	 dmy.add(c);
-	 // c.setParent(null);
+         c.setVisible(false);
+         JComponent dmy = new JPanel();
+         dmy.add(c);
+         // c.setParent(null);
        }
 
       bubble_groups.remove(bg);
@@ -2423,12 +2423,12 @@ boolean isMoving(BudaBubble bb)
 
 
 /********************************************************************************/
-/*										*/
-/*	Fix up the group after given bubble has moved.				*/
-/*										*/
-/*	This method handles splitting the group if needed, adding the bubble	*/
-/*	to a new group, and merging groups					*/
-/*										*/
+/*                                                                              */
+/*      Fix up the group after given bubble has moved.                          */
+/*                                                                              */
+/*      This method handles splitting the group if needed, adding the bubble    */
+/*      to a new group, and merging groups                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void fixupGroups(BudaBubble bb)
@@ -2438,29 +2438,29 @@ void fixupGroups(BudaBubble bb)
 
       boolean changed = true;
       while (changed) {
-	 changed = false;
-	 BudaBubbleGroup bg = bb.getGroup();
-	 // First check for splitting the current group
-	 if (bg != null && bg.isSplit()) {
-	    checkGroup(bg);
-	    bg = bb.getGroup();
-	  }
+         changed = false;
+         BudaBubbleGroup bg = bb.getGroup();
+         // First check for splitting the current group
+         if (bg != null && bg.isSplit()) {
+            checkGroup(bg);
+            bg = bb.getGroup();
+          }
 
-	 // Next create a new group for the bubble if needed
-	 if (bg == null) {
-	    bg = new BudaBubbleGroup();
-	    bb.setGroup(bg);
-	    addBubbleGroup(bg);
-	  }
+         // Next create a new group for the bubble if needed
+         if (bg == null) {
+            bg = new BudaBubbleGroup();
+            bb.setGroup(bg);
+            addBubbleGroup(bg);
+          }
 
-	 // Finally see if we need to merge this group with any other
-	 for (BudaBubbleGroup nbg : bubble_groups) {
-	    if (nbg.shouldMerge(bg)) {
-	       mergeGroups(nbg,bg);
-	       changed = true;
-	       break;
-	     }
-	  }
+         // Finally see if we need to merge this group with any other
+         for (BudaBubbleGroup nbg : bubble_groups) {
+            if (nbg.shouldMerge(bg)) {
+               mergeGroups(nbg,bg);
+               changed = true;
+               break;
+             }
+          }
        }
     }
 
@@ -2508,7 +2508,7 @@ private boolean checkGroup(BudaBubbleGroup g)
    // next add each bubble in turn to a group
    // For each unused bubble, create a new group
    // Then expand that group by adding all other bubbles that fit in it.  This is
-   //	done over and over as things are added
+   //   done over and over as things are added
 
    SortedSet<BudaBubbleGroup> grps = new TreeSet<>();
    while (!bbls.isEmpty()) {
@@ -2518,15 +2518,15 @@ private boolean checkGroup(BudaBubbleGroup g)
       bb.setGroup(g0);
       boolean chng = true;
       while (chng) {
-	 chng = false;
-	 for (BudaBubble nbb : bbls) {
-	    if (g0.shouldAdd(nbb)) {
-	       nbb.setGroup(g0);
-	       bbls.remove(nbb);
-	       chng = true;
-	       break;
-	     }
-	  }
+         chng = false;
+         for (BudaBubble nbb : bbls) {
+            if (g0.shouldAdd(nbb)) {
+               nbb.setGroup(g0);
+               bbls.remove(nbb);
+               chng = true;
+               break;
+             }
+          }
        }
       grps.add(g0);
     }
@@ -2536,7 +2536,7 @@ private boolean checkGroup(BudaBubbleGroup g)
    grps.remove(lst);
    for (BudaBubble bb : lst.getBubbles()) {
       if (bb.isVisible()) {
-	 bb.setGroup(g);
+         bb.setGroup(g);
        }
     }
 
@@ -2550,21 +2550,21 @@ private boolean checkGroup(BudaBubbleGroup g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling entry points						*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling entry points                                             */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	These are public to enable the mouse event queue handler to send events
- *	from the middle/right buttons to this area rather than to components
+ *      These are public to enable the mouse event queue handler to send events
+ *      from the middle/right buttons to this area rather than to components
  **/
 
-@Override public void processMouseMotionEvent(MouseEvent e)	
+@Override public void processMouseMotionEvent(MouseEvent e)     
 { 
    super.processMouseMotionEvent(e); 
 }
-@Override public void processMouseEvent(MouseEvent e)		
+@Override public void processMouseEvent(MouseEvent e)           
 { 
    super.processMouseEvent(e);
 }
@@ -2573,9 +2573,9 @@ private boolean checkGroup(BudaBubbleGroup g)
 
 
 /********************************************************************************/
-/*										*/
-/*	Mouse handling methods to handle to level events			*/
-/*										*/
+/*                                                                              */
+/*      Mouse handling methods to handle to level events                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleMouseEvent(MouseEvent e)
@@ -2595,43 +2595,43 @@ private void handleMouseEvent(MouseEvent e)
           }
        }
       else if (mr.getGroup() != null) {
-	 if (e.getClickCount() == 1) {
+         if (e.getClickCount() == 1) {
             // do nothing
-	  }
-	 else if (e.getClickCount() == 2) {
-	    userRemoveGroup(mr.getGroup());
-	  }
+          }
+         else if (e.getClickCount() == 2) {
+            userRemoveGroup(mr.getGroup());
+          }
        }
       else if (mr.getLink() != null) {
-	 removeLink(mr.getLink());
+         removeLink(mr.getLink());
        }
     }
    else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON1) {
       if (pr != null && mr.getBubble() != null && pr.getRegion() != mr.getRegion() && pr.getBubble() != null) {
-	 int deltax = Math.abs(pr.getLocation().x - mr.getLocation().x);
-	 int deltay = Math.abs(pr.getLocation().y - mr.getLocation().y);
-	 if (deltax <= 1 && deltay <= 1) {
-	    mr = pr;
-	    last_mouse = pr;
-	 }
+         int deltax = Math.abs(pr.getLocation().x - mr.getLocation().x);
+         int deltay = Math.abs(pr.getLocation().y - mr.getLocation().y);
+         if (deltax <= 1 && deltay <= 1) {
+            mr = pr;
+            last_mouse = pr;
+         }
       }
       if (mr.getBubble() == null) {
-	 for_root.hideSearchBubble();
+         for_root.hideSearchBubble();
        }
       if (mr.getBubble() != null && mr.getRegion().isBorder() &&
-		  mr.getBubble().isResizable()) {
-	 mouse_context = new BubbleResizeContext(mr.getBubble(),mr.getRegion(),e);
+                  mr.getBubble().isResizable()) {
+         mouse_context = new BubbleResizeContext(mr.getBubble(),mr.getRegion(),e);
        }
     }
    else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON3 &&
-	       (e.getModifiersEx() & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK)) != 0) {
+               (e.getModifiersEx() & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK)) != 0) {
       if (mr.getBubble() != null) mouse_context = new BubbleConnectContext(mr.getBubble(),e);
     }
    else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON3) {
       if (mr.getBubble() != null) {
-	 BudaBubble bubble = mr.getBubble();
-	 bubble = bubble.getActualBubble(e.getX(),e.getY(), true);
-	 if (!bubble.isFixed() || bubble.isUserPos()) {
+         BudaBubble bubble = mr.getBubble();
+         bubble = bubble.getActualBubble(e.getX(),e.getY(), true);
+         if (!bubble.isFixed() || bubble.isUserPos()) {
             mouse_context = new BubbleMoveContext(bubble,e);
           }
        }
@@ -2640,30 +2640,30 @@ private void handleMouseEvent(MouseEvent e)
     }
    else if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON3) {
       if (mr.getBubble() != null) {
-	 Point point = new Point(e.getX(), e.getY());
-	 Point pt = SwingUtilities.convertPoint(this,e.getPoint(),mr.getBubble());
-	 e.translatePoint(pt.x-e.getX(),pt.y-e.getY());
-	 mr.getBubble().getActualBubble(point.x, point.y, false).handlePopupMenu(e);
+         Point point = new Point(e.getX(), e.getY());
+         Point pt = SwingUtilities.convertPoint(this,e.getPoint(),mr.getBubble());
+         e.translatePoint(pt.x-e.getX(),pt.y-e.getY());
+         mr.getBubble().getActualBubble(point.x, point.y, false).handlePopupMenu(e);
        }
       else if (mr.getLink() != null) {
-	 mr.getLink().handlePopupMenu(e);
+         mr.getLink().handlePopupMenu(e);
        }
       else if (mr.getGroup() != null) {
-	 mr.getGroup().handlePopupMenu(e);
+         mr.getGroup().handlePopupMenu(e);
        }
       else {
-	 int mods = e.getModifiersEx();
-	 boolean mergeforreg = BUDA_PROPERTIES.getBoolean(SEARCH_MERGED_ON_REGULAR);
-	 if ((mods & InputEvent.CTRL_DOWN_MASK) != 0)
-	    for_root.createDocSearchBubble(e.getPoint(),null,null);
-	 else if ((mods & InputEvent.SHIFT_DOWN_MASK) != 0) {
-	    if (!mergeforreg) for_root.createMergedSearchBubble(e.getPoint(),null,null);
-	    else for_root.createSearchBubble(e.getPoint(), null, null);
-	 }
-	 else {
-	    if (!mergeforreg) for_root.createSearchBubble(e.getPoint(),null,null);
-	    else for_root.createMergedSearchBubble(e.getPoint(),null,null);
-	 }
+         int mods = e.getModifiersEx();
+         boolean mergeforreg = BUDA_PROPERTIES.getBoolean(SEARCH_MERGED_ON_REGULAR);
+         if ((mods & InputEvent.CTRL_DOWN_MASK) != 0)
+            for_root.createDocSearchBubble(e.getPoint(),null,null);
+         else if ((mods & InputEvent.SHIFT_DOWN_MASK) != 0) {
+            if (!mergeforreg) for_root.createMergedSearchBubble(e.getPoint(),null,null);
+            else for_root.createSearchBubble(e.getPoint(), null, null);
+         }
+         else {
+            if (!mergeforreg) for_root.createSearchBubble(e.getPoint(),null,null);
+            else for_root.createMergedSearchBubble(e.getPoint(),null,null);
+         }
        }
     }
 }
@@ -2701,32 +2701,32 @@ private void handleMouseMoved(MouseEvent e)
 
    switch (mr.getRegion()) {
       default :
-	 BudaCursorManager.setTemporaryCursor(this, null);
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, null);
+         break;
       case BORDER_N :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+         break;
       case BORDER_NE :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+         break;
       case BORDER_E :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+         break;
       case BORDER_SE :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+         break;
       case BORDER_S :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+         break;
       case BORDER_SW :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+         break;
       case BORDER_W :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+         break;
       case BORDER_NW :
-	 BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
-	 break;
+         BudaCursorManager.setTemporaryCursor(this, Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+         break;
     }
 }
 
@@ -2796,15 +2796,15 @@ private class Mouser extends MouseAdapter {
     }
 
 
-}	// end of inner class Mouser
+}       // end of inner class Mouser
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class to contain information about the current mouse position		*/
-/*										*/
+/*                                                                              */
+/*      Class to contain information about the current mouse position           */
+/*                                                                              */
 /********************************************************************************/
 
 private class MouseRegion implements BudaHelpRegion {
@@ -2839,67 +2839,67 @@ private class MouseRegion implements BudaHelpRegion {
       // First see if the mouse is inside a bubble
 
       synchronized (active_bubbles) {
-	 for (BudaBubble bb : active_bubbles) {
-	    BudaRegion br = bb.correlate(x,y);
-	    if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
-	       maxlayer = JLayeredPane.getLayer(bb);
-	       region_type = br;
-	       in_bubble = bb;
-	     }
-	  }
+         for (BudaBubble bb : active_bubbles) {
+            BudaRegion br = bb.correlate(x,y);
+            if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
+               maxlayer = JLayeredPane.getLayer(bb);
+               region_type = br;
+               in_bubble = bb;
+             }
+          }
        }
 
       // Next see if the mouse is on a link
       if (region_type == BudaRegion.NONE) {
-	 synchronized (bubble_links) {
-	    for (BudaBubbleLink bl : bubble_links) {
-	       BudaRegion br = bl.correlate(x,y);
-	       if (br != BudaRegion.NONE) {
-		  region_type = br;
-		  in_link = bl;
-		  break;
-		}
-	     }
-	  }
+         synchronized (bubble_links) {
+            for (BudaBubbleLink bl : bubble_links) {
+               BudaRegion br = bl.correlate(x,y);
+               if (br != BudaRegion.NONE) {
+                  region_type = br;
+                  in_link = bl;
+                  break;
+                }
+             }
+          }
        }
 
       // If not, check if it is inside a bubble group
       if (region_type == BudaRegion.NONE) {
-	 synchronized (bubble_groups) {
-	    for (BudaBubbleGroup bg : bubble_groups) {
-	       BudaRegion br = bg.correlate(x,y);
-	       if (br != BudaRegion.NONE) {
-		  region_type = br;
-		  in_group = bg;
-		  break;
-		}
-	     }
-	  }
+         synchronized (bubble_groups) {
+            for (BudaBubbleGroup bg : bubble_groups) {
+               BudaRegion br = bg.correlate(x,y);
+               if (br != BudaRegion.NONE) {
+                  region_type = br;
+                  in_group = bg;
+                  break;
+                }
+             }
+          }
        }
    }
 
-   @Override public BudaRegion getRegion()	{ return region_type; }
-   @Override public BudaBubble getBubble()	{ return in_bubble; }
-   @Override public BudaBubbleGroup getGroup()	{ return in_group; }
-   @Override public BudaBubbleLink getLink()	{ return in_link; }
+   @Override public BudaRegion getRegion()      { return region_type; }
+   @Override public BudaBubble getBubble()      { return in_bubble; }
+   @Override public BudaBubbleGroup getGroup()  { return in_group; }
+   @Override public BudaBubbleLink getLink()    { return in_link; }
 
-   Point getLocation()			{ return mouse_loc; }
+   Point getLocation()                  { return mouse_loc; }
 
-}	// end of inner class MouseRegion
+}       // end of inner class MouseRegion
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle move and resize of bubbles				*/
-/*										*/
-/*	Resize and move events are handled by placing a subclass of		*/
-/*	MouseContext into the field mouse_context.  Then drag events and	*/
-/*	the release events are passed to the context using the next()		*/
-/*	method.  finish() is called after release				*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle move and resize of bubbles                            */
+/*                                                                              */
+/*      Resize and move events are handled by placing a subclass of             */
+/*      MouseContext into the field mouse_context.  Then drag events and        */
+/*      the release events are passed to the context using the next()           */
+/*      method.  finish() is called after release                               */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract class MouseContext {
@@ -2919,7 +2919,7 @@ private abstract class MouseContext {
 
    abstract void next(MouseEvent e);
 
-}	// end of inner class MouseContext
+}       // end of inner class MouseContext
 
 
 
@@ -2950,10 +2950,10 @@ private class BubbleMoveContext extends MouseContext {
       if (for_bubble == null) return;
    
       for_bubble.forceFreeze();
-   //	 if (docked_bubbles.containsKey(for_bubble)) {
-   //	    docked_bubbles.remove(for_bubble);
-   //	    for_bubble.setDocked(false);
-   //	  }
+   //    if (docked_bubbles.containsKey(for_bubble)) {
+   //       docked_bubbles.remove(for_bubble);
+   //       for_bubble.setDocked(false);
+   //     }
    
       BudaCursorManager.setGlobalCursorForComponent(for_bubble, palm_cursor);
    
@@ -3024,7 +3024,7 @@ private class BubbleMoveContext extends MouseContext {
     }
 
 
-}	// end of BubbleMoveContext
+}       // end of BubbleMoveContext
 
 
 
@@ -3062,44 +3062,44 @@ private class BubbleResizeContext extends MouseContext {
       int dx = p0.x - initial_mouse.x;
       int dy = p0.y - initial_mouse.y;
       switch (border_region) {
-	 case BORDER_S :
-	 case BORDER_SE :
-	 case BORDER_SW :
-	    new_bounds.height = initial_bounds.height + dy;
-	    if (new_bounds.height < min_height) new_bounds.height = min_height;
-	    break;
-	 case BORDER_N :
-	 case BORDER_NE :
-	 case BORDER_NW :
-	    new_bounds.height = initial_bounds.height - dy;
-	    if (new_bounds.height < min_height) {
-	       new_bounds.height = min_height;
-	       dy = initial_bounds.height - min_height;
-	     }
-	    new_bounds.y = initial_bounds.y + dy;
-	    break;
-	 default:
-	    break;
+         case BORDER_S :
+         case BORDER_SE :
+         case BORDER_SW :
+            new_bounds.height = initial_bounds.height + dy;
+            if (new_bounds.height < min_height) new_bounds.height = min_height;
+            break;
+         case BORDER_N :
+         case BORDER_NE :
+         case BORDER_NW :
+            new_bounds.height = initial_bounds.height - dy;
+            if (new_bounds.height < min_height) {
+               new_bounds.height = min_height;
+               dy = initial_bounds.height - min_height;
+             }
+            new_bounds.y = initial_bounds.y + dy;
+            break;
+         default:
+            break;
        }
       switch (border_region) {
-	 case BORDER_W :
-	 case BORDER_SW :
-	 case BORDER_NW :
-	    new_bounds.width = initial_bounds.width - dx;
-	    if (new_bounds.width < min_width) {
-	       new_bounds.width = min_width;
-	       dx = initial_bounds.width - min_width;
-	     }
-	    new_bounds.x = initial_bounds.x + dx;
-	    break;
-	 case BORDER_E :
-	 case BORDER_SE :
-	 case BORDER_NE :
-	    new_bounds.width = initial_bounds.width + dx;
-	    if (new_bounds.width < min_width) new_bounds.width = min_width;
-	    break;
-	 default:
-	    break;
+         case BORDER_W :
+         case BORDER_SW :
+         case BORDER_NW :
+            new_bounds.width = initial_bounds.width - dx;
+            if (new_bounds.width < min_width) {
+               new_bounds.width = min_width;
+               dx = initial_bounds.width - min_width;
+             }
+            new_bounds.x = initial_bounds.x + dx;
+            break;
+         case BORDER_E :
+         case BORDER_SE :
+         case BORDER_NE :
+            new_bounds.width = initial_bounds.width + dx;
+            if (new_bounds.width < min_width) new_bounds.width = min_width;
+            break;
+         default:
+            break;
        }
       for_bubble.setBounds(new_bounds);
     }
@@ -3124,7 +3124,7 @@ private class BubbleResizeContext extends MouseContext {
        }
     }
 
-}	// end of BubbleResizeContext
+}       // end of BubbleResizeContext
 
 
 
@@ -3163,9 +3163,9 @@ private class GroupMoveContext extends MouseContext {
       if (dx == 0 && dy == 0) return;
 
       // if (scale_factor != 1.0) {
-	  // p0 = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(),
-					// BudaBubbleArea.this);
-	  // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
+          // p0 = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(),
+                                        // BudaBubbleArea.this);
+          // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
        // }
 
       checkMoveViewport(p0);
@@ -3174,10 +3174,10 @@ private class GroupMoveContext extends MouseContext {
 
       mouse_point = p1;
       for (BudaBubble bb : move_bubbles) {
-	 Point p = bb.getLocation();
-	 p.x += dx;
-	 p.y += dy;
-	 bb.setLocation(p);
+         Point p = bb.getLocation();
+         p.x += dx;
+         p.y += dy;
+         bb.setLocation(p);
        }
     }
 
@@ -3202,7 +3202,7 @@ private class GroupMoveContext extends MouseContext {
        }
     }
 
-}	// end of GroupMoveContext
+}       // end of GroupMoveContext
 
 
 
@@ -3243,14 +3243,14 @@ private class AreaMoveContext extends MouseContext {
       area_history.end(begin_event);
     }
 
-}	// end of AreaMoveContext
+}       // end of AreaMoveContext
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Context for making/breaking connections 				*/
-/*										*/
+/*                                                                              */
+/*      Context for making/breaking connections                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubbleConnectContext extends MouseContext {
@@ -3270,14 +3270,14 @@ private class BubbleConnectContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       if (draw_panel == null) {
-	 BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this,
+         BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this,
                Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-	 draw_panel = new DrawPanel();
-	 draw_panel.setOpaque(false);
-	 Dimension d = getSize();
-	 draw_panel.setSize(d);
-	 draw_panel.addPoint(start_event.getX(),start_event.getY());
-	 add(draw_panel,JLayeredPane.DRAG_LAYER);
+         draw_panel = new DrawPanel();
+         draw_panel.setOpaque(false);
+         Dimension d = getSize();
+         draw_panel.setSize(d);
+         draw_panel.addPoint(start_event.getX(),start_event.getY());
+         add(draw_panel,JLayeredPane.DRAG_LAYER);
        }
       draw_panel.addPoint(e.getX(),e.getY());
       last_event = e;
@@ -3295,10 +3295,10 @@ private class BubbleConnectContext extends MouseContext {
          synchronized (bubble_links) {
             for (BudaBubbleLink bbl : bubble_links) {
                if ((bbl.getSource() == start_bubble && bbl.getTarget() == mr.getBubble()) ||
-        	      (bbl.getSource() == mr.getBubble() && bbl.getTarget() == start_bubble)) {
-        	  rembbl = bbl;
-        	  break;
-        	}
+                      (bbl.getSource() == mr.getBubble() && bbl.getTarget() == start_bubble)) {
+                  rembbl = bbl;
+                  break;
+                }
              }
           }
          if (rembbl != null) {
@@ -3320,16 +3320,16 @@ private class BubbleConnectContext extends MouseContext {
       for_root.repaint();
     }
 
-}	// end of BubbleMoveContext
+}       // end of BubbleMoveContext
 
 
 
 
 private static class DrawPanel extends JPanel implements NoBubble {
 
-   private Path2D	line_points;
-   private Stroke	line_stroke;
-   private int		num_points;
+   private Path2D       line_points;
+   private Stroke       line_stroke;
+   private int          num_points;
 
    private static final long serialVersionUID = 1;
 
@@ -3342,8 +3342,8 @@ private static class DrawPanel extends JPanel implements NoBubble {
    void addPoint(double x,double y) {
       if (num_points++ == 0) line_points.moveTo(x,y);
       else {
-	 line_points.lineTo(x,y);
-	 repaint();
+         line_points.lineTo(x,y);
+         repaint();
        }
     }
 
@@ -3355,19 +3355,19 @@ private static class DrawPanel extends JPanel implements NoBubble {
       g2.draw(line_points);
     }
 
-}	// end of inner class DrawPanel
+}       // end of inner class DrawPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to remove and restore bubbles					*/
-/*										*/
+/*                                                                              */
+/*      Methods to remove and restore bubbles                                   */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Remove the specified bubble but let the user unremove it if desired.
+ *      Remove the specified bubble but let the user unremove it if desired.
  **/
 
 public void userRemoveBubble(BudaBubble bb)
@@ -3419,7 +3419,7 @@ void userRemoveGroup(BudaBubbleGroup bg)
        }
       if (r0 == null) return;
       
-      BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",			       
+      BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",                            
             new UndoRemove(bg.getBubbles()),UNDO_REMOVE_TIME);
       Dimension usz = undo.getSize();
       add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
@@ -3516,15 +3516,15 @@ private class UndoRemove implements BudaHintActions {
       link_set = null;
     }
 
-}	// end of inner class UndoRemove
+}       // end of inner class UndoRemove
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for automatic scrolling the background				*/
-/*										*/
+/*                                                                              */
+/*      Methods for automatic scrolling the background                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void checkMoveViewport(Point p)
@@ -3581,25 +3581,25 @@ private class AutoScroller extends javax.swing.Timer implements ActionListener
       scrollViewport(delta_x*AUTOSCROLL_SPEED,delta_y*AUTOSCROLL_SPEED);
     }
 
-}	// end of inner class AutoScroller
+}       // end of inner class AutoScroller
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for handling component actions					*/
-/*										*/
+/*                                                                              */
+/*      Methods for handling component actions                                  */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubbleManager implements ComponentListener, ContainerListener {
 
-   BubbleManager()		{ }
+   BubbleManager()              { }
 
    @Override public void componentHidden(ComponentEvent e) {
       BudaBubble bb = (BudaBubble) e.getSource();
       if (bb.isShowing() && bb.isVisible())
-	 return;
+         return;
       localRemoveBubble(bb);
       updateOverview();
     }
@@ -3642,9 +3642,9 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentRemoved(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getChild();
-	 localRemoveBubble(bb);
-	 updateOverview();
+         BudaBubble bb = (BudaBubble) e.getChild();
+         localRemoveBubble(bb);
+         updateOverview();
        }
     }
 
@@ -3655,23 +3655,23 @@ private class BubbleManager implements ComponentListener, ContainerListener {
        }
     }
 
-}	// end of inner class BubbleManager
+}       // end of inner class BubbleManager
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Dummy layout manager for bubble area					*/
-/*										*/
+/*                                                                              */
+/*      Dummy layout manager for bubble area                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class BudaLayoutManager implements LayoutManager {
 
-   @Override public void addLayoutComponent(String name,Component c)		{ }
+   @Override public void addLayoutComponent(String name,Component c)            { }
 
-   @Override public void removeLayoutComponent(Component c)			{ }
+   @Override public void removeLayoutComponent(Component c)                     { }
 
-   @Override public void layoutContainer(Container par) 			{ }
+   @Override public void layoutContainer(Container par)                         { }
 
    @Override public Dimension minimumLayoutSize(Container par) {
       return par.getSize();
@@ -3681,14 +3681,14 @@ private static final class BudaLayoutManager implements LayoutManager {
       return par.getSize();
     }
 
-}	// end of BudaLayoutManager
+}       // end of BudaLayoutManager
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble drag and drop support						*/
-/*										*/
+/*                                                                              */
+/*      Bubble drag and drop support                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private class BubbleDropper extends TransferHandler {
@@ -3709,7 +3709,7 @@ private class BubbleDropper extends TransferHandler {
    @Override public boolean canImport(JComponent c,DataFlavor [] flavors) {
       DataFlavor df = BudaRoot.getBubbleTransferFlavor();
       for (int i = 0; i < flavors.length; ++i) {
-	 if (flavors[i].equals(df)) return true;
+         if (flavors[i].equals(df)) return true;
        }
       return false;
     }
@@ -3749,7 +3749,7 @@ private class BubbleDropper extends TransferHandler {
       return false;
    }
 
-}	// end of inner class BubbleDropper
+}       // end of inner class BubbleDropper
 
 
 
@@ -3758,7 +3758,7 @@ private class BubbleDropper extends TransferHandler {
 
 
 
-}	// end of class BudaBubbleArea
+}       // end of class BudaBubbleArea
 
 
 

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoFactory.java						*/
-/*										*/
-/*	BUbbles Environment New Objects creator factory 			*/
-/*										*/
+/*                                                                              */
+/*              BuenoFactory.java                                               */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator factory                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -70,20 +70,20 @@ public final class BuenoFactory implements BuenoConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private SwingEventListenerList<BuenoInserter> insertion_handlers;
 private Map<BuenoMethod,BuenoCreator> creation_map;
-private BuenoCreator		cur_creator;
+private BuenoCreator            cur_creator;
 private BuenoMethodCreatorInstance method_creator;
 private BuenoClassCreatorInstance class_creator;
 private BuenoPackageCreatorInstance package_creator;
-private BuenoClassMethodFinder	method_finder;
+private BuenoClassMethodFinder  method_finder;
 
-private static BuenoFactory	the_factory = null;
+private static BuenoFactory     the_factory = null;
 
 private static final String WORKSPACE_NAME = " WORKSPACE ";
 
@@ -101,9 +101,9 @@ public static synchronized BuenoFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BuenoFactory()
@@ -128,9 +128,9 @@ private BuenoFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -144,9 +144,9 @@ public static void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void addInsertionHandler(BuenoInserter bi)
@@ -176,9 +176,9 @@ BuenoCreator getCreator()
 
 
 /********************************************************************************/
-/*										*/
-/*	Location creation methods						*/
-/*										*/
+/*                                                                              */
+/*      Location creation methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 public BuenoLocation createLocation(BumpLocation l,boolean before)
@@ -201,9 +201,9 @@ public BuenoLocation createFileLocation(String proj,String file)
 
 
 /********************************************************************************/
-/*										*/
-/*	Dialog setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Dialog setup methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 public void setMethodDialog(BuenoMethodCreatorInstance bmc)
@@ -230,12 +230,12 @@ public void setClassMethodFinder(BuenoClassMethodFinder fdr)
 
 
 public void createMethodDialog(BudaBubble src,Point loc,BuenoProperties known,
-				  BuenoLocation insert,String lbl,
-				  BuenoBubbleCreator newer)
+                                  BuenoLocation insert,String lbl,
+                                  BuenoBubbleCreator newer)
 {
    if (method_creator != null) {
       if (method_creator.showMethodDialogBubble(src,loc,known,insert,lbl,newer))
-	 return;
+         return;
     }
 
    BuenoMethodDialog md = new BuenoMethodDialog(src,loc,known,insert,newer);
@@ -252,7 +252,7 @@ public void createClassDialog(BudaBubble src,Point loc,BuenoType type,
 {
    if (class_creator != null) {
       if (class_creator.showClassDialogBubble(src,loc,type,known,insert,lbl,newer))
-	 return;
+         return;
     }
 
    BuenoClassDialog cd = new BuenoClassDialog(src,loc,type,known,insert,newer);
@@ -268,7 +268,7 @@ public void createPackageDialog(BudaBubble src,Point loc,BuenoType type,
 {
    if (package_creator != null) {
       if (package_creator.showPackageDialogBubble(src,loc,type,known,insert,lbl,newer))
-	 return;
+         return;
     }
 
    BuenoPackageDialog pd = new BuenoPackageDialog(src,loc,known,insert,newer);
@@ -321,9 +321,9 @@ List<BumpLocation> findClassMethods(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for doing the creation						*/
-/*										*/
+/*                                                                              */
+/*      Methods for doing the creation                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
@@ -336,14 +336,14 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
 
    switch (what) {
       case NEW_PACKAGE :
-	 cur_creator.createPackage(where,props);
-	 break;
+         cur_creator.createPackage(where,props);
+         break;
       case NEW_MODULE :
-	 cur_creator.createModule(where,props);
-	 break;
+         cur_creator.createModule(where,props);
+         break;
       case NEW_FILE :
-	 cur_creator.createFile(where,props);
-	 break;
+         cur_creator.createFile(where,props);
+         break;
       case NEW_DIRECTORY :
          cur_creator.createDirectory(where,props);
          break;
@@ -352,10 +352,10 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
       case NEW_INTERFACE :
       case NEW_ENUM :
       case NEW_ANNOTATION :
-	 BuenoClassSetup bcs = new BuenoClassSetup(props,what);
-	 bcs.extendProperties();
-	 cur_creator.createType(what,where,props);
-	 break;
+         BuenoClassSetup bcs = new BuenoClassSetup(props,what);
+         bcs.extendProperties();
+         cur_creator.createType(what,where,props);
+         break;
       case NEW_INNER_TYPE :
       case NEW_INNER_CLASS :
       case NEW_INNER_INTERFACE :
@@ -369,10 +369,10 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
       case NEW_MARQUIS_COMMENT :
       case NEW_BLOCK_COMMENT :
       case NEW_JAVADOC_COMMENT :
-	 result = setupNew(what,where,props);
-	 insertText(where,result.toString(),
-	       props.getBooleanProperty(BuenoKey.KEY_REFORMAT));
-	 break;
+         result = setupNew(what,where,props);
+         insertText(where,result.toString(),
+               props.getBooleanProperty(BuenoKey.KEY_REFORMAT));
+         break;
     }
 }
 
@@ -396,31 +396,31 @@ public CharSequence setupNew(BuenoType what,BuenoLocation where,BuenoProperties 
       case NEW_ENUM :
       case NEW_ANNOTATION :
       case NEW_FILE :
-	 throw new IllegalArgumentException("Can only setup internal items");
+         throw new IllegalArgumentException("Can only setup internal items");
 
       case NEW_INNER_TYPE :
       case NEW_INNER_CLASS :
       case NEW_INNER_INTERFACE :
       case NEW_INNER_ENUM :
-	 result = cur_creator.createInnerType(what,props);
-	 break;
+         result = cur_creator.createInnerType(what,props);
+         break;
       case NEW_CONSTRUCTOR :
       case NEW_METHOD :
       case NEW_GETTER :
       case NEW_SETTER :
       case NEW_GETTER_SETTER :
-	 result = cur_creator.createMethod(what,props);
-	 break;
+         result = cur_creator.createMethod(what,props);
+         break;
       case NEW_FIELD :
-	 result = cur_creator.createField(props);
-	 break;
+         result = cur_creator.createField(props);
+         break;
       case NEW_MARQUIS_COMMENT :
       case NEW_BLOCK_COMMENT :
       case NEW_JAVADOC_COMMENT :
-	 result = cur_creator.createComment(what,props);
-	 break;
+         result = cur_creator.createComment(what,props);
+         break;
       default :
-	 break;
+         break;
     }
 
   return result;
@@ -442,19 +442,19 @@ private void fixupProps(BuenoType what,BuenoLocation where,BuenoProperties props
    String fil = props.getStringProperty(BuenoKey.KEY_FILE);
    if (fil == null && where.getFile() != null) {
       switch (what) {
-	 case NEW_PACKAGE :
-	 case NEW_TYPE :
-	 case NEW_CLASS :
-	 case NEW_INTERFACE :
-	 case NEW_ENUM :
-	 case NEW_ANNOTATION :
-	 case NEW_MODULE :
-	 case NEW_FILE :
-	    break;
-	 default :
-	    props.put(BuenoKey.KEY_FILE,where.getFile().getPath());
-	    props.put(BuenoKey.KEY_FILETAIL,where.getFile().getName());
-	    break;
+         case NEW_PACKAGE :
+         case NEW_TYPE :
+         case NEW_CLASS :
+         case NEW_INTERFACE :
+         case NEW_ENUM :
+         case NEW_ANNOTATION :
+         case NEW_MODULE :
+         case NEW_FILE :
+            break;
+         default :
+            props.put(BuenoKey.KEY_FILE,where.getFile().getPath());
+            props.put(BuenoKey.KEY_FILETAIL,where.getFile().getName());
+            break;
        }
     }
    String clsnm = props.getStringProperty(BuenoKey.KEY_CLASS_NAME);
@@ -465,9 +465,9 @@ private void fixupProps(BuenoType what,BuenoLocation where,BuenoProperties props
 
 
 /********************************************************************************/
-/*										*/
-/*	Insertion methods							*/
-/*										*/
+/*                                                                              */
+/*      Insertion methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 boolean insertText(BuenoLocation loc,String text,boolean format)
@@ -483,9 +483,9 @@ boolean insertText(BuenoLocation loc,String text,boolean format)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for doing create project					*/
-/*										*/
+/*                                                                              */
+/*      Methods for doing create project                                        */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaBubble getCreateProjectBubble()
@@ -510,18 +510,18 @@ private static final class CreateListener implements BudaConstants.ButtonListene
       BudaBubble bb = bf.getCreateProjectBubble();
       if (bb == null) return;
       bba.addBubble(bb,null,pt,BudaConstants.PLACEMENT_LOGICAL|
-		       BudaConstants.PLACEMENT_MOVETO |
-		       BudaConstants.PLACEMENT_USER);
+                       BudaConstants.PLACEMENT_MOVETO |
+                       BudaConstants.PLACEMENT_USER);
     }
 
-}	// end of inner class CreateListener
+}       // end of inner class CreateListener
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle importing templates						*/
-/*										*/
+/*                                                                              */
+/*      Handle importing templates                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class TemplateImporter implements BudaConstants.ButtonListener {
@@ -532,7 +532,7 @@ private static final class TemplateImporter implements BudaConstants.ButtonListe
       bba.addBubble(bbl,null,pt,BudaConstants.PLACEMENT_USER);
     }
 
-}	// end of inner class TemplateImporter
+}       // end of inner class TemplateImporter
 
 
 
@@ -545,7 +545,7 @@ private static class TemplateBubble extends BudaBubble {
       setContentPane(pnl);
     }
 
-}	// end of inner class TemplateBubble
+}       // end of inner class TemplateBubble
 
 
 
@@ -616,21 +616,21 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       BudaBubble bbl = BudaRoot.findBudaBubble((Component) evt.getSource());
       bbl.setVisible(false);
       if (forproject_field != null) {
-	 target_project = (String) forproject_field.getSelectedItem();
+         target_project = (String) forproject_field.getSelectedItem();
        }
       if (source_field == null || source_field.getSelectedIndex() <= 0) {
-	 String f = file_field.getText();
-	 if (f == null) return;
-	 if (f.length() == 0) return;
-	 File f1 = new File(f);
-	 if (!f1.exists()) f1 = new File(f.trim());
-	 loadTemplates(f1);
+         String f = file_field.getText();
+         if (f == null) return;
+         if (f.length() == 0) return;
+         File f1 = new File(f);
+         if (!f1.exists()) f1 = new File(f.trim());
+         loadTemplates(f1);
        }
       else {
-	 File f1 = BoardSetup.getPropertyBase();
-	 File f2 = new File(f1,"templates");
-	 File f3 = new File(f2,source_field.getSelectedItem().toString());
-	 loadTemplates(f3);
+         File f1 = BoardSetup.getPropertyBase();
+         File f2 = new File(f1,"templates");
+         File f3 = new File(f2,source_field.getSelectedItem().toString());
+         loadTemplates(f3);
        }
     }
 
@@ -639,48 +639,48 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       File t = BoardSetup.getPropertyBase();
       File t1 = new File(t,"templates");
       if (target_project == null || target_project.equals(WORKSPACE_NAME)) {
-	 String ws = BoardSetup.getSetup().getDefaultWorkspace();
-	 int idx = ws.lastIndexOf(File.separator);
-	 if (idx > 0) ws = ws.substring(idx+1);
-	 target_project = ws;
+         String ws = BoardSetup.getSetup().getDefaultWorkspace();
+         int idx = ws.lastIndexOf(File.separator);
+         if (idx > 0) ws = ws.substring(idx+1);
+         target_project = ws;
        }
       target_project = target_project.toLowerCase();
       File t2 = new File(t1,target_project);
       t2.mkdirs();
       if (f.isDirectory()) {
-	 for (File f1 : f.listFiles()) {
-	    if (f1.getName().endsWith(".template")) {
-	       File t3 = new File(t2,f1.getName());
-	       try {
-		  IvyFile.copyFile(f1,t3);
-		}
-	       catch (IOException e) { }
-	     }
-	  }
+         for (File f1 : f.listFiles()) {
+            if (f1.getName().endsWith(".template")) {
+               File t3 = new File(t2,f1.getName());
+               try {
+                  IvyFile.copyFile(f1,t3);
+                }
+               catch (IOException e) { }
+             }
+          }
        }
       else if (f.getName().endsWith(".zip") || f.getName().endsWith(".jar")) {
-	 try {
-	    ZipFile zf = new ZipFile(f);
-	    for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
-	       ZipEntry ze = e.nextElement();
-	       String nm = ze.getName();
-	       if (nm.endsWith(".template")) {
-		  File t3 = new File(t2,nm);
-		  InputStream ins = zf.getInputStream(ze);
-		  IvyFile.copyFile(ins,t3);
-		}
-	     }
-	    zf.close();
-	  }
-	 catch (IOException e) { }
+         try {
+            ZipFile zf = new ZipFile(f);
+            for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
+               ZipEntry ze = e.nextElement();
+               String nm = ze.getName();
+               if (nm.endsWith(".template")) {
+                  File t3 = new File(t2,nm);
+                  InputStream ins = zf.getInputStream(ze);
+                  IvyFile.copyFile(ins,t3);
+                }
+             }
+            zf.close();
+          }
+         catch (IOException e) { }
        }
 
     }
 
-}	// end of inner class TemplatePanel
+}       // end of inner class TemplatePanel
 
 
-}	// end of class BuenoFactory
+}       // end of class BuenoFactory
 
 
 

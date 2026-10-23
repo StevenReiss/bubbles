@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtRepository.java						*/
-/*										*/
-/*	Bubbles Environment dyanmic debugger tool explorer repository		*/
-/*										*/
+/*                                                                              */
+/*              BddtRepository.java                                             */
+/*                                                                              */
+/*      Bubbles Environment dyanmic debugger tool explorer repository           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -47,28 +47,28 @@ import java.util.Map;
 
 
 class BddtRepository implements BddtConstants, BumpConstants, BassRepository,
-	BassConstants.BassPopupHandler
+        BassConstants.BassPopupHandler
 {
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BumpClient			 bump_client;
-private BumpRunModel			 run_model;
+private BumpClient                       bump_client;
+private BumpRunModel                     run_model;
 private Map<BumpLaunchConfig,ConfigName> config_map;
-private Map<BumpProcess,ProcessName>	 process_map;
+private Map<BumpProcess,ProcessName>     process_map;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtRepository()
@@ -79,8 +79,8 @@ BddtRepository()
    config_map = new HashMap<>();
    for (BumpLaunchConfig blc : run_model.getLaunchConfigurations()) {
       if (!blc.isWorkingCopy()) {
-	 ConfigName cn = new ConfigName(blc);
-	 config_map.put(blc,cn);
+         ConfigName cn = new ConfigName(blc);
+         config_map.put(blc,cn);
        }
     }
 
@@ -99,9 +99,9 @@ BddtRepository()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Iterable<BassName> getAllNames()
@@ -139,9 +139,9 @@ BddtRepository()
 
 
 /********************************************************************************/
-/*										*/
-/*	Name representation for launch configureations				*/
-/*										*/
+/*                                                                              */
+/*      Name representation for launch configureations                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ConfigName extends BassNameBase {
@@ -158,31 +158,31 @@ private static class ConfigName extends BassNameBase {
       return new BddtLaunchBubble(for_config);
     }
 
-   @Override public BudaBubble createPreviewBubble()	{ return null; }
+   @Override public BudaBubble createPreviewBubble()    { return null; }
 
    @Override protected String getKey() {
       return "LAUNCH@" + for_config.getProject() + "@" + for_config.getConfigName();
     }
 
-   @Override public String getProject() 		{ return null; }
+   @Override public String getProject()                 { return null; }
 
    @Override protected String getSymbolName() {
       return BDDT_LAUNCH_CONFIG_PREFIX + for_config.getConfigName().replace(".","_");
     }
 
-   @Override protected String getParameters()		{ return null; }
+   @Override protected String getParameters()           { return null; }
 
-   BumpLaunchConfig getConfiguration()			{ return for_config; }
+   BumpLaunchConfig getConfiguration()                  { return for_config; }
 
-}	// end of inner class ConfigName
+}       // end of inner class ConfigName
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Name representation for processes configureations			*/
-/*										*/
+/*                                                                              */
+/*      Name representation for processes configureations                       */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ProcessName extends BassNameBase {
@@ -194,9 +194,9 @@ private static class ProcessName extends BassNameBase {
       name_type = BassNameType.DEBUG_PROCESS;
     }
 
-   @Override public BudaBubble createBubble()		{ return null; }
+   @Override public BudaBubble createBubble()           { return null; }
 
-   @Override public BudaBubble createPreviewBubble()	{ return null; }
+   @Override public BudaBubble createPreviewBubble()    { return null; }
 
    @Override public String createPreviewString() {
       return "Process being debugged: " + getSymbolName();
@@ -206,7 +206,7 @@ private static class ProcessName extends BassNameBase {
       return "PROCESS@" + getProcessProject() + "@" + for_process.getId();
     }
 
-   @Override public String getProject() 		{ return null; }
+   @Override public String getProject()                 { return null; }
 
    @Override protected String getSymbolName() {
       if (for_process.getLaunch() == null) return "???";
@@ -216,7 +216,7 @@ private static class ProcessName extends BassNameBase {
             "." + for_process.getId();
     }
 
-   @Override protected String getParameters()		{ return null; }
+   @Override protected String getParameters()           { return null; }
    
    BumpProcess getProcess()                             { return for_process; }
 
@@ -227,15 +227,15 @@ private static class ProcessName extends BassNameBase {
       return for_process.getLaunch().getConfiguration().getProject();
     }
 
-}	// end of inner class ProcessName
+}       // end of inner class ProcessName
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Model event handling							*/
-/*										*/
+/*                                                                              */
+/*      Model event handling                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
@@ -244,30 +244,30 @@ private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
       BumpLaunchConfig blc = evt.getLaunchConfiguration();
 
       switch (evt.getEventType()) {
-	 case LAUNCH_ADD :
-	    if (!blc.isWorkingCopy()) {
-	       ConfigName cn = new ConfigName(blc);
-	       config_map.put(blc,cn);
-	       BassFactory.reloadRepository(BddtRepository.this);
-	     }
-	    break;
-	 case LAUNCH_REMOVE :
-	    if (config_map.remove(blc) != null) {
-	       BassFactory.reloadRepository(BddtRepository.this);
-	     }
-	    break;
-	 case LAUNCH_CHANGE :
-	    if (!blc.isWorkingCopy()) {
-	       ConfigName cn = config_map.get(blc);
-	       if (cn == null || !cn.getFullName().equals(cn.getSymbolName())) {
-	          cn = new ConfigName(blc);
-	          config_map.put(blc,cn);
-	          BassFactory.reloadRepository(BddtRepository.this);
-	        }
-	     }
-	    break;
-	 default:
-	    break;
+         case LAUNCH_ADD :
+            if (!blc.isWorkingCopy()) {
+               ConfigName cn = new ConfigName(blc);
+               config_map.put(blc,cn);
+               BassFactory.reloadRepository(BddtRepository.this);
+             }
+            break;
+         case LAUNCH_REMOVE :
+            if (config_map.remove(blc) != null) {
+               BassFactory.reloadRepository(BddtRepository.this);
+             }
+            break;
+         case LAUNCH_CHANGE :
+            if (!blc.isWorkingCopy()) {
+               ConfigName cn = config_map.get(blc);
+               if (cn == null || !cn.getFullName().equals(cn.getSymbolName())) {
+                  cn = new ConfigName(blc);
+                  config_map.put(blc,cn);
+                  BassFactory.reloadRepository(BddtRepository.this);
+                }
+             }
+            break;
+         default:
+            break;
        }
     }
 
@@ -294,28 +294,28 @@ private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
        }
     }
 
-}	// end of inner class ModelHandler
+}       // end of inner class ModelHandler
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Popup menu handling							*/
-/*										*/
+/*                                                                              */
+/*      Popup menu handling                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu m,
-				    String fullname,BassName forname)
+                                    String fullname,BassName forname)
 {
    if (forname instanceof ConfigName) {
       ConfigName cn = (ConfigName) forname;
       BumpLaunchConfig cfg = cn.getConfiguration();
       if (cfg != null) {
-	 m.add(new CloneLaunchAction(cfg));
-	 m.add(new DebugLaunchAction(cfg));
+         m.add(new CloneLaunchAction(cfg));
+         m.add(new DebugLaunchAction(cfg));
 //       m.add(new RunLaunchAction(cfg));
-	 m.add(new DeleteLaunchAction(cfg));
+         m.add(new DeleteLaunchAction(cfg));
        }
     }
    else if (forname == null && fullname.contains("@Launch Configurations")) {
@@ -347,7 +347,7 @@ private static class CloneLaunchAction extends AbstractAction {
       if (nblc != null) nblc.save();
     }
 
-}	// end of inner class CloneLaunchAction
+}       // end of inner class CloneLaunchAction
 
 
 
@@ -365,7 +365,7 @@ private static class DeleteLaunchAction extends AbstractAction {
       for_config.delete();
     }
 
-}	// end of inner class DeleteLaunchAction
+}       // end of inner class DeleteLaunchAction
 
 
 
@@ -384,7 +384,7 @@ private class RunLaunchAction extends AbstractAction {
       bump_client.startRun(for_config);
     }
 
-}	// end of inner class RunLaunchAction
+}       // end of inner class RunLaunchAction
 
 
 private class DebugLaunchAction extends AbstractAction {
@@ -402,7 +402,7 @@ private class DebugLaunchAction extends AbstractAction {
       bf.newDebugger(for_config);
     }
 
-}	// end of inner class RunLaunchAction
+}       // end of inner class RunLaunchAction
 
 
 private class TerminateProcessAction extends AbstractAction {
@@ -423,7 +423,7 @@ private class TerminateProcessAction extends AbstractAction {
 
 
 
-}	// end of class BddtRepository
+}       // end of class BddtRepository
 
 
 

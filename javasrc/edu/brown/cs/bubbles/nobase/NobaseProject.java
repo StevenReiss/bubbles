@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseProject.java						*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              NobaseProject.java                                              */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -54,12 +54,12 @@ class NobaseProject implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-protected NobaseMain	nobase_main;
+protected NobaseMain    nobase_main;
 protected NobaseProjectManager project_manager;
 private String project_name;
 protected File base_directory;
@@ -67,20 +67,20 @@ protected List<NobasePathSpec> project_paths;
 private List<File> project_files;
 private boolean is_open;
 private NobasePreferences nobase_prefs;
-private File		js_runner;
-protected NobaseScope	global_scope;
-private NobaseResolver	project_resolver;
-private File		base_path;
-private NobaseModule	module_manager;
+private File            js_runner;
+protected NobaseScope   global_scope;
+private NobaseResolver  project_resolver;
+private File            base_path;
+private NobaseModule    module_manager;
 
 private Map<NobaseFile,ISemanticData> parse_data;
 private Set<NobaseFile> all_files;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseProject(NobaseMain pm,String name,File base)
@@ -119,13 +119,13 @@ NobaseProject(NobaseMain pm,String name,File base)
       js_runner = findInterpreter(bfile);
       if (js_runner == null) js_runner = findInterpreter(null);
       for (Element pe : IvyXml.children(xml,"PATH")) {
-	 NobasePathSpec ps = project_manager.createPathSpec(pe);
-	 project_paths.add(ps);
+         NobasePathSpec ps = project_manager.createPathSpec(pe);
+         project_paths.add(ps);
        }
       for (Element fe : IvyXml.children(xml,"FILE")) {
-	 String nm = IvyXml.getTextElement(fe,"NAME");
-	 File fs = new File(nm);
-	 project_files.add(fs);
+         String nm = IvyXml.getTextElement(fe,"NAME");
+         File fs = new File(nm);
+         project_files.add(fs);
        }
       nobase_prefs.loadXml(xml);
     }
@@ -176,38 +176,38 @@ protected File findInterpreter(String name)
       BufferedReader br = new BufferedReader(isr);
       List<String> lines = new ArrayList<String>();
       for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null) break;
-	 lines.add(ln);
+         String ln = br.readLine();
+         if (ln == null) break;
+         lines.add(ln);
        }
       for (String ln : lines) {
-	 StringTokenizer tok = new StringTokenizer(ln);
-	 if (tok.countTokens() < 2) {
-	    NobaseMain.logI("BAD checkinterpreter output LINE: " + ln);
-	    continue;
-	  }
-	 String nam = tok.nextToken();
-	 String typ = tok.nextToken();
-	 NobaseValue nval = NobaseValue.createAnyValue();
-	 if (typ.equalsIgnoreCase("function")) {
-	    nval = NobaseValue.createFunction();
-	  }
-	 else if (typ.equalsIgnoreCase("object")) {
-	    nval = NobaseValue.createObject();
-	  }
-	 else if (typ.equalsIgnoreCase("string")) {
-	    if (tok.hasMoreTokens()) {
-	       String cnts = tok.nextToken("\n");
-	       if (cnts.length() > 1 && cnts.charAt(0) == ' ') cnts = cnts.substring(1);
-	       cnts = URLDecoder.decode(cnts,"UTF-8");
-	       nval = NobaseValue.createString(cnts);
-	     }
-	    else nval = NobaseValue.createString();
-	  }
-	 else if (typ.equalsIgnoreCase("Array")) {
-	    nval = NobaseValue.createArrayValue();
-	  }
-	 defineName(global_scope,null,nam,nval);
+         StringTokenizer tok = new StringTokenizer(ln);
+         if (tok.countTokens() < 2) {
+            NobaseMain.logI("BAD checkinterpreter output LINE: " + ln);
+            continue;
+          }
+         String nam = tok.nextToken();
+         String typ = tok.nextToken();
+         NobaseValue nval = NobaseValue.createAnyValue();
+         if (typ.equalsIgnoreCase("function")) {
+            nval = NobaseValue.createFunction();
+          }
+         else if (typ.equalsIgnoreCase("object")) {
+            nval = NobaseValue.createObject();
+          }
+         else if (typ.equalsIgnoreCase("string")) {
+            if (tok.hasMoreTokens()) {
+               String cnts = tok.nextToken("\n");
+               if (cnts.length() > 1 && cnts.charAt(0) == ' ') cnts = cnts.substring(1);
+               cnts = URLDecoder.decode(cnts,"UTF-8");
+               nval = NobaseValue.createString(cnts);
+             }
+            else nval = NobaseValue.createString();
+          }
+         else if (typ.equalsIgnoreCase("Array")) {
+            nval = NobaseValue.createArrayValue();
+          }
+         defineName(global_scope,null,nam,nval);
 
        }
       // check versions, etc. here
@@ -233,7 +233,7 @@ protected void defineName(NobaseScope scp,NobaseValue scpval,String nam,NobaseVa
       sym.setBubblesName(bubblesnm);
       if (scp != null) scp.define(sym);
       if (scpval != null) {
-	 scpval.addProperty(nam,val);
+         scpval.addProperty(nam,val);
        }
     }
    else {
@@ -241,13 +241,13 @@ protected void defineName(NobaseScope scp,NobaseValue scpval,String nam,NobaseVa
       String sfx = nam.substring(idx+1);
       NobaseValue nval = null;
       if (scp != null) {
-	 nval = scp.lookupValue(pfx,true);
+         nval = scp.lookupValue(pfx,true);
        }
       if (nval == null && scpval != null) {
-	 nval = scpval.getProperty(pfx,true);
+         nval = scpval.getProperty(pfx,true);
        }
       if (nval != null) {
-	 defineName(null,nval,sfx,val);
+         defineName(null,nval,sfx,val);
        }
     }
 }
@@ -256,19 +256,19 @@ protected void defineName(NobaseScope scp,NobaseValue scpval,String nam,NobaseVa
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-public String getName() 			{ return project_name; }
-File getBasePath()				{ return base_directory; }
-NobasePreferences getPreferences()		{ return nobase_prefs; }
-public boolean isOpen() 			{ return is_open; }
-public boolean exists() 			{ return base_directory.exists(); }
+public String getName()                         { return project_name; }
+File getBasePath()                              { return base_directory; }
+NobasePreferences getPreferences()              { return nobase_prefs; }
+public boolean isOpen()                         { return is_open; }
+public boolean exists()                         { return base_directory.exists(); }
 public NobaseProject [] getReferencedProjects() { return new NobaseProject[0]; }
 public NobaseProject [] getReferencingProjects() { return new NobaseProject[0]; }
-NobaseScope getGlobalScope()			{ return global_scope; }
+NobaseScope getGlobalScope()                    { return global_scope; }
 
 Collection<NobaseFile> getAllFiles()
 {
@@ -342,9 +342,9 @@ ISemanticData getParseData(NobaseFile fd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Editing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Editing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void editProject(Element pxml)
@@ -367,16 +367,16 @@ void editProject(Element pxml)
       f1 = IvyFile.getCanonical(f1);
       NobasePathSpec oldspec = null;
       for (NobasePathSpec ps : project_paths) {
-	 if (done.contains(ps)) continue;
-	 File p1 = ps.getFile();
-	 if (f1.equals(p1)) {
-	    done.add(ps);
-	    oldspec = ps;
-	    break;
-	  }
+         if (done.contains(ps)) continue;
+         File p1 = ps.getFile();
+         if (f1.equals(p1)) {
+            done.add(ps);
+            oldspec = ps;
+            break;
+          }
        }
       if (IvyXml.getAttrBool(pelt,"DELETE")) {
-	 if (oldspec != null) dels.add(oldspec);
+         if (oldspec != null) dels.add(oldspec);
        }
       else {
          boolean usr = true;
@@ -423,9 +423,9 @@ void editProject(Element pxml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Create new package							*/
-/*										*/
+/*                                                                              */
+/*      Create new package                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void createPackage(String name,boolean force,IvyXmlWriter xw)
@@ -437,11 +437,11 @@ void createPackage(String name,boolean force,IvyXmlWriter xw)
       File f = ps.getFile();
       if (!f.exists()) continue;
       for (int i = 0; i < comps.length-1; ++i) {
-	 f = new File(f,comps[i]);
+         f = new File(f,comps[i]);
        }
       if (f.exists()) {
-	 dir = new File(f,comps[comps.length-1]);
-	 break;
+         dir = new File(f,comps[comps.length-1]);
+         break;
        }
     }
 
@@ -455,9 +455,9 @@ void createPackage(String name,boolean force,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Create new package							*/
-/*										*/
+/*                                                                              */
+/*      Create new package                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void findPackage(String name,IvyXmlWriter xw)
@@ -469,11 +469,11 @@ void findPackage(String name,IvyXmlWriter xw)
       File f = ps.getFile();
       if (!f.exists()) continue;
       for (int i = 0; i < comps.length; ++i) {
-	 f = new File(f,comps[i]);
+         f = new File(f,comps[i]);
        }
       if (f.exists()) {
-	 dir = new File(f,comps[comps.length-1]);
-	 break;
+         dir = new File(f,comps[comps.length-1]);
+         break;
        }
     }
 
@@ -488,9 +488,9 @@ void findPackage(String name,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Module management methods						*/
-/*										*/
+/*                                                                              */
+/*      Module management methods                                               */
+/*                                                                              */
 /********************************************************************************/
 
 void setupModule(NobaseFile file,NobaseScope scp)
@@ -570,11 +570,11 @@ public File findModuleFile(String name) throws NobaseException
       File f = ps.getFile();
       if (!f.exists()) continue;
       for (int i = 0; i < comps.length-1; ++i) {
-	 f = new File(f,comps[i]);
+         f = new File(f,comps[i]);
        }
       if (f.exists()) {
-	 dir = f;
-	 break;
+         dir = f;
+         break;
        }
     }
 
@@ -590,9 +590,9 @@ public File findModuleFile(String name) throws NobaseException
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void saveProject()
@@ -640,13 +640,13 @@ void outputProject(boolean files,boolean paths,boolean clss,boolean opts,IvyXmlW
    if (paths) {
       xw.begin("CLASSPATH");
       for (NobasePathSpec ps : project_paths) {
-	 ps.outputXml(xw);
+         ps.outputXml(xw);
        }
       xw.end("CLASSPATH");
     }
    if (files) {
       for (File fs : project_files) {
-	 outputFile(fs,xw);
+         outputFile(fs,xw);
        }
     }
 
@@ -668,9 +668,9 @@ private void outputFile(File fs,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void open()
@@ -691,10 +691,10 @@ protected void findFiles(String pfx,File f,boolean reload)
    boolean nest = true;
    for (NobasePathSpec ps : project_paths) {
       if (!ps.isUser() || ps.isExclude()) {
-	 if (ps.match(f)) return;
+         if (ps.match(f)) return;
        }
       if (!ps.isNested()) {
-	 if (ps.match(f)) nest = false;
+         if (ps.match(f)) nest = false;
        }
     }
 
@@ -703,8 +703,8 @@ protected void findFiles(String pfx,File f,boolean reload)
       String npfx = null;
       if (pfx != null) npfx = pfx + "." + f.getName();
       for (File f1 : fls) {
-	 if (!nest && f1.isDirectory()) continue;
-	 findFiles(npfx,f1,reload);
+         if (!nest && f1.isDirectory()) continue;
+         findFiles(npfx,f1,reload);
        }
       return;
     }
@@ -719,29 +719,29 @@ protected void findFiles(String pfx,File f,boolean reload)
    ISemanticData isd = parse_data.get(fd);
    if (reload) {
       if (fd.reload()) {
-	 module_manager.clearExportValue(fd);
-	 isd = null;
+         module_manager.clearExportValue(fd);
+         isd = null;
        }
     }
    all_files.add(fd);
    if (isd == null) {
       ISemanticData sd = parseFile(fd);
       if (sd != null) {
-	 IvyXmlWriter xw = NobaseMain.getNobaseMain().beginMessage("FILEERROR");
-	 xw.field("PROJECT",sd.getProject().getName());
-	 xw.field("FILE",fd.getFile().getPath());
-	 xw.begin("MESSAGES");
-	 for (NobaseMessage m : sd.getMessages()) {
-	    try {
-	       NobaseMain.logW("PARSE ERROR: " + m);
-	       NobaseUtil.outputProblem(m,sd,xw);
-	     }
-	    catch (Throwable t) {
-	       NobaseMain.logE("Nobase error message: ",t);
-	     }
-	  }
-	 xw.end("MESSAGES");
-	 NobaseMain.getNobaseMain().finishMessage(xw);
+         IvyXmlWriter xw = NobaseMain.getNobaseMain().beginMessage("FILEERROR");
+         xw.field("PROJECT",sd.getProject().getName());
+         xw.field("FILE",fd.getFile().getPath());
+         xw.begin("MESSAGES");
+         for (NobaseMessage m : sd.getMessages()) {
+            try {
+               NobaseMain.logW("PARSE ERROR: " + m);
+               NobaseUtil.outputProblem(m,sd,xw);
+             }
+            catch (Throwable t) {
+               NobaseMain.logE("Nobase error message: ",t);
+             }
+          }
+         xw.end("MESSAGES");
+         NobaseMain.getNobaseMain().finishMessage(xw);
        }
     }
 }
@@ -766,8 +766,8 @@ void build(boolean refresh,boolean reload)
    if (refresh) {
       oldfiles = new HashSet<NobaseFile>(all_files);
       if (reload) {
-	 all_files.clear();
-	 parse_data.clear();
+         all_files.clear();
+         parse_data.clear();
        }
     }
 
@@ -806,22 +806,22 @@ private void handleRefresh(Set<NobaseFile> oldfiles)
    for (NobaseFile fd : all_files) {
       NobaseFile old = null;
       for (NobaseFile ofd : oldfiles) {
-	 if (ofd.getFile().equals(fd.getFile())) {
-	    old = ofd;
-	    break;
-	  }
+         if (ofd.getFile().equals(fd.getFile())) {
+            old = ofd;
+            break;
+          }
        }
       if (old == null) {
-	 outputDelta(xw,"ADDED",fd);
-	 ++ctr;
+         outputDelta(xw,"ADDED",fd);
+         ++ctr;
        }
       else if (old.getLastDateLastModified() != fd.getLastDateLastModified()) {
-	 oldfiles.remove(old);
-	 outputDelta(xw,"CHANGED",fd);
-	 ++ctr;
+         oldfiles.remove(old);
+         outputDelta(xw,"CHANGED",fd);
+         ++ctr;
        }
       else {
-	 oldfiles.remove(old);
+         oldfiles.remove(old);
        }
     }
    for (NobaseFile fd : oldfiles) {
@@ -851,9 +851,9 @@ private void outputDelta(IvyXmlWriter xw,String act,NobaseFile ifd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Pattern search								*/
-/*										*/
+/*                                                                              */
+/*      Pattern search                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized void patternSearch(String pat,String typ,boolean defs,boolean refs,boolean sys,IvyXmlWriter xw)
@@ -886,7 +886,7 @@ synchronized void patternSearch(String pat,String typ,boolean defs,boolean refs,
       xw.field("FILE",mtch.getFile().getFile().getPath());
       NobaseSymbol sym = mtch.getContainer();
       if (sym != null) {
-	 sym.outputNameData(mtch.getFile(),xw);
+         sym.outputNameData(mtch.getFile(),xw);
        }
       xw.end("MATCH");
     }
@@ -895,9 +895,9 @@ synchronized void patternSearch(String pat,String typ,boolean defs,boolean refs,
 
 
 /********************************************************************************/
-/*										*/
-/*	Find all command							*/
-/*										*/
+/*                                                                              */
+/*      Find all command                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void findAll(String file,int soff,int eoff,boolean defs,boolean refs,
@@ -933,7 +933,7 @@ void findAll(String file,int soff,int eoff,boolean defs,boolean refs,
       NobaseSymbol sym = mtch.getContainer();
       if (sym == null) sym = mtch.getSymbol();
       if (sym != null) {
-	 sym.outputNameData(mtch.getFile(),xw);
+         sym.outputNameData(mtch.getFile(),xw);
        }
       xw.end("MATCH");
     }
@@ -942,9 +942,9 @@ void findAll(String file,int soff,int eoff,boolean defs,boolean refs,
 
 
 /********************************************************************************/
-/*										*/
-/*	Get fully qualified name command					*/
-/*										*/
+/*                                                                              */
+/*      Get fully qualified name command                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void getFullyQualifiedName(String file,int spos,int epos,IvyXmlWriter xw)
@@ -969,32 +969,32 @@ void getFullyQualifiedName(String file,int spos,int epos,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Find text regions command						*/
-/*										*/
+/*                                                                              */
+/*      Find text regions command                                               */
+/*                                                                              */
 /********************************************************************************/
 
 // CHECKSTYLE:OFF
 synchronized void getTextRegions(String bid,String file,String cls,boolean pfx,boolean statics,
       boolean compunit,boolean imports,boolean pkg,
       boolean topdecls,boolean fields,boolean all,IvyXmlWriter xw)
-	throws NobaseException
+        throws NobaseException
 // CHECKSTYLE:ON
 {
    if (file == null) {
       String mnm = cls;
       while (mnm != null) {
-	 try {
-	    File f1 = findModuleFile(mnm);
-	    if (f1 != null) {
-	       file = f1.getAbsolutePath();
-	       break;
-	     }
-	  }
-	 catch (Throwable t) { }
-	 int idx = mnm.lastIndexOf(".");
-	 if (idx < 0) break;
-	 mnm = mnm.substring(0,idx);
+         try {
+            File f1 = findModuleFile(mnm);
+            if (f1 != null) {
+               file = f1.getAbsolutePath();
+               break;
+             }
+          }
+         catch (Throwable t) { }
+         int idx = mnm.lastIndexOf(".");
+         if (idx < 0) break;
+         mnm = mnm.substring(0,idx);
        }
       if (file == null) throw new NobaseException("File must be given");
     }
@@ -1017,9 +1017,9 @@ synchronized void getTextRegions(String bid,String file,String cls,boolean pfx,b
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Completions command 						*/
-/*										*/
+/*                                                                              */
+/*      Get Completions command                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 void getCompletions(String file,int offset,IvyXmlWriter xw)
@@ -1036,9 +1036,9 @@ void getCompletions(String file,int offset,IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Utility methods 							*/
-/*										*/
+/*                                                                              */
+/*      Utility methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private ISemanticData parseFile(NobaseFile fd)
@@ -1070,14 +1070,14 @@ private static final class SourceFilter implements FileFilter {
       return false;
     }
 
-}	// end of inner class SourceFilter
+}       // end of inner class SourceFilter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Find library files by name						*/
-/*										*/
+/*                                                                              */
+/*      Find library files by name                                              */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseFile findRequiresFile(NobaseFile orig,String fnm)
@@ -1102,8 +1102,8 @@ NobaseFile findRequiresFile(NobaseFile orig,String fnm)
    for (File par = orig.getFile().getParentFile(); par != null; par = par.getParentFile()) {
       File nmod = new File(par,"node_modules");
       if (nmod.exists()) {
-	 nf = getNodeModuleFile(nmod,fnm);
-	 if (nf != null) return nf;
+         nf = getNodeModuleFile(nmod,fnm);
+         if (nf != null) return nf;
        }
     }
 
@@ -1117,14 +1117,14 @@ private NobaseFile getNobaseFile(File tgt)
    if (!tgt.exists()) {
       String pth = tgt.getPath();
       for (String s : new String [] { ".js", ".json", "node" }) {
-	 File ntgt = new File(pth + s);
-	 if (ntgt.exists()) {
+         File ntgt = new File(pth + s);
+         if (ntgt.exists()) {
             if (s.equals(".json")) {
                NobaseMain.logI("Reading json file " + ntgt);
              }
-	    tgt = ntgt;
-	    break;
-	  }
+            tgt = ntgt;
+            break;
+          }
        }
       if (!tgt.exists()) return null;
     }
@@ -1146,33 +1146,33 @@ private NobaseFile getNodeModuleFile(File nmod,String fnm)
       String mod = getModuleFromPath(tgt);
       File json = new File(tgt,"package.json");
       if (json.exists()) {
-	 try {
-	    String pkgtxt = IvyFile.loadFile(json);
-	    JSONObject jo = new JSONObject(pkgtxt);
-	    String mnm = jo.getString("name");
-	    if (jo.has("main")) {
-	       String main = jo.getString("main");
-	       if (mnm == null) mnm = mod;
-	       File src = new File(tgt,main);
-	       if (src.exists()) {
+         try {
+            String pkgtxt = IvyFile.loadFile(json);
+            JSONObject jo = new JSONObject(pkgtxt);
+            String mnm = jo.getString("name");
+            if (jo.has("main")) {
+               String main = jo.getString("main");
+               if (mnm == null) mnm = mod;
+               File src = new File(tgt,main);
+               if (src.exists()) {
                   src = IvyFile.getCanonical(src);
-		  if (src.isDirectory()) {
-		     src = new File(src,"index.js");
-		     if (!src.exists()) src = new File(src,"index.node");
-		     if (!src.exists()) return null;
-		   }
-		  return findFile(src,mnm);
-		}
-	     }
-	  }
-	 catch (IOException e) {
-	  }
+                  if (src.isDirectory()) {
+                     src = new File(src,"index.js");
+                     if (!src.exists()) src = new File(src,"index.node");
+                     if (!src.exists()) return null;
+                   }
+                  return findFile(src,mnm);
+                }
+             }
+          }
+         catch (IOException e) {
+          }
        }
       // try index.js if json fails
       File f1 = new File(tgt,"index.js");
       if (!f1.exists()) f1 = new File(tgt,"index.node");
       if (f1.exists()) {
-	 return findFile(f1,mod);
+         return findFile(f1,mod);
        }
     }
 
@@ -1190,15 +1190,15 @@ private String getModuleFromPath(File f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle all names							*/
-/*										*/
+/*                                                                              */
+/*      Handle all names                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 
-}	// end of class NobaseProject
+}       // end of class NobaseProject
 
 
 

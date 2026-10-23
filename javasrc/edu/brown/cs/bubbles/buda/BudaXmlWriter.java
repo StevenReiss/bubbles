@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BudaXmlWriter.java						*/
-/*										*/
-/*	BUblles Display Area xml writer 					*/
-/*										*/
+/*                                                                              */
+/*              BudaXmlWriter.java                                              */
+/*                                                                              */
+/*      BUblles Display Area xml writer                                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,9 +40,9 @@ import java.io.IOException;
 
 
 /**
- *	This class is a minor extension of IvyXmlWriter that supports writing
- *	out graphical elements such as rectangles and colors.  It is passed to
- *	bubble components that implement BubbleOutputer.
+ *      This class is a minor extension of IvyXmlWriter that supports writing
+ *      out graphical elements such as rectangles and colors.  It is passed to
+ *      bubble components that implement BubbleOutputer.
  *
  **/
 
@@ -52,9 +52,9 @@ public class BudaXmlWriter extends IvyXmlWriter implements BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public BudaXmlWriter(String file) throws IOException
@@ -76,13 +76,13 @@ public BudaXmlWriter()
 
 
 /********************************************************************************/
-/*										*/
-/*	Helper methods for common structures					*/
-/*										*/
+/*                                                                              */
+/*      Helper methods for common structures                                    */
+/*                                                                              */
 /********************************************************************************/
 
 /**
- *	Output an arbitrary element with the given name and string value.
+ *      Output an arbitrary element with the given name and string value.
  **/
 
 public void element(String id,String s)
@@ -93,7 +93,7 @@ public void element(String id,String s)
 
 
 /**
- *	Output an element with a rectangular value
+ *      Output an element with a rectangular value
  **/
 
 public void element(String id,Rectangle2D r)
@@ -111,7 +111,7 @@ public void element(String id,Rectangle2D r)
 
 
 /**
- *	Output an element with a point value
+ *      Output an element with a point value
  **/
 
 public void element(String id,Point2D p)
@@ -127,7 +127,7 @@ public void element(String id,Point2D p)
 
 
 /**
- *	Output an element with a color value
+ *      Output an element with a color value
  **/
 
 public void element(String id,Color c)
@@ -140,7 +140,7 @@ public void element(String id,Color c)
 
 
 
-}	// end of class BudaXmlWriter
+}       // end of class BudaXmlWriter
 
 
 

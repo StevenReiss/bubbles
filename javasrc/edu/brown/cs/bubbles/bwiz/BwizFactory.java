@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*										*/
-/*		BwizFactory.java						*/
-/*										*/
-/*	Factory to set up wizards as part of bubbles				*/
-/*										*/
+/*                                                                              */
+/*              BwizFactory.java                                                */
+/*                                                                              */
+/*      Factory to set up wizards as part of bubbles                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -56,12 +56,12 @@ public final class BwizFactory implements BwizConstants, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BudaRoot	buda_root;
+private BudaRoot        buda_root;
 
 private static BwizFactory the_factory;
 
@@ -69,9 +69,9 @@ private static BwizFactory the_factory;
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -96,9 +96,9 @@ public static BwizFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BwizFactory()
@@ -109,9 +109,9 @@ private BwizFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Panel setup methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupWizards(BudaRoot br)
@@ -135,9 +135,9 @@ private void setupWizards(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble methods								*/
-/*										*/
+/*                                                                              */
+/*      Bubble methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void createBubble(Component c,Component fc)
@@ -157,19 +157,19 @@ private class WizardBubble extends BudaBubble {
       setContentPane(c,fc);
     }
 
-}	// end of inner class WizardBubble
+}       // end of inner class WizardBubble
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods for using new method wizard dialog				*/
-/*										*/
+/*                                                                              */
+/*      Methods for using new method wizard dialog                              */
+/*                                                                              */
 /********************************************************************************/
 
 private class CreatorWizard implements BuenoMethodCreatorInstance,
-	BuenoClassCreatorInstance, BuenoPackageCreatorInstance {
+        BuenoClassCreatorInstance, BuenoPackageCreatorInstance {
 
 
    private Element wizard_data;
@@ -179,10 +179,10 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
     }
    
    @Override public boolean showMethodDialogBubble(BudaBubble src,Point loc,
-        					      BuenoProperties known,
-        					      BuenoLocation insert,
-        					      String lbl,
-        					      BuenoBubbleCreator newer) {
+                                                      BuenoProperties known,
+                                                      BuenoLocation insert,
+                                                      String lbl,
+                                                      BuenoBubbleCreator newer) {
       BoardProperties bp = BoardProperties.getProperties("Bwiz");
       if (!bp.getBoolean("Bwiz.use.method.dialog") || wizard_data == null) return false;
    
@@ -192,33 +192,33 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(src);
       if (bba == null) bba = buda_root.getCurrentBubbleArea();
       bba.addBubble(bb,src,loc,PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|
-        	       PLACEMENT_LOGICAL);
+                       PLACEMENT_LOGICAL);
    
       return true;
     }
 
   @Override public boolean showClassDialogBubble(BudaBubble src,Point loc,
-	BuenoType typ,
-	 BuenoProperties known,
-	 BuenoLocation insert,
-	 String lbl,
-	 BuenoBubbleCreator newer) {
+        BuenoType typ,
+         BuenoProperties known,
+         BuenoLocation insert,
+         String lbl,
+         BuenoBubbleCreator newer) {
       BoardProperties bp = BoardProperties.getProperties("Bwiz");
       if (!bp.getBoolean("Bwiz.use.class.dialog") || wizard_data == null) return false;
 
       BwizNewWizard ccwiz = null;
       switch (typ) {
-	 case NEW_CLASS :
-	    ccwiz = new BwizNewClassWizard(insert);
-	    break;
-	 case NEW_INTERFACE :
-	    ccwiz = new BwizNewInterfaceWizard(insert);
-	    break;
-	 case NEW_ENUM :
-	    ccwiz = new BwizNewEnumWizard(insert);
-	    break;
-	 default :
-	    return false;
+         case NEW_CLASS :
+            ccwiz = new BwizNewClassWizard(insert);
+            break;
+         case NEW_INTERFACE :
+            ccwiz = new BwizNewInterfaceWizard(insert);
+            break;
+         case NEW_ENUM :
+            ccwiz = new BwizNewEnumWizard(insert);
+            break;
+         default :
+            return false;
        }
 
       ccwiz.setBubbleCreator(newer);
@@ -226,13 +226,13 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(src);
       if (bba == null) bba = buda_root.getCurrentBubbleArea();
       bba.addBubble(bb,src,loc,PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|
-	    PLACEMENT_LOGICAL);
+            PLACEMENT_LOGICAL);
 
       return true;
     }
 
   @Override public boolean showPackageDialogBubble(BudaBubble src,Point loc,
-	BuenoType typ,
+        BuenoType typ,
         BuenoProperties known,
         BuenoLocation insert,
         String lbl,
@@ -259,12 +259,12 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
      return IvyXml.getAttrBool(wizard_data,"SEPARATE_TYPES");
    }
 
-}	// end of inner class MethodCreator
+}       // end of inner class MethodCreator
 
 
 
 
-}	// end of class BwizFactory
+}       // end of class BwizFactory
 
 
 

@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*										*/
-/*		BaleFindReplaceBar.java 					*/
-/*										*/
-/*	Bubble Annotated Language Editor Fragment editor find bar		*/
-/*										*/
+/*                                                                              */
+/*              BaleFindReplaceBar.java                                         */
+/*                                                                              */
+/*      Bubble Annotated Language Editor Fragment editor find bar               */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Arman Uguray 		      */
-/*	Copyright 2012 Brown University -- Steven Reiss 		      */
+/*      Copyright 2010 Brown University -- Arman Uguray                       */
+/*      Copyright 2012 Brown University -- Steven Reiss                       */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -81,14 +81,14 @@ import java.util.List;
 
 
 class BaleFindReplaceBar extends SwingGridPanel implements BaleConstants, BaleConstants.BaleFinder,
-	ActionListener, CaretListener, ItemListener
+        ActionListener, CaretListener, ItemListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BaleEditorPane editor_pane;
@@ -98,7 +98,7 @@ private JTextField replace_field;
 private JCheckBox is_case_sensitive; // toggles whether the search should be case sensitive
 private JLabel number_label; // shows how many occurences of the search text have been found
 
-private String	search_for;
+private String  search_for;
 private String searched_for;    // stores the most recent search text. used to determine 
                                 //   whether it is necessary to run a new search
 private transient List<Position> occurrences_set; // stores the locations of occurrences of the search text.
@@ -133,9 +133,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
@@ -273,12 +273,12 @@ private JTextField createTextField(int ln)
 
 
 /********************************************************************************/
-/*										*/
-/*	Activate methods							*/
-/*										*/
+/*                                                                              */
+/*      Activate methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public Component getComponent()		{ return this; }
+@Override public Component getComponent()               { return this; }
 
 
 @Override public void setVisible(boolean fg)
@@ -309,9 +309,9 @@ private JTextField createTextField(int ln)
 
 
 /********************************************************************************/
-/*										*/
-/*	Search routines 							*/
-/*										*/
+/*                                                                              */
+/*      Search routines                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void find(int dir,boolean next)
@@ -521,14 +521,14 @@ private void replaceAll()
    try {
       bh.beginEditAction(editor_pane);
       while (!occurrences_set.isEmpty()) {
-	 int idx = occurrences_set.size();
-	 Position p = occurrences_set.remove(idx-1);
-	 try {
-	    for_document.replace(p.getOffset(),ln,s,null);
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Problem with replaceall",e);
-	  }
+         int idx = occurrences_set.size();
+         Position p = occurrences_set.remove(idx-1);
+         try {
+            for_document.replace(p.getOffset(),ln,s,null);
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Problem with replaceall",e);
+          }
          findAllOccurences(search_for, 1);
          number_label.setText("Matches: " + occurrences_set.size());
        }
@@ -543,7 +543,7 @@ private void replaceAll()
 
 private void clearHighlights()
 {
-   if (my_highlighter == null) return;	// can be called before constructor completes
+   if (my_highlighter == null) return;  // can be called before constructor completes
    if (my_highlight_tag == null) return;
 
    try {
@@ -556,9 +556,9 @@ private void clearHighlights()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action Handlers 							*/
-/*										*/
+/*                                                                              */
+/*      Action Handlers                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -567,7 +567,7 @@ private void clearHighlights()
 
    if (cmd.equals("DONE")) {
       try {
-	 my_highlighter.changeHighlight(my_highlight_tag, 0, 0);
+         my_highlighter.changeHighlight(my_highlight_tag, 0, 0);
        } 
       catch (BadLocationException ble) { }
       setVisible(false);
@@ -639,7 +639,7 @@ private class SearchAction extends AbstractAction {
       find(last_dir,true);
     }
 
-}	// end of inner class SearchAction
+}       // end of inner class SearchAction
 
 
 
@@ -655,7 +655,7 @@ private class ReplaceAction extends AbstractAction {
       replace();
     }
 
-}	// end of inner class ReplaceAction
+}       // end of inner class ReplaceAction
 
 
 
@@ -670,9 +670,9 @@ private class CloseListener extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       if (KeyEvent.getKeyText(e.getKeyCode()).equals("F") && e.getModifiersEx() == modifier_key){
-	 clearHighlights();
-	 setVisible(false);
-	 if (editor_pane.isVisible()) editor_pane.grabFocus();
+         clearHighlights();
+         setVisible(false);
+         if (editor_pane.isVisible()) editor_pane.grabFocus();
        }
     }
 
@@ -681,11 +681,11 @@ private class CloseListener extends KeyAdapter {
          if (KeyEvent.getKeyText(e.getKeyCode()).equals("Tab") && replace_field.isVisible()) {
             replace_field.grabFocus();
           }
-	 else if (!KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")) find(0, true);
+         else if (!KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")) find(0, true);
       }
     }
 
-}	// end of inner class CloseListener
+}       // end of inner class CloseListener
 
 
 
@@ -696,7 +696,7 @@ private final class HighlightCanceler implements CaretListener {
       if (current_caret_position != editor_pane.getCaretPosition()) clearHighlights();
     }
 
-}	// end of inner class HighlightCanceler
+}       // end of inner class HighlightCanceler
 
 
 
@@ -752,7 +752,7 @@ private static class FindFocusTraversalPolicy extends FocusTraversalPolicy {
 
 
 
-}	// end of class BaleFindReplaceBar
+}       // end of class BaleFindReplaceBar
 
 
 

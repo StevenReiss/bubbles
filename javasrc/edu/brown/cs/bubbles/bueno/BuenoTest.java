@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoTest.java							*/
-/*										*/
-/*	BUbbles Environment New Objects creator tester				*/
-/*										*/
+/*                                                                              */
+/*              BuenoTest.java                                                  */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator tester                          */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -38,9 +38,9 @@ public final class BuenoTest implements BuenoConstants, BuenoConstants.BuenoInse
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -54,17 +54,17 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BuenoTest(String [] args)
@@ -82,9 +82,9 @@ private BuenoTest(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Testing methods 							*/
-/*										*/
+/*                                                                              */
+/*      Testing methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private void runTest()
@@ -113,9 +113,9 @@ private void runTest()
 
 
 /********************************************************************************/
-/*										*/
-/*	Hnadle insertion requests						*/
-/*										*/
+/*                                                                              */
+/*      Hnadle insertion requests                                               */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean insertText(BuenoLocation loc,String text,boolean format)
@@ -130,7 +130,7 @@ private void runTest()
 
 
 
-}	// end of class BuenoTest
+}       // end of class BuenoTest
 
 
 

@@ -137,7 +137,7 @@ private class CreateBubble extends BudaBubble {
       setContentPane(cnts);
    }
 
-}	// end of inner class CreateBubble
+}       // end of inner class CreateBubble
 
 
 private JPanel getCreationPanel()
@@ -240,7 +240,7 @@ private final class NameAction implements ActionListener, UndoableEditListener {
       create_props.put(PROJ_PROP_DIRECTORY,pdir);
     }
    
-}	// end of inner class NameAction
+}       // end of inner class NameAction
 
 
 
@@ -258,12 +258,12 @@ private final class CreateAction implements ActionListener, Runnable {
          // put up error message
        }
       else {
-	 // possibly bring up project editor dialog here on success
+         // possibly bring up project editor dialog here on success
       }
    }
    
    
-}	// end of inner class CreateAction
+}       // end of inner class CreateAction
 
 
 private final class TypeAction implements ActionListener {
@@ -318,7 +318,7 @@ private boolean createProject()
    BumpClient bc = BumpClient.getBump();
    if (!bc.createProject(pnm,pdir,create_type.getName(),create_props)) {
       try {
-	 IvyFile.remove(pdir);
+         IvyFile.remove(pdir);
        }
       catch (IOException e) { }
       return false;
@@ -390,7 +390,7 @@ private class EditorBubble extends BudaBubble {
       setContentPane(cnts);
     }
    
-}	// end of inner class CreateBubble
+}       // end of inner class CreateBubble
 
 
 private JPanel getEditorPanel(Element projxml,Element editxml)

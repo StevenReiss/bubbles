@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeduFactory.java						*/
-/*										*/
-/*	Bubbles for Education -- setup for courses				*/
-/*										*/
+/*                                                                              */
+/*              BeduFactory.java                                                */
+/*                                                                              */
+/*      Bubbles for Education -- setup for courses                              */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven Reiss 			*/
+/*      Copyright 2011 Brown University -- Steven Reiss                         */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 package edu.brown.cs.bubbles.bedu;
@@ -57,23 +57,23 @@ public final class BeduFactory implements BeduConstants, BoardConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BeduCourseData		course_data;
-private boolean 			is_setup;
+private BeduCourseData          course_data;
+private boolean                         is_setup;
 private BudaRoot                        buda_root;
 
-private static BeduFactory		the_factory = null;
+private static BeduFactory              the_factory = null;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static synchronized BeduFactory getFactory()
@@ -104,9 +104,9 @@ private BeduFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 public static void setup()
@@ -125,9 +125,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 public List<Assignment> getAllAssignments()
@@ -143,7 +143,7 @@ public List<Assignment> getCreatableAssignments()
    List<Assignment> rslt = new ArrayList<Assignment>();
    for (Assignment a : getAllAssignments()) {
       if (a.isPast() || a.isCurrent()) {
-	 if (!a.isInUserWorkspace() && a.getName() != null) rslt.add(a);
+         if (!a.isInUserWorkspace() && a.getName() != null) rslt.add(a);
        }
     }
    return rslt;
@@ -193,9 +193,9 @@ private static class OpenAssignmentAction extends AbstractAction {
 
 
 /********************************************************************************/
-/*										*/
-/*	Button setup and handling						*/
-/*										*/
+/*                                                                              */
+/*      Button setup and handling                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupCourseButtons()
@@ -206,22 +206,22 @@ private void setupCourseButtons()
    if (course_data != null) {
       String cnm = course_data.getName();
       for (Assignment asg : getAllAssignments()) {
-	 if (asg.canSubmit()) {
-	    String nm = "Bubble." + cnm + ".Submit " + asg.getName();
-	    BudaRoot.registerMenuButton(nm,new Submitter(asg));
-	  }
-	 if (asg.isPast() || asg.isCurrent()) {
-	    String doc = asg.getDocumentationUrl();
-	    if (doc != null) {
-	       String nm = "Bubble." + cnm + ".Assignment " + asg.getName();
-	       BudaRoot.registerMenuButton(nm,new Documenter(asg));
-	     }
-	  }
+         if (asg.canSubmit()) {
+            String nm = "Bubble." + cnm + ".Submit " + asg.getName();
+            BudaRoot.registerMenuButton(nm,new Submitter(asg));
+          }
+         if (asg.isPast() || asg.isCurrent()) {
+            String doc = asg.getDocumentationUrl();
+            if (doc != null) {
+               String nm = "Bubble." + cnm + ".Assignment " + asg.getName();
+               BudaRoot.registerMenuButton(nm,new Documenter(asg));
+             }
+          }
        }
       String hlp = course_data.getHelpUrl();
       if (hlp != null) {
-	 String nm = "Bubble.Help.Help for " + course_data.getName();
-	 BudaRoot.registerMenuButton(nm,new Helper());
+         String nm = "Bubble.Help.Help for " + course_data.getName();
+         BudaRoot.registerMenuButton(nm,new Helper());
        }
     }
 }
@@ -285,7 +285,7 @@ private class Submitter implements Runnable, BudaConstants.ButtonListener {
       BoardThreadPool.start(this);
     }
 
-}	// end of inner class Submitter
+}       // end of inner class Submitter
 
 
 
@@ -310,14 +310,14 @@ private final class Helper implements BudaConstants.ButtonListener {
       showPage(course_data.getHelpUrl());
     }
 
-}	// end of innter class Helper
+}       // end of innter class Helper
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Property methods							*/
-/*										*/
+/*                                                                              */
+/*      Property methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupProperties(File dir)
@@ -334,19 +334,19 @@ private void setupProperties(File dir)
       File f1 = new File(dir,nm);
       boolean upd = false;
       try {
-	 FileInputStream ins = new FileInputStream(f1);
-	 np.loadFromXML(ins);
-	 for (String xnm : np.stringPropertyNames()) {
-	    Object v = bp.getProperty(xnm);
-	    if (v == null || force) {
-	       bp.setProperty(xnm,np.getProperty(xnm));
-	       upd = true;
-	     }
-	  }
-	 if (upd) bp.save();
+         FileInputStream ins = new FileInputStream(f1);
+         np.loadFromXML(ins);
+         for (String xnm : np.stringPropertyNames()) {
+            Object v = bp.getProperty(xnm);
+            if (v == null || force) {
+               bp.setProperty(xnm,np.getProperty(xnm));
+               upd = true;
+             }
+          }
+         if (upd) bp.save();
        }
       catch (IOException e) {
-	 BoardLog.logE("BEDU","Can't load property file",e);
+         BoardLog.logE("BEDU","Can't load property file",e);
        }
     }
 }
@@ -364,9 +364,9 @@ private static final class PropsFilter implements FilenameFilter {
 
 
 /********************************************************************************/
-/*										*/
-/*	Workspace setup methods 						*/
-/*										*/
+/*                                                                              */
+/*      Workspace setup methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupWorkspace()
@@ -386,9 +386,9 @@ private void setupWorkspace()
 
 
 /********************************************************************************/
-/*										*/
-/*	Find initial course directory						*/
-/*										*/
+/*                                                                              */
+/*      Find initial course directory                                           */
+/*                                                                              */
 /********************************************************************************/
 
 static File getCourseDirectory()
@@ -424,18 +424,18 @@ static File getInstallDirectory()
    if (f == null) {
       URL url = BeduFactory.class.getClassLoader().getResource(BOARD_RESOURCE_PLUGIN_ECLIPSE);
       if (url != null) {
-	 String file = url.toString();
-	 if (file.startsWith("jar:file:/")) file = file.substring(9);
-	 if (file.length() >= 3 && file.charAt(0) == '/' &&
-		  Character.isLetter(file.charAt(1)) && file.charAt(2) == ':' &&
-		  File.separatorChar == '\\')
-	    file = file.substring(1);
-	 int idx = file.lastIndexOf('!');
-	 if (idx >= 0) file = file.substring(0,idx);
-	 if (File.separatorChar != '/') file = file.replace('/',File.separatorChar);
-	 file = file.replace("%20"," ");
-	 File f1 = new File(file);
-	 f = f1.getParentFile();
+         String file = url.toString();
+         if (file.startsWith("jar:file:/")) file = file.substring(9);
+         if (file.length() >= 3 && file.charAt(0) == '/' &&
+                  Character.isLetter(file.charAt(1)) && file.charAt(2) == ':' &&
+                  File.separatorChar == '\\')
+            file = file.substring(1);
+         int idx = file.lastIndexOf('!');
+         if (idx >= 0) file = file.substring(0,idx);
+         if (File.separatorChar != '/') file = file.replace('/',File.separatorChar);
+         file = file.replace("%20"," ");
+         File f1 = new File(file);
+         f = f1.getParentFile();
       }
    }
 
@@ -449,7 +449,7 @@ static File getInstallDirectory()
 
 
 
-}	// end of class BeduFactory
+}       // end of class BeduFactory
 
 
 

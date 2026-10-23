@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugBreakpoint.java					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugBreakpoint.java                                      */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -40,17 +40,17 @@ abstract class NobaseDebugBreakpoint implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	is_enabled;
-private String		break_id;
-private int		break_number;
-private boolean 	is_tracepoint;
-private String		debug_condition;
-private boolean 	condition_enabled;
+private boolean         is_enabled;
+private String          break_id;
+private int             break_number;
+private boolean         is_tracepoint;
+private String          debug_condition;
+private boolean         condition_enabled;
 
 private static IdCounter break_counter = new IdCounter();
 
@@ -58,13 +58,13 @@ private static IdCounter break_counter = new IdCounter();
 
 
 /********************************************************************************/
-/*										*/
-/*	Static creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Static creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 static NobaseDebugBreakpoint createLineBreakpoint(NobaseFile file,int line)
-	throws NobaseException
+        throws NobaseException
 {
    return new LineBreakpoint(file,line);
 }
@@ -82,11 +82,11 @@ static NobaseDebugBreakpoint createBreakpoint(Element xml) throws NobaseExceptio
    BreakType bt = IvyXml.getAttrEnum(xml,"TYPE",BreakType.NONE);
    switch (bt) {
       case NONE :
-	 break;
+         break;
       case LINE :
-	 return new LineBreakpoint(xml);
+         return new LineBreakpoint(xml);
       case EXCEPTION :
-	 return new ExceptionBreakpoint(xml);
+         return new ExceptionBreakpoint(xml);
    }
 
    return null;
@@ -96,9 +96,9 @@ static NobaseDebugBreakpoint createBreakpoint(Element xml) throws NobaseExceptio
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected NobaseDebugBreakpoint()
@@ -130,18 +130,18 @@ protected NobaseDebugBreakpoint(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getId()					{ return break_id; }
+String getId()                                  { return break_id; }
 
-boolean isEnabled()			{ return is_enabled; }
-String getCondition()			{ return debug_condition; }
-boolean isConditionEnabled()		{ return condition_enabled; }
+boolean isEnabled()                     { return is_enabled; }
+String getCondition()                   { return debug_condition; }
+boolean isConditionEnabled()            { return condition_enabled; }
 
-void setConditionEnabled(boolean e)	{ condition_enabled = e; }
+void setConditionEnabled(boolean e)     { condition_enabled = e; }
 void setCondition(String c)
 {
    if (c != null && c.trim().length() == 0) c = null;
@@ -162,11 +162,11 @@ void setProperty(String p,String v)
 
 abstract BreakType getType();
 
-File getFile()				{ return null; }
-int getLine()				{ return -1; }
-String getException()			{ return null; }
-boolean isCaught()			{ return false; }
-boolean isUncaught()			{ return false; }
+File getFile()                          { return null; }
+int getLine()                           { return -1; }
+String getException()                   { return null; }
+boolean isCaught()                      { return false; }
+boolean isUncaught()                    { return false; }
 
 void clear()
 {
@@ -175,9 +175,9 @@ void clear()
 
 
 /********************************************************************************/
-/*										*/
-/*	Output Methods								*/
-/*										*/
+/*                                                                              */
+/*      Output Methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void outputXml(IvyXmlWriter xw)
@@ -227,26 +227,26 @@ protected abstract void outputLocalBubbles(IvyXmlWriter xw);
 
 
 /********************************************************************************/
-/*										*/
-/*	Line breakpoint specifics						*/
-/*										*/
+/*                                                                              */
+/*      Line breakpoint specifics                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private static class LineBreakpoint extends NobaseDebugBreakpoint
 {
-   private NobaseFile	   file_data;
-   private Position	   file_position;
+   private NobaseFile      file_data;
+   private Position        file_position;
 
    LineBreakpoint(NobaseFile file,int line) throws NobaseException {
       file_data = file;
       IDocument d = file.getDocument();
       try {
-	 int off = d.getLineOffset(line);
-	 file_position = new Position(off);
-	 d.addPosition(file_position);
+         int off = d.getLineOffset(line);
+         file_position = new Position(off);
+         d.addPosition(file_position);
        }
       catch (BadLocationException ex) {
-	 throw new NobaseException("Bad breakpoint location",ex);
+         throw new NobaseException("Bad breakpoint location",ex);
        }
     }
 
@@ -259,26 +259,26 @@ private static class LineBreakpoint extends NobaseDebugBreakpoint
       int line = IvyXml.getAttrInt(xml,"LINE");
       IDocument d = file_data.getDocument();
       try {
-	 int off = d.getLineOffset(line);
-	 file_position = new Position(off);
-	 d.addPosition(file_position);
+         int off = d.getLineOffset(line);
+         file_position = new Position(off);
+         d.addPosition(file_position);
        }
       catch (BadLocationException ex) {
-	 throw new NobaseException("Bad breakpoint location",ex);
+         throw new NobaseException("Bad breakpoint location",ex);
        }
     }
 
-   @Override BreakType getType()			{ return BreakType.LINE; }
+   @Override BreakType getType()                        { return BreakType.LINE; }
 
-   @Override public File getFile()			{ return file_data.getFile(); }
+   @Override public File getFile()                      { return file_data.getFile(); }
 
    @Override public int getLine() {
       int off = file_position.getOffset();
       try {
-	 return file_data.getDocument().getLineOfOffset(off);
+         return file_data.getDocument().getLineOfOffset(off);
        }
       catch (BadLocationException ex) {
-	 return -1;
+         return -1;
        }
     }
 
@@ -295,20 +295,20 @@ private static class LineBreakpoint extends NobaseDebugBreakpoint
       xw.field("ENDPOS",file_position.getOffset() + file_position.getLength());
     }
 
-}	// end of inner class LineBreakpoint
+}       // end of inner class LineBreakpoint
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Exception breakpoint specifics						*/
-/*										*/
+/*                                                                              */
+/*      Exception breakpoint specifics                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private static class ExceptionBreakpoint extends NobaseDebugBreakpoint
 {
-   private boolean	is_caught;
-   private boolean	is_uncaught;
+   private boolean      is_caught;
+   private boolean      is_uncaught;
 
    ExceptionBreakpoint(boolean c,boolean u) {
       is_caught = c;
@@ -321,9 +321,9 @@ private static class ExceptionBreakpoint extends NobaseDebugBreakpoint
       is_uncaught = IvyXml.getAttrBool(xml,"ISUNCAUGHT");
     }
 
-   @Override BreakType getType()			{ return BreakType.EXCEPTION; }
-   @Override public boolean isCaught()		        { return is_caught; }
-   @Override public boolean isUncaught()		{ return is_uncaught; }
+   @Override BreakType getType()                        { return BreakType.EXCEPTION; }
+   @Override public boolean isCaught()                  { return is_caught; }
+   @Override public boolean isUncaught()                { return is_uncaught; }
 
    @Override protected void outputLocalXml(IvyXmlWriter xw) {
       xw.field("ISCAUGHT",is_caught);
@@ -342,12 +342,12 @@ private static class ExceptionBreakpoint extends NobaseDebugBreakpoint
       else super.setProperty(p,v);
     }
 
-}	// end of inner class LineBreakpoint
+}       // end of inner class LineBreakpoint
 
 
 
 
-}	// end of class NobaseDebugBreakpoint
+}       // end of class NobaseDebugBreakpoint
 
 
 

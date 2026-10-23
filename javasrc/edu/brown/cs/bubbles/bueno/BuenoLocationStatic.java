@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BuenoLocationStatic.java					*/
-/*										*/
-/*	BUbbles Environment New Objects creator location provided by name	*/
-/*										*/
+/*                                                                              */
+/*              BuenoLocationStatic.java                                        */
+/*                                                                              */
+/*      BUbbles Environment New Objects creator location provided by name       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2010 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -39,25 +39,25 @@ class BuenoLocationStatic extends BuenoLocation
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		project_name;
-private String		class_name;
-private String		package_name;
-private String		insert_name;
-private File		location_file;
-private boolean 	insert_after;
+private String          project_name;
+private String          class_name;
+private String          package_name;
+private String          insert_name;
+private File            location_file;
+private boolean         insert_after;
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
@@ -83,21 +83,21 @@ BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
    else if (nm != null) {
       locs = bcc.findClassDefinition(proj,nm);
       if (locs != null && locs.size() > 0) {
-	 BumpLocation loc = locs.get(0);	// Is this always correct?
-	 if (loc.getProject() != null) project_name = loc.getProject();
-	 location_file = loc.getFile();
-	 String snm = loc.getSymbolName();
-	 class_name = snm;
-	 String key = loc.getKey();
-	 int ct = 0;
-	 for (int i = key.indexOf('$'); i >= 0; i = key.indexOf('$',i+1)) ct++;
-	 int idx = snm.lastIndexOf(".");
-	 if (ct > 0) {
-	    for (int j = 0; idx > 0 && j < ct; ++j) {
-	       idx = snm.lastIndexOf(".",idx-1);
-	     }
-	  }
-	 if (idx > 0) package_name = snm.substring(0,idx);
+         BumpLocation loc = locs.get(0);        // Is this always correct?
+         if (loc.getProject() != null) project_name = loc.getProject();
+         location_file = loc.getFile();
+         String snm = loc.getSymbolName();
+         class_name = snm;
+         String key = loc.getKey();
+         int ct = 0;
+         for (int i = key.indexOf('$'); i >= 0; i = key.indexOf('$',i+1)) ct++;
+         int idx = snm.lastIndexOf(".");
+         if (ct > 0) {
+            for (int j = 0; idx > 0 && j < ct; ++j) {
+               idx = snm.lastIndexOf(".",idx-1);
+             }
+          }
+         if (idx > 0) package_name = snm.substring(0,idx);
        }
       else {
          // do nothing
@@ -124,18 +124,18 @@ BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public String getProject()			{ return project_name; }
+@Override public String getProject()                    { return project_name; }
 
-@Override public String getPackage()			{ return package_name; }
+@Override public String getPackage()                    { return package_name; }
 
-@Override public String getClassName()			{ return class_name; }
+@Override public String getClassName()                  { return class_name; }
 
-@Override public File getFile() 	
+@Override public File getFile()         
 {
    return location_file;
 }
@@ -169,7 +169,7 @@ BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
 
 
 
-}	// end of class BuenoLocationStatic
+}       // end of class BuenoLocationStatic
 
 
 

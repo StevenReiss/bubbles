@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BddtExceptionBreakpointBubble.java				*/
-/*										*/
-/*	Bubble to handle the creation of exception breakpoings			*/
-/*										*/
+/*                                                                              */
+/*              BddtExceptionBreakpointBubble.java                              */
+/*                                                                              */
+/*      Bubble to handle the creation of exception breakpoings                  */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -46,29 +46,29 @@ import java.util.TreeSet;
 
 
 class BddtExceptionBreakpointBubble extends BudaBubble implements BddtConstants,
-		BumpConstants, BudaConstants, BassConstants, ActionListener
+                BumpConstants, BudaConstants, BassConstants, ActionListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JComboBox<String>	exception_box;
-private JCheckBox		caught_button;
-private JCheckBox		uncaught_button;
-private JCheckBox		suspendvm_button;
+private JComboBox<String>       exception_box;
+private JCheckBox               caught_button;
+private JCheckBox               uncaught_button;
+private JCheckBox               suspendvm_button;
 private JCheckBox               subclass_button;
 private static final long serialVersionUID = 1;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BddtExceptionBreakpointBubble()
@@ -80,9 +80,9 @@ BddtExceptionBreakpointBubble()
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel layout								*/
-/*										*/
+/*                                                                              */
+/*      Panel layout                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupPanel()
@@ -110,9 +110,9 @@ private void setupPanel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handler								*/
-/*										*/
+/*                                                                              */
+/*      Action handler                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -157,9 +157,9 @@ private void createBreakpoint()
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to get the set of exceptions					*/
-/*										*/
+/*                                                                              */
+/*      Methods to get the set of exceptions                                    */
+/*                                                                              */
 /********************************************************************************/
 
 private final class ExceptionSet implements Runnable {
@@ -183,12 +183,12 @@ private final class ExceptionSet implements Runnable {
 
 
 
-}	// end of inner class ExceptionSet
+}       // end of inner class ExceptionSet
 
 
 
 
-}	// end of class BddtExceptionBreakpointBubble
+}       // end of class BddtExceptionBreakpointBubble
 
 
 

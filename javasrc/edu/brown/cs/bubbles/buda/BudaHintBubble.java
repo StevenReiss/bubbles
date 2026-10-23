@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BudaHintBubble.java						*/
-/*										*/
-/*	BUblles Display Area bubble for providing hints/undo/...		*/
-/*										*/
+/*                                                                              */
+/*              BudaHintBubble.java                                             */
+/*                                                                              */
+/*      BUblles Display Area bubble for providing hints/undo/...                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -51,17 +51,17 @@ class BudaHintBubble extends BudaBubble implements ActionListener, BudaConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private JComponent	display_message;
+private JComponent      display_message;
 private BudaHintActions hint_actions;
-private int		display_time;
-private int		delta_time;
-private long		start_time;
-private boolean 	fade_out;
+private int             display_time;
+private int             delta_time;
+private long            start_time;
+private boolean         fade_out;
 
 private static final int FADE_INTERVAL = 1000;
 private static final double START_TRANSPARENCY = 0.5;
@@ -74,9 +74,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BudaHintBubble(String msg,BudaHintActions action,int time)
@@ -132,9 +132,9 @@ BudaHintBubble(String msg,BudaHintActions action,int time)
 
 
 /********************************************************************************/
-/*										*/
-/*	Painting methods							*/
-/*										*/
+/*                                                                              */
+/*      Painting methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 void setFade(double fade)
@@ -157,8 +157,8 @@ void setFade(double fade)
       tt.start();
 
       if (fade_out) {
-	 tt = new Timer(delta_time,new FadeAction());
-	 tt.start();
+         tt = new Timer(delta_time,new FadeAction());
+         tt.start();
        }
     }
 
@@ -169,9 +169,9 @@ void setFade(double fade)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action handler								*/
-/*										*/
+/*                                                                              */
+/*      Action handler                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -185,9 +185,9 @@ void setFade(double fade)
 
 
 /********************************************************************************/
-/*										*/
-/*	Remove Action								*/
-/*										*/
+/*                                                                              */
+/*      Remove Action                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private final class RemoveAction implements ActionListener {
@@ -198,16 +198,16 @@ private final class RemoveAction implements ActionListener {
       hint_actions = null;
     }
 
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Fade Action								*/
-/*										*/
+/*                                                                              */
+/*      Fade Action                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private final class FadeAction implements ActionListener {
@@ -225,12 +225,12 @@ private final class FadeAction implements ActionListener {
        }
     }
 
-}	// end of inner class FadeAction
+}       // end of inner class FadeAction
 
 
 
 
-}	// end of class BudaHintBubble
+}       // end of class BudaHintBubble
 
 
 

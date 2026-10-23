@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BoppFactory.java						*/
-/*										*/
-/*	Factory for setting up the option panel 				*/
-/*										*/
+/*                                                                              */
+/*              BoppFactory.java                                                */
+/*                                                                              */
+/*      Factory for setting up the option panel                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Alexander Hills		      */
+/*      Copyright 2009 Brown University -- Alexander Hills                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,9 +56,9 @@ public class BoppFactory implements BoppConstants, BudaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private static BoppFactory the_factory = new BoppFactory();
@@ -82,9 +82,9 @@ public static BoppFactory getFactory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initialization methods							*/
-/*										*/
+/*                                                                              */
+/*      Initialization methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -98,7 +98,7 @@ public static void setup()
 
 
 /**
- *	Setup method called after buda is setup
+ *      Setup method called after buda is setup
  **/
 
 public static void initialize(BudaRoot br)
@@ -106,7 +106,7 @@ public static void initialize(BudaRoot br)
    buda_root = br;
 
    Icon chevron = BoardImage.getIcon("dropdown_chevron",
-					BUDA_BUTTON_RESIZE_WIDTH, BUDA_BUTTON_RESIZE_HEIGHT);
+                                        BUDA_BUTTON_RESIZE_WIDTH, BUDA_BUTTON_RESIZE_HEIGHT);
 
    option_set = new BoppOptionSet(br);
 
@@ -129,9 +129,9 @@ public static void initialize(BudaRoot br)
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel setup methods							*/
-/*										*/
+/*                                                                              */
+/*      Panel setup methods                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 static void repaintBubbleArea()
@@ -174,9 +174,9 @@ static void handleOptionChange(BoppOptionNew opt)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Handler for options button						*/
-/*										*/
+/*                                                                              */
+/*      Handler for options button                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class OptionsListenerNew implements ActionListener {
@@ -212,10 +212,10 @@ private static class OptionsListenerNew implements ActionListener {
       jp.setVisible(true);
     }
 
-}	// end of inner class OptionsListener
+}       // end of inner class OptionsListener
 
 
-}	// end of class BoppFactory
+}       // end of class BoppFactory
 
 
 

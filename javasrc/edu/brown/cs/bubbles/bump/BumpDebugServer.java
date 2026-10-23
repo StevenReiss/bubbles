@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BumpDebugServer.java						*/
-/*										*/
-/*	Bubble Environment debugger process message server			*/
-/*										*/
+/*                                                                              */
+/*              BumpDebugServer.java                                            */
+/*                                                                              */
+/*      Bubble Environment debugger process message server                      */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2010 Brown University -- Steven P. Reiss			*/
+/*      Copyright 2010 Brown University -- Steven P. Reiss                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -56,9 +56,9 @@ public final class BumpDebugServer implements BumpConstants, MintConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Main program								*/
-/*										*/
+/*                                                                              */
+/*      Main program                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 public static void main(String [] args)
@@ -71,16 +71,16 @@ public static void main(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String		mint_name;
-private String		our_name;
-private int		port_number;
-private SocketThread	socket_thread;
-private MintControl	mint_control;
+private String          mint_name;
+private String          our_name;
+private int             port_number;
+private SocketThread    socket_thread;
+private MintControl     mint_control;
 private Set<Connection> active_connections;
 private Map<String,Connection> named_connections;
 
@@ -88,9 +88,9 @@ private Map<String,Connection> named_connections;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BumpDebugServer(String [] args)
@@ -110,19 +110,19 @@ private BumpDebugServer(String [] args)
 
 
 /********************************************************************************/
-/*										*/
-/*	Argument processing							*/
-/*										*/
+/*                                                                              */
+/*      Argument processing                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 private void scanArgs(String [] args)
 {
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-")) {
-	 if (args[i].startsWith("-M") && i+1 < args.length) {           // -M <mint name>
-	    mint_name = args[++i];
-	  }
-	 else badArgs();
+         if (args[i].startsWith("-M") && i+1 < args.length) {           // -M <mint name>
+            mint_name = args[++i];
+          }
+         else badArgs();
        }
       else badArgs();
     }
@@ -142,9 +142,9 @@ private void badArgs()
 
 
 /********************************************************************************/
-/*										*/
-/*	Processing methods							*/
-/*										*/
+/*                                                                              */
+/*      Processing methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private void process()
@@ -171,9 +171,9 @@ private void process()
 
 
 /********************************************************************************/
-/*										*/
-/*	Connection processing methods						*/
-/*										*/
+/*                                                                              */
+/*      Connection processing methods                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void handleConnection(Socket s)
@@ -196,9 +196,9 @@ private void removeConnection(Connection c)
 
 
 /********************************************************************************/
-/*										*/
-/*	Thread for accepting connections from debug clients			*/
-/*										*/
+/*                                                                              */
+/*      Thread for accepting connections from debug clients                     */
+/*                                                                              */
 /********************************************************************************/
 
 private class SocketThread extends Thread {
@@ -213,10 +213,10 @@ private class SocketThread extends Thread {
    String getLocation() {
       String h = server_socket.getInetAddress().getHostAddress();
       if (h.equals("0.0.0.0")) {
-	try {
-	    h = InetAddress.getLocalHost().getHostAddress();
-	  }
-	 catch (UnknownHostException e) { }
+        try {
+            h = InetAddress.getLocalHost().getHostAddress();
+          }
+         catch (UnknownHostException e) { }
        }
       return "<SOCKET HOST='" + h + "' PORT='" + server_socket.getLocalPort() + "' />";
     }
@@ -224,23 +224,23 @@ private class SocketThread extends Thread {
    @Override public void run() {
       Socket s;
       while (server_socket != null) {
-	 try {
-	    s = server_socket.accept();
-	    handleConnection(s);
-	  }
-	 catch (IOException e) { }
+         try {
+            s = server_socket.accept();
+            handleConnection(s);
+          }
+         catch (IOException e) { }
        }
     }
 
-}	// end of inner class SocketThread
+}       // end of inner class SocketThread
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Class representing a debugger connection				*/
-/*										*/
+/*                                                                              */
+/*      Class representing a debugger connection                                */
+/*                                                                              */
 /********************************************************************************/
 
 private class Connection extends Thread {
@@ -252,10 +252,10 @@ private class Connection extends Thread {
    Connection(Socket s) {
       super("BumpDebugConnection_" + s.getRemoteSocketAddress());
       try {
-	 s.setSoTimeout(60000);
+         s.setSoTimeout(60000);
        }
       catch (SocketException e) {
-	 System.err.println("BUMPDEBUG: Problem with socket timeout: " + e);
+         System.err.println("BUMPDEBUG: Problem with socket timeout: " + e);
        }
       client_socket = s;
       output_writer = null;
@@ -332,16 +332,16 @@ private class Connection extends Thread {
       output_writer.flush();
     }
 
-}	// end of inner class Connection
+}       // end of inner class Connection
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Message handling							*/
-/*										*/
+/*                                                                              */
+/*      Message handling                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 private final class BandaidHandler implements MintHandler {
@@ -354,7 +354,7 @@ private final class BandaidHandler implements MintHandler {
       msg.replyTo();
     }
 
-}	// end of inner class BandaidHandler
+}       // end of inner class BandaidHandler
 
 
 
@@ -371,7 +371,7 @@ private final class BumpHandler implements MintHandler {
       msg.replyTo(rply);
     }
 
-}	// end of inner class BumpHandler
+}       // end of inner class BumpHandler
 
 
 
@@ -381,14 +381,14 @@ private final class ExitHandler implements MintHandler {
       System.exit(0);
     }
 
-}	// end of inner class ExitHandler
+}       // end of inner class ExitHandler
 
 
 
 
 
 
-}	// end of class BumpDebugServer
+}       // end of class BumpDebugServer
 
 
 

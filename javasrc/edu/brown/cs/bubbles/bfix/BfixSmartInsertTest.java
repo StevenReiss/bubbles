@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BfixSmartInsertTest.java					*/
-/*										*/
-/*	description of class							*/
-/*										*/
+/*                                                                              */
+/*              BfixSmartInsertTest.java                                        */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -41,9 +41,9 @@ public class BfixSmartInsertTest
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BfixCorrector file1_corrector;
@@ -51,15 +51,15 @@ private BfixCorrector file1_corrector;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
-public	BfixSmartInsertTest()
+public  BfixSmartInsertTest()
 {
    String [] args = new String [] { "-m", "BUBBLES_TEST_spr", "-w",
-	 "/home/spr/Eclipse/hump" };
+         "/home/spr/Eclipse/hump" };
    try {
       Class<?> c = Class.forName("edu.brown.cs.bubbles.bema.BemaMain");
       Method m = c.getDeclaredMethod("main",String [].class);
@@ -76,7 +76,7 @@ public void setupFiles()
    String proj = "hump";
    File file = new File("/gpfs/main/research/people/spr/hump/javasrc/edu/brown/cs/hump/HumpFile.java");
    BaleWindow bw = bf.createFileEditor(proj,file,
-	 "edu.brown.cs.hump.HumpFile");
+         "edu.brown.cs.hump.HumpFile");
    file1_corrector = new BfixCorrector(bw,false);
 }
 
@@ -89,8 +89,8 @@ public void setupFiles()
 {
    BfixSmartInsert smartie = new BfixSmartInsert(file1_corrector);
    BfixOrderNewElement newelt = new BfixOrderNewElement("edu.brown.cs.hump.HumpFile.getDocument",
-	 BumpSymbolType.FUNCTION,Modifier.PUBLIC,
-	 "public Document getDocument() { return base_document; }");
+         BumpSymbolType.FUNCTION,Modifier.PUBLIC,
+         "public Document getDocument() { return base_document; }");
    smartie.smartInsertSetup(newelt);
 
    int pos = newelt.getInsertPosition();
@@ -102,7 +102,7 @@ public void setupFiles()
 }
 
 
-}	// end of class BfixSmartInsertTest
+}       // end of class BfixSmartInsertTest
 
 
 

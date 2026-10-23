@@ -1,34 +1,34 @@
 /********************************************************************************/
-/*										*/
-/*		BoppOptionPanel.java						*/
-/*										*/
-/*	Panel for displaying options						*/
-/*										*/
+/*                                                                              */
+/*              BoppOptionPanel.java                                            */
+/*                                                                              */
+/*      Panel for displaying options                                            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2009, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- *  Permission to use, copy, modify, and distribute this software and its	 *
- *  documentation for any purpose other than its incorporation into a		 *
- *  commercial product is hereby granted without fee, provided that the 	 *
- *  above copyright notice appear in all copies and that both that		 *
- *  copyright notice and this permission notice appear in supporting		 *
- *  documentation, and that the name of Brown University not be used in 	 *
- *  advertising or publicity pertaining to distribution of the software 	 *
- *  without specific, written prior permission. 				 *
- *										 *
- *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
- *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
- *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
- *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
- *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
- *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
- *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
- *  OF THIS SOFTWARE.								 *
- *										 *
+ *  Copyright 2009, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ *  Permission to use, copy, modify, and distribute this software and its        *
+ *  documentation for any purpose other than its incorporation into a            *
+ *  commercial product is hereby granted without fee, provided that the          *
+ *  above copyright notice appear in all copies and that both that               *
+ *  copyright notice and this permission notice appear in supporting             *
+ *  documentation, and that the name of Brown University not be used in          *
+ *  advertising or publicity pertaining to distribution of the software          *
+ *  without specific, written prior permission.                                  *
+ *                                                                               *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS                *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND            *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY      *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY          *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,              *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS               *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE          *
+ *  OF THIS SOFTWARE.                                                            *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -76,28 +76,28 @@ class BoppOptionPanel implements BoppConstants, ActionListener
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BoppOptionSet	option_set;
-private List<SubPanel>	sub_panels;
-private SwingGridPanel	display_panel;
-private JTextField	search_field;
-private JButton 	revert_button;
-private JButton 	save_button;
-private JButton 	close_button;
-private JTabbedPane	tab_pane;
-private SubPanel	search_panel;
-private SubPanel	recent_options;
+private BoppOptionSet   option_set;
+private List<SubPanel>  sub_panels;
+private SwingGridPanel  display_panel;
+private JTextField      search_field;
+private JButton         revert_button;
+private JButton         save_button;
+private JButton         close_button;
+private JTabbedPane     tab_pane;
+private SubPanel        search_panel;
+private SubPanel        recent_options;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BoppOptionPanel(BoppOptionSet opts)
@@ -125,12 +125,12 @@ BoppOptionPanel(BoppOptionSet opts)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-SwingGridPanel getPanel()			{ return display_panel; }
+SwingGridPanel getPanel()                       { return display_panel; }
 
 BudaBubble getBubble()
 {
@@ -153,9 +153,9 @@ private class OptionBubble extends BudaBubble {
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle recentoptions							*/
-/*										*/
+/*                                                                              */
+/*      Handle recentoptions                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void handleOptionChange(BoppOptionNew opt)
@@ -168,9 +168,9 @@ void handleOptionChange(BoppOptionNew opt)
 
 
 /********************************************************************************/
-/*										*/
-/*	Layout methods								*/
-/*										*/
+/*                                                                              */
+/*      Layout methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void setupDisplay()
@@ -222,9 +222,9 @@ private static final class Mouser extends MouseInputAdapter { }
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to handle search						*/
-/*										*/
+/*                                                                              */
+/*      Methods to handle search                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private final class SearchKeyListener extends KeyAdapter {
@@ -233,7 +233,7 @@ private final class SearchKeyListener extends KeyAdapter {
       search();
     }
 
-}	// end of inner class SearchKeyListener
+}       // end of inner class SearchKeyListener
 
 
 private final class VisibleListener extends ComponentAdapter {
@@ -242,7 +242,7 @@ private final class VisibleListener extends ComponentAdapter {
       search_field.requestFocus();
     }
 
-}	// end of inner class VisibleListener
+}       // end of inner class VisibleListener
 
 
 
@@ -269,9 +269,9 @@ private void search()
 
 
 /********************************************************************************/
-/*										*/
-/*	Button action methods							*/
-/*										*/
+/*                                                                              */
+/*      Button action methods                                                   */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void actionPerformed(ActionEvent e)
@@ -283,8 +283,8 @@ private void search()
       option_set.revertOptions();
       BudaRoot br = BudaRoot.findBudaRoot(display_panel);
       if (br != null) {
-	 br.handlePropertyChange();
-	 br.repaint();
+         br.handlePropertyChange();
+         br.repaint();
        }
       // need to reset panel here
     }
@@ -297,8 +297,8 @@ private void search()
       option_set.saveOptions();
       Component c = null;
       for (c = display_panel; c != null; c = c.getParent()) {
-	 if (c instanceof Window) break;
-	 if (c.getParent() instanceof BudaBubbleArea) break;
+         if (c instanceof Window) break;
+         if (c.getParent() instanceof BudaBubbleArea) break;
        }
       if (c != null) c.setVisible(false);
     }
@@ -307,9 +307,9 @@ private void search()
 
 
 /********************************************************************************/
-/*										*/
-/*	Information about a subpanel						*/
-/*										*/
+/*                                                                              */
+/*      Information about a subpanel                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class SubPanel {
@@ -335,7 +335,7 @@ private static class SubPanel {
       getDisplay();
     }
 
-   String getName()				{ return panel_name; }
+   String getName()                             { return panel_name; }
 
    SwingGridPanel getDisplay() {
       option_panel.removeAll();
@@ -353,15 +353,15 @@ private static class SubPanel {
       getDisplay();
    }
 
-}	// end of inner class SubPanel
+}       // end of inner class SubPanel
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Panel for option display						*/
-/*										*/
+/*                                                                              */
+/*      Panel for option display                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private static final class OptionPanel extends SwingGridPanel implements Scrollable {
@@ -388,11 +388,11 @@ private static final class OptionPanel extends SwingGridPanel implements Scrolla
       return true;
     }
 
-}	// end of inner class OpitonPanel
+}       // end of inner class OpitonPanel
 
 
 
-}	// end of class BoppOptionPanel
+}       // end of class BoppOptionPanel
 
 
 

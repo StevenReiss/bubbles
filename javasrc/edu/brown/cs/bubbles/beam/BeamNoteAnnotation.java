@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BeamNoteAnnotation.java 					*/
-/*										*/
-/*	Bubble Environment Auxilliary & Missing items note annotation		*/
-/*										*/
+/*                                                                              */
+/*              BeamNoteAnnotation.java                                         */
+/*                                                                              */
+/*      Bubble Environment Auxilliary & Missing items note annotation           */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -67,9 +67,9 @@ class BeamNoteAnnotation implements BaleConstants.BaleAnnotation {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private File for_file;
@@ -89,9 +89,9 @@ static {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BeamNoteAnnotation(File file,BaleFileOverview doc,int off)
@@ -120,11 +120,11 @@ BeamNoteAnnotation(Element xml)
       ll.revalidate();
       BaleFileOverview bfo = BaleFactory.getFactory().getFileOverview(null,for_file);
       if (bfo != null) {
-	 int lst = bfo.findLineOffset(ll.getLine());
-	 try {
-	    note_position = bfo.createPosition(lst);
-	  }
-	 catch (BadLocationException e) { }
+         int lst = bfo.findLineOffset(ll.getLine());
+         try {
+            note_position = bfo.createPosition(lst);
+          }
+         catch (BadLocationException e) { }
        }
     }
 }
@@ -133,12 +133,12 @@ BeamNoteAnnotation(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bale annotation access methods						*/
-/*										*/
+/*                                                                              */
+/*      Bale annotation access methods                                          */
+/*                                                                              */
 /********************************************************************************/
 
-@Override public File getFile() 			{ return for_file; }
+@Override public File getFile()                         { return for_file; }
 
 @Override public int getDocumentOffset() {
    if (note_position == null) return -1;
@@ -153,16 +153,16 @@ BeamNoteAnnotation(Element xml)
    return note_icon;
 }
 
-@Override public String getToolTip()			{ return "Note Bubble"; }
+@Override public String getToolTip()                    { return "Note Bubble"; }
 
-@Override public Color getLineColor(BudaBubble b)	{ return annot_color; }
-@Override public Color getBackgroundColor()		{ return null; }
+@Override public Color getLineColor(BudaBubble b)       { return annot_color; }
+@Override public Color getBackgroundColor()             { return null; }
 
 @Override public boolean getForceVisible(BudaBubble bbl) {
    return false;
 }
 
-@Override public int getPriority()			{ return 2; }
+@Override public int getPriority()                      { return 2; }
 
 @Override public void addPopupButtons(Component c,JPopupMenu m)
 {
@@ -173,9 +173,9 @@ BeamNoteAnnotation(Element xml)
 
 
 /********************************************************************************/
-/*										*/
-/*	Local access methods						*/
-/*										*/
+/*                                                                              */
+/*      Local access methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 void setAnnotationFile(String name)
@@ -187,9 +187,9 @@ void setAnnotationFile(String name)
 
 
 /********************************************************************************/
-/*										*/
-/*	Methods to save permanently						*/
-/*										*/
+/*                                                                              */
+/*      Methods to save permanently                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void saveAnnotation(BudaXmlWriter xw)
@@ -212,9 +212,9 @@ void saveAnnotation(BudaXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action associated with note annotations 				*/
-/*										*/
+/*                                                                              */
+/*      Action associated with note annotations                                 */
+/*                                                                              */
 /********************************************************************************/
 
 private class NoteAction extends AbstractAction {
@@ -244,7 +244,7 @@ private class NoteAction extends AbstractAction {
       bba.addLink(lnk);
     }
 
-}	// end of inner class NoteAction
+}       // end of inner class NoteAction
 
 
 
@@ -261,19 +261,19 @@ private class RemoveNoteAction extends AbstractAction {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea((Component) e.getSource());
       if (bba == null) return;
       for (BudaBubble bb : bba.getBubbles()) {
-	 if (bb instanceof BeamNoteBubble) {
-	    BeamNoteBubble bnb = (BeamNoteBubble) bb;
-	    bnb.clearAnnotation(BeamNoteAnnotation.this);
-	  }
+         if (bb instanceof BeamNoteBubble) {
+            BeamNoteBubble bnb = (BeamNoteBubble) bb;
+            bnb.clearAnnotation(BeamNoteAnnotation.this);
+          }
        }
       BaleFactory.getFactory().removeAnnotation(BeamNoteAnnotation.this);
     }
 
-}	// end of inner class RemoveNoteAction
+}       // end of inner class RemoveNoteAction
 
 
 
-}	// end of class BeamNoteAnnotation
+}       // end of class BeamNoteAnnotation
 
 
 

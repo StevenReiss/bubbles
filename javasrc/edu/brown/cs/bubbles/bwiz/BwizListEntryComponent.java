@@ -1,23 +1,23 @@
 /********************************************************************************/
-/*										*/
-/*		BwizListEntryComponent.java					*/
-/*										*/
-/*	Wizard component holding a list of items				*/
-/*										*/
+/*                                                                              */
+/*              BwizListEntryComponent.java                                     */
+/*                                                                              */
+/*      Wizard component holding a list of items                                */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2013 UCF -- Jared Bott				      */
-/*	Copyright 2013 Brown University -- Annalia Sunderland		      */
-/*	Copyright 2013 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2013 UCF -- Jared Bott                                      */
+/*      Copyright 2013 Brown University -- Annalia Sunderland                 */
+/*      Copyright 2013 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -60,14 +60,14 @@ import java.util.Vector;
 
 
 class BwizListEntryComponent extends JPanel implements BwizConstants,
-	BwizConstants.VerificationListener, ListSelectionListener
+        BwizConstants.VerificationListener, ListSelectionListener
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private String ui_title;
@@ -89,9 +89,9 @@ private static Border cell_padding = BorderFactory.createEmptyBorder(4,4,4,4);
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BwizListEntryComponent(IVerifier verifier, String title)
@@ -110,12 +110,12 @@ BwizListEntryComponent(IVerifier verifier, String title)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-List<String> getListElements()	
+List<String> getListElements()  
 { 
    String text = input_field.getText();
    List<String> rslt = new ArrayList<>(list_data);
@@ -154,7 +154,7 @@ void setHoverText(String s)
    input_choice.setToolTipText(s);
 }
 
-boolean isActive()		
+boolean isActive()              
 {
    String txt = input_field.getText();
    if (txt == null || txt.length() == 0) return false;
@@ -172,15 +172,15 @@ void setOptions(Collection<String> opts)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 private void setup()
 {
    setLayout(new BoxLayout(this,
-			      BoxLayout.PAGE_AXIS));
+                              BoxLayout.PAGE_AXIS));
    setOpaque(false);
    setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -270,35 +270,35 @@ private void addItem(String text)
    if (the_verifier != null) {
       //Use the verifier to check the text
       if (the_verifier.verify(text)) {
-	 List<String> slist = the_verifier.results(text);
-	 for (String s : slist) {
-	    s = s.trim();
-	    if (!set_data.contains(s)) {
-	       set_data.add(s);
-	       list_data.add(s);
-	       ui_list.setListData(list_data);
-	       input_field.setText("");
-	       input_choice.clear();
-	       fireItemAdded(text);
-	       disableAddition();
-	       disableRemoval();
-	     }
-	  }
+         List<String> slist = the_verifier.results(text);
+         for (String s : slist) {
+            s = s.trim();
+            if (!set_data.contains(s)) {
+               set_data.add(s);
+               list_data.add(s);
+               ui_list.setListData(list_data);
+               input_field.setText("");
+               input_choice.clear();
+               fireItemAdded(text);
+               disableAddition();
+               disableRemoval();
+             }
+          }
        }
     }
    else {
       //No verification of entry
       //Make sure no duplicates
       if (!set_data.contains(text)) {
-	 set_data.add(text);
-	 list_data.add(text);
-	 ui_list.setListData(list_data);
-	 input_field.setText("");
-	 input_choice.clear();
-	 // Throw an event that an item was added
-	 fireItemAdded(text);
-	 disableAddition();
-	 disableRemoval();
+         set_data.add(text);
+         list_data.add(text);
+         ui_list.setListData(list_data);
+         input_field.setText("");
+         input_choice.clear();
+         // Throw an event that an item was added
+         fireItemAdded(text);
+         disableAddition();
+         disableRemoval();
        }
     }
 }
@@ -312,7 +312,7 @@ private void remove(List<String> objects)
    for (String obj : objects) {
       String[] strs = obj.trim().split(" ");
       if (strs.length > 1) {
-	 set_data.remove(strs[1]);
+         set_data.remove(strs[1]);
        }
       list_data.remove(obj);
       set_data.remove(obj);
@@ -358,8 +358,8 @@ void addItemChangeEventListener(ItemChangeListener listener)
 {
     if (!e.getValueIsAdjusting()) {
        if (ui_list.getSelectedIndices().length>0) {
-	  enableRemoval();
-	}
+          enableRemoval();
+        }
      }
 }
 
@@ -430,9 +430,9 @@ protected void setTextFont(Font f)
 
 
 /********************************************************************************/
-/*										*/
-/*	Event handlers								*/
-/*										*/
+/*                                                                              */
+/*      Event handlers                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private final class InputAction implements ActionListener {
@@ -441,7 +441,7 @@ private final class InputAction implements ActionListener {
       addItem(input_field.getText());
     }
 
-}	// end of inner class InputAction
+}       // end of inner class InputAction
 
 
 
@@ -450,7 +450,7 @@ private final class RemoveAction implements ActionListener
     @Override public void actionPerformed(ActionEvent e) {
        removeSelected();
      }
-}	// end of inner class RemoveAction
+}       // end of inner class RemoveAction
 
 
 
@@ -459,22 +459,22 @@ private final class KeyAction extends KeyAdapter {
    @Override public void keyPressed(KeyEvent e) {
       int keyCode=e.getKeyCode();
       switch (keyCode) {
-	 case KeyEvent.VK_BACK_SPACE :
-	 case KeyEvent.VK_DELETE :
-	    removeSelected();
-	    break;
+         case KeyEvent.VK_BACK_SPACE :
+         case KeyEvent.VK_DELETE :
+            removeSelected();
+            break;
        }
     }
 
-}	// end of inner class KeyAction
+}       // end of inner class KeyAction
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Cell renderers								*/
-/*										*/
+/*                                                                              */
+/*      Cell renderers                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private class PaddedListCellRenderer implements ListCellRenderer<String>
@@ -497,11 +497,11 @@ private class PaddedListCellRenderer implements ListCellRenderer<String>
       return renderer;
     }
 
-}	// end of inner class PaddedListCellRenderer
+}       // end of inner class PaddedListCellRenderer
 
 
 
-}	// end of class BwizListEntryComponent
+}       // end of class BwizListEntryComponent
 
 
 

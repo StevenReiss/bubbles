@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BqstHiddenField.java						*/
-/*										*/
-/*	Bubbles questions and forms hidden field implementation 		*/
-/*										*/
+/*                                                                              */
+/*              BqstHiddenField.java                                            */
+/*                                                                              */
+/*      Bubbles questions and forms hidden field implementation                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Yu Li			      */
+/*      Copyright 2009 Brown University -- Yu Li                              */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -35,12 +35,12 @@ class BqstHiddenField extends BqstQuestion implements BqstConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	    q_hiddenmsg;
+private String      q_hiddenmsg;
 
 private static final long serialVersionUID = 1L;
 
@@ -48,9 +48,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 protected BqstHiddenField(String qst,String msg)
@@ -62,9 +62,9 @@ protected BqstHiddenField(String qst,String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void setup()
@@ -73,9 +73,9 @@ protected BqstHiddenField(String qst,String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Get Answer methods							*/
-/*										*/
+/*                                                                              */
+/*      Get Answer methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 @Override String getAnswer()
@@ -86,9 +86,9 @@ protected BqstHiddenField(String qst,String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Reset methods								*/
-/*										*/
+/*                                                                              */
+/*      Reset methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 @Override void reset()
@@ -96,7 +96,7 @@ protected BqstHiddenField(String qst,String msg)
 
 
 
-}	// end of class BqstHiddenField
+}       // end of class BqstHiddenField
 
 
 

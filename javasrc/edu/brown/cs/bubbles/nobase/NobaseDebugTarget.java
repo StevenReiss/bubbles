@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		NobaseDebugTarget.java						*/
-/*										*/
-/*	Interface to a running process to debug 				*/
-/*										*/
+/*                                                                              */
+/*              NobaseDebugTarget.java                                          */
+/*                                                                              */
+/*      Interface to a running process to debug                                 */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 /* SVN: $Id$ */
@@ -57,26 +57,26 @@ class NobaseDebugTarget implements NobaseConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-// private WebSocket	comm_socket;
+// private WebSocket    comm_socket;
 private DebugWebSocket comm_socket;
-// private DebugListener	debug_reader;
-private DebugWriter	debug_writer;
+// private DebugListener        debug_reader;
+private DebugWriter     debug_writer;
 private DebugEventProcessor event_handler;
-private int		sequence_number;
-private NobaseMain	nobase_main;
-private Process 	run_process;
+private int             sequence_number;
+private NobaseMain      nobase_main;
+private Process         run_process;
 private NobaseLaunchConfig launch_config;
 private NobaseDebugManager debug_manager;
 
-private File	debug_file;
+private File    debug_file;
 private NobaseDebugThread thread_data;
 private boolean is_disconnected;
-private String	target_id;
+private String  target_id;
 private OutputStream console_input;
 
 private Map<Integer,ScriptData> script_map;
@@ -91,9 +91,9 @@ private static IdCounter       target_counter = new IdCounter();
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 NobaseDebugTarget(NobaseDebugManager mgr,NobaseLaunchConfig cfg)
@@ -126,9 +126,9 @@ NobaseDebugTarget(NobaseDebugManager mgr,NobaseLaunchConfig cfg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup Methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup Methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void startDebug() throws NobaseException
@@ -150,41 +150,41 @@ void startDebug() throws NobaseException
 
    for (int i = 0; i < 10; ++i) {
       try {
-	 URI u = new URI("http://localhost:" + port + "/json/list");
-	 HttpURLConnection hc = (HttpURLConnection) u.toURL().openConnection();
-	 InputStream is = hc.getInputStream();
-	 String cnts = IvyFile.loadFile(is);
-	 JSONArray jarr = new JSONArray(cnts);
-	 JSONObject jo = jarr.getJSONObject(0);
-	 String wsurl = jo.getString("webSocketDebuggerUrl");
-	 String id = jo.getString("id");
-	 hc.disconnect();
+         URI u = new URI("http://localhost:" + port + "/json/list");
+         HttpURLConnection hc = (HttpURLConnection) u.toURL().openConnection();
+         InputStream is = hc.getInputStream();
+         String cnts = IvyFile.loadFile(is);
+         JSONArray jarr = new JSONArray(cnts);
+         JSONObject jo = jarr.getJSONObject(0);
+         String wsurl = jo.getString("webSocketDebuggerUrl");
+         String id = jo.getString("id");
+         hc.disconnect();
 
-	 URI u1 = new URI("http://localhost:" + port + "/json/version/" + id);
-	 HttpURLConnection hc1 = (HttpURLConnection) u1.toURL().openConnection();
-	 InputStream is1 = hc1.getInputStream();
-	 cnts = IvyFile.loadFile(is1);
-	 hc1.disconnect();
+         URI u1 = new URI("http://localhost:" + port + "/json/version/" + id);
+         HttpURLConnection hc1 = (HttpURLConnection) u1.toURL().openConnection();
+         InputStream is1 = hc1.getInputStream();
+         cnts = IvyFile.loadFile(is1);
+         hc1.disconnect();
 
-	 URI wsuri = new URI(wsurl);
-	 comm_socket = new DebugWebSocket(this,wsuri);
-	 comm_socket.connect();
-	 if (!comm_socket.waitForReady()) throw new IOException("Socket setup error");
+         URI wsuri = new URI(wsurl);
+         comm_socket = new DebugWebSocket(this,wsuri);
+         comm_socket.connect();
+         if (!comm_socket.waitForReady()) throw new IOException("Socket setup error");
 
-	 debug_writer = new DebugWriter(comm_socket);
-	 debug_writer.start();
+         debug_writer = new DebugWriter(comm_socket);
+         debug_writer.start();
 
-	 event_handler = new DebugEventProcessor();
-	 event_handler.start();
+         event_handler = new DebugEventProcessor();
+         event_handler.start();
 
-	 setupClient();
-	 break;
+         setupClient();
+         break;
        }
       catch (Throwable e) {
-	 if (i >= 5) System.err.println("Got status: " + i + ": " + e);
+         if (i >= 5) System.err.println("Got status: " + i + ": " + e);
        }
       try {
-	 Thread.sleep(50);
+         Thread.sleep(50);
        }
       catch (InterruptedException e) { }
     }
@@ -205,11 +205,11 @@ private int findPort()
    for ( ; ; ) {
       int portid = ((int) (Math.random() * 50000)) + 4000;
       try {
-	 Socket s = new Socket("localhost",portid);
-	 s.close();
+         Socket s = new Socket("localhost",portid);
+         s.close();
        }
       catch (ConnectException e) {
-	 return portid;
+         return portid;
        }
       catch (IOException e) { }
     }
@@ -260,9 +260,9 @@ private void setupClient()
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 synchronized int getNextSequence()
@@ -278,8 +278,8 @@ boolean canTerminate()
    if (thread_data == null) return false;
    return thread_data.canTerminate();
 }
-boolean isTerminated()					{ return thread_data.isTerminated(); }
-boolean isSuspended()					{ return thread_data.isSuspended(); }
+boolean isTerminated()                                  { return thread_data.isTerminated(); }
+boolean isSuspended()                                   { return thread_data.isSuspended(); }
 
 boolean canResume()
 {
@@ -300,9 +300,9 @@ boolean canSuspend()
 }
 
 
-File getFile()						{ return debug_file; }
-String getId()						{ return target_id; }
-NobaseDebugRefMap getReferenceMap()			{ return reference_map; }
+File getFile()                                          { return debug_file; }
+String getId()                                          { return target_id; }
+NobaseDebugRefMap getReferenceMap()                     { return reference_map; }
 
 int getScriptIdForFile(String file)
 {
@@ -327,23 +327,23 @@ NobaseDebugThread findThreadById(String tid)
 }
 
 
-boolean canDisconnect() 		{ return !is_disconnected; }
-boolean isDisconnected()		{ return is_disconnected; }
+boolean canDisconnect()                 { return !is_disconnected; }
+boolean isDisconnected()                { return is_disconnected; }
 void disconnect()
 {
    terminate();
 }
 
 
-Process getProcess()				{ return run_process; }
-NobaseLaunchConfig getLaunchConfig()		{ return launch_config; }
+Process getProcess()                            { return run_process; }
+NobaseLaunchConfig getLaunchConfig()            { return launch_config; }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Command methods 							*/
-/*										*/
+/*                                                                              */
+/*      Command methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void postCommand(NobaseDebugCommand cmd)
@@ -365,9 +365,9 @@ void postCommand(NobaseDebugCommand cmd)
 
 
 /********************************************************************************/
-/*										*/
-/*	Action methods								*/
-/*										*/
+/*                                                                              */
+/*      Action methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void resume() throws NobaseException
@@ -451,9 +451,9 @@ private void noteExit()
 
 
 /********************************************************************************/
-/*										*/
-/*	Evaluation commands							*/
-/*										*/
+/*                                                                              */
+/*      Evaluation commands                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 JSONObject getObjectProperties(String id)
@@ -495,34 +495,34 @@ private class EvalRunner implements Runnable {
       xw.field("ID",eval_id);
       xw.begin("EVAL");
       if (resp != null && resp.isSuccess()) {
-	 xw.field("STATUS","OK");
-	 // Object body = resp.getBodyAny();
-	 // NobaseDebugRefMap refmap = resp.getRefMap();
-	 // NobaseDebugValue ndv = NobaseDebugValue.getValue(body,refmap);
-	 // need to complete the value here and handle all references
-	 // ndv.outputXml(null,0,xw);
+         xw.field("STATUS","OK");
+         // Object body = resp.getBodyAny();
+         // NobaseDebugRefMap refmap = resp.getRefMap();
+         // NobaseDebugValue ndv = NobaseDebugValue.getValue(body,refmap);
+         // need to complete the value here and handle all references
+         // ndv.outputXml(null,0,xw);
        }
       else if (resp != null && resp.getError() != null) {
-	 xw.field("STATUS","ERROR");
-	 xw.textElement("ERROR",resp.getError());
+         xw.field("STATUS","ERROR");
+         xw.textElement("ERROR",resp.getError());
        }
       else {
-	 xw.field("STATUS","ERROR");
+         xw.field("STATUS","ERROR");
        }
       xw.end("EVAL");
       nobase_main.finishMessage(xw);
    }
 
-}	// end of inner class EvalRunner
+}       // end of inner class EvalRunner
 
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint methods							*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint methods                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 void addBreakpointInRuntime(NobaseDebugBreakpoint bp)
@@ -531,22 +531,22 @@ void addBreakpointInRuntime(NobaseDebugBreakpoint bp)
 
    switch (bp.getType()) {
       case EXCEPTION :
-	 cmd = new NobaseDebugCommand.SetPauseOnExceptions(this,
-	       bp.isCaught(),bp.isUncaught());
-	 postCommand(cmd);
-	 break;
+         cmd = new NobaseDebugCommand.SetPauseOnExceptions(this,
+               bp.isCaught(),bp.isUncaught());
+         postCommand(cmd);
+         break;
       case LINE :
-	 String file = bp.getFile().getPath();
-	 if (file_map.get(file) != null) {
-	    cmd = new NobaseDebugCommand.SetLineBreakpoint(this,file,bp.getLine());
-	  }
-	 else {
-	    cmd = new NobaseDebugCommand.SetUrlBreakpoint(this,file,bp.getLine());
-	  }
-	 postCommand(cmd);
-	 break;
+         String file = bp.getFile().getPath();
+         if (file_map.get(file) != null) {
+            cmd = new NobaseDebugCommand.SetLineBreakpoint(this,file,bp.getLine());
+          }
+         else {
+            cmd = new NobaseDebugCommand.SetUrlBreakpoint(this,file,bp.getLine());
+          }
+         postCommand(cmd);
+         break;
       case NONE :
-	 return;
+         return;
     }
 }
 
@@ -565,17 +565,17 @@ void handleBreakpointResolved(JSONObject data)
    for (NobaseDebugBreakpoint bpt : debug_manager.getBreakpoints()) {
       BreakData bd = break_map.get(bpt);
       if (bd == null) {
-	 if (bpt.getFile().equals(file)) {
-	    int d = lno - bpt.getLine();
-	    if (d == 0) {
-	       best = bpt;
-	       break;
-	     }
-	    else if (d > 0 && (delta < 0 || d < delta)) {
-	       best = bpt;
-	       delta = d;
-	     }
-	  }
+         if (bpt.getFile().equals(file)) {
+            int d = lno - bpt.getLine();
+            if (d == 0) {
+               best = bpt;
+               break;
+             }
+            else if (d > 0 && (delta < 0 || d < delta)) {
+               best = bpt;
+               delta = d;
+             }
+          }
        }
     }
    if (best != null) {
@@ -612,9 +612,9 @@ public void breakpointChanged(NobaseDebugBreakpoint breakpoint)
 
 
 /********************************************************************************/
-/*										*/
-/*	Execution methods							*/
-/*										*/
+/*                                                                              */
+/*      Execution methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 private void queueDebugEvent(JSONObject msg)
@@ -638,26 +638,26 @@ private void handleDebugEvent(JSONObject msg)
       case "Runtime.exceptionRevoked" :
       case "Runtime.consoleAPICalled" :
       case "Runtime.inspectRequested" :
-	 break;
+         break;
       case "Runtime.exceptionThrown" :
-	 break;
+         break;
       case "Debugger.scriptParsed" :
       case "Debugger.scriptFailedToParse" :
-	 addScript(cnts);
-	 break;
+         addScript(cnts);
+         break;
       case "Debugger.breakpointResolved" :
-	 handleBreakpointResolved(cnts);
-	 break;
+         handleBreakpointResolved(cnts);
+         break;
       case "Debugger.paused" :
-	 handleSuspended(cnts);
-	 break;
+         handleSuspended(cnts);
+         break;
       case "Debugger.resumed" :
-	 break;
+         break;
       case "Profiler.consoleProfileStarted" :
       case "Profiler.consoleProfileFinished" :
-	 break;
+         break;
       default :
-	 break;
+         break;
 
     }
 }
@@ -678,23 +678,23 @@ private void handleSuspended(JSONObject payload)
       case "promiseRejection" :
       case "OOM" :
       case "ambiguous" :
-	 reason = DebugDetailValue.UNSPECIFIED;
-	 break;
+         reason = DebugDetailValue.UNSPECIFIED;
+         break;
       case "debugCommand" :
-	 reason = DebugDetailValue.STEP_END;
-	 break;
+         reason = DebugDetailValue.STEP_END;
+         break;
       case "other" :
-	 JSONArray arr = payload.optJSONArray("hitBreakpoints");
-	 if (arr != null && arr.length() > 0) reason = DebugDetailValue.BREAKPOINT;
-	 else reason = DebugDetailValue.STEP_END;
-	 break;
+         JSONArray arr = payload.optJSONArray("hitBreakpoints");
+         if (arr != null && arr.length() > 0) reason = DebugDetailValue.BREAKPOINT;
+         else reason = DebugDetailValue.STEP_END;
+         break;
       case "Break on start" :
-	 reason = DebugDetailValue.BREAKPOINT;
-	 break;
+         reason = DebugDetailValue.BREAKPOINT;
+         break;
       default :
-	 NobaseMain.logE("Unexpected reason for suspension: " + sr);
-	 reason = DebugDetailValue.UNSPECIFIED;
-	 break;
+         NobaseMain.logE("Unexpected reason for suspension: " + sr);
+         reason = DebugDetailValue.UNSPECIFIED;
+         break;
     }
 
    generateThreadEvent("SUSPEND",reason,thread_data);
@@ -708,9 +708,9 @@ private void handleSuspended(JSONObject payload)
 
 
 /********************************************************************************/
-/*										*/
-/*	Console methods 							*/
-/*										*/
+/*                                                                              */
+/*      Console methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 public void addConsoleInputListener()
@@ -726,9 +726,9 @@ void consoleInput(String txt) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Output methods								*/
-/*										*/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 private void generateProcessEvent(String kind)
@@ -784,9 +784,9 @@ private void outputProcessXml(IvyXmlWriter xw)
 
 
 /********************************************************************************/
-/*										*/
-/*	DebugListener implementation						*/
-/*										*/
+/*                                                                              */
+/*      DebugListener implementation                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private static class DebugWebSocket extends WebSocketClient {
@@ -807,10 +807,10 @@ private static class DebugWebSocket extends WebSocketClient {
    void addToResponseQueue(NobaseDebugCommand cmd) {
       int sequence = cmd.getSequence();
       synchronized (response_queue) {
-	 if (accept_messages)
-	    response_queue.put(sequence,cmd);
-	 else
-	    cmd.processResponse(null);
+         if (accept_messages)
+            response_queue.put(sequence,cmd);
+         else
+            cmd.processResponse(null);
        }
     }
 
@@ -823,10 +823,10 @@ private static class DebugWebSocket extends WebSocketClient {
       NobaseMain.logD("DEBUG Socket CLOSE " + status + " " + reason + " " + remote);
       remote_target.noteExit();
       synchronized (response_queue) {
-	 accept_messages = false;
-	 for (NobaseDebugCommand cmd : response_queue.values()) {
-	    cmd.processResponse(null);
-	  }
+         accept_messages = false;
+         for (NobaseDebugCommand cmd : response_queue.values()) {
+            cmd.processResponse(null);
+          }
        }
     }
 
@@ -834,16 +834,16 @@ private static class DebugWebSocket extends WebSocketClient {
       NobaseMain.logD("DEBUG Socket ERROR " + err);
       err.printStackTrace();
       synchronized (this) {
-	 is_ready = false;
-	 notifyAll();
+         is_ready = false;
+         notifyAll();
        }
     }
 
    @Override public void onOpen(ServerHandshake hsd) {
       NobaseMain.logD("DEBUG Socket OPEN " + hsd.getHttpStatus() + " " + hsd.getHttpStatusMessage());
       synchronized (this) {
-	 is_ready = true;
-	 notifyAll();
+         is_ready = true;
+         notifyAll();
        }
     }
 
@@ -853,49 +853,49 @@ private static class DebugWebSocket extends WebSocketClient {
 
    private void processCommand(String jsonstr) {
       try {
-	 JSONObject json = new JSONObject(jsonstr);
-	 int seqno = json.optInt("id");
-	 if (seqno != 0) {
-	    NobaseMain.logD("DEBUG RESPONSE: " + jsonstr);
-	    NobaseDebugCommand cmd;
-	    synchronized (response_queue) {
-	       cmd = response_queue.remove(Integer.valueOf(seqno));
-	     }
-	    if (cmd != null) {
-	       cmd.processResponse(json);
-	     }
-	  }
-	 else {
-	    NobaseMain.logD("DEBUG MESSAGE: " + jsonstr);
-	    remote_target.queueDebugEvent(json);
-	  }
+         JSONObject json = new JSONObject(jsonstr);
+         int seqno = json.optInt("id");
+         if (seqno != 0) {
+            NobaseMain.logD("DEBUG RESPONSE: " + jsonstr);
+            NobaseDebugCommand cmd;
+            synchronized (response_queue) {
+               cmd = response_queue.remove(Integer.valueOf(seqno));
+             }
+            if (cmd != null) {
+               cmd.processResponse(json);
+             }
+          }
+         else {
+            NobaseMain.logD("DEBUG MESSAGE: " + jsonstr);
+            remote_target.queueDebugEvent(json);
+          }
        }
       catch (Exception e) {
-	 NobaseMain.logE("Error processing debug command",e);
-	 e.printStackTrace();
-	 throw new RuntimeException(e);
+         NobaseMain.logE("Error processing debug command",e);
+         e.printStackTrace();
+         throw new RuntimeException(e);
        }
     }
 
    synchronized boolean waitForReady() {
       while (is_ready == null) {
-	 try {
-	    wait(1000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(1000);
+          }
+         catch (InterruptedException e) { }
        }
       return is_ready;
     }
 
-}	// end of inner class DebugWebSocket
+}       // end of inner class DebugWebSocket
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Event processor 							*/
-/*										*/
+/*                                                                              */
+/*      Event processor                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private class DebugEventProcessor extends Thread {
@@ -914,37 +914,37 @@ private class DebugEventProcessor extends Thread {
 
    @Override public void run() {
       for ( ; ; ) {
-	 JSONObject evt = null;
-	 synchronized (this) {
-	    while (command_queue.isEmpty()) {
-	       if (comm_socket == null) break;
-	       try {
-		  wait(1000);
-		}
-	       catch (InterruptedException e) { }
-	     }
-	    if (comm_socket == null)
-	       break;
-	    evt = command_queue.remove(0);
-	  }
-	 try {
-	    if (evt != null) handleDebugEvent(evt);
-	  }
-	 catch (Throwable t) {
-	    NobaseMain.logE("Problem processing event",t);
-	  }
+         JSONObject evt = null;
+         synchronized (this) {
+            while (command_queue.isEmpty()) {
+               if (comm_socket == null) break;
+               try {
+                  wait(1000);
+                }
+               catch (InterruptedException e) { }
+             }
+            if (comm_socket == null)
+               break;
+            evt = command_queue.remove(0);
+          }
+         try {
+            if (evt != null) handleDebugEvent(evt);
+          }
+         catch (Throwable t) {
+            NobaseMain.logE("Problem processing event",t);
+          }
        }
     }
 
-}	// end of inner class DebugEventProcessor
+}       // end of inner class DebugEventProcessor
 
 
 
 
 /********************************************************************************/
-/*										*/
-/*	DebugWriter implementation						*/
-/*										*/
+/*                                                                              */
+/*      DebugWriter implementation                                              */
+/*                                                                              */
 /********************************************************************************/
 
 private static class DebugWriter extends Thread {
@@ -962,58 +962,58 @@ private static class DebugWriter extends Thread {
 
    void postCommand(NobaseDebugCommand cmd) {
       synchronized (cmd_queue) {
-	 cmd_queue.add(cmd);
-	 cmd_queue.notifyAll();
+         cmd_queue.add(cmd);
+         cmd_queue.notifyAll();
        }
     }
 
    public void done() {
       synchronized (cmd_queue) {
-	 is_done = true;
-	 cmd_queue.notifyAll();
+         is_done = true;
+         cmd_queue.notifyAll();
        }
     }
 
    @Override public void run() {
       while (!is_done) {
-	 NobaseDebugCommand cmd = null;
-	 synchronized (cmd_queue) {
-	    while (cmd_queue.size() == 0 && !is_done) {
-	       try {
-		  cmd_queue.wait();
-		}
-	       catch (InterruptedException e) { }
-	     }
-	    if (is_done) break;
-	    cmd = cmd_queue.remove(0);
-	  }
-	 try {
-	    if (cmd != null) {
-	       String c = cmd.getOutgoing();
-	       NobaseMain.logD("DEBUG SEND COMMAND " + c);
-	       if (c != null) {
-		  write_socket.send(c);
-		}
-	     }
-	  }
-	 catch (Throwable e1) {
-	    is_done = true;
-	  }
-	 if ((write_socket == null) || write_socket.isClosed()) {
-	    is_done = true;
-	    write_socket = null;
-	  }
+         NobaseDebugCommand cmd = null;
+         synchronized (cmd_queue) {
+            while (cmd_queue.size() == 0 && !is_done) {
+               try {
+                  cmd_queue.wait();
+                }
+               catch (InterruptedException e) { }
+             }
+            if (is_done) break;
+            cmd = cmd_queue.remove(0);
+          }
+         try {
+            if (cmd != null) {
+               String c = cmd.getOutgoing();
+               NobaseMain.logD("DEBUG SEND COMMAND " + c);
+               if (c != null) {
+                  write_socket.send(c);
+                }
+             }
+          }
+         catch (Throwable e1) {
+            is_done = true;
+          }
+         if ((write_socket == null) || write_socket.isClosed()) {
+            is_done = true;
+            write_socket = null;
+          }
        }
    }
 
-}	// end of inner class DebugWriter
+}       // end of inner class DebugWriter
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Handle console I/O							*/
-/*										*/
+/*                                                                              */
+/*      Handle console I/O                                                      */
+/*                                                                              */
 /********************************************************************************/
 
 private class ConsoleReader extends Thread {
@@ -1032,24 +1032,24 @@ private class ConsoleReader extends Thread {
    @Override public void run() {
       char [] buf = new char[4096];
       try {
-	 for ( ; ; ) {
-	    int ln = input_stream.read(buf);
-	    if (ln < 0) break;
-	    String txt = new String(buf,0,ln);
-	    if (!is_stderr && !have_header && txt.contains("listening")) {
-	       have_header = true;
-	       continue;
-	     }
-	    NobaseMain.logD("CONSOLE WRITE: " + is_stderr + " " + txt);
-	    IvyXmlWriter xw = nobase_main.beginMessage("CONSOLE");
-	    xw.field("PID",target_id);
-	    xw.field("STDERR",is_stderr);
-	    xw.cdataElement("TEXT",txt);
-	    nobase_main.finishMessage(xw);
-	  }
+         for ( ; ; ) {
+            int ln = input_stream.read(buf);
+            if (ln < 0) break;
+            String txt = new String(buf,0,ln);
+            if (!is_stderr && !have_header && txt.contains("listening")) {
+               have_header = true;
+               continue;
+             }
+            NobaseMain.logD("CONSOLE WRITE: " + is_stderr + " " + txt);
+            IvyXmlWriter xw = nobase_main.beginMessage("CONSOLE");
+            xw.field("PID",target_id);
+            xw.field("STDERR",is_stderr);
+            xw.cdataElement("TEXT",txt);
+            nobase_main.finishMessage(xw);
+          }
        }
       catch (IOException e) {
-	 NobaseMain.logD("Error reading from process: " + e);
+         NobaseMain.logD("Error reading from process: " + e);
        }
       IvyXmlWriter xw = nobase_main.beginMessage("CONSOLE");
       xw.field("PID",target_id);
@@ -1062,9 +1062,9 @@ private class ConsoleReader extends Thread {
 
 
 /********************************************************************************/
-/*										*/
-/*	ScriptData representation						*/
-/*										*/
+/*                                                                              */
+/*      ScriptData representation                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private void addScript(JSONObject obj)
@@ -1099,17 +1099,17 @@ private class ScriptData {
       obj.getInt("length");
     }
 
-   int getId()				{ return script_id; }
-   String getFile()			{ return script_file; }
+   int getId()                          { return script_id; }
+   String getFile()                     { return script_file; }
 
-}	// end of inner class ScriptData
+}       // end of inner class ScriptData
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Breakpoint Data 							*/
-/*										*/
+/*                                                                              */
+/*      Breakpoint Data                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private BreakData getBreakData(NobaseDebugBreakpoint bp)
@@ -1117,8 +1117,8 @@ private BreakData getBreakData(NobaseDebugBreakpoint bp)
    synchronized (break_map) {
       BreakData bd = break_map.get(bp);
       if (bd == null) {
-	 bd = new BreakData(bp);
-	 break_map.put(bp,bd);
+         bd = new BreakData(bp);
+         break_map.put(bp,bd);
        }
       return bd;
     }
@@ -1136,17 +1136,17 @@ private class BreakData {
       break_id = 0;
     }
 
-   int getId()						{ return break_id; }
+   int getId()                                          { return break_id; }
 
-   void setId(int id)					{ break_id = id; }
+   void setId(int id)                                   { break_id = id; }
 
-}	// end of inner class BreakData
-
-
+}       // end of inner class BreakData
 
 
 
-}	// end of class NobaseDebugTarget
+
+
+}       // end of class NobaseDebugTarget
 
 
 

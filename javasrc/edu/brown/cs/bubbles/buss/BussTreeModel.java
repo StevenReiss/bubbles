@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BussTreeModel.java						*/
-/*										*/
-/*	BUbble Stack Strategies bubble stack tree model 			*/
-/*										*/
+/*                                                                              */
+/*              BussTreeModel.java                                              */
+/*                                                                              */
+/*      BUbble Stack Strategies bubble stack tree model                         */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2009 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -46,13 +46,13 @@ class BussTreeModel extends DefaultTreeModel implements TreeModel, BussConstants
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private transient Branch	root_node;
-private transient BussTreeImpl	cur_selection;
+private transient Branch        root_node;
+private transient BussTreeImpl  cur_selection;
 
 private static final long serialVersionUID = 1;
 
@@ -60,9 +60,9 @@ private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BussTreeModel()
@@ -76,9 +76,9 @@ BussTreeModel()
 
 
 /********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
+/*                                                                              */
+/*      Setup methods                                                           */
+/*                                                                              */
 /********************************************************************************/
 
 void addEntry(BussEntry ent)
@@ -108,9 +108,9 @@ void setup()
 
 
 /********************************************************************************/
-/*										*/
-/*	Selection methods							*/
-/*										*/
+/*                                                                              */
+/*      Selection methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void setSelection(BussTreeNode tn)
@@ -134,9 +134,9 @@ void setSelection(BussTreeNode tn)
 
 
 /********************************************************************************/
-/*										*/
-/*	Remove methods (after drag)						*/
-/*										*/
+/*                                                                              */
+/*      Remove methods (after drag)                                             */
+/*                                                                              */
 /********************************************************************************/
 
 void removeEntry(BussEntry be)
@@ -147,9 +147,9 @@ void removeEntry(BussEntry be)
 
 
 /********************************************************************************/
-/*										*/
-/*	Cleanup methods 							*/
-/*										*/
+/*                                                                              */
+/*      Cleanup methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void disposeBubbles()
@@ -160,9 +160,9 @@ void disposeBubbles()
 
 
 /********************************************************************************/
-/*										*/
-/*	Tree node representation						*/
-/*										*/
+/*                                                                              */
+/*      Tree node representation                                                */
+/*                                                                              */
 /********************************************************************************/
 
 private abstract static class BussTreeImpl implements BussTreeNode, TreeNode {
@@ -173,21 +173,21 @@ private abstract static class BussTreeImpl implements BussTreeNode, TreeNode {
       parent_node = par;
     }
 
-   @Override public TreeNode getParent()		{ return parent_node; }
+   @Override public TreeNode getParent()                { return parent_node; }
 
-   @Override public BussEntry getEntry()		{ return null; }
+   @Override public BussEntry getEntry()                { return null; }
 
    abstract String getLocalName();
 
-   void collapseSingletons()				{ }
+   void collapseSingletons()                            { }
 
-   @Override public String toString()			{ return getLocalName(); }
+   @Override public String toString()                   { return getLocalName(); }
 
-   boolean removeEntry(BussTreeModel mdl,BussEntry be)	{ return false; }
+   boolean removeEntry(BussTreeModel mdl,BussEntry be)  { return false; }
 
-   void disposeBubbles()				{ }
+   void disposeBubbles()                                { }
 
-}	// end of inner class BussTreeNode
+}       // end of inner class BussTreeNode
 
 
 
@@ -201,14 +201,14 @@ private static class TreeLeaf extends BussTreeImpl {
       for_entry = ent;
     }
 
-   @Override public boolean getAllowsChildren() 	{ return false; }
-   @Override public Enumeration<TreeNode> children()	{ return null; }
-   @Override public TreeNode getChildAt(int idx)	{ return null; }
-   @Override public int getChildCount() 		{ return 0; }
-   @Override public int getIndex(TreeNode tn)		{ return -1; }
-   @Override public boolean isLeaf()			{ return true; }
+   @Override public boolean getAllowsChildren()         { return false; }
+   @Override public Enumeration<TreeNode> children()    { return null; }
+   @Override public TreeNode getChildAt(int idx)        { return null; }
+   @Override public int getChildCount()                 { return 0; }
+   @Override public int getIndex(TreeNode tn)           { return -1; }
+   @Override public boolean isLeaf()                    { return true; }
 
-   @Override public BussEntry getEntry()		{ return for_entry; }
+   @Override public BussEntry getEntry()                { return for_entry; }
 
    @Override String getLocalName() {
       String nm = for_entry.getEntryName();
@@ -222,7 +222,7 @@ private static class TreeLeaf extends BussTreeImpl {
       for_entry.dispose();
     }
 
-}	// end of inner class TreeLeaf
+}       // end of inner class TreeLeaf
 
 
 
@@ -237,68 +237,68 @@ private static class Branch extends BussTreeImpl {
       child_nodes = new Vector<TreeNode>();
     }
 
-   @Override public boolean getAllowsChildren() 	{ return true; }
-   @Override public Enumeration<TreeNode> children()	{ return child_nodes.elements(); }
+   @Override public boolean getAllowsChildren()         { return true; }
+   @Override public Enumeration<TreeNode> children()    { return child_nodes.elements(); }
    @Override public TreeNode getChildAt(int idx) {
       if (idx > child_nodes.size()) return null;
       return child_nodes.get(idx);
     }
-   @Override public int getChildCount() 		{ return child_nodes.size(); }
-   @Override public int getIndex(TreeNode tn)		{ return child_nodes.indexOf(tn); }
-   @Override public boolean isLeaf()			{ return false; }
+   @Override public int getChildCount()                 { return child_nodes.size(); }
+   @Override public int getIndex(TreeNode tn)           { return child_nodes.indexOf(tn); }
+   @Override public boolean isLeaf()                    { return false; }
 
-   void addChild(TreeNode n)				{ child_nodes.add(n); }
+   void addChild(TreeNode n)                            { child_nodes.add(n); }
 
    Branch insertBranch(String nm) {
       int idx = 0;
       for (TreeNode tn : child_nodes) {
-	 BussTreeImpl bti = (BussTreeImpl) tn;
-	 String tnm = bti.getLocalName();
-	 int c = nm.compareTo(tnm);
-	 if (c < 0) {
-	    Branch b = new Branch(nm,this);
-	    child_nodes.insertElementAt(b,idx);
-	    return b;
-	  }
-	 else if (c == 0) return (Branch) tn;
-	 ++idx;
+         BussTreeImpl bti = (BussTreeImpl) tn;
+         String tnm = bti.getLocalName();
+         int c = nm.compareTo(tnm);
+         if (c < 0) {
+            Branch b = new Branch(nm,this);
+            child_nodes.insertElementAt(b,idx);
+            return b;
+          }
+         else if (c == 0) return (Branch) tn;
+         ++idx;
        }
       Branch b = new Branch(nm,this);
       child_nodes.add(b);
       return b;
     }
 
-   @Override String getLocalName()				{ return local_name; }
+   @Override String getLocalName()                              { return local_name; }
 
    @Override void collapseSingletons() {
       if (parent_node != null) {
-	 Branch cn = this;
-	 StringBuffer buf = null;
-	 while (cn.child_nodes.size() == 1) {
-	    TreeNode tn = cn.getChildAt(0);
-	    if (tn.isLeaf()) break;
-	    if (buf == null) {
-	       buf = new StringBuffer();
-	       buf.append(cn.getLocalName());
-	     }
-	    else {
-	       buf.append(".");
-	       buf.append(cn.getLocalName());
-	     }
-	    cn = (Branch) tn;
-	  }
-	 if (cn != this) {
-	    int idx = parent_node.getIndex(this);
-	    if (buf != null) cn.local_name = buf.toString() + "." + cn.local_name;
-	    cn.parent_node = parent_node;
-	    parent_node.child_nodes.set(idx,cn);
-	    cn.collapseSingletons();
-	    return;
-	  }
+         Branch cn = this;
+         StringBuffer buf = null;
+         while (cn.child_nodes.size() == 1) {
+            TreeNode tn = cn.getChildAt(0);
+            if (tn.isLeaf()) break;
+            if (buf == null) {
+               buf = new StringBuffer();
+               buf.append(cn.getLocalName());
+             }
+            else {
+               buf.append(".");
+               buf.append(cn.getLocalName());
+             }
+            cn = (Branch) tn;
+          }
+         if (cn != this) {
+            int idx = parent_node.getIndex(this);
+            if (buf != null) cn.local_name = buf.toString() + "." + cn.local_name;
+            cn.parent_node = parent_node;
+            parent_node.child_nodes.set(idx,cn);
+            cn.collapseSingletons();
+            return;
+          }
        }
       for (TreeNode tn : child_nodes) {
-	 BussTreeImpl ti = (BussTreeImpl) tn;
-	 ti.collapseSingletons();
+         BussTreeImpl ti = (BussTreeImpl) tn;
+         ti.collapseSingletons();
        }
     }
 
@@ -331,16 +331,16 @@ private static class Branch extends BussTreeImpl {
 
    @Override void disposeBubbles() {
       for (TreeNode tn : child_nodes) {
-	 BussTreeImpl bti = (BussTreeImpl) tn;
-	 bti.disposeBubbles();
+         BussTreeImpl bti = (BussTreeImpl) tn;
+         bti.disposeBubbles();
        }
     }
 
-}	// end of inner class Branch
+}       // end of inner class Branch
 
 
 
-}	// end of class BussTreeModel
+}       // end of class BussTreeModel
 
 
 
