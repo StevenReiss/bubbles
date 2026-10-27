@@ -664,7 +664,7 @@ private static class DefaultKeyAction extends TextAction {
          Dimension d0 = target.getSize();
          if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
          else d0 = target.getPreferredSize();
-         
+        
          String content = e.getActionCommand();
          String postcontent = null;
          int mod = e.getModifiers();
@@ -673,7 +673,7 @@ private static class DefaultKeyAction extends TextAction {
             char c = content.charAt(0);
             int soff = target.getSelectionStart();
             int eoff = target.getSelectionEnd();
-            
+        
             if ((c >= 0x20) && (c != 0x7F)) {
                boolean overwrite = target.getOverwriteMode();
                String pc = language_kit.getPostContent(content);
@@ -723,7 +723,7 @@ private static class DefaultKeyAction extends TextAction {
                    }
                 }
                if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
-               
+        
                target.replaceSelection(content);
                if (postcontent != null) {
                   int off = target.getSelectionEnd();
@@ -735,7 +735,7 @@ private static class DefaultKeyAction extends TextAction {
                   target.setSelectionStart(off);
                   target.setSelectionEnd(off);
                 }
-               
+        
                if (content != null && shouldAutoIndent(target,content,soff)) {
                   // TODO: check that this is the only thing on the line
                   indent_lines_action.actionPerformed(e);
@@ -744,7 +744,7 @@ private static class DefaultKeyAction extends TextAction {
                if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
                   new BaleCompletionContext(target,soff,c);
                 }
-               
+        
                if (d0 != null) {
                   Dimension d1 = target.getPreferredSize();
                   if (d1.height > d0.height) {
@@ -756,13 +756,14 @@ private static class DefaultKeyAction extends TextAction {
        }
       finally { bd.baleWriteUnlock(); }
    }
-   
+
    private boolean handleBlockCreation(BaleEditorPane target,String content,
          ActionEvent e) {
       String txt = target.getSelectedText();
       int soff = target.getSelectionStart();
       int eoff = target.getSelectionEnd();
-      String pc = language_kit.getPostContent(content);    if (txt != null && txt.contains("\n") || txt.length() > 10) {
+      String pc = language_kit.getPostContent(content); 
+      if (txt != null && txt.contains("\n") || txt.length() > 10) {
          try {
             int noff = Math.max(0,soff-128);
             String prev = target.getText(noff,soff-noff);
@@ -806,12 +807,15 @@ private static class DefaultKeyAction extends TextAction {
                      break;
                    }
                 }
-             } 
+             }
             if (n1off >= 0 && n3off >= 0) {
                String ins = content;
                if (n2off >= 0) {
                   n1off = n2off;
                   ins = " " + ins;
+                }
+               else {
+                  ins = "\n" + ins + "\n";
                 }
                String inslines = target.getText(n1off+1,n3off-n1off+1);
                ins += inslines + pc;
@@ -829,7 +833,7 @@ private static class DefaultKeyAction extends TextAction {
        }
       return false;
     }
-      
+
 }       // end of inner class DefaultKeyAction
 
 
@@ -1258,9 +1262,9 @@ private static class DeleteLineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-   
+
       BaleDocument bd = be.getBaleDocument();
-   
+
       bd.baleWriteLock();
       try {
          int soff = be.getSelectionStart();
@@ -1269,7 +1273,7 @@ private static class DeleteLineAction extends TextAction {
          int eoff = be.getSelectionEnd();
          int elno = (eoff == soff ? slno : bd.findLineNumber(eoff));
          int edel = bd.findLineOffset(elno+1);
-   
+
          if (edel != sdel) {
             be.setSelectionStart(sdel);
             be.setSelectionEnd(edel);
@@ -2689,13 +2693,13 @@ private static class FormatAction extends TextAction {
       if (!checkEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-      
+
       Position epos = null;
       try {
          epos = bd.createPosition(target.getSelectionEnd());
        }
       catch (BadLocationException e) { }
-      
+
       BowiFactory.startTask();
       try {
          bd.format(target.getSelectionStart(),target.getSelectionEnd());
@@ -2703,7 +2707,7 @@ private static class FormatAction extends TextAction {
       finally {
          BowiFactory.stopTask();
        }
-      
+
       if (epos != null) target.setSelectionEnd(epos.getOffset());
     }
 
@@ -2766,13 +2770,13 @@ private static class ExpandXYAction extends TextAction {
       BudaBubble bb = BudaRoot.findBudaBubble(target);
       if (bb == null) return;
       Dimension d1 = bb.getSize();
-   
+
       if (vx > d1.width || vy >= d1.height) {
          d1.width += Math.max(0,vx - d1.width + 10);
          d1.height += Math.max(0, vy - d1.height + 30);
          bb.setSize(d1);
        }
-   
+
       if (code_only) remove_code_elision_action.actionPerformed(e);
       else remove_elision_action.actionPerformed(e);
    }
@@ -2801,12 +2805,12 @@ private static class GotoDefinitionAction extends TextAction {
       try {
      BaleEditorPane target = getBaleEditor(e);
      if (!checkReadEditor(target)) return;
-   
+
      BaleDocument bd = target.getBaleDocument();
      int soff = target.getSelectionStart();
      int eoff = target.getSelectionEnd();
      if (eoff != soff) eoff = soff;
-   
+
      BumpClient bc = BumpClient.getBump();
      List<BumpLocation> locs;
      BalePosition sp;
@@ -2820,12 +2824,12 @@ private static class GotoDefinitionAction extends TextAction {
      catch (BadLocationException ex) {
         return;
       }
-   
+
      if (doClassSearchAction(locs)) {
         goto_search_action.actionPerformed(e);
         return;
       }
-   
+
      if (locs == null || locs.size() == 0) {
         if (e.getActionCommand() == null) {
            e = new ActionEvent(target,e.getID(),
@@ -2834,7 +2838,7 @@ private static class GotoDefinitionAction extends TextAction {
         goto_doc_action.actionPerformed(e);
         return;
       }
-   
+
      if (locs.size() == 1) {
         BumpLocation loc0 = locs.get(0);
         int foff = bd.mapOffsetToEclipse(soff);
@@ -2843,7 +2847,7 @@ private static class GotoDefinitionAction extends TextAction {
            return;
          }
       }
-   
+
      BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
@@ -2872,7 +2876,7 @@ private static class GotoImplementationAction extends TextAction {
          int soff = target.getSelectionStart();
          int eoff = target.getSelectionEnd();
          if (eoff != soff) eoff = soff;
-   
+
          BumpClient bc = BumpClient.getBump();
          List<BumpLocation> locs;
          BalePosition sp;
@@ -2886,12 +2890,12 @@ private static class GotoImplementationAction extends TextAction {
          catch (BadLocationException ex) {
             return;
           }
-   
+
          if (doClassSearchAction(locs)) {
             goto_search_action.actionPerformed(e);
             return;
           }
-   
+
          if (locs == null || locs.size() == 0) {
             if (e.getActionCommand() == null) {
                e = new ActionEvent(target,e.getID(),"GotoImplementationAction",
@@ -2900,7 +2904,7 @@ private static class GotoImplementationAction extends TextAction {
             goto_doc_action.actionPerformed(e);
             return;
           }
-   
+
          if (locs.size() == 1) {
             BumpLocation loc0 = locs.get(0);
             int foff = bd.mapOffsetToEclipse(soff);
@@ -2909,7 +2913,7 @@ private static class GotoImplementationAction extends TextAction {
                return;
              }
           }
-   
+
          BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
@@ -3107,16 +3111,16 @@ private static class GotoSearchAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       int soff = target.getSelectionStart();
       int eoff = target.getSelectionEnd();
-   
+
       BumpClient bc = BumpClient.getBump();
       Collection<BumpLocation> locs = bc.findDefinition(null,
                                                    bd.getFile(),
                                                    bd.mapOffsetToEclipse(soff),
                                                    bd.mapOffsetToEclipse(eoff));
       if (locs == null || locs.size() == 0) return;
-   
+
       handleSearchAction(e,locs);
-   
+
       BoardMetrics.noteCommand("BALE","GoToSearch");
     }
 
@@ -3141,11 +3145,11 @@ private static class GotoTypeAction extends TextAction {
       try {
          BaleEditorPane target = getBaleEditor(e);
          if (!checkReadEditor(target)) return;
-   
+
          BaleDocument bd = target.getBaleDocument();
          int soff = target.getSelectionStart();
          int eoff = target.getSelectionEnd();
-   
+
          BumpClient bc = BumpClient.getBump();
          Collection<BumpLocation> locs;
          BalePosition sp;
@@ -3159,12 +3163,12 @@ private static class GotoTypeAction extends TextAction {
          catch (BadLocationException ex) {
             return;
           }
-   
+
          if (doClassSearchAction(locs)) {
             handleSearchAction(e,locs);
             return;
           }
-   
+
          if (locs == null || locs.size() == 0) {
             if (e.getActionCommand() == null) {
                e = new ActionEvent(target,e.getID(),"GotoTypeAction",e.getWhen(),e.getModifiers());
@@ -3172,7 +3176,7 @@ private static class GotoTypeAction extends TextAction {
             goto_doc_action.actionPerformed(e);
             return;
           }
-   
+
          BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
@@ -3474,7 +3478,7 @@ private static class CommentAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-   
+
       BuenoFactory bf = BuenoFactory.getFactory();
       BuenoLocation bl = new CommentLocation(be,be.getSelectionStart());
       bf.createNew(new_type,bl,null);
@@ -3529,7 +3533,7 @@ private static class FixErrorsAction extends TextAction {
          fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
       }
       catch (Exception e) { }
-   
+
     }
 
    @Override public void actionPerformed(ActionEvent e) {
