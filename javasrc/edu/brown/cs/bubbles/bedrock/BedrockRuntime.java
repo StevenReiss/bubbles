@@ -1242,34 +1242,41 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
          IAstEvaluationEngine eeng = EvaluationManager.newAstEvaluationEngine(jproj,tgt);
          ICompiledExpression eexp = compileExpression(eeng,expr,jsf);
          IStackFrame origframe = jsf;
-         if (eexp == null || eexp.hasErrors() && allframes) {
+         if (eexp == null || eexp.hasErrors()) {
             if (eexp != null) {
                String [] errs = eexp.getErrorMessages();
                for (String err : errs) {
                   BedrockPlugin.logD("COMPILER ERRORS FOUND: " + err + " " + jsf + " " + frid + " " + thrd);
                 }
              }
-
-            HashSet<String> done = new HashSet<>();
-            for (IStackFrame frame: thrd.getStackFrames()) {
-               if (frame instanceof IJavaStackFrame) {
-                  IJavaStackFrame njsf = (IJavaStackFrame) frame;
-                  String key = njsf.getSourceName() + njsf.getMethodName() + njsf.getLineNumber();
-                  if (!done.add(key)) continue;
-                  if (njsf == jsf) continue;
-                  eexp = compileExpression(eeng,expr,njsf);
-                  if (eexp == null || eexp.hasErrors()) {
-                     BedrockPlugin.logD("COMPILER ERRORS FOUND: " + njsf);
-                     continue;
+            if (allframes) {           
+               HashSet<String> done = new HashSet<>();
+               for (IStackFrame frame: thrd.getStackFrames()) {
+                  if (frame instanceof IJavaStackFrame) {
+                     IJavaStackFrame njsf = (IJavaStackFrame) frame;
+                     String key = njsf.getSourceName() + njsf.getMethodName() + njsf.getLineNumber();
+                     if (!done.add(key)) continue;
+                     if (njsf == jsf) continue;
+                     eexp = compileExpression(eeng,expr,njsf);
+                     if (eexp == null || eexp.hasErrors()) {
+                        BedrockPlugin.logD("COMPILER ERRORS FOUND: " + njsf);
+                        continue;
+                      }
+                     BedrockPlugin.logD("COMPILED OKAY");
+                     jsf = njsf;
+                     break;
                    }
-                  BedrockPlugin.logD("COMPILED OKAY");
-                  jsf = njsf;
-                  break;
                 }
              }
           }
          if (eexp == null || eexp.hasErrors()) {
-            throw new BedrockException("Error in exception: won't compile");
+            if (eexp != null) {
+               String [] errs = eexp.getErrorMessages();
+               for (String err : errs) {
+                  BedrockPlugin.logD("COMPILER ERRORS FOUND: " + err + " " + jsf + " " + frid + " " + thrd);
+                }
+             }
+            throw new BedrockException("Error in excpression: won't compile: " + eexp);
           }
          eeng.evaluateExpression(eexp,jsf,
                new EvalListener(origframe,bid,eid,

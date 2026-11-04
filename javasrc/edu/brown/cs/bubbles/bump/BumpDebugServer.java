@@ -263,7 +263,7 @@ private class Connection extends Thread {
     }
 
    @Override public void run() {
-      System.err.println("BUMP: start connect");
+      System.err.println("BUMP: start bandaid connect");
    
       try {
          InputStream ins = client_socket.getInputStream();
@@ -307,7 +307,7 @@ private class Connection extends Thread {
          t.printStackTrace();
        }
    
-      System.err.println("BUMP CONNECTION EXITED");
+      System.err.println("BUMP bandaid CONNECTION EXITED");
    
    
       try {

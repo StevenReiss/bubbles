@@ -779,7 +779,7 @@ private static class DefaultKeyAction extends TextAction {
                   continue;
                 }
                else if (nlct > 0 && !Character.isWhitespace(c1)) {
-                  if (c1 == ')') {
+                  if (c1 == ')' || c1 == 'e') {
                      n2off = noff + i + 1;
                    }
                   break;
