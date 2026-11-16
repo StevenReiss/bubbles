@@ -1318,7 +1318,7 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
           }
        }
       catch (JavaModelException e) {
-         BedrockPlugin.logE("Problem getting source range: " + e);
+         BedrockPlugin.logW("Problem getting source range: " + e);
        }
     }
 
