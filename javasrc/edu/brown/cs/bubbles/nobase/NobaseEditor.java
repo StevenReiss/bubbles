@@ -545,7 +545,7 @@ private class AutoCompile implements Runnable {
           }
        }
       xw.end("MESSAGES");
-
+   
       if (!edit_data.getEditId().equals(edit_id)) return;
       NobaseMain.getNobaseMain().finishMessage(xw);
       if (ep.getAutoElide()) {

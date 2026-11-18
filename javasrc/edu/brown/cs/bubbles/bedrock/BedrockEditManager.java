@@ -2093,30 +2093,36 @@ private class EditTask implements Runnable {
       if (file_data.getCurrentId(bedrock_id) != null &&
              !file_data.getCurrentId(bedrock_id).equals(for_id))
          return;
-
+   
       long delay = getElideDelay(bedrock_id);
-
+   
       if (delay > 0) {
          synchronized (thread_pool) {
             if (active_waits == 0) {
                try {
+                  ++active_waits;
                   thread_pool.wait(delay);
                }
                catch (InterruptedException e) { }
+               --active_waits;
+             }
+            else {
+               BedrockPlugin.logD("Already an active wait");
+               return;
              }
           }
        }
-
+   
       CompilationUnit cu = null;
       synchronized (file_data) {
          if (file_data.getCurrentId(bedrock_id) != null &&
                !file_data.getCurrentId(bedrock_id).equals(for_id))
             return;
-
+   
          BedrockPlugin.logD("BUILD AST " + for_id + " " + bedrock_id);
          cu = file_data.getAstRoot(bedrock_id);
        }
-
+   
       if (cu == null && for_id.startsWith("PID_")) {
          IvyXmlWriter xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
          xw.field("FILE",file_data.getFileName());
@@ -2124,15 +2130,15 @@ private class EditTask implements Runnable {
          xw.field("FAILURE",true);
          our_plugin.finishMessage(xw);
        }
-
+   
       if (file_data.getCurrentId(bedrock_id) != null &&
              !file_data.getCurrentId(bedrock_id).equals(for_id)) {
          BedrockPlugin.logD("Discarding AST " + file_data.getCurrentId(bedrock_id) + " " + for_id);
          return;
        }
-
+   
       if (getAutoElide(bedrock_id) && cu != null) {
-         // System.err.println("BEDROCK: ELIDE " + for_id);
+         System.err.println("BEDROCK: ELIDE " + for_id);
          BedrockElider be = file_data.checkElider(bedrock_id);
          if (be != null) {
             IvyXmlWriter xw = our_plugin.beginMessage("ELISION",bedrock_id);
@@ -2317,7 +2323,7 @@ private class FileData implements IBufferChangedListener {
 
    void applyEdit(String bid,TextEdit xe,String id) throws BedrockException {
       boolean chngfg = hasChanged();
-
+   
       if (bid != null && buffer_map.get(bid) != null) {
          // handle private buffers
          PrivateBufferData bd = buffer_map.get(bid);
@@ -2979,7 +2985,7 @@ private class ProblemHandler implements IProblemRequestor {
    @Override public void endReporting() {
       BedrockPlugin.logD("End error reporting for " + is_private);
       if (suppress_errors) return;
-
+   
       IvyXmlWriter xw;
       if (is_private) {
          if (bedrock_id != null) {
@@ -2994,7 +3000,7 @@ private class ProblemHandler implements IProblemRequestor {
          xw.field("FILE",file_data.getFileName());
        }
       else return;
-
+   
       if (file_data != null && file_data.getProject() != null) {
          xw.field("PROJECT",file_data.getProject().getName());
        }
@@ -3005,9 +3011,9 @@ private class ProblemHandler implements IProblemRequestor {
           }
        }
       xw.end("MESSAGES");
-
+   
       our_plugin.finishMessage(xw);
-
+   
       BedrockPlugin.logD("ERROR REPORT: " + xw.toString());
       xw.close();
     }

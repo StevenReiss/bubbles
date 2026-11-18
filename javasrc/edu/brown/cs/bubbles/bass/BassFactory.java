@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 
@@ -96,6 +97,7 @@ private static BassFactory              the_factory;
 private static Map<BudaBubbleArea,BassBubble> package_explorers;
 private static Map<SearchType,Set<BassRepository>> use_repositories;
 private static Map<BassRepository,BassTreeModelBase> repository_map;
+private static ReentrantLock            reload_lock;
 
 
 
@@ -153,6 +155,7 @@ public static synchronized void setup()
    BudaRoot.addToolbarButton("DefaultMenu",new TextSearchButton(null),"Text search",BoardImage.getImage("search"));
 
    repository_map = new HashMap<>();
+   reload_lock = new ReentrantLock();
 
    the_factory.addPopupHandler(new BassCreator());
    the_factory.addPopupHandler(new ProjectProps());
@@ -584,14 +587,20 @@ private static class TextSearchButton extends AbstractAction implements BudaCons
 
 public static void reloadRepository(BassRepository br)
 {
-   synchronized (repository_map) {
-      for (BassRepository abr : repository_map.keySet()) {
-         if (abr.includesRepository(br)) {
-            BassTreeModelBase tmb = getModelBase(abr);
-            tmb.requestRebuild();
-            // tmb.rebuild();
+   if (!reload_lock.tryLock()) return;
+   try {
+      synchronized (repository_map) {
+         for (BassRepository abr : repository_map.keySet()) {
+            if (abr.includesRepository(br)) {
+               BassTreeModelBase tmb = getModelBase(abr);
+               tmb.requestRebuild();
+               // tmb.rebuild();
+             }
           }
        }
+    }
+   finally {
+      reload_lock.unlock();
     }
 }
 

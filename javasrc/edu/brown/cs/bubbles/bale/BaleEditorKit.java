@@ -1630,7 +1630,7 @@ private static class SmartPasteAction extends TextAction {
             epos = bd.createPosition(p1+1);
          }
          catch (BadLocationException ex) { }
-
+   
          SwingEditorPane src = target.getClipboardSource();
          if (src != target && src != null) {
             BudaRoot br = BudaRoot.findBudaRoot(target);
@@ -1638,13 +1638,14 @@ private static class SmartPasteAction extends TextAction {
             BudaBubble b2 = BudaRoot.findBudaBubble(target);
             if (br != null && b1 != null && b2 != null) br.noteBubbleCopy(b1,b2);
           }
-
+   
          target.paste();
-
+   
          int slno = bd.findLineNumber(p0);
          if (epos != null) p1 = epos.getOffset();
          else p1 = p0;
          int elno = bd.findLineNumber(p1);
+         BoardLog.logD("BALE","Smart paste indent " + slno + " " + elno);
          for (int i = slno; i <= elno; ++i) {
             bd.fixLineIndent(i);
           }
