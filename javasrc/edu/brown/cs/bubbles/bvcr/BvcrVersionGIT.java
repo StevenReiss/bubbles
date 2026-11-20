@@ -236,7 +236,7 @@ private void findGitRoot(File f0)
 @Override void findHistory(File f,IvyXmlWriter xw)
 {
    String head = null;
-   Map<String,List<String>> priors = new HashMap<String,List<String>>();
+   Map<String,List<String>> priors = new HashMap<>();
    String cmd1 = git_command + " log --reverse '--pretty=format:" + GIT_PRIOR_FORMAT + "'";
    StringCommand cmd = new StringCommand(cmd1);
    StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
@@ -249,7 +249,7 @@ private void findGitRoot(File f0)
          String alts = ldata[2];
          List<String> prevs = priors.get(rev);
          if (prevs == null) {
-            prevs = new ArrayList<String>();
+            prevs = new ArrayList<>();
             priors.put(rev,prevs);
           }
          for (StringTokenizer ltok = new StringTokenizer(prev,"(, )"); ltok.hasMoreTokens(); ) {

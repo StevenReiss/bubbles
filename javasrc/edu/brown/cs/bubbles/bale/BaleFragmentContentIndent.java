@@ -555,7 +555,7 @@ private class RegionData {
        }
       int delta = off - spos - line_data[line].getAdd();
       if (delta >= 0) return;
-
+   
       int off0 = line_data[line].getOffset() + br.getStart();
       int len0 = line_data[line].getDelete();
       int len1 = line_data[line].getAdd();

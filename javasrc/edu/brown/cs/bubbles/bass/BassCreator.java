@@ -991,9 +991,10 @@ private static class DeleteClassAction extends AbstractAction implements Runnabl
 
    @Override public void actionPerformed(ActionEvent e) {
       if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
-         int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the class " + class_name,
-                                                    "Confirm Delete Class",
-                                                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+         int sts = JOptionPane.showConfirmDialog(null,
+               "Do you really want to delete the class " + class_name,
+               "Confirm Delete Class",
+               JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
          if (sts != JOptionPane.YES_OPTION) return;
       }
       BoardThreadPool.start(this);
@@ -1033,7 +1034,7 @@ private static class DeleteMethodAction extends AbstractAction {
       if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
          int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the method " +
                method_location.getDisplayName(),
-               "Confirm Delete Class",
+               "Confirm Delete Method",
                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
          if (sts != JOptionPane.YES_OPTION) return;
        }
